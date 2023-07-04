@@ -1,0 +1,9 @@
+
+.hyperLink {
+	text-decoration: underline;
+	font-weight: lighter;
+	font-size : 15px;
+	/* display: block; */
+	color: blue;
+	cursor: pointer;
+}

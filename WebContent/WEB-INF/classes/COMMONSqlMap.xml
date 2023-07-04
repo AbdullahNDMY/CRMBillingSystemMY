@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="COMMON">
+
+	<select id="VALID_TERMINATE_DATE" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT ID_CUST_PLAN_GRP
+		FROM T_CUST_PLAN_D
+		WHERE MIN_SVC_PERIOD = 1 
+		AND TO_DATE(#terminateDate#, 'DD/MM/YYYY') &lt;= MIN_SVC_END
+		AND ID_CUST_PLAN_GRP = #idService#
+		AND ID_CUST_PLAN = #idCustPlan#
+		AND IS_DELETED = 0
+	</select>
+	
+	<select id="CHECK_BILLING_ACOUNT_TERMINATE" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT COUNT(ID_BILL_ACCOUNT)
+		FROM T_BAC_D
+		WHERE ID_CUST_PLAN_GRP = #idService# AND ID_CUST_PLAN = #idCustPlan#
+		AND TO_DATE(#terminateDate#, 'DD/MM/YYYY') &lt; BILL_TO
+	</select>
+	<select id="GET_BILL_TO" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT to_char(BILL_TO,'yyyy-mm-dd') BILL_TO
+		FROM T_BAC_D
+		WHERE ID_CUST_PLAN_GRP = #idService# AND ID_CUST_PLAN =#idCustPlan#
+	</select>
+	
+	<update id="TERMINATE_SERVICE" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_D
+		SET SVC_END = TO_DATE(#terminateDate#, 'DD/MM/YYYY'),
+		<isNotEmpty property="servicesStatus">
+		SERVICES_STATUS = #servicesStatus#, 
+		</isNotEmpty>
+		AUTO_RENEW = '0',
+        DATE_UPDATED = sysdate,
+		ID_LOGIN = #idLogin#,
+		ID_AUDIT = #idAudit#
+		WHERE ID_CUST_PLAN_GRP = #idService#
+		AND ID_CUST_PLAN = #idCustPlan#
+		AND IS_DELETED = 0
+	</update>
+	
+	<select id="SELECT_COMMON_SERVICE_END_DATE_GET_T_CUST_PLAN_D" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      A.ID_CUST_PLAN_GRP,
+		      A.ID_CUST_PLAN,
+		      TO_CHAR(A.SVC_START, 'dd/mm/yyyy') AS SVC_START,
+		      TO_CHAR(A.SVC_END, 'dd/mm/yyyy') AS SVC_END,
+		      A.SERVICES_STATUS,
+		      A.BILLING_STATUS,
+		      A.MIN_SVC_PERIOD,
+		      TO_CHAR(A.MIN_SVC_START, 'dd/mm/yyyy') AS MIN_SVC_START,
+		      TO_CHAR(A.MIN_SVC_END, 'dd/mm/yyyy') AS MIN_SVC_END,
+		      TO_CHAR(B.BILL_FROM, 'dd/mm/yyyy') AS BILL_FROM,
+		      TO_CHAR(B.BILL_TO, 'dd/mm/yyyy') AS BILL_TO,
+		      C.BILL_INSTRUCT,
+		      C.PLAN_STATUS
+		FROM
+		      T_CUST_PLAN_H C LEFT JOIN T_CUST_PLAN_D A ON C.ID_CUST_PLAN = A.ID_CUST_PLAN
+		      LEFT JOIN T_BAC_D B
+		      ON A.ID_CUST_PLAN = B.ID_CUST_PLAN
+		      AND A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP
+		WHERE
+		      A.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	</select>
+	<select id="SELECT_COMMON_SERVICE_END_DATE_GET_MAPPING_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	          A.ACCESS_ACCOUNT
+	    FROM
+	          T_SUBSCRIPTION_INFO A INNER JOIN T_CUST_PLAN_H B 
+	          ON A.ID_CUST_PLAN = B.ID_CUST_PLAN
+	          INNER JOIN T_CUST_PLAN_D C
+	          ON B.ID_CUST_PLAN = C.ID_CUST_PLAN
+	          INNER JOIN T_CUST_PLAN_LINK D
+	          ON C.ID_CUST_PLAN_GRP = D.ID_CUST_PLAN_GRP
+	          INNER JOIN M_PLAN_BATCH_MAPPING E
+	          ON D.ID_PLAN_GRP = E.ID_PLAN_GRP
+	    WHERE
+	          C.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	          AND E.BATCH_ID = 'RD'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN_GRP" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE 
+			ID_PLAN_GRP IN 
+			(
+				SELECT 
+					ID_PLAN_GRP
+				FROM 
+					T_CUST_PLAN_LINK
+				WHERE 
+					ID_CUST_PLAN_GRP = #idCustPlanGrp#
+					AND IS_DELETED = '0'
+			)
+			AND BATCH_ID = 'RD'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN_GRP_AND_SERVICE_STATUS" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		      B.SERVICES_STATUS
+        FROM 
+              T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+              INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              B.ID_CUST_PLAN_GRP &lt;&gt; #idCustPlanGrp#
+              AND B.ID_CUST_PLAN = #idCustPlan#
+              AND B.IS_DELETED = '0'
+              <isNotEmpty property="serviceStatus">
+                  AND B.SERVICES_STATUS = #serviceStatus#
+              </isNotEmpty>
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_SUB_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      B.SERVICES_STATUS
+        FROM 
+              T_SUBSCRIPTION_INFO T INNER JOIN T_CUST_PLAN_H A
+              ON T.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+              INNER JOIN T_CUST_PLAN_D B
+              ON A.ID_CUST_PLAN = B.ID_CUST_PLAN AND A.IS_DELETED = '0'
+              INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+              INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              T.ID_SUB_INFO = #idSubInfo#
+              AND T.IS_DELETED = '0'
+              AND B.SERVICES_STATUS = 'PS3'
+	</select>
+	<select id="GET_SUBSCIPTION_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_CUST_PLAN = #idCustPlan#
+			AND IS_DELETED = '0'
+	</select>
+	<update id="UPDATE_COMMON_SERVICE_END_DATE_T_CUST_PLAN_D" parameterClass="java.util.HashMap">
+	    UPDATE
+	          T_CUST_PLAN_D
+	    SET
+	          SVC_END = TO_DATE(#svcEndDate#, 'dd/mm/yyyy'),
+	          AUTO_RENEW = #autoRenew#,
+	          SERVICES_STATUS = #serviceStatus#,
+	          DATE_UPDATED = sysdate,
+			  ID_LOGIN = #idLogin#,
+			  ID_AUDIT = #idAudit#
+	    WHERE 
+	          ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	</update>
+	<select id="GET_SUBSCIPTION_BY_ID_SUB_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_SUB_INFO = #idSubInfo#
+			AND IS_DELETED = '0'
+	</select>
+	<update id="UPDATE_COMMON_POPACC_T_SUBSCRIPTION_INFO" parameterClass="java.util.HashMap">
+	    UPDATE
+	          T_SUBSCRIPTION_INFO
+	    SET
+	          ACCESS_ACCOUNT = #accessAccount#,
+	          ACCESS_PW = #accessPw#,
+	          DATE_UPDATED = sysdate,
+			  ID_LOGIN = #idLogin#,
+			  ID_AUDIT = #idAudit#
+	    WHERE 
+	          ID_SUB_INFO = #idSubInfo#
+	</update>
+	<update id="UPDATE_COMMON_POPAPW_T_SUBSCRIPTION_INFO" parameterClass="java.util.HashMap">
+	    UPDATE
+	          T_SUBSCRIPTION_INFO
+	    SET
+	          ACCESS_PW = #accessPw#,
+	          DATE_UPDATED = sysdate,
+			  ID_LOGIN = #idLogin#,
+			  ID_AUDIT = #idAudit#
+	    WHERE 
+	          ID_SUB_INFO = #idSubInfo#
+	</update>
+</sqlMap>

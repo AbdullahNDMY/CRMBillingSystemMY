@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+                              "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<!-- SqlMapConfig定義 -->
+<sqlMapConfig>
+    <settings useStatementNamespaces="true"/>
+    <sqlMap resource="testSqlMap.xml"/>
+    <sqlMap resource="sqlMap.xml"/>
+    <sqlMap resource="E_DIMSqlMap.xml"/>
+    <sqlMap resource="E_MEXSqlMap.xml"/>
+    <sqlMap resource="B_BILSqlMap.xml"/>
+    <sqlMap resource="B_CPMSqlMap.xml"/>
+    <sqlMap resource="B_BACSqlMap.xml"/>
+    <sqlMap resource="B_BTHSqlMap.xml"/>
+    <sqlMap resource="B_CSBSqlMap.xml"/>
+    <sqlMap resource="R_AGRSqlMap.xml"/>
+    <sqlMap resource="R_RRRSqlMap.xml"/>
+    <sqlMap resource="R_SALSqlMap.xml"/>
+    <sqlMap resource="R_ACRSqlMap.xml"/>
+    <sqlMap resource="C_CMN002SqlMap.xml"/>
+    <sqlMap resource="E_MIMSqlMap.xml"/>
+    <sqlMap resource="E_SETSqlMap.xml"/>
+    <sqlMap resource="A_PWDSqlMap.xml"/>
+    <sqlMap resource="A_USRSqlMap.xml"/>
+    <sqlMap resource="M_CDMSqlMap.xml"/>
+    <sqlMap resource="M_CSTSqlMap.xml"/>    
+    <sqlMap resource="M_COMSqlMap.xml"/>    
+    <sqlMap resource="M_BNKSqlMap.xml"/>    
+    <sqlMap resource="M_CURSqlMap.xml"/>
+    <sqlMap resource="M_GBSSqlMap.xml"/>
+    <sqlMap resource="M_ALTSqlMap.xml"/>
+    <sqlMap resource="M_SVGSqlMap.xml"/>
+    <sqlMap resource="M_SVTSqlMap.xml"/>
+    <sqlMap resource="M_SSMSqlMap.xml"/>
+    <sqlMap resource="M_PBMSqlMap.xml"/>
+    <sqlMap resource="M_PPMSqlMap.xml"/>
+    <sqlMap resource="R_SOASqlMap.xml"/>
+    <sqlMap resource="R_BACSqlMap.xml"/>
+</sqlMapConfig>

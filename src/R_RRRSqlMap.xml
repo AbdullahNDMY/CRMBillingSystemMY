@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_RRR">
+	<select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'R-RRR'
+	</select>
+	<select id="countRefundReport" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT COUNT(*)
+			 FROM T_CSB_H e INNER JOIN T_CSB_D f ON e.RECEIPT_NO = f.RECEIPT_NO AND e.IS_DELETED = 0 AND f.IS_DELETED = 0
+		     INNER JOIN M_CUST b ON b.id_cust = e.id_cust AND b.IS_DELETED = 0
+		     LEFT JOIN M_COM_BANKINFO c ON c.id_com_bank = e.id_com_bank
+             LEFT OUTER JOIN M_BANK J ON J.ID_BANK = C.ID_BANK
+             LEFT OUTER JOIN T_BIL_H d ON d.ID_REF = f.ID_REF AND d.IS_DELETED = 0
+             LEFT OUTER JOIN T_CSB_H refund ON refund.RECEIPT_NO = f.ID_REF AND refund.IS_DELETED = 0
+			 WHERE e.PMT_STATUS in ('N','F')
+			<dynamic prepend="AND">
+                <isNotEmpty prepend="AND" property="tbxPaidDateFrom">
+	                to_char(e.DATE_TRANS,'YYYYMMDD') &gt;= to_char(to_date(#tbxPaidDateFrom#,'DD/MM/YYYY'),'YYYYMMDD')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxPaidDateTo">
+                    to_char(e.DATE_TRANS,'YYYYMMDD') &lt;= to_char(to_date(#tbxPaidDateTo#,'DD/MM/YYYY'),'YYYYMMDD')
+                </isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillDocument">
+					UPPER(f.ID_REF) LIKE UPPER('%$tbxBillDocument$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxChequeNo">
+					UPPER(e.REFERENCE2) LIKE UPPER('%$tbxChequeNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxReceiptNo">
+					UPPER(e.RECEIPT_NO) LIKE UPPER('%$tbxReceiptNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboPaymentMetho">
+					trim(e.PMT_METHOD) = #cboPaymentMetho#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					e.CUR_CODE = #cboCurrency#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBankInName">
+					c.ID_COM_BANK = #tbxBankInName#
+				</isNotEmpty>
+			</dynamic>
+	</select>
+	<select id="getListRefundReport" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT to_char(e.DATE_TRANS,'dd/mm/yyyy') as DATE_TRANS, TRIM(b.CUST_NAME) AS CUST_NAME, TRIM(b.AFFILIATE_CODE) AS AFFILIATE_CODE, TRIM(f.ID_REF) AS ID_REF,
+		       e.REFERENCE2,e.RECEIPT_NO,e.PMT_STATUS,
+		       TRIM(J.BANK_FULL_NAME) AS COM_ACCT_NAME, e.PMT_METHOD, e.cur_code, d.BILL_AMOUNT, f.AMT_PAID, refund.AMT_RECEIVED as REFUND_AMT_RECEIVED
+		     FROM T_CSB_H e INNER JOIN T_CSB_D f ON e.RECEIPT_NO = f.RECEIPT_NO AND e.IS_DELETED = 0 AND f.IS_DELETED = 0
+		     INNER JOIN M_CUST b ON b.id_cust = e.id_cust AND b.IS_DELETED = 0
+		     LEFT JOIN M_COM_BANKINFO c ON c.id_com_bank = e.id_com_bank
+             LEFT OUTER JOIN M_BANK J ON J.ID_BANK = C.ID_BANK
+		     LEFT OUTER JOIN T_BIL_H d ON d.ID_REF = f.ID_REF AND d.IS_DELETED = 0
+             LEFT OUTER JOIN T_CSB_H refund ON refund.RECEIPT_NO = f.ID_REF AND refund.IS_DELETED = 0
+			 WHERE e.PMT_STATUS in ('N','F')
+			<dynamic prepend="AND">
+                <isNotEmpty prepend="AND" property="tbxPaidDateFrom">
+                    to_char(e.DATE_TRANS,'YYYYMMDD') &gt;= to_char(to_date(#tbxPaidDateFrom#,'DD/MM/YYYY'),'YYYYMMDD')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxPaidDateTo">
+                    to_char(e.DATE_TRANS,'YYYYMMDD') &lt;= to_char(to_date(#tbxPaidDateTo#,'DD/MM/YYYY'),'YYYYMMDD')
+                </isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillDocument">
+					UPPER(f.ID_REF) LIKE UPPER('%$tbxBillDocument$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxChequeNo">
+					UPPER(e.REFERENCE2) LIKE UPPER('%$tbxChequeNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxReceiptNo">
+					UPPER(e.RECEIPT_NO) LIKE UPPER('%$tbxReceiptNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboPaymentMetho">
+					trim(e.PMT_METHOD) = #cboPaymentMetho#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					e.CUR_CODE = #cboCurrency#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBankInName">
+					c.ID_COM_BANK = #tbxBankInName#
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY to_char(e.DATE_TRANS,'yyyymmdd') DESC,e.RECEIPT_NO ASC,f.ID_REF ASC
+	</select>
+	<select id="getPaymentRef" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT rsm.value
+		FROM RESOURCESMAINT rsm 
+		WHERE rsm.category = #category#
+  		  AND rsm.resource_id = #resourceId#
+	</select>
+	<select id="getPaymentInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT REPLACE(RESOURCE_ID, 'PayRef_', '') as PAYMENTMETHOD, value as PAYMENTREF
+		FROM RESOURCESMAINT
+		WHERE CATEGORY = 'PAYMENT_REF_DETAIL' AND SEQ = 2 AND IS_DELETED='0'
+		ORDER BY ID ASC
+    </select>
+    <select id="getBankInfo" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT
+	          E.ID_COM_BANK as value,
+	          J.BANK_FULL_NAME || ' - ' || E.COM_ACCT_NO as label
+		FROM
+		      M_COM_BANKINFO E, M_BANK J
+		WHERE
+		      E.ID_BANK = J.ID_BANK
+		      AND J.IS_DELETED = 0
+		ORDER BY
+		      upper(J.BANK_FULL_NAME) ASC, upper(E.COM_ACCT_NO) ASC
+	</select>
+</sqlMap>

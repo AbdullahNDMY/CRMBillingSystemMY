@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_PBM">
+
+	<select id="SELECT.M_PBM.SQL11"	parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	   	Select	
+	   		C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, 
+	   		D.ITEM_GRP_NAME,D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE,F.ID_PLAN, F.USAGE_BASE,TRIM(F.UOM) AS UOM					
+		From	
+			M_PLAN_H C 
+				inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN 
+				left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP and F.BATCH_ID = #id_batch#
+		Where 
+			(F.BATCH_ID = #id_batch# OR F.BATCH_ID IS NULL)
+	    	AND C.ID_PLAN = #id_plan#		    
+			AND ( D.ITEM_TYPE = 'S'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+	    ORDER BY upper(D.ITEM_GRP_NAME) asc
+	</select>
+
+	<select id="SELECT.M_PBM.SQL12"	parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	   	Select
+	   		C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,C.BILL_CURRENCY,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,
+	   		D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE,F.ID_PLAN, sg.SVC_GRP_NAME
+		From
+			M_PLAN_H C inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN
+				left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP and F.BATCH_ID = #id_batch#,
+			M_SVG sg
+		Where
+			(F.BATCH_ID = #id_batch# OR F.BATCH_ID IS NULL)
+	    	AND C.ID_PLAN = #id_plan#
+			AND (D.ITEM_TYPE = 'S'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+			and D.SVC_LEVEL1 = sg.SVC_GRP
+			and D.IS_DELETED = 0
+			and C.IS_DELETED = 0
+		ORDER BY upper(D.ITEM_GRP_NAME) asc
+	</select>
+ 
+	<select id="SELECT.M_PBM.SQL13"	parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	   	Select	
+	   		C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,D.SVC_LEVEL1,D.RATE_TYPE,
+	   		D.RATE_MODE,D.RATE,F.ID_PLAN, F.CODE_VALUE					
+		From	
+			M_PLAN_H C inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN 
+				left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP  and F.BATCH_ID = #id_batch#
+		Where		
+	  		(F.BATCH_ID = #id_batch# OR F.BATCH_ID IS NULL)
+	    	AND C.ID_PLAN = #id_plan#						
+			AND ((D.ITEM_TYPE = 'S'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA') OR
+			    (D.ITEM_TYPE = 'O'  AND (D.RATE_MODE = '7' OR D.RATE_MODE = '8') AND D.RATE_TYPE = 'EX'))
+		ORDER BY upper(D.ITEM_GRP_NAME) asc
+	</select>
+ 
+    <select id="SELECT.M_PBM.SQL14" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        Select
+            C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,C.BILL_CURRENCY,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,
+            D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE,F.ID_PLAN,F.UOM,F.CODE_VALUE,F.USAGE_BASE,sg.SVC_GRP_NAME
+        From
+            M_PLAN_H C inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN
+                left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP and F.BATCH_ID = #id_batch#,
+            M_SVG sg
+        Where
+            (F.BATCH_ID = #id_batch# OR F.BATCH_ID IS NULL)
+            AND C.ID_PLAN = #id_plan#
+            AND (D.ITEM_TYPE = 'O'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+            and D.SVC_LEVEL1 = sg.SVC_GRP
+            and D.IS_DELETED = 0
+            and C.IS_DELETED = 0
+        ORDER BY upper(D.ITEM_GRP_NAME) asc
+    </select>
+    
+	<select id="SELECT.PLAN_BATCH" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		Select 
+			distinct (ID_PLAN_GRP)
+		From	
+			M_PLAN_BATCH_MAPPING
+		WHERE
+			BATCH_ID = #batchId#
+	</select>
+ 
+	<select id="SELECT.TOTALPLAN" parameterClass="java.lang.String" resultClass="java.lang.String">
+	  	SELECT
+	  		COUNT (distinct(f.Id_Plan))
+	  	FROM
+	  		M_PLAN_H C inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN
+			left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP
+	  	WHERE F.BATCH_ID = #id_batch#
+	  		and D.IS_DELETED = 0
+	</select>
+ 
+	<select id="SELECT.PLANID" parameterClass="java.lang.String" resultClass="java.lang.String">
+   		SELECT distinct(f.Id_Plan)
+   		FROM
+   			M_PLAN_H C inner join M_PLAN_D D on D.ID_PLAN = C.ID_PLAN
+			left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP
+   		WHERE
+   			F.BATCH_ID = #id_batch#
+   			and D.IS_DELETED = 0
+   		order by
+   			f.id_plan ASC
+	</select>
+ 
+	<select id="SELECT.CUST_PLAN" parameterClass="java.lang.String" resultClass="java.lang.String">
+         select 
+         	count(id_cust_plan) total 
+         from T_CUST_PLAN_D 
+         where ID_CUST_PLAN = #id_plan#
+	</select>
+ 
+	<select id="SELECT.CUST_PLAN_GROUP" resultClass="java.util.HashMap">
+	    select distinct(cpl.ID_PLAN_GRP)
+	    from T_CUST_PLAN_LINK cpl
+	    	<isNotEmpty property="id_plan">
+	    		, M_PLAN_BATCH_MAPPING pbm
+	    	</isNotEmpty>
+	    where cpl.ID_PLAN_GRP is not null
+	    <isNotEmpty property="id_plan">
+	    	and pbm.BATCH_ID = #batchId#
+	    	and pbm.ID_PLAN = #id_plan#
+	    	and pbm.ID_PLAN_GRP = cpl.ID_PLAN_GRP
+	    </isNotEmpty>
+	</select>
+
+	<select id="SELECT.PLANS" resultClass="java.util.HashMap">
+		select C.ID_PLAN, C.PLAN_NAME, C.PLAN_DESC, C.BILL_CURRENCY
+		From M_PLAN_H C 
+		where C.IS_DELETED = 0 
+		order by C.ID_PLAN asc
+	</select>
+	<select id="SELECT.SVC_GRP" resultClass="org.apache.struts.util.LabelValueBean">
+		SELECT H.SVC_GRP AS value,
+			H.SVC_GRP_NAME AS label  	
+		FROM M_SVG H 
+	</select>
+	<select id="SELECT.ID_PLAN_GRP">	             
+		select 
+			distinct (ID_PLAN_GRP) 
+		from 
+			T_CUST_PLAN_LINK
+	</select>
+ 
+	<select id="SELECT.31" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		Select	
+			C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE					
+		From	
+			M_PLAN_H C inner join M_PLAN_D	D on C.ID_PLAN = D.ID_PLAN
+		Where C.ID_PLAN = #plan_id_new#			
+			and (D.ITEM_TYPE = 'S'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+			and C.IS_DELETED = 0
+			and D.IS_DELETED = 0
+		ORDER BY C.ID_PLAN asc
+	</select>
+ 
+	<select id="SELECT.32" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		Select	
+			C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,
+			D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE, sg.SVC_GRP_NAME
+		From	
+			M_PLAN_H C inner join M_PLAN_D	D on C.ID_PLAN = D.ID_PLAN
+			left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP and F.BATCH_ID = #id_batch#,
+			M_SVG sg
+		Where	
+			(F.BATCH_ID IS NULL)
+			and C.ID_PLAN = #plan_id_new#				
+			and (D.ITEM_TYPE = 'S'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+			and D.SVC_LEVEL1 = sg.SVC_GRP
+			and C.IS_DELETED = 0
+			and D.IS_DELETED = 0
+		ORDER BY upper(D.ITEM_GRP_NAME) asc 
+ 	</select>
+    
+    <select id="SELECT.33" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        Select  
+            C.ID_PLAN,C.PLAN_NAME,C.PLAN_DESC,D.ID_PLAN_GRP,D.ID_PLAN,D.ITEM_TYPE, D.ITEM_GRP_NAME,
+            D.SVC_LEVEL1,D.RATE_TYPE,D.RATE_MODE,D.RATE, sg.SVC_GRP_NAME
+        From    
+            M_PLAN_H C inner join M_PLAN_D  D on C.ID_PLAN = D.ID_PLAN
+            left join M_PLAN_BATCH_MAPPING F on C.ID_PLAN = F.ID_PLAN and F.ID_PLAN_GRP = D.ID_PLAN_GRP and F.BATCH_ID = #id_batch#,
+            M_SVG sg
+        Where   
+            (F.BATCH_ID IS NULL)
+            and C.ID_PLAN = #plan_id_new#               
+            and (D.ITEM_TYPE = 'O'  AND D.RATE_MODE = '5' AND D.RATE_TYPE = 'BA')
+            and D.SVC_LEVEL1 = sg.SVC_GRP
+            and C.IS_DELETED = 0
+            and D.IS_DELETED = 0
+        ORDER BY upper(D.ITEM_GRP_NAME) asc 
+    </select>
+    
+    <select id="SELECT.34" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT  
+            ID_PLAN
+        FROM    
+            M_PLAN_BATCH_MAPPING
+        Where
+            ID_PLAN = #plan_id_new#
+            AND BATCH_ID = #id_batch#
+    </select>
+
+	<insert id="UPDATE.40" parameterClass="java.util.HashMap">
+    	Insert
+    		Into M_PLAN_BATCH_MAPPING (DATE_CREATED,DATE_UPDATED,ID_PLAN,BATCH_ID,ID_LOGIN,ID_PLAN_GRP,USAGE_BASE,UOM,CODE_VALUE,ID_AUDIT)					
+		Values(SYSDATE,SYSDATE,#ID_PLAN#,#BATCH_ID#,#ID_LOGIN#,#ID_PLAN_GRP#,#USAGE_BASE#,#UOM#,#CODE_VALUE#,#ID_AUDIT#)									    		
+	</insert>
+  
+    <delete id="DELETE.20" parameterClass="java.util.HashMap">
+		Delete From M_PLAN_BATCH_MAPPING					
+		Where
+		ID_PLAN = #plan_id#
+		AND BATCH_ID = #batchId#
+	</delete>
+  
+	<update id="UPDATE.51_AD_DU" parameterClass="java.util.HashMap">
+    	Update	M_PLAN_BATCH_MAPPING
+    	SET
+	    	DATE_UPDATED = SYSDATE,
+	    	ID_LOGIN = #ID_LOGIN#, 
+	    	USAGE_BASE = #USAGE_BASE#,
+			UOM = #UOM#,
+			ID_AUDIT = #ID_AUDIT#			
+		Where
+			ID_PLAN_GRP = #ID_PLAN_GRP# 
+			AND BATCH_ID = #batchId#
+  	</update>
+  
+   	<update id="UPDATE.512_IP" parameterClass="java.util.HashMap">
+    	Update	M_PLAN_BATCH_MAPPING
+    	SET
+	    	DATE_UPDATED = SYSDATE,
+	    	ID_LOGIN = #ID_LOGIN#, 	    	
+			CODE_VALUE=#CODE_VALUE#,
+			ID_AUDIT = #ID_AUDIT#
+		Where
+			ID_PLAN_GRP = #ID_PLAN_GRP#
+			AND BATCH_ID = #batchId#
+  	</update>
+    
+    <update id="UPDATE.51_MH" parameterClass="java.util.HashMap">
+        Update  M_PLAN_BATCH_MAPPING
+        SET
+            DATE_UPDATED = SYSDATE,
+            ID_LOGIN = #ID_LOGIN#,          
+            CODE_VALUE=#CODE_VALUE#,
+            USAGE_BASE = #USAGE_BASE#,
+            UOM = #UOM#,
+            ID_AUDIT = #ID_AUDIT#
+        Where
+        	ID_PLAN_GRP = #ID_PLAN_GRP#
+        	AND BATCH_ID = #batchId#
+    </update>
+  
+    <delete id="DELETE.BATCH_PLAN_GRP" parameterClass="java.util.HashMap">
+        DELETE FROM
+            M_PLAN_BATCH_MAPPING
+        WHERE
+            ID_PLAN=#id_plan#
+            AND UOM IN ('AMA','AMQ','VRS','ASP','JMG')
+            AND BATCH_ID = #batchId#
+    </delete>
+
+	<delete id="DELETE.52" parameterClass="java.util.HashMap">
+		Delete						
+		From M_PLAN_BATCH_MAPPING					
+		Where
+			ID_PLAN_GRP = #idPlanGrp#
+			AND BATCH_ID = #batchId#
+	</delete>
+ 
+
+<!-- 設定侁E
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+</sqlMap>

@@ -1,0 +1,78 @@
+.reportLink{
+	text-decoration:none;
+	color:blue;
+}
+
+.batchLink a, .subresultInfo a{
+	color:blue;
+}
+
+.batchMsg{
+	color:blue;/*#2b76b9;*/
+}
+
+.resultInfo{
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	width:100%;
+}
+
+.resultInfo td{
+	/*padding: 0px 0px 0px 0px;*/
+	padding-top:20px;
+}
+
+.resultInfo table{
+	font-size:11px;
+}
+
+.resultInfo td.header,
+.resultInfo th {
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+
+.subresultInfo td, .subresultInfo th{
+	font-size:14px;
+}
+
+.subresultInfo th{
+	background-color:#ccced0;
+}
+
+.AGRTextBox{
+	width: 230px;
+}
+.AGRYearTextBox{
+	width: 100px;
+}
+
+.exportbutton{
+	width: 100px;	
+}
+
+.header{
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+.rightHeader{
+	height: 20px;
+	text-align: right;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+.pageWidth{
+	width:1200px;
+}
+.hyperLink {
+	text-decoration: underline;
+	/* font-weight: lighter; */
+	font-size : 16px;
+	/* display: block; */
+	color: blue;
+	cursor: pointer;
+}

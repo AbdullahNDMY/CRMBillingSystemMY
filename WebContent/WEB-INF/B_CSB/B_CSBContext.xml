@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02SCR" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_SCRBLogic"
+        id="B_CSBS02SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02AD" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02ADBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_ADBLogic"
+        id="B_CSBS02ADBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02NE" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02ANBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_NEBLogic"
+        id="B_CSBS02ANBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02V" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02VBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_VBLogic"
+        id="B_CSBS02VBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02E_SCR" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02E_SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_ESCRBLogic"
+        id="B_CSBS02E_SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02D" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02DBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_DBLogic"
+        id="B_CSBS02DBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/B_CSB/B_CSBS01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBR01BLogic" scope="singleton">
+        <property name="businessLogic" ref="B_CSBR01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBR01BLogic"
+        id="B_CSBR01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSBS02CheckError" scope="singleton">
+        <property name="businessLogic" ref="B_CSBS02_CheckErrorBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBS02_CheckErrorBLogic"
+        id="B_CSBS02_CheckErrorBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/B_CSB/B_CSBR01ExportBL" scope="singleton">
+        <property name="businessLogic" ref="B_CSBR01ExportBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSBR01ExportBLogic"
+        id="B_CSBR01ExportBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CSB/SC_B_CSB_S01DSP" scope="singleton"/>
+        
+    <!--  #617 modification especially B_CSB_S03 start -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S03New" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S03NewBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03NewBLogic"
+        id="B_CSB_S03NewBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S03Save" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S03SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03SaveBLogic"
+        id="B_CSB_S03SaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S03Edit" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S03EditBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03EditBLogic"
+        id="B_CSB_S03EditBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S03View" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S03ViewBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03ViewBLogic"
+        id="B_CSB_S03ViewBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03ErrorForward"
+        name="/B_CSB/B_CSB_S03ErrorChkSCR" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S03Del" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S03DelBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S03DelBLogic"
+        id="B_CSB_S03DelBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CSB/B_CSB_S04SCRBL" scope="singleton">
+        <property name="businessLogic" ref="B_CSB_S04SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_csb.blogic.B_CSB_S04SCRBLogic"
+        id="B_CSB_S04SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!--  #617 modification especially B_CSB_S03 end -->
+</beans>

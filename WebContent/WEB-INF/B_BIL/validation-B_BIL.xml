@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <!--
+    <formset>
+
+      <form name="/isValid">
+        <field property="codeArray" indexedListProperty="codeArray"
+            depends="prohibitedArray">
+          <arg key="##INDEX" resource="false" position="0"/>
+          <arg key="testValidate.codeArray" position="1"/>
+          <arg key="${var:chars}" resource="false" position="2"/>
+          <var>
+            <var-name>chars</var-name>
+            <var-value>!"#</var-value>
+          </var>
+        </field>
+      </form>
+    </formset>
+ -->
+    <formset>
+    	 <form name="/RP_B_BIL_S01_02BL">
+    	 	 <field depends="validateDateOrder" property="tbxBillingDateTo">
+                <arg key="Billing Date To" position="0" resource="false"/>
+                <arg key="Billing Date To" position="1" resource="false" />
+                <arg key="Billing Date From" position="2" resource="false" />
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+                <var>
+					<var-name>fromDateProperty</var-name>
+					<var-value>tbxBillingDateFrom</var-value>
+				</var>
+            </field>
+            <field depends="validatePairProperty" property="tbxBillingDateFrom">
+                <arg key="Billing Date To" position="0" resource="false"/>
+                <var>
+					<var-name>pairProperty</var-name>
+					<var-value>tbxBillingDateTo</var-value>
+				</var>
+            </field>
+            <field depends="validatePairProperty" property="tbxBillingDateTo">
+               <arg key="Billing Date From" position="0" resource="false"/>
+               <var>
+					<var-name>pairProperty</var-name>
+					<var-value>tbxBillingDateFrom</var-value>
+				</var>
+            </field>
+        </form>
+        <form name="/RP_B_BIL_S02_02_02BL">
+            <field depends="date" property="headerData.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+            </field>
+            <field depends="required" property="headerData.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BIL_S03_03_02BL">
+        	<!--  
+            <field depends="required" property="inputHeaderInfo.idCust">
+                <arg key="Customer Name" position="0" resource="false"/>
+            </field>
+            <field depends="required" property="inputHeaderInfo.adrType">
+                <arg key="Billing Address" position="0" resource="false"/>
+            </field>
+            <field depends="required" property="inputHeaderInfo.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+            </field>
+            <field depends="date" property="inputHeaderInfo.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+            </field>
+            <field depends="required" property="inputHeaderInfo.billCurrency">
+                <arg key="Billing Currency" position="0" resource="false"/>
+            </field>
+            -->
+            <!--
+            <field property="uqty" depends="number">
+				<msg name="number" key="screen.m_svt.ERR1SC011"/>
+					<arg position="0" key="screen.m_svt.unitQty"/>
+				<var>
+					<var-name>integerLength</var-name>
+					<var-value>5</var-value>
+				</var>
+				<var>
+					<var-name>scale</var-name>
+					<var-value>3</var-value>
+				</var>
+		    </field>
+            <field depends="required" property="inputHeaderInfo.gstAmount">
+                <arg key="GST Amount" position="0" resource="false"/>
+            </field>
+            -->
+        </form>
+        <form name="/RP_B_BIL_S03_02_02BL">
+        	<!--  
+            <field depends="required" property="inputHeaderInfo.idCust">
+                <arg key="Customer Name" position="0" resource="false"/>
+            </field>
+            <field depends="required" property="inputHeaderInfo.adrType">
+                <arg key="Billing Address" position="0" resource="false"/>
+            </field>
+            <field depends="required" property="inputHeaderInfo.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+            </field>
+            <field depends="date" property="inputHeaderInfo.dateReq">
+                <arg key="Billing Date" position="0" resource="false"/>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+            </field>
+            <field depends="required" property="inputHeaderInfo.billCurrency">
+                <arg key="Billing Currency" position="0" resource="false"/>
+            </field>
+            -->
+            <!--
+            <field depends="required" property="inputHeaderInfo.gstAmount">
+                <arg key="GST Amount" position="0" resource="false"/>
+            </field>
+            -->
+        </form>
+    </formset>
+</form-validation>

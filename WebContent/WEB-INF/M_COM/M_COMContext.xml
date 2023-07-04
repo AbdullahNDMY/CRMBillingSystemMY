@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_COM/M_COMS01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01BLogic" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01BLogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01BLogicBLogic"
+        id="M_COMS01BLogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01getSaveDataBLogic" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01getSaveDataBLogicBLogic"/>        
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01SaveBLogic" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01SaveBLogicBLogic"/>
+    </bean>
+    <bean
+        class="nttdm.bsys.m_com.blogic.M_COMS01getSaveDataBLogicBLogic"
+        id="M_COMS01getSaveDataBLogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+     </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01SaveBLogicBLogic"
+        id="M_COMS01SaveBLogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01displayImageBlogic" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01displayImageBlogicBLogic"/>
+    </bean>
+    <bean
+        class="nttdm.bsys.m_com.blogic.M_COMS01displayImageBlogicBLogic"
+        id="M_COMS01displayImageBlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_COM/M_COMS01displayImageFW" scope="singleton"/>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01_1BLogic"
+        id="M_COMS01_1BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01DeleteBL" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01DeleteBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01DeleteBLogic"
+        id="M_COMS01DeleteBLogic" scope="singleton">
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01_1getDataBLogic"
+        id="M_COMS01_1getDataBLogic" scope="singleton"/>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01_1updateDataBLogic"
+        id="M_COMS01_1updateDataBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01SaveIMGBLogic" scope="singleton">
+        <property name="businessLogic" ref="M_COMS01SaveIMGBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01SaveIMGBLogic"
+        id="M_COMS01SaveIMGBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_COM/action1SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_COM/M_COMS01DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01_01_InitData" scope="prototype">
+        <property name="businessLogic" ref="M_COMS01_01_InitDataBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_COM/M_COMS01_01DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_COM/M_COMS01_01_Save" scope="prototype">
+        <property name="businessLogic" ref="M_COMS01_01_SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01_01_SaveBLogic"
+        id="M_COMS01_01_SaveBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.blogic.M_COMS01_01_InitDataBLogic"
+        id="M_COMS01_01_InitDataBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.m_com.action.M_COMS01_AjaxAction"
+        name="/M_COM/M_COMS01_Ajax" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+</beans>

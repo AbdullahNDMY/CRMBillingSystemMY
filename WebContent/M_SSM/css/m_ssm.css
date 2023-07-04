@@ -1,0 +1,82 @@
+@CHARSET "ISO-8859-1";
+
+table td {
+	padding: 0px;
+}
+
+.listTable TH {
+	background-color: #efebef;
+	font-weight: normal;
+}
+
+.listTable TD {
+	text-align: center;
+	background-color: #FFFFFF;
+}
+
+.serviceTable {
+	position:relative;
+	width: 100%;
+}
+
+.serviceTable td {
+	height:30px;
+}
+
+.labelTable {
+	position:relative;
+	border-width: 0px;
+}
+
+.labelTable td {
+	width:50px;
+}
+
+.data td {
+	height:30px;
+	border-width: 0px;
+}
+
+.checkLabelCell {
+	width:50px;
+	background-color: #efebef;
+}
+
+.checkCell {
+	width:50px;
+	
+}
+
+.deleteCell {
+	border-bottom:#efebef 1px solid;
+	border-left:#efebef 1px solid;
+}
+
+.serviceLabelCell {
+	text-align:left;
+	border-bottom:#efebef 1px solid;
+	border-right:#efebef 1px solid;
+	padding-right: 10px;
+}
+
+.divLink {
+	color: blue;
+	text-decoration:underline;
+	cursor: hand;
+}
+/* Scrollable div */
+div.contents
+{
+   overflow: auto;
+}
+
+.success {
+	color: blue;
+}
+.searchCondition{
+    width:100%;
+    background-color:#F8F8F8;
+    border-top:2px solid #DFDFDF;
+    border-bottom:2px solid #DFDFDF;
+    padding: 8px 25px 13px 25px;
+}

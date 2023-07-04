@@ -1,0 +1,28 @@
+#TERASOLUNAIDE configuration file
+#Mon Nov 16 17:10:09 ICT 2009
+dto.input.suffix=Input
+form.package=form
+form.name.suffix=Form
+dispatchaction.path.suffix=DSP
+action.package=action
+blogicaction.path.suffix=BL
+class.path.userformbeantype=jp.terasoluna.fw.web.struts.form.ValidatorActionFormEx
+abstract.class.name.prefix=Abstract
+class.path.blogicaction=jp.terasoluna.fw.web.struts.actions.BLogicAction
+gensrc=gen_src
+pojo.interface.suffix=BLogic
+dao.parameter.suffix=DaoInput
+action.class.suffix=Action
+form.class.suffix=Form
+webAppRoot=/WebContent
+blogicAction=true
+dto.package=dto
+dto.output.suffix=Output
+projectRootPackage=nttdm.bsys
+forwardaction.path.suffix=SCR
+blogic.class.suffix=BLogic
+dynaActionForm=true
+pojo.package=blogic
+class.path.formbeantype=jp.terasoluna.fw.web.struts.form.DynaValidatorActionFormEx
+pojo.class.suffix=BLogicImpl
+blogic.package=blogic

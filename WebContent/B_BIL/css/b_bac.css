@@ -1,0 +1,184 @@
+.space{
+	background-color: #FFFFFF;
+}
+.header1{
+	margin-top:0.05in;
+	background-color:#E0E0E0;
+	border-collapse: collapse;
+	width:100%;	
+}
+
+.headerInfo{
+	font-family : "Calibri";
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: left;
+	font-size: 14px;
+}
+.statusBold{
+	height: 20px;
+	color: RGB(0,0,128);
+	font-size: 16px;
+	font-weight: bold;	
+	align: center;
+}
+.preparedBy{
+	height: 20px;
+	color: RGB(153,51,0);
+	font-weight: bold;	
+	font-size: 16px;
+	align: center;
+}
+.dateColor{
+	height: 16px;
+	color: RGB(153,51,51);
+	font-size: 14px;
+	align: center;
+		
+}
+.InputTextBox{
+	width: 200px;	
+}
+.InputComboBox{
+	width: 400px;
+}
+.TelExtNoTextBox{
+	width:100px;	
+}
+.TransparentTextBox{
+	width: 180px;
+	border: 0px;
+	background-color: transparent;	
+	text-align: center;
+}
+.TransparentVerySmallTextBox{
+	width: 20px;
+	height: 15px;
+	border: 0px;
+	text-align: center;
+	background-color: transparent;	
+	vertical-align: middle;
+}
+
+.TransparentSmallTextBox{
+	width: 40px;
+	height: 15px;
+	border: 0px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	background-color: transparent;	
+}
+.TransparentTitleTextBox{
+
+	text-align: left;
+	vertical-align: middle;
+	height: 15px;
+	background: #F8F8F8;
+	color: #333399;
+	font-size: 15px;
+	font-weight: bold;
+	width: 25px;
+	border: 0px;
+}
+.SmallHiddenTextBox{
+	border: 0px;
+	background-color: #E0E0E0;	
+}
+.HiddenTextBox{
+	width: 180px;
+	border: 0px;
+	background-color: #E0E0E0;	
+}
+.HiddenGridTextBox{
+	width: 90px;
+	border: 0px;
+	background-color: #F8F8F8;	
+}
+.resultInfo{
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	width:100%;	
+}
+.resultInfo table{
+	font-size:11px;
+}
+.resultInfo td{
+	padding: 0px 0px 0px 0px;
+}
+.resultInfo td.header,
+.resultInfo th {
+	background-color: RGB(140,176,248);
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+
+.header{
+	background-color: RGB(140,176,248);
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+
+.lineBottom{
+	color: #EFEFEF;
+}
+
+input.realFile
+    {
+  position:absolute;
+      right:7%;
+      -moz-opacity:0;
+      filter:alpha(opacity: 0);
+      opacity: 0;
+      z-index: 2;
+      width:0px;
+      border-width:0px;
+
+}
+input.fakeFile
+{ 
+  z-index:1;
+  width:80px;
+  height:22px;
+}
+
+.hidden
+{ 
+  display: none;
+}
+
+.divLeft{
+	float: left; 
+	width: 40%;
+}
+.divCenter{
+	float: left; 
+	width: 10%;
+}
+.divRight{
+	float: left; 
+	width: 50%;
+}
+.noBorder{
+	border: 0px;
+}
+.fieldsetPadding{
+	padding: 5px 5px 5px 5px;
+}
+.fieldsetBorder{
+	border: 2px solid #E6E6E6;
+}
+legend{
+	padding: 2px 2px 2px 2px;
+	color: blue;
+}
+.grayHr{
+	background-color: E6E6E6;
+}
+.pinkTable{
+	border: 2px solid #F6CEF5;
+}

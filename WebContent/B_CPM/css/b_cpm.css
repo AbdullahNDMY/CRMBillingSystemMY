@@ -1,0 +1,57 @@
+body {
+	font-size: 13px;
+}
+
+.textStyle {
+	text-align: left;
+}
+
+.numberStyle {
+	text-align: right;
+}
+
+.numberStyleBold {
+	text-align: right;
+	font-weight: bold;
+}
+
+.dateStyle {
+	text-align: center;
+}
+
+.subInfo {
+	color: #a04c51;
+}
+
+fieldset.explicit-width{     
+	width: 1%; /* Will expand to fit content */ 
+}
+
+fieldset.inline-block{
+	display: inline-block; 
+} 
+
+fieldset{
+	width:100%;
+	padding: 15px 0px 5px 0px;
+	position:relative;
+}
+fieldset .service legend{
+	font-size:medium;
+	font-weight:bold;
+}
+
+fieldset .removeX{
+	position:absolute;
+	top:15px;
+	right:10px;
+
+}
+fieldset .removeX a{
+	text-decoration:none;
+	color:#C4C4BE;
+	font-weight:bold;
+}
+fieldset .removeX img{
+	border:0;
+}

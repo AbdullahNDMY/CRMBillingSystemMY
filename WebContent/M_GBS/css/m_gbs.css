@@ -1,0 +1,122 @@
+.contentTable {
+	width: 100%;
+	padding-top: 50px;
+	padding-bottom: 75px;
+	padding-left: 10px;
+	padding-right: 10px;
+	cellspacing:1px;
+	background-color: #CCCCCC;
+}
+
+.contentTable TD {
+	background-color: #FFFFFF;
+}
+
+.listTable {
+	cellspacing: 2px;
+}
+
+.listTable TH {
+	background-color: #efebef;
+	font-weight: normal;
+}
+
+.listTable TD {
+	text-align: center;
+}
+
+.listTableContent {
+	cellspacing: 2px;
+	background-color: #efebef;
+}
+
+.listTableContent TD {
+	text-align: center;
+	background-color: #FFFFFF;
+}
+
+.divLink {
+	color: blue;
+	text-decoration:underline;
+	cursor: hand;
+}
+/* Scrollable div */
+div.contents
+{
+   overflow: auto;
+}
+
+.error {
+	margin : 0px 0px 0px 0px;
+	color: red;
+}
+
+.success {
+	color: blue;
+}
+
+.txt_number {
+	text-align: right;
+}
+
+.resultTitle{
+    width:100%;
+    background-color:#EAEAEA;
+    font-weight:bold;
+    padding:4px 10px 3px 2px;
+    margin: 5px 0 10px 0;
+}
+
+.itemTable{
+    text-align:left;
+    border-collapse:collapse;
+    border:1px solid #CEE7FF;
+    text-align: center;
+}
+.itemTable th{
+    background-color:#CEE7FF;
+    border-width: 0px;
+}
+.itemTable td{
+    border-color: #CEE7FF;
+    border-style: solid;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+}
+.customerTable{
+    text-align:left;
+    border-collapse:collapse;
+    border:1px solid #CEE7FF;
+    text-align: center;
+}
+.customerTable th{
+    background-color:#CEE7FF;
+    border-width: 0px;
+}
+.customerTable td{
+    border-color: #CEE7FF;
+    border-style: solid;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+}
+.itemDiv{
+    width:1100px;
+    overflow: auto;
+    max-height: 465px;
+}
+.deleteX{
+    width: 25px; 
+    text-align: center; 
+    cursor: hand;
+    font-weight:bold;
+}
+input.taxrate{
+	text-align: right;
+}
+input.accountCode{
+	text-align: left;
+}

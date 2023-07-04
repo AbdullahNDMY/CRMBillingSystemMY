@@ -1,0 +1,1524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_RPT_SB03" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.callouts" value="##Tue Aug 30 09:35:59 ICT 2011"/>
+	<style name="cell" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="bounce" fontName="Times New Roman">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+			<bottomPen lineWidth="1.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="cell_no_right" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="cell_no_left" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_no_left_right" hAlign="Right" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_right_left" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_no_bottom" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_no_top" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_no_bottom_right" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_left" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_left_bottom" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_bottom" hAlign="Right" rotation="None" fontName="Times New Roman">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="cell_popAccount" fontName="Times New Roman" fontSize="8">
+		<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="rackEquipmentDataset">
+		<field name="rackNo" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="maxPower" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="equipmentLocation" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="equipmentSuite" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="firewallIPDataset">
+		<field name="interfaceIP" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ipZone" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="policyDataset">
+		<field name="policy" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="source" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="destination" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="protocol" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="action" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="remarks" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="popAccountDataset">
+		<field name="no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="popAccount" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="password" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mailboxSize" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="antiVirus" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="antiSpam" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="junkMgmt" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mailAccount" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mailBoxQty" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dnsDomainDataset">
+		<field name="domainName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="type" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ipAddress" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="weight" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="itContactDataset">
+		<field name="label" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="telNo" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="faxNo" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="designation" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="instantAddrDataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="ipAddressDataset">
+		<field name="ipAddressLANNetwork" class="java.lang.String"/>
+		<field name="cpeConfigurationName" class="java.lang.String"/>
+		<field name="ipAddressWANISPEdgeRouter" class="java.lang.String"/>
+		<field name="ipAddressRouterWANInterface" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="instantAddr2Dataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="emailSetupDataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="ftpInterfaceDataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="fireWallDataset">
+		<field name="titleName1" class="java.lang.String"/>
+		<field name="value1" class="java.lang.String"/>
+		<field name="titleName2" class="java.lang.String"/>
+		<field name="value2" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dnsZoneDataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="personInChargeDataset">
+		<field name="titleName" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="SERVICE_COMMISSION_DATE" class="java.lang.String"/>
+	<parameter name="serviceType" class="java.lang.String"/>
+	<parameter name="serviceLineProvider" class="java.lang.String"/>
+	<parameter name="instantAddressOrder" class="java.lang.String"/>
+	<parameter name="mrtgMonitoringOrder" class="java.lang.String"/>
+	<parameter name="ipAddressOrder" class="java.lang.String"/>
+	<parameter name="firewallOrder" class="java.lang.String"/>
+	<parameter name="popAccountOrder" class="java.lang.String"/>
+	<parameter name="emailSetupOrder" class="java.lang.String"/>
+	<parameter name="ftpInterfaceOrder" class="java.lang.String"/>
+	<parameter name="dnsZoneOrder" class="java.lang.String"/>
+	<parameter name="rackEquipOrder" class="java.lang.String"/>
+	<parameter name="helpdeskContactOrder" class="java.lang.String"/>
+	<parameter name="remarkOrder" class="java.lang.String"/>
+	<parameter name="ipAddressLANNetwork" class="java.lang.String"/>
+	<parameter name="rackEquipment" class="java.lang.Object"/>
+	<parameter name="ipList" class="java.lang.Object"/>
+	<parameter name="policyList" class="java.lang.Object"/>
+	<parameter name="popAccountList" class="java.lang.Object"/>
+	<parameter name="domainList" class="java.lang.Object"/>
+	<parameter name="serverInfoOrder" class="java.lang.String"/>
+	<parameter name="serverList" class="java.lang.Object"/>
+	<parameter name="helpdeskOrder" class="java.lang.String"/>
+	<parameter name="helpdeskEmail" class="java.lang.String"/>
+	<parameter name="helpdeskTelNo" class="java.lang.String"/>
+	<parameter name="remarksOrder" class="java.lang.String"/>
+	<parameter name="subscriptionMemo" class="java.lang.String"/>
+	<parameter name="itContactList" class="java.lang.Object"/>
+	<parameter name="instantAddress2Order" class="java.lang.String"/>
+	<parameter name="serviceLineProviderTitle" class="java.lang.String"/>
+	<parameter name="serviceTypeTitle" class="java.lang.String"/>
+	<parameter name="addressLine4" class="java.lang.String"/>
+	<parameter name="isITContactDisplayFlg" class="java.lang.String"/>
+	<parameter name="itContactOrder" class="java.lang.String"/>
+	<parameter name="completionDateOrder" class="java.lang.String"/>
+	<parameter name="serviceInfoOrder" class="java.lang.String"/>
+	<parameter name="cPEConfigList" class="java.lang.Object"/>
+	<parameter name="cpeConfigurationOrder" class="java.lang.String"/>
+	<parameter name="ipAddressList" class="java.lang.Object"/>
+	<parameter name="instantAddrList" class="java.lang.Object"/>
+	<parameter name="instantAddr2List" class="java.lang.Object"/>
+	<parameter name="emailSetupList" class="java.lang.Object"/>
+	<parameter name="ftpInterfaceList" class="java.lang.Object"/>
+	<parameter name="fireWallList" class="java.lang.Object"/>
+	<parameter name="dnsZoneList" class="java.lang.Object"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["report_pdf\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mrtgList" class="java.lang.Object"/>
+	<parameter name="headerInfo" class="java.lang.Object"/>
+	<parameter name="personInChargeList" class="java.lang.Object"/>
+	<parameter name="printedRemark" class="java.lang.String"/>
+	<parameter name="personInChargeOrder" class="java.lang.String"/>
+	<field name="customerName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemOrderField" class="java.lang.Integer"/>
+	<variable name="itemOrder" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{itemRoot}]]></variableExpression>
+		<initialValueExpression><![CDATA[5]]></initialValueExpression>
+	</variable>
+	<variable name="itemRoot" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{itemRoot}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[10]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band splitType="Stretch"/>
+		<band>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="0"/>
+				<dataSourceExpression><![CDATA[$P{headerInfo}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "B_RPT_SB03_headerInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="54">
+			<printWhenExpression><![CDATA[$P{isITContactDisplayFlg}=="1" && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{itContactList}).getRecordCount() > 0]]></printWhenExpression>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="25" width="62" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contacts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="62" y="25" width="191" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="253" y="25" width="93" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="346" y="25" width="78" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fax No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="424" y="25" width="131" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="40" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="itContactDataset">
+						<dataSourceExpression><![CDATA[$P{itContactList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="62" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{label}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="62" y="0" width="191" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[($F{designation}==null?"":$F{designation})+" "+($F{name}==null?"":$F{name})]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="346" y="0" width="78" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{faxNo}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="424" y="0" width="131" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="253" y="0" width="93" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{telNo}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{itContactOrder}).concat(".  Customer IT Contact")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="39">
+			<staticText>
+				<reportElement style="cell" x="0" y="25" width="181" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Service Completion Date]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" x="181" y="25" width="374" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{SERVICE_COMMISSION_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{completionDateOrder}).concat(".  Service Completion Date")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{serviceInfoOrder} != null]]></printWhenExpression>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="cell" stretchType="RelativeToBandHeight" x="111" y="25" width="167" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceType}==null?"":$P{serviceType}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="cell" stretchType="RelativeToBandHeight" x="398" y="25" width="157" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceLineProvider}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="cell" stretchType="RelativeToBandHeight" x="0" y="25" width="111" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceTypeTitle}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="cell" stretchType="RelativeToBandHeight" x="278" y="25" width="120" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{serviceLineProviderTitle}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{serviceInfoOrder}).concat(".  Service Information")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{instantAddressOrder}).concat(".  Installation Address")]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14">
+					<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="instantAddrDataset">
+						<dataSourceExpression><![CDATA[$P{instantAddrList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="150" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="150" y="0" width="405" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14">
+					<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="instantAddr2Dataset">
+						<dataSourceExpression><![CDATA[$P{instantAddr2List}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="150" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="150" y="0" width="405" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{instantAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{instantAddress2Order}).concat(".  Installation Address 2")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="25">
+			<printWhenExpression><![CDATA[$P{mrtgMonitoringOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{mrtgMonitoringOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{mrtgMonitoringOrder}).concat(".  MRTG Monitoring")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band>
+			<printWhenExpression><![CDATA[$P{mrtgMonitoringOrder} != null]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="0"/>
+				<dataSourceExpression><![CDATA[$P{mrtgList}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "B_RPT_SB03_MRTG.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="25">
+			<printWhenExpression><![CDATA[$P{ipAddressOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{ipAddressList}).getRecordCount() > 0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{ipAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{ipAddressOrder}).concat(".  Assigned IP Address and Prefix")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="56">
+			<printWhenExpression><![CDATA[((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{ipAddressList}).getRecordCount() > 0 && $P{ipAddressOrder} != null]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="56">
+					<printWhenExpression><![CDATA[$P{ipAddressOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="ipAddressDataset">
+						<dataSourceExpression><![CDATA[$P{ipAddressList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="56" width="555">
+						<staticText>
+							<reportElement style="cell_no_bottom_right" x="0" y="14" width="181" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<text><![CDATA[ISP Edge Router IP Address]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="cell_left" x="0" y="28" width="181" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<text><![CDATA[Router WAN Interface IP Address]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="cell_left_bottom" x="0" y="42" width="181" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<text><![CDATA[Network Address]]></text>
+						</staticText>
+						<textField isBlankWhenNull="true">
+							<reportElement style="cell_no_top" x="181" y="42" width="374" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{ipAddressLANNetwork}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement style="cell_no_right" x="0" y="0" width="177" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<text><![CDATA[CPE Name]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="cell_no_left_right" x="176" y="0" width="5" height="14"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<textField isBlankWhenNull="true">
+							<reportElement style="cell_no_left" x="181" y="0" width="374" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{cpeConfigurationName}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement style="cell_no_bottom" x="181" y="14" width="374" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+								<topPen lineWidth="1.0" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{ipAddressWANISPEdgeRouter}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement style="cell_right_left" x="181" y="28" width="374" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{ipAddressRouterWANInterface}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="25">
+			<printWhenExpression><![CDATA[$P{cpeConfigurationOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{cPEConfigList}).getRecordCount() > 0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{cpeConfigurationOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{cpeConfigurationOrder}).concat(".  Managed CPE Configuration Parameter")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band>
+			<printWhenExpression><![CDATA[((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{cPEConfigList}).getRecordCount() > 0 && $P{cpeConfigurationOrder} != null]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="0"/>
+				<dataSourceExpression><![CDATA[$P{cPEConfigList}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "B_RPT_SB03_CPEConfig.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="fireWallDataset">
+						<dataSourceExpression><![CDATA[$P{fireWallList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="97" y="0" width="169" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value1}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="409" y="0" width="146" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value2}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="97" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName1}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="266" y="0" width="143" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName2}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{firewallOrder}).concat(".  Firewall")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="29">
+			<printWhenExpression><![CDATA[$P{firewallOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{ipList}).getRecordCount() > 0]]></printWhenExpression>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="0" width="292" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interface IP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="292" y="0" width="263" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Zone]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="15" width="555" height="14">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="firewallIPDataset">
+						<dataSourceExpression><![CDATA[$P{ipList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="292" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{interfaceIP}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="292" y="0" width="263" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{ipZone}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="29">
+			<printWhenExpression><![CDATA[$P{firewallOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{policyList}).getRecordCount() > 0]]></printWhenExpression>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="0" width="102" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Policy]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="102" y="0" width="87" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Source]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="189" y="0" width="87" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Destination]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="276" y="0" width="87" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Protocol]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="363" y="0" width="87" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Action]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="450" y="0" width="105" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remarks]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="15" width="555" height="14">
+					<printWhenExpression><![CDATA[$P{firewallOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="policyDataset">
+						<dataSourceExpression><![CDATA[$P{policyList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="102" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{policy}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="102" y="0" width="87" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{source}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="189" y="0" width="87" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{destination}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="276" y="0" width="87" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{protocol}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="363" y="0" width="87" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{action}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="450" y="0" width="105" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{remarks}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="25">
+			<printWhenExpression><![CDATA[$P{serverInfoOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{serverList}).getRecordCount() > 0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{serverInfoOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{serverInfoOrder}).concat(".  Server Information")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band>
+			<printWhenExpression><![CDATA[$P{serverInfoOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{serverList}).getRecordCount() > 0]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="0"/>
+				<dataSourceExpression><![CDATA[$P{serverList}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "B_RPT_SB03_ServerInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="75">
+			<printWhenExpression><![CDATA[((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{popAccountList}).getRecordCount() > 0 && $P{popAccountOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="554" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{popAccountOrder}).concat(".  POP Account Information")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="25" width="31" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="279" y="25" width="139" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[POP Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell_popAccount" mode="Opaque" x="520" y="25" width="34" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Junk Mgmt]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="61" width="554" height="14">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="popAccountDataset">
+						<dataSourceExpression><![CDATA[$P{popAccountList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="554">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="31" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{no}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="279" y="0" width="139" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{popAccount}==null?"":$F{popAccount}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="170" y="0" width="109" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{password}==null?"":$F{password}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell_popAccount" stretchType="RelativeToTallestObject" x="486" y="0" width="34" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{antiSpam}.equals("1")?"Yes":"No"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell_popAccount" stretchType="RelativeToTallestObject" x="520" y="0" width="34" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{junkMgmt}.equals("1")?"Yes":"No"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="31" y="0" width="139" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{mailAccount}==null?"":$F{mailAccount}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell_popAccount" stretchType="RelativeToTallestObject" x="452" y="0" width="34" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{antiVirus}.equals("1")?"Yes":"No"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell_popAccount" stretchType="RelativeToTallestObject" x="418" y="0" width="34" height="14"/>
+							<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{mailboxSize}==null?"":$F{mailboxSize}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="31" y="25" width="139" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mail Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="170" y="25" width="109" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mail Password]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell_popAccount" mode="Opaque" x="418" y="25" width="34" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Size
+(MB)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell_popAccount" mode="Opaque" x="452" y="25" width="34" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Virus Scan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell_popAccount" mode="Opaque" x="486" y="25" width="34" height="36" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{popAccountOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Anti Spam]]></text>
+			</staticText>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{emailSetupOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{emailSetupOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{emailSetupOrder}).concat(".  Email Client Setup Information")]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="emailSetupDataset">
+						<dataSourceExpression><![CDATA[$P{emailSetupList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="181" y="0" width="374" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="181" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{ftpInterfaceOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{ftpInterfaceOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{ftpInterfaceOrder}).concat(".  FTP Interface Information")]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="ftpInterfaceDataset">
+						<dataSourceExpression><![CDATA[$P{ftpInterfaceList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="133" y="0" width="422" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="133" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{dnsZoneOrder}).concat(".  DNS Zone Information")]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="25" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dnsZoneDataset">
+						<dataSourceExpression><![CDATA[$P{dnsZoneList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="170" y="0" width="385" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="170" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="29">
+			<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{domainList}).getRecordCount() > 0]]></printWhenExpression>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="0" width="150" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Domain Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="150" y="0" width="131" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type (MX/A/Name)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="281" y="0" width="143" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IP Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="424" y="0" width="131" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weight]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="15" width="556" height="14">
+					<printWhenExpression><![CDATA[$P{dnsZoneOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dnsDomainDataset">
+						<dataSourceExpression><![CDATA[$P{domainList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="556">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="150" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{domainName}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="150" y="0" width="131" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{type}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="281" y="0" width="143" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{ipAddress}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="424" y="0" width="131" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{weight}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="54">
+			<printWhenExpression><![CDATA[$P{rackEquipOrder} != null && ((net.sf.jasperreports.engine.data.JRMapCollectionDataSource )$P{rackEquipment}).getRecordCount() > 0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{rackEquipOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{rackEquipOrder}).concat(".  Rack/Equipment Location")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="0" y="25" width="125" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{rackEquipOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="125" y="25" width="114" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{rackEquipOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Suite/Cage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="239" y="25" width="158" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{rackEquipOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rack No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cell" mode="Opaque" x="397" y="25" width="158" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{rackEquipOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Power Committed (kW)]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement style="bounce" x="0" y="40" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="rackEquipmentDataset">
+						<dataSourceExpression><![CDATA[$P{rackEquipment}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="125" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{equipmentLocation}==null?"":$F{equipmentLocation}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" positionType="Float" stretchType="RelativeToTallestObject" x="125" y="0" width="114" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{equipmentSuite}==null?"":$F{equipmentSuite}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" positionType="Float" stretchType="RelativeToTallestObject" x="239" y="0" width="158" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{rackNo}==null?"":$F{rackNo}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" positionType="Float" stretchType="RelativeToTallestObject" x="397" y="0" width="158" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{maxPower}==null?"":$F{maxPower}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="53">
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{helpdeskOrder}).concat(".  NTT Helpdesk Contact Information")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="cell" x="0" y="25" width="160" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[E-mail for Support]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" x="160" y="25" width="395" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{helpdeskEmail}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="cell" x="0" y="39" width="160" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Telephone No.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" x="160" y="39" width="395" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{helpdeskTelNo}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="25">
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{personInChargeOrder}).concat(".  Person In Charge")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="14"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="personInChargeDataset">
+						<dataSourceExpression><![CDATA[$P{personInChargeList}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="14" width="555">
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="0" width="160" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{titleName}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="cell" stretchType="RelativeToTallestObject" x="160" y="0" width="395" height="14"/>
+							<textElement>
+								<font fontName="Arial" size="8"/>
+							</textElement>
+							<textFieldExpression class="java.lang.String"><![CDATA[$F{value}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+		<band height="39">
+			<printWhenExpression><![CDATA[$P{remarksOrder} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="cell" mode="Opaque" x="0" y="10" width="555" height="15" forecolor="#FFFFFF" backcolor="#999999">
+					<printWhenExpression><![CDATA[$P{remarksOrder} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["  ".concat($P{remarksOrder}).concat(".  Remarks")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="cell" stretchType="RelativeToTallestObject" x="0" y="25" width="555" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{printedRemark}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="80">
+			<line>
+				<reportElement x="52" y="30" width="123" height="1"/>
+			</line>
+			<line>
+				<reportElement x="266" y="30" width="73" height="1"/>
+			</line>
+			<line>
+				<reportElement x="409" y="30" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="409" y="34" width="100" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Engineer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="266" y="34" width="73" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="34" width="115" height="15"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Customer Signature]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

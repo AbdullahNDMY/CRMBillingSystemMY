@@ -1,0 +1,58 @@
+body {
+    background: #FFFFFF;
+    font-family : "Calibri";
+}
+
+ul, li{
+	margin: 0px;
+	padding: 0px 0px 0px 1px;
+	list-style: none;
+}
+ul li ul {
+	padding: 0px;
+}
+ul li a {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.menuContainer {
+	width: 203px;
+	margin-top: 0.15in;
+	margin-left: 0.075in;
+	border: 1px solid #C0C0C0;
+	background-color: #E8E8E8;
+	overflow: auto;
+}
+
+.labelSubHeader {
+	background-image: url(../../image/subheader.png);
+	background-repeat: repeat-x;
+	height : 21px;
+	font-weight: bold;
+	color: #000000;
+	text-align: left;
+	vertical-align: middle;
+	padding-left: 2px;
+	border-bottom: solid 1px #C0C0C0;
+}
+
+.show ul {
+	display: inherit;
+}
+.hide ul {
+	display: none;
+}
+
+.parentMenu {
+	font-weight: bold;
+	cursor: pointer;
+	font-size : 14px;
+	color: #000000;
+}
+
+.subMenu {
+	font-weight: lighter;
+	font-size : 13px;
+	cursor: pointer;
+}

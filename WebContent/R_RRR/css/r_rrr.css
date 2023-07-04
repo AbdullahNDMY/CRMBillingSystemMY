@@ -1,0 +1,55 @@
+.RRRTextBox{
+	width: 230px;
+}
+.RRRYearTextBox{
+	width: 100px;
+}
+
+.exportbutton{
+	width: 100px;	
+}
+
+.resultInfo{
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	width:100%;	
+}
+.resultInfo table{
+	font-size:11px;
+}
+.resultInfo td{
+	padding: 0px 0px 0px 0px;
+}
+.resultInfo td.header,
+.resultInfo th {
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+
+.header{
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+.rightHeader{
+	height: 20px;
+	text-align: right;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+.pageWidth{
+	width:1600px;
+}
+.fieldsetPadding{
+	padding: 1px 5px 5px 5px;
+}
+.fieldsetBorder{
+	border: 2px solid #E6E6E6;
+}
+legend{
+	padding: 2px 2px 2px 2px;
+	color: blue;
+}

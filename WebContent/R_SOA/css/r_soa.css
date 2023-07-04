@@ -1,0 +1,42 @@
+.SOATextBox{
+	width: 230px;
+}
+.SOAYearTextBox{
+	width: 77px;
+}
+
+.exportbutton{
+	width: 100px;	
+}
+
+.resultInfo{
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	width:100%;	
+}
+.resultInfo table{
+	font-size:11px;
+}
+.resultInfo td{
+	padding: 0px 0px 0px 0px;
+}
+.resultInfo td.header,
+.resultInfo th {
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+
+.header{
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}
+.rightHeader{
+	height: 20px;
+	text-align: right;
+	font-weight: bold;
+	border-bottom:solid 2px #CFCFCF;	
+}

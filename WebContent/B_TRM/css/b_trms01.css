@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+.pageWidth{
+    width:1200px;
+}
+#section{
+    border-top:2px solid #cecece;
+    border-bottom:2px solid #cecece;
+    padding:5px 5px;
+    margin-top:-5px;
+}
+#section table td{
+    text-align: left;
+    white-space:nowrap;
+}
+.textwith{
+    width: 200px;
+}

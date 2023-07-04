@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+<!-- モジュール共通のBean定義 -->
+	<bean id="contextApplicationContextProvider" class="nttdm.bsys.util.ApplicationContextProvider"></bean>
+	
+	<bean id="G_SGP_P01" scope="prototype"
+	class="nttdm.bsys.common.util.G_SGP_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>  
+  
+  <bean id="G_SET_P01" scope="prototype"
+		class="nttdm.bsys.common.util.G_SET_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  </bean>
+  
+	<bean id="G_GIR_P01" scope="prototype"
+		class="nttdm.bsys.common.util.G_GIR_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  
+  <bean id="G_GIR_P02" scope="prototype"
+		class="nttdm.bsys.common.util.G_GIR_P02">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  
+	<bean id="G_GIR_P01_E" scope="singleton"
+		class="nttdm.bsys.common.util.G_GIR_P01_E">
+  		<property name="queryDAO" ref="queryDAO"></property>
+  		<property name="updateDAO" ref="updateDAO"></property>
+  		<property name="updateDAONuked" ref="updateDAONuked"></property>
+	</bean>
+  
+  <bean id="G_CIT_P01" scope="prototype"
+		class="nttdm.bsys.common.util.G_CIT_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  
+  <bean id="G_CLC_P01" scope="prototype"
+		class="nttdm.bsys.common.util.G_CLC_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  
+  <bean id="G_IPS_P01" scope="singleton"
+		class="nttdm.bsys.common.util.G_IPS_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_SGP_P02" scope="prototype"
+		class="nttdm.bsys.common.util.G_SGP_P02">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_BTH_P01" scope="singleton"
+		class="nttdm.bsys.common.util.G_BTH_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_BTH_P01_2" scope="singleton"
+		class="nttdm.bsys.common.util.G_BTH_P01_2">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_RAD_P01" scope="singleton"
+		class="nttdm.bsys.common.util.G_RAD_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_BIL_P02" scope="singleton"
+		class="nttdm.bsys.common.util.G_BIL_P02">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_ADT_P01" scope="singleton"
+		class="nttdm.bsys.common.util.G_ADT_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+  <bean id="G_RPT_P01" scope="singleton"
+		class="nttdm.bsys.common.util.G_RPT_P01">
+  	<property name="queryDAO" ref="queryDAO"></property>
+  	<property name="updateDAO" ref="updateDAO"></property>
+  	<property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+	
+  <bean id="G_BAC_P01" scope="singleton"
+        class="nttdm.bsys.common.util.G_BAC_P01">
+    <property name="queryDAO" ref="queryDAO"></property>
+    <property name="updateDAO" ref="updateDAO"></property>
+    <property name="updateDAONuked" ref="updateDAONuked"></property>
+  </bean>
+	
+<!-- ======================================== トランザクション・AOP定義 -->
+  <!-- AOPの定義 -->
+  <!-- 
+    下記で指定したパターンのBeanに対してインタセプタを適用する。
+    BLogicからデータベースアクセスを行う場合は、下記のコメントアウトを解除して
+    BLogicに対するトランザクションの設定を有効にする。
+    モジュール毎のmoduleContext.xmlで定義されたBeanのみ対象となるので注意すること。
+   -->
+  <!--  
+  <aop:config>
+    <aop:pointcut id="blogicBeans"  expression="bean(*BLogic)"/>
+    <aop:advisor 
+         pointcut-ref="blogicBeans" 
+         advice-ref="transactionInterceptor"/>
+  </aop:config>
+  -->
+</beans>

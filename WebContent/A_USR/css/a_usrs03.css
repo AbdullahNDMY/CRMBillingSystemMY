@@ -1,0 +1,88 @@
+
+.searchCondition{
+	width:94.7%;
+	background-color:#F8F8F8;
+	border-top:2px solid #DFDFDF;
+	border-bottom:2px solid #DFDFDF;
+	margin-top:6px;
+	padding: 8px 25px 13px 25px;
+}
+
+.USRTextBox{
+	width: 180px;
+}
+
+.groupButton{
+	width:100%;
+	margin-top:4px;
+	margin-bottom:27px
+}
+.groupButton button{
+	margin-right:5px;
+}
+
+h4{
+	width:98.7%;
+	background-color:#EAEAEA;
+	font-weight:bold;
+	padding:4px 10px 3px 2px;
+}
+
+.planService {
+	width:100%;
+	position:relative;
+	background-color:white;
+	border:1px solid #D0D0BF;
+}
+.planService .wrapper{
+	width:100%;
+	overflow:auto;
+}
+.planService table{
+	text-align:left;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin:9px 10px 9px 10px;
+
+}
+
+.planService table .header{
+	background-color:#CEE7FF;
+	border-width: 0px;
+}
+.planService td{
+	border-color: #CEE7FF;
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.planService .colEmpty{
+	width:45px;
+	border-width: 0px;
+}
+.planService .colServiceType{
+	width:220px;
+	border-width: 0px;
+}
+.planService .colAccCode{
+	width:370px;
+	border-width: 0px;
+}
+
+.planService input{
+	width:97%;
+}
+
+a.hlDelete:visited{
+	color:#0000FF;
+}
+
+a.hlAdd:visited{
+	color:#0000FF;
+}
+.disableLink{
+	color:gray;
+}

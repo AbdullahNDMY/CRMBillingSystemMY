@@ -1,0 +1,156 @@
+body{
+
+	background-color: #F8F8F8;
+}
+.generalInfo{
+	margin-top:0.05in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+}
+.generalInfo table{
+	font-size : 11px;	
+}
+.generalInfo td.header{
+	text-align: left;
+	background-color: #EAEAEA;
+	font: bold;	
+	height: 25px;
+}
+
+.generalInfo td.colLeft1{
+	text-align: left;
+	padding-left: 0in;
+}
+.generalInfo td.colLeft{
+	text-align: left;
+	padding-left: 0in;
+}
+.generalInfo td.colRight{
+	text-align: right;
+}
+.generalInfo td.colCenter{
+	text-align: center;
+	vertical-align: top;
+}
+.generalInfo2{
+	margin-top:0.2in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+}
+.generalInfo2 table{
+	font-size : 11px;	
+}
+.generalInfo2 td.header{
+	text-align: left;
+	background-color: #EAEAEA;
+	font: bold;	
+	height: 25px;
+}
+.bankChargeInfo{
+	margin-top:0.05in;
+	margin-left:0.1in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:80%;	
+	border: solid 2px #CECECE;
+}
+.bankChargeInfo table{
+	font-size : 11px;	
+}
+.bankChargeInfo td.colLeft1{
+	text-align: left;
+	padding-left: 0.09in;
+}
+.bankChargeInfo td.colLeft{
+	text-align: left;
+}
+.creditInfo {
+	margin-top:0.05in;
+	width:100%;	
+}
+.creditInfo table{
+	font-size : 10px;	
+}
+.creditInfo td.header{
+	text-align: center;
+	font-weight: bold;
+	background-color: #EBEADB;
+	height:25px;
+	border: solid 1px #000000;	
+
+}
+.creditInfo td.colLeft{
+	text-align: left;	
+	border: solid 1px #000000;
+	padding-left: 0.05in;
+}
+.creditInfo td.colRight{
+	text-align: right;	
+	border: solid 1px #000000;
+}
+.creditInfo td.colCenter{
+	text-align: center;	
+	border: solid 1px #000000;
+}
+.buttonTbl {
+	margin-top:0.3in;
+	width:100%;	
+	border-top: solid 2px #CECECE;
+}
+.buttonTbl table{
+	font-size : 11px;
+}
+.RemarkTextBox{
+	width: 400px;
+}
+.CashBookTextBox{
+	width: 200px;
+}
+.DateTextBox{
+	width: 100px;
+	font-family: Tahoma;
+}
+.CommonTextBox{
+	width: 200px;
+}
+.BalanceTextBox{
+	border: none;
+	background-color:#F8F8F8;
+}
+.hidden { display: none; }
+.unhidden { display: block; }
+.tdBorderTopStyle{
+	border-top-width: 1px;
+	border-top-color:#EAEAEA;
+	border-top-style: solid;
+}
+.tdBorderLeftStyle{
+	border-left-width: 1px;
+	border-left-color:#EAEAEA;
+	border-left-style: solid;
+}
+.tdBorderRightStyle{
+	border-right-width: 1px;
+	border-right-color:#EAEAEA;
+	border-right-style: solid;
+}
+.tdBorderBottomStyle{
+	border-bottom-width: 1px;
+	border-bottom-color:#EAEAEA;
+	border-bottom-style: solid;
+}
+.widthBetween{
+	width:10px;
+}
+.fieldsetPadding{
+	padding: 5px 5px 5px 5px;
+}
+.fieldsetBorder{
+	border: 2px solid #E6E6E6;
+}
+legend{
+	padding: 2px 2px 2px 2px;
+	color: blue;
+}

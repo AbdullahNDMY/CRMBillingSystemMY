@@ -1,0 +1,2100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="B_SSM_S01">
+
+	<select id="GeneralHeader" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		 WHERE U.CATEGORY='HDR' AND
+		       U.IS_DELETED='0' AND
+		 	   U.RESOURCE_ID='GEN'||
+		 	   ( SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1) ORDER BY U.SEQ
+	</select>
+	<select id="GeneralFileName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='EXP' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='GEN'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+	</select>
+	<select id="ISPHeader" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		 WHERE U.CATEGORY='HDR' AND
+		       U.IS_DELETED='0' AND
+		 	   U.RESOURCE_ID='ISP'||
+		 	   ( SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1) ORDER BY U.SEQ
+	</select>
+	<select id="ISPFileName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='EXP' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='ISP'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+	</select>
+	<select id="ColocatonHeader" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='HDR' AND
+		      U.IS_DELETED='0' AND
+		 	  U.RESOURCE_ID='COL'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1) ORDER BY U.SEQ
+	</select>
+	<select id="ColocatonFileName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='EXP' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='COL'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+	</select>
+	<select id="EmailHeader" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE  U.CATEGORY='HDR' AND
+		       U.IS_DELETED='0' AND
+		       U.RESOURCE_ID='EML'||
+		       (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1) ORDER BY U.SEQ
+	</select>
+	<select id="EmailFileName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='EXP' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='EML'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+	</select>
+	<select id="AdderssHeader" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='HDR' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='ADR'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+			   ORDER BY U.SEQ
+	</select>
+	<select id="AdderssFileName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	U.VALUE
+		FROM	RESOURCESMAINT U
+		WHERE U.CATEGORY='EXP' AND
+		      U.IS_DELETED='0' AND
+			  U.RESOURCE_ID='ADR'||
+			  (SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='SYSTEMBASE' AND C.SET_SEQ=1)
+	</select>
+	
+	<!-- *****************************************SQL for ISP*********************************** -->
+	<!-- Function get General Search ResultSet -->
+	<sql id="getGeneralSearchResultSetCon">
+			<isNotEmpty property="generalCustomerID" prepend="AND">
+				UPPER(customerID) like UPPER('%$generalCustomerID$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalCustomerName" prepend="AND">
+				UPPER(customerName) like UPPER('%$generalCustomerName$%')
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalCustomerType" prepend="AND">
+				CUSTOMER_TYPE = #generalCustomerType# 
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalCategory" prepend="AND">
+				SVC_LEVEL1 = #generalCategory# 
+			</isNotEmpty>
+			<!-- #180 Start -->
+			<isNotEmpty property="generalService" prepend="AND">
+				<!-- SVC_LEVEL2 = #generalService#  -->
+				SVC_LEVEL2 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'TYP'
+						AND SVC_GRP=#generalCategory# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#generalService#||'%')
+		         )				
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalPlan" prepend="AND">
+				<!-- SVC_LEVEL3 = #generalPlan# --> 
+				SVC_LEVEL3 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'ITM'
+						AND SVC_GRP=#generalCategory# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#generalPlan#||'%')
+		         )				
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalPlanDetail" prepend="AND">
+				<!-- SVC_LEVEL4 = #generalPlanDetail# --> 
+				SVC_LEVEL4 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'DTL'
+						AND SVC_GRP=#generalCategory# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#generalPlanDetail#||'%')
+		         )				
+			</isNotEmpty>
+			<!-- #180 End -->
+			<isNotEmpty property="generalSubscriptionID" prepend="AND">
+				UPPER(subscriptionID) like UPPER('%$generalSubscriptionID$%')
+			</isNotEmpty>
+			<!--  
+			<isNotEmpty property="generalBillingInstruction" prepend="AND">
+				BILL_INSTRUCT = #generalBillingInstruction# 
+			</isNotEmpty>
+			-->
+			<isNotEmpty property="generalBillingAccount" prepend="AND">
+				UPPER(ID_BILL_ACCOUNT) like UPPER('%$generalBillingAccount$%')
+			</isNotEmpty>
+			
+			<isNotEmpty property="serviceStatusArray" prepend="AND">			
+				<iterate prepend="PLAN_STATUS IN " 
+						 open="(" close=")"
+						 conjunction=","
+						 property="serviceStatusArray">
+					#serviceStatusArray[]#
+				</iterate> 				
+			</isNotEmpty>	
+			<!--
+			<isNotEmpty property="generalFromServiceDate" prepend="AND">
+				SVC_START >= TO_DATE(#generalFromServiceDate#, 'DD/MM/YYYY')
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalToServiceDate" prepend="AND">
+				 TO_DATE(#generalToServiceDate#, 'DD/MM/YYYY') >= SVC_START
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalEndFromServiceDate" prepend="AND">
+				((AUTO_RENEW='0' AND SVC_END >= TO_DATE(#generalEndFromServiceDate#, 'DD/MM/YYYY')) OR (AUTO_RENEW='1' AND to_date(to_char(sysdate,'DD/MM/YYYY'),'DD/MM/YYYY')>=TO_DATE(#generalEndFromServiceDate#, 'DD/MM/YYYY')))
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalEndToServiceDate" prepend="AND">
+				((AUTO_RENEW='0' AND TO_DATE(#generalEndToServiceDate#, 'DD/MM/YYYY') >= SVC_END) OR (AUTO_RENEW='1' AND TO_DATE(#generalEndToServiceDate#, 'DD/MM/YYYY') >= to_date(to_char(sysdate,'DD/MM/YYYY'),'DD/MM/YYYY')))
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalContractTermMode" prepend="AND">
+				CONTRACT_TERM = #generalContractTermMode# 
+			</isNotEmpty>
+			
+			<isNotEmpty property="generalTimeContractTerm" prepend="AND">
+				UPPER(CONTRACT_TERM_NO) like UPPER('%$generalTimeContractTerm$%')
+			</isNotEmpty>
+			-->
+	</sql>
+	
+	<select id="getGeneralSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">		
+		 		SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_GENERAL t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getGeneralSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_GENERAL t) t where t.customerID is not null 
+       				<dynamic>
+  						<include refid="getGeneralSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.customerID, t.subscriptionID
+       			<!--  
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.SVC_LEVEL3
+	       			</isNotEmpty>
+	       		</dynamic>
+	       		-->
+	       		ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+				)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getGeneralSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		select count(*) from 
+      (select t.* from (select t.*,rownum rn from V_B_SSM_GENERAL t) t
+      	<dynamic prepend="WHERE">
+			<include refid="getGeneralSearchResultSetCon"/>
+		</dynamic>
+		ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+      ) t,
+      (select max(rown) ro from (select t.*,rownum rown from V_B_SSM_GENERAL t) t where t.customerID is not null 
+      <dynamic>
+		<include refid="getGeneralSearchResultSetCon"/>
+	  </dynamic>
+      group by t.customerID,t.subscriptionID
+      <!--
+      <dynamic>
+	      <isNotEmpty property="isExportFlag" prepend=",">
+	           t.SVC_LEVEL2,t.SVC_LEVEL3
+	      </isNotEmpty>
+      </dynamic>
+      -->
+      ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+      ) t1
+      where t.rn = t1.ro
+	</select>
+	
+	<!-- Function get ISP Search ResultSet -->
+	<sql id="getISPSearchResultSetCon">
+			<isNotEmpty property="customerID" prepend="AND">
+				UPPER(customerID) like UPPER('%$customerID$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="customerName" prepend="AND">
+				UPPER(customerName) like UPPER('%$customerName$%')
+			</isNotEmpty>
+			
+			<isNotEmpty property="customerType" prepend="AND">
+				CUSTOMER_TYPE = #customerType# 
+			</isNotEmpty>
+			
+			<isNotEmpty property="category" prepend="AND">
+				SVC_LEVEL1 = #category# 
+			</isNotEmpty>
+			<!-- #180 Start -->
+			<isNotEmpty property="service" prepend="AND">
+				<!-- SVC_LEVEL2 = #service# --> 
+				SVC_LEVEL2 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'TYP'
+						AND SVC_GRP=#category# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#service#||'%')
+		         )				
+			</isNotEmpty>
+			
+			<isNotEmpty property="plan" prepend="AND">
+				<!-- SVC_LEVEL3 = #plan# -->
+				SVC_LEVEL3 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'ITM'
+						AND SVC_GRP=#category# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#plan#||'%')
+		         )				 
+			</isNotEmpty>
+			
+			<isNotEmpty property="planDetail" prepend="AND">
+				<!-- SVC_LEVEL4 = #planDetail# --> 
+				SVC_LEVEL4 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'DTL'
+						AND SVC_GRP=#category# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#planDetail#||'%')
+		         )				
+			</isNotEmpty>
+			<!-- #180 End -->
+			<isNotEmpty property="subscriptionID" prepend="AND">
+				UPPER(subscriptionID) like UPPER('%$subscriptionID$%')
+			</isNotEmpty>
+								
+			<isNotEmpty property="serviceStatusArray" prepend="AND">			
+				<iterate prepend="PLAN_STATUS IN " 
+						 open="(" close=")"
+						 conjunction=","
+						 property="serviceStatusArray">
+					#serviceStatusArray[]#
+				</iterate> 				
+			</isNotEmpty>													
+ 			<!--  
+  			<isNotEmpty property="billingInstruction" prepend="AND">
+				BILL_INSTRUCT = #billingInstruction# 
+			</isNotEmpty>
+			
+			<isNotEmpty property="fromServiceDate" prepend="AND">
+				SVC_START >= TO_DATE(#fromServiceDate#, 'DD/MM/YYYY')
+			</isNotEmpty>
+			
+			<isNotEmpty property="toServiceDate" prepend="AND">
+				 TO_DATE(#toServiceDate#, 'DD/MM/YYYY') >= SVC_START
+			</isNotEmpty>
+			
+			<isNotEmpty property="endFromServiceDate" prepend="AND">
+				SVC_END >= TO_DATE(#endFromServiceDate#, 'DD/MM/YYYY')
+			</isNotEmpty>
+			
+			<isNotEmpty property="endToServiceDate" prepend="AND">
+				 TO_DATE(#endToServiceDate#, 'DD/MM/YYYY') >= SVC_END
+			</isNotEmpty>
+			
+			<isNotEmpty property="contractTermMode" prepend="AND">
+				CONTRACT_TERM = #contractTermMode# 
+			</isNotEmpty>
+			
+			<isNotEmpty property="timeContractTerm" prepend="AND">
+				UPPER(CONTRACT_TERM_NO) like UPPER('%$timeContractTerm$%')
+			</isNotEmpty>
+			-->
+			<isNotEmpty property="installationAddress" prepend="AND">
+		    	UPPER( (ADR_LINE1 || ADR_LINE2 || ADR_LINE3) ) like UPPER('%$installationAddress$%')
+			</isNotEmpty>
+			
+			<isNotEmpty property="txtAccessAccount" prepend="AND">
+				UPPER(ACCESS_ACCOUNT) like UPPER('%$txtAccessAccount$%') 
+			</isNotEmpty>
+			
+		    <isNotEmpty property="postalCode" prepend="AND">
+				UPPER(ZIP_CODE) like UPPER('%$postalCode$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="routerNo" prepend="AND">
+				UPPER(routerNo) like UPPER('%$routerNo$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="circuitID" prepend="AND">
+				UPPER(circuitID) like UPPER('%$circuitID$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="carrier" prepend="AND">
+				<isEqual property="carrier" compareValue="selectNullCarrierValue">
+					carrier1 is null
+				</isEqual>
+				<isNotEqual property="carrier" compareValue="selectNullCarrierValue">							
+					carrier1 = #carrier# 
+				</isNotEqual>
+			</isNotEmpty>
+			
+			<isNotEmpty property="modemNo" prepend="AND">
+				UPPER(modemNo) like UPPER('%$modemNo$%') 
+			</isNotEmpty>
+			
+			<isNotEmpty property="aDSL_DelNo" prepend="AND">
+				UPPER(aDSL_DelNo) like UPPER('%$aDSL_DelNo$%') 
+			</isNotEmpty>		
+	</sql>
+	
+	<select id="getISPSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">		
+		 		SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_ISP t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getISPSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_ISP t) t where t.customerID is not null 
+       				<dynamic>
+  						<include refid="getISPSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.customerID, t.subscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.SVC_LEVEL3
+	       			</isNotEmpty>
+	       		</dynamic>
+	       		-->
+	       		ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+				)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getISPSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		select count(*) from 
+      (select t.* from (select t.*,rownum rn from V_B_SSM_ISP t) t
+      	<dynamic prepend="WHERE">
+			<include refid="getISPSearchResultSetCon"/>
+		</dynamic>
+		ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+      ) t,
+      (select max(rown) ro from (select t.*,rownum rown from V_B_SSM_ISP t) t where t.customerID is not null 
+      <dynamic>
+		<include refid="getISPSearchResultSetCon"/>
+	  </dynamic>
+      group by t.customerID,t.subscriptionID
+      <!--
+      <dynamic>
+	      <isNotEmpty property="isExportFlag" prepend=",">
+	           t.SVC_LEVEL2,t.SVC_LEVEL3
+	      </isNotEmpty>
+      </dynamic>
+      -->
+      ORDER BY CAST(customerID AS NUMBER) ASC, subscriptionID ASC
+      ) t1
+      where t.rn = t1.ro
+	</select>
+	
+	<select id="getISPSearchResultSetContactInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			DB.NAME,
+			DB.DESIGNATION,
+			DB.TEL_NO,
+			DB.FAX_NO,
+			DB.CONTACT_TYPE
+		FROM 
+			T_IT_CONTACT_D DB, T_IT_CONTACT_H DB_H 
+		WHERE 
+			DB.CONTACT_TYPE IN ('C1','C2','C3')
+			AND DB.ID_CONTACT = DB_H.ID_CONTACT
+			AND DB_H.ID_SUB_INFO=#subscriptionID#
+	</select>
+	
+	<select id="getISPSearchResultSetCustCtcInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			T.CONTACT_NAME contact_name_tc,
+			T.DESIGNATION designation_tc,
+			T.TEL_NO telno_tc,
+			T.FAX_NO faxno_tc,
+			T.EMAIL,
+			T.MOBILE_NO
+		FROM 
+			M_CUST_CTC T 
+		WHERE 
+			T.CONTACT_TYPE='TC' 
+			AND T.ID_CUST = #custID# 
+			AND ROWNUM = 1
+	</select>
+	
+	<select id="getISPSearchResultSetT_INST_ADR1" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT AE.Adr_Line1,
+               AE.Adr_Line2,
+               AE.Adr_Line3,
+       		   AE.ZIP_CODE,
+		       AE.ADR_TYPE,
+		       RC.VALUE AS COUNTRYNAME
+        FROM
+               T_INST_ADR AE  LEFT JOIN  RESOURCESMAINT RC 
+               ON RC.RESOURCE_ID = AE.COUNTRY AND RC.Category = 'COUNTRY'
+               AND RC.Is_Deleted = 0 AND ROWNUM = 1
+        WHERE 
+               AE.ID_SUB_INFO = #subscriptionID#
+               AND AE.ADR_TYPE IN ('A1', 'A2')
+	</select>
+	
+	<select id="getISPSearchResultSetT_INST_ADR2" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT (AE.ADR_LINE1 || CASE
+	         WHEN AE.ADR_LINE1 is not null AND AE.ADR_LINE2 is not null THEN
+	          ', ' || AE.ADR_LINE2
+	       
+	         WHEN AE.ADR_LINE1 is null THEN
+	          AE.ADR_LINE2
+	       END || CASE
+	         WHEN AE.ADR_LINE1 is not null AND AE.ADR_LINE3 is not null THEN
+	          ', ' || AE.ADR_LINE3
+	       
+	         WHEN AE.ADR_LINE2 is not null AND AE.ADR_LINE3 is not null THEN
+	          ', ' || AE.ADR_LINE3
+	       
+	         WHEN AE.ADR_LINE1 is null AND AE.ADR_LINE2 is null THEN
+	          AE.ADR_LINE3
+	       END || CASE
+	         WHEN AE.ADR_LINE1 is not null AND AE.ZIP_CODE is not null THEN
+	          ', ' || AE.ZIP_CODE
+	       
+	         WHEN AE.ADR_LINE2 is not null AND AE.ZIP_CODE is not null THEN
+	          ', ' || AE.ZIP_CODE
+	       
+	         WHEN AE.ADR_LINE3 is not null AND AE.ZIP_CODE is not null THEN
+	          ', ' || AE.ZIP_CODE
+	       
+	         WHEN AE.ADR_LINE1 is null AND AE.ADR_LINE2 is null AND
+	              AE.ADR_LINE3 is null THEN
+	          AE.ZIP_CODE
+	       END || CASE
+	         WHEN AE.ADR_LINE1 is not null AND
+	              (SELECT RC.VALUE COUNTRY
+	                 FROM RESOURCESMAINT RC
+	                WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                  AND ROWNUM = 1) is not null THEN
+	          ', ' || (SELECT RC.VALUE COUNTRY
+	                     FROM RESOURCESMAINT RC
+	                    WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                    AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                      AND ROWNUM = 1)
+	       
+	         WHEN AE.ADR_LINE2 is not null AND
+	              (SELECT RC.VALUE COUNTRY
+	                 FROM RESOURCESMAINT RC
+	                WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                  AND ROWNUM = 1) is not null THEN
+	          ', ' || (SELECT RC.VALUE COUNTRY
+	                     FROM RESOURCESMAINT RC
+	                    WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                    AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                      AND ROWNUM = 1)
+	       
+	         WHEN AE.ADR_LINE3 is not null AND
+	              (SELECT RC.VALUE COUNTRY
+	                 FROM RESOURCESMAINT RC
+	                WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                  AND ROWNUM = 1) is not null THEN
+	          ', ' || (SELECT RC.VALUE COUNTRY
+	                     FROM RESOURCESMAINT RC
+	                    WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                    AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                      AND ROWNUM = 1)
+	       
+	         WHEN AE.ZIP_CODE is not null AND
+	              (SELECT RC.VALUE COUNTRY
+	                 FROM RESOURCESMAINT RC
+	                WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                  AND ROWNUM = 1) is not null THEN
+	          ', ' || (SELECT RC.VALUE COUNTRY
+	                     FROM RESOURCESMAINT RC
+	                    WHERE RC.RESOURCE_ID = AE.COUNTRY
+	                    AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	                      AND ROWNUM = 1)
+	       
+	         WHEN AE.ADR_LINE1 is null AND AE.ADR_LINE2 is null AND
+	              AE.ADR_LINE3 is null AND AE.ZIP_CODE is null THEN
+	          (SELECT RC.VALUE COUNTRY
+	             FROM RESOURCESMAINT RC
+	            WHERE RC.RESOURCE_ID = AE.COUNTRY
+	            AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0
+	              AND ROWNUM = 1)
+	       END) installationAddress2
+	  FROM T_INST_ADR AE
+	 WHERE
+	 AE.ID_SUB_INFO = #subscriptionID#
+	 AND AE.ADR_TYPE = 'A2'
+	 AND ROWNUM = 1
+	</select>
+	
+	<select id="getISPSearchResultSetM_SUPPLIER_H" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			f.SUPPLIER_NAME carrier
+  		FROM 
+  			M_SUPPLIER_H f
+ 		WHERE f.IS_DELETED = 0
+   		AND f.ID_SUPPLIER = #idSupplier#
+	</select>
+	
+	<!--************************************* SQL for CoLocation ***************************************-->	
+	<!-- Function get CoLocation Sum Search ResultSet -->
+	<sql id="getCoLocationSumSearchResultSetCon">
+		<isNotEmpty property="coLocationCustomerID" prepend="AND">
+			UPPER(coLocationCustomerID) LIKE UPPER('%$coLocationCustomerID$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCustomerName" prepend="AND">
+			UPPER(coLocationCustomerName) LIKE UPPER('%$coLocationCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #coLocationCustomerType# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCategory" prepend="AND">
+			SVC_LEVEL1 = #coLocationCategory# 
+		</isNotEmpty>
+		<!-- #180 Start -->
+		<isNotEmpty property="coLocationService" prepend="AND">
+			<!-- SVC_LEVEL2 = #coLocationService# --> 
+				SVC_LEVEL2 IN(
+					SELECT ID_SERVICE
+					FROM M_SVC
+					WHERE IS_DELETED = 0 
+						AND SVC_CATEGORY = 'TYP'
+						AND SVC_GRP=#coLocationCategory# 
+						AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationService#||'%')
+		         )			
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationPlan" prepend="AND">
+			<!-- SVC_LEVEL3 = #coLocationPlan# -->
+			SVC_LEVEL3 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#coLocationCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationPlanDetail" prepend="AND">
+			<!-- SVC_LEVEL4 = #coLocationPlanDetail# --> 
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#coLocationCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationPlanDetail#||'%')
+	         )			
+		</isNotEmpty>
+		<!-- #180 End -->
+		<isNotEmpty property="coLocationSubscriptionID" prepend="AND">
+			UPPER(coLocationSubscriptionID) LIKE UPPER('%$coLocationSubscriptionID$%')
+		</isNotEmpty>
+		<!--
+		<isNotEmpty property="coLocationBillingInstruction" prepend="AND">
+			coLocationBillingInstruction = #coLocationBillingInstruction# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationFromServiceDate" prepend="AND">
+				coLocationFromServiceDate >= TO_DATE(#coLocationFromServiceDate#, 'DD/MM/YYYY')
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationToServiceDate" prepend="AND">
+			 TO_DATE(#coLocationToServiceDate#, 'DD/MM/YYYY') >= coLocationFromServiceDate
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEndFromServiceDate" prepend="AND">
+				coLocationToServiceDate >= TO_DATE(#coLocationEndFromServiceDate#, 'DD/MM/YYYY')
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEndToServiceDate" prepend="AND">
+			 TO_DATE(#coLocationEndToServiceDate#, 'DD/MM/YYYY') >= coLocationToServiceDate
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationContractTermMode" prepend="AND">
+			coLocationContractTerm = #coLocationContractTermMode# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationTimeContractTerm" prepend="AND">
+			UPPER(coLocationTimeContractTerm) LIKE UPPER('%$coLocationTimeContractTerm$%')
+		</isNotEmpty>
+		-->
+		<isNotEmpty property="coLocationRackNo" prepend="AND">
+			UPPER(coLocationRackNo) LIKE UPPER('%$coLocationRackNo$%')  
+		</isNotEmpty>
+		<!--
+		<isNotEmpty property="coLocationPowerCommitted" prepend="AND">
+			UPPER(coLocationTotalPowerCommitted) LIKE UPPER('%$coLocationPowerCommitted$%')
+		</isNotEmpty>
+		-->
+		<isNotEmpty property="coLocationEquipmentLocation" prepend="AND">
+			coLocationEquipLocation = #coLocationEquipmentLocation#  
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEquipmentSuite" prepend="AND">
+			UPPER(coLocationEquipSuite) LIKE UPPER('%$coLocationEquipmentSuite$%')
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationServiceStatusArray" prepend="AND">				
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="coLocationServiceStatusArray">
+				#coLocationServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getCoLocationSumSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	 	SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_COL t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getCoLocationSumSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_COL t) t where t.coLocationCustomerID is not null 
+       				<dynamic>
+  						<include refid="getCoLocationSumSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.coLocationCustomerID, t.coLocationSubscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.SVC_LEVEL3
+	       			</isNotEmpty>
+       			</dynamic>
+       			-->
+       			ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+	        )
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getCoLocationSumSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	 	select count(*) from 
+      (select t.* from (select t.*,rownum rn from V_B_SSM_COL t) t
+      	<dynamic prepend="WHERE">
+  			<include refid="getCoLocationSumSearchResultSetCon"/>
+  		</dynamic>
+  		ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+      ) t,
+      (select  max(rown) ro from (select t.*,rownum rown from V_B_SSM_COL t) t where t.coLocationCustomerID is not null 
+      	<dynamic>
+  			<include refid="getCoLocationSumSearchResultSetCon"/>
+  		</dynamic>
+      group by t.coLocationCustomerID, t.coLocationSubscriptionID
+      <!--
+      <dynamic>
+	      <isNotEmpty property="isExportFlag" prepend=",">
+	      	t.SVC_LEVEL2,t.SVC_LEVEL3
+	      </isNotEmpty>
+      </dynamic>
+      -->
+      ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+      ) t1
+      where t.rn = t1.ro
+	</select>
+	
+	<select id="getCoLocationT_RAC" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT A.RACK_NO, MN.EQUIP_LOCATION, A.EQUIP_SUITE,A.MAX_POWER
+		  FROM (select d.equip_location, d.equip_suite, d.RACK_NO, d.id_rack_d,d.max_power
+		          FROM T_RACK_POWER_H h
+		         inner join T_RACK_POWER_D d on h.id_rack_h = d.id_rack_h
+		         AND h.is_deleted=0 AND d.is_deleted=0 
+		         where h.id_sub_info = #coLocationSubscriptionID#) A
+		  left join M_EQUIP_LOCATION MN on MN.ID_EQUIP_LOCATION = A.EQUIP_LOCATION AND MN.Is_Deleted=0
+		 order by A.Id_Rack_d
+	</select>
+	
+	<!-- Function get CoLocation Detail Search ResultSet -->
+	<sql id="getCoLocationDetailSearchResultSetCon">
+		<isNotEmpty property="coLocationCustomerID" prepend="AND">
+			UPPER(coLocationCustomerID) LIKE UPPER('%$coLocationCustomerID$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCustomerName" prepend="AND">
+			UPPER(coLocationCustomerName) LIKE UPPER('%$coLocationCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #coLocationCustomerType# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationCategory" prepend="AND">
+			SVC_LEVEL1 = #coLocationCategory# 
+		</isNotEmpty>
+		<!-- #180 Start -->
+		<isNotEmpty property="coLocationService" prepend="AND">
+			<!-- SVC_LEVEL2 = #coLocationService# -->
+			SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#coLocationCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationService#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationPlan" prepend="AND">
+			<!-- coLocationPlan = #coLocationPlan# -->
+			coLocationPlan IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#coLocationCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationPlanDetail" prepend="AND">
+			<!-- SVC_LEVEL4 = #coLocationPlanDetail# -->
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#coLocationCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#coLocationPlanDetail#||'%')
+	         )			 
+		</isNotEmpty>
+		<!-- #180 End -->
+		<isNotEmpty property="coLocationSubscriptionID" prepend="AND">
+			UPPER(coLocationSubscriptionID) LIKE UPPER('%$coLocationSubscriptionID$%')
+		</isNotEmpty>			
+		<!--
+		<isNotEmpty property="coLocationBillingInstruction" prepend="AND">
+			coLocationBillingInstruction = #coLocationBillingInstruction# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationFromServiceDate" prepend="AND">
+				coLocationFromServiceDate >= TO_DATE(#coLocationFromServiceDate#, 'DD/MM/YYYY')
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationToServiceDate" prepend="AND">
+			 TO_DATE(#coLocationToServiceDate#, 'DD/MM/YYYY') >= coLocationFromServiceDate
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEndFromServiceDate" prepend="AND">
+				coLocationToServiceDate >= TO_DATE(#coLocationEndFromServiceDate#, 'DD/MM/YYYY')
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEndToServiceDate" prepend="AND">
+			 TO_DATE(#coLocationEndToServiceDate#, 'DD/MM/YYYY') >= coLocationToServiceDate
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationContractTermMode" prepend="AND">
+			coLocationContractTerm = #coLocationContractTermMode# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationTimeContractTerm" prepend="AND">
+			UPPER(coLocationTimeContractTerm) LIKE UPPER('%$coLocationTimeContractTerm$%')
+		</isNotEmpty>
+		-->
+		<isNotEmpty property="coLocationRackNo" prepend="AND">
+			UPPER(coLocationRackNo) LIKE UPPER('%$coLocationRackNo$%')  
+		</isNotEmpty>
+		<!--
+		<isNotEmpty property="coLocationPowerCommitted" prepend="AND">
+			UPPER(coLocationPowerCommitted) LIKE UPPER('%$coLocationPowerCommitted$%')
+		</isNotEmpty>
+		-->
+		<isNotEmpty property="coLocationEquipmentLocation" prepend="AND">
+			coLocationEquipLocation = #coLocationEquipmentLocation#  
+		</isNotEmpty>
+		
+		<isNotEmpty property="coLocationEquipmentSuite" prepend="AND">
+			UPPER(coLocationEquipSuite) LIKE UPPER('%$coLocationEquipmentSuite$%')
+		</isNotEmpty>	
+						
+		<isNotEmpty property="coLocationServiceStatusArray" prepend="AND">				
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="coLocationServiceStatusArray">
+				#coLocationServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>	
+	</sql>
+	
+	<select id="getCoLocationDetailSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	 	SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_DETAIL_COL t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getCoLocationDetailSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_DETAIL_COL t) t where t.coLocationCustomerID is not null 
+       				<dynamic>
+  						<include refid="getCoLocationDetailSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.coLocationCustomerID, t.coLocationSubscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.coLocationPlan
+	       			</isNotEmpty>
+       			</dynamic>
+       			-->
+       			ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+			)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getCoLocationDetailSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	 	select count(*) from 
+      (select t.* from (select t.*,rownum rn from V_B_SSM_DETAIL_COL t) t
+      	<dynamic prepend="WHERE">
+			<include refid="getCoLocationDetailSearchResultSetCon"/>
+		</dynamic>
+		ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+      ) t,
+      (select  max(rown) ro from (select t.*,rownum rown from V_B_SSM_DETAIL_COL t) t where t.coLocationCustomerID is not null 
+      	<dynamic>
+			<include refid="getCoLocationDetailSearchResultSetCon"/>
+		</dynamic>
+      group by t.coLocationCustomerID, t.coLocationSubscriptionID
+      <!--
+      <dynamic>
+	      <isNotEmpty property="isExportFlag" prepend=",">
+	      	t.SVC_LEVEL2,t.coLocationPlan
+	      </isNotEmpty>
+      </dynamic>
+      -->
+      ORDER BY CAST(coLocationCustomerID AS NUMBER) ASC, coLocationSubscriptionID ASC
+      ) t1
+      where t.rn = t1.ro
+	</select>
+	
+	<!--******************************* SQL for Email **************************************-->
+	<!-- Function get Email Subscribed Search ResultSet -->
+	<sql id="getEmailSubscribedSearchResultSetCon">
+		<isNotEmpty property="emailCustomerID" prepend="AND">
+			UPPER(emailCustomerID) LIKE UPPER('%$emailCustomerID$%')  
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerName" prepend="AND">
+			UPPER(emailCustomerName) LIKE UPPER('%$emailCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #emailCustomerType#  
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailDomainNameText" prepend="AND">
+			UPPER(emailDomainName) LIKE UPPER('%$emailDomainNameText$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailSubscribedAddressText" prepend="AND">
+			UPPER(MAIL_ACCOUNT) LIKE UPPER('%$emailSubscribedAddressText$%') 
+		</isNotEmpty>
+		<!--
+		<isEmpty property="detetedEmail" prepend="AND">
+			MAIL_ACCOUNT_DELETED_FLG = '0'
+		</isEmpty>
+		
+		<isNotEmpty property="detetedEmail" prepend="AND">
+		    (MAIL_ACCOUNT_DELETED_FLG = '0' OR (MAIL_ACCOUNT_DELETED_FLG = '1' AND MAIL_ACCOUNT_DELETED_DISP = 1))
+		</isNotEmpty>
+		-->
+		<isNotEmpty property="emailCategory" prepend="AND">
+			emailCategory = #emailCategory# 
+		</isNotEmpty>
+		<!-- #180 Start -->
+		<isNotEmpty property="emailServiceName" prepend="AND">
+			<!-- SVC_LEVEL2 = #emailServiceName# -->
+			SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailServiceName#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlan" prepend="AND">
+			<!-- emailPlan = #emailPlan# -->
+			emailPlan IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlanDetail" prepend="AND">
+			<!-- SVC_LEVEL4 = #emailPlanDetail# --> 
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlanDetail#||'%')
+	         )			
+		</isNotEmpty>
+		<!-- #180 End -->
+		<isNotEmpty property="emailSubscriptionID" prepend="AND">
+			UPPER(emailSubscriptionID) LIKE UPPER('%$emailSubscriptionID$%') 
+		</isNotEmpty>
+			
+		<isNotEmpty property="emailServiceStatusArray" prepend="AND">			
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="emailServiceStatusArray">
+				#emailServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getEmailSubscribedIDList" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+			select t.emailSubscriptionID from 
+		      (select distinct emailCustomerID, emailSubscriptionID from (
+		         select t.*,rownum rn,
+		           BA.DOMAIN_NAME emailDomainName,
+  				            BB.MAIL_ACCOUNT emailCustomerAddress,
+        					BB.MAIL_ACCOUNT emailSubscribedAddressText,
+        					BB.MAIL_ACCOUNT,
+					        BB.Is_Deleted AS MAIL_ACCOUNT_DELETED_FLG,
+					        BB.Is_Deleted_Disp AS MAIL_ACCOUNT_DELETED_DISP
+  				            from V_B_SSM_EMAIL_SUBSCRIBED t LEFT JOIN T_MAIL_ADDRESS BA ON
+			        BA.ID_SUB_INFO = t.emailSubscriptionID AND
+			        (BA.IS_DELETED = 0 OR BA.IS_DELETED is null)
+			        LEFT JOIN T_MAIL_ACCOUNT BB ON
+			        BA.ID_MAIL = BB.ID_MAIL
+			        <dynamic>
+				        <isEmpty property="detetedEmail" prepend="AND">
+							BB.IS_DELETED = '0'
+						</isEmpty>
+						<isNotEmpty property="detetedEmail" prepend="AND">
+						    BB.IS_DELETED_DISP = 1
+						</isNotEmpty>
+					</dynamic>
+		      ) t
+		      	<dynamic prepend="WHERE">
+					<include refid="getEmailSubscribedSearchResultSetCon"/>
+				</dynamic>
+				ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t
+	</select>
+	
+	<select id="getEmailSubscribedSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+			select 
+			      t.* 
+			from
+				(
+					select 
+					      t.* 
+					from
+					(
+					    select t.*,rownum rn from 
+					    (
+					    select 
+						      t.*
+						from 
+						     V_B_SSM_EMAIL_SUBSCRIBED t
+							<dynamic prepend="WHERE">
+							     <isNotEmpty property="emailSubscriptionIDList" prepend="AND">			
+									<iterate prepend="t.emailSubscriptionID IN " 
+											 open="(" close=")"
+											 conjunction=","
+											 property="emailSubscriptionIDList">
+										#emailSubscriptionIDList[]#
+									</iterate> 				
+								</isNotEmpty>
+						    </dynamic>
+						    ORDER BY CAST(emailCustomerID AS NUMBER) ASC,emailSubscriptionID ASC
+						) t
+					) t
+				) t,
+				(
+					 select 
+					       max(rown) ro
+		             from 
+		             (
+		                  select t.*,rownum rown from 
+		                  (
+		                      select
+			                        t.*
+			                  from 
+			                        V_B_SSM_EMAIL_SUBSCRIBED t
+			                        <dynamic prepend="WHERE">
+									     <isNotEmpty property="emailSubscriptionIDList" prepend="AND">			
+											<iterate prepend="t.emailSubscriptionID IN " 
+													 open="(" close=")"
+													 conjunction=","
+													 property="emailSubscriptionIDList">
+												#emailSubscriptionIDList[]#
+											</iterate> 				
+										</isNotEmpty>
+								    </dynamic>
+							        ORDER BY CAST(emailCustomerID AS NUMBER) ASC,emailSubscriptionID ASC
+		                  ) t
+		             ) t
+		             GROUP BY t.emailSubscriptionID, t.emailCustomerID
+	             ) t1
+			where t.rn = t1.ro
+	</select>
+	
+	<select id="getEmailSubscribedSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+			select count(*) from 
+		      (select distinct emailCustomerID, emailSubscriptionID from (
+		         select t.*,rownum rn,
+		           BA.DOMAIN_NAME emailDomainName,
+  				            BB.MAIL_ACCOUNT emailCustomerAddress,
+        					BB.MAIL_ACCOUNT emailSubscribedAddressText,
+        					BB.MAIL_ACCOUNT,
+					        BB.Is_Deleted AS MAIL_ACCOUNT_DELETED_FLG,
+					        BB.Is_Deleted_Disp AS MAIL_ACCOUNT_DELETED_DISP
+  				            from V_B_SSM_EMAIL_SUBSCRIBED t LEFT JOIN T_MAIL_ADDRESS BA ON
+			        BA.ID_SUB_INFO = t.emailSubscriptionID AND
+			        (BA.IS_DELETED = 0 OR BA.IS_DELETED is null)
+			        LEFT JOIN T_MAIL_ACCOUNT BB ON
+			        BA.ID_MAIL = BB.ID_MAIL
+			        <dynamic>
+				        <isEmpty property="detetedEmail" prepend="AND">
+							BB.IS_DELETED = '0'
+						</isEmpty>
+						<isNotEmpty property="detetedEmail" prepend="AND">
+						    BB.IS_DELETED_DISP = 1
+						</isNotEmpty>
+					</dynamic>
+		      ) t
+		      	<dynamic prepend="WHERE">
+					<include refid="getEmailSubscribedSearchResultSetCon"/>
+				</dynamic>
+				ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t
+	</select>
+	
+	<select id="getEmailSubscribedSubEmailAddress" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT BA.DOMAIN_NAME, BB.MAIL_ACCOUNT, BB.IS_DELETED FROM T_MAIL_ADDRESS BA LEFT JOIN T_MAIL_ACCOUNT BB  
+		ON BA.Id_Mail=BB.Id_Mail AND BA.Is_Deleted=0
+		<isEmpty property="detetedEmail" prepend="AND">
+			BB.IS_DELETED = '0'
+		</isEmpty>
+		<isNotEmpty property="detetedEmail" prepend="AND">
+		    BB.IS_DELETED_DISP = 1
+		</isNotEmpty>
+		WHERE BA.Id_Sub_Info=#emailSubscriptionID#
+		ORDER BY BB.IS_DELETED,upper(BB.MAIL_ACCOUNT)
+	</select>
+	
+	<!-- Function get Email DomainName Search ResultSet -->
+	<sql id="getEmailDomainNameSearchResultSetCon">
+		<isNotEmpty property="emailCustomerID" prepend="AND">
+			UPPER(emailCustomerID) LIKE UPPER('%$emailCustomerID$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerName" prepend="AND">
+			UPPER(emailCustomerName) LIKE UPPER('%$emailCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #emailCustomerType# 
+		</isNotEmpty>
+	
+		<isNotEmpty property="emailTeamworkUrlText" prepend="AND">
+			UPPER(emailTeamworkURL) LIKE '%' || UPPER(#emailTeamworkUrlText#) || '%'
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailTeamworkAdminIDText" prepend="AND">
+			UPPER(emailTeamworkAdminId) LIKE  '%' || UPPER(#emailTeamworkAdminIDText#) || '%'
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailTeamworkAdressText" prepend="AND">
+			UPPER(emailTeamworkDomainAddress) LIKE  '%' || UPPER(#emailTeamworkAdressText#) || '%'
+		</isNotEmpty>
+		
+		<!--
+		<isNotEmpty property="emailITAddressText" prepend="AND">
+			UPPER(emailCustomerAddress) LIKE UPPER('%$emailITAddressText$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailITContactText" prepend="AND">
+			UPPER(emailCustomerAddress) LIKE UPPER('%$emailITContactText$%') 
+		</isNotEmpty>
+	    -->
+		<isNotEmpty property="emailCategory" prepend="AND">
+			emailCategory = #emailCategory# 
+		</isNotEmpty>
+		<!-- #180 Start -->
+		<isNotEmpty property="emailServiceName" prepend="AND">
+			<!-- SVC_LEVEL2 = #emailServiceName# -->
+			SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailServiceName#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlan" prepend="AND">
+			<!-- emailPlan = #emailPlan# -->
+			emailPlan IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlanDetail" prepend="AND">
+			<!-- SVC_LEVEL4 = #emailPlanDetail# -->
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlanDetail#||'%')
+	         )			 
+		</isNotEmpty>
+		<!-- #180 End -->
+		<isNotEmpty property="emailSubscriptionID" prepend="AND">
+			UPPER(emailSubscriptionID) LIKE UPPER('%$emailSubscriptionID$%') 
+		</isNotEmpty>
+						
+		<isNotEmpty property="emailServiceStatusArray" prepend="AND">				
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="emailServiceStatusArray">
+				#emailServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getEmailDomainNameSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+			SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_EMAIL_DOMAIN_NAME t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getEmailDomainNameSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_EMAIL_DOMAIN_NAME t) t where t.emailCustomerID is not null 
+       				<dynamic>
+  						<include refid="getEmailDomainNameSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.emailCustomerID, t.emailSubscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.emailPlan
+	       			</isNotEmpty>
+       			</dynamic>
+       			-->
+       			ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+			)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getEmailDomainNameSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+			select count(*) from 
+		      (select t.* from (select t.*,rownum rn from V_B_SSM_EMAIL_DOMAIN_NAME t) t
+		      	<dynamic prepend="WHERE">
+					<include refid="getEmailDomainNameSearchResultSetCon"/>
+				</dynamic>
+				ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t,
+		      (select  max(rown) ro from (select t.*,rownum rown from V_B_SSM_EMAIL_DOMAIN_NAME t) t where t.emailCustomerID is not null 
+		      	<dynamic>
+					<include refid="getEmailDomainNameSearchResultSetCon"/>
+				</dynamic>
+		      group by t.emailCustomerID, t.emailSubscriptionID
+		      <!--
+		      <dynamic>
+			      <isNotEmpty property="isExportFlag" prepend=",">
+			      	t.SVC_LEVEL2,t.emailPlan
+			      </isNotEmpty>
+		      </dynamic>
+		      -->
+		      ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t1
+		      where t.rn = t1.ro
+	</select>
+	
+	<select id="getEmailDomainNameEmailAddress" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT BB.MAIL_ACCOUNT emailCustomerAddress FROM T_MAIL_ADDRESS BA LEFT JOIN T_MAIL_ACCOUNT BB  
+		ON BA.Id_Mail=BB.Id_Mail AND BA.Is_Deleted=0 AND BB.Is_Deleted=0
+		WHERE BA.Id_Sub_Info=#emailSubscriptionID#
+	</select>
+	
+	<select id="getEmailDomainNameFtpUrl" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT AC.FTP_URL emailFTP_URL FROM T_FTP_INT AC WHERE AC.ID_SUB_INFO=#emailSubscriptionID# AND AC.Is_Deleted='0'
+	</select>
+	
+	<select id="getEmailDomainNameDomainName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT HB.DNS_DOMAIN emailDNSDomainName
+		  FROM T_DNS_ZONE HA
+		  LEFT JOIN T_DNS_ZONE_REC HB ON HA.ID_DNS_ZONE = HB.ID_DNS_ZONE
+		                             AND HA.Is_Deleted = 0
+		                             AND HB.Is_Deleted = 0
+		 WHERE HA.ID_SUB_INFO = #emailSubscriptionID#
+	</select>
+	
+	<!-- Function get Email ITContact Search ResultSet -->
+	<sql id="getEmailITContactSearchResultSetCon">
+		<isNotEmpty property="emailCustomerID" prepend="AND">
+			UPPER(emailCustomerID) LIKE UPPER('%$emailCustomerID$%')  
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerName" prepend="AND">
+			UPPER(emailCustomerName) LIKE UPPER('%$emailCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #emailCustomerType#  
+		</isNotEmpty>
+		<!-- 
+		<isNotEmpty property="emailSubscribedAddressText" prepend="AND">
+			UPPER(emailITContact) LIKE UPPER('%$emailSubscribedAddressText$%') 
+		</isNotEmpty>
+		<isNotEmpty property="emailITAddressText" prepend="AND">
+			UPPER(emailITContact) LIKE UPPER('%$emailITAddressText$%') 
+		</isNotEmpty>
+		<isNotEmpty property="emailDomainNameText" prepend="AND">
+			UPPER(emailITContact) LIKE UPPER('%$emailDomainNameText$%') 
+		</isNotEmpty>
+		<isNotEmpty property="emailITContactNoText" prepend="AND">
+			UPPER(emailITContactNo) LIKE UPPER('%$emailITContactNoText$%') 
+		</isNotEmpty>
+		 -->
+		<isNotEmpty property="emailCategory" prepend="AND">
+			emailCategory = #emailCategory# 
+		</isNotEmpty>
+		<!-- #180 Start -->
+		<isNotEmpty property="emailServiceName" prepend="AND">
+			<!-- SVC_LEVEL2 = #emailServiceName# -->
+			SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailServiceName#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlan" prepend="AND">
+			<!-- emailPlan = #emailPlan# -->
+			emailPlan IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="emailPlanDetail" prepend="AND">
+			<!-- SVC_LEVEL4 = #emailPlanDetail# -->
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#emailCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#emailPlanDetail#||'%')
+	         )			 
+		</isNotEmpty>
+		<!-- #180 End -->
+		<isNotEmpty property="emailSubscriptionID" prepend="AND">
+			UPPER(emailSubscriptionID) LIKE UPPER('%$emailSubscriptionID$%') 
+		</isNotEmpty>
+						
+		<isNotEmpty property="emailServiceStatusArray" prepend="AND">		
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="emailServiceStatusArray">
+				#emailServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getEmailITContactSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+			SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_EMAIL_IT_CONTACT t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getEmailITContactSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_EMAIL_IT_CONTACT t) t where t.emailCustomerID is not null 
+       				<dynamic>
+  						<include refid="getEmailITContactSearchResultSetCon"/>
+  					</dynamic>
+       			group by t.emailCustomerID, t.emailSubscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.emailPlan
+	       			</isNotEmpty>
+       			</dynamic>
+       			-->
+       			ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+			)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="getEmailITContactSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+			select count(*) from 
+		      (select t.* from (select t.*,rownum rn from V_B_SSM_EMAIL_IT_CONTACT t) t
+		      	<dynamic prepend="WHERE">
+					<include refid="getEmailITContactSearchResultSetCon"/>
+				</dynamic>
+				ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t,
+		      (select  max(rown) ro from (select t.*,rownum rown from V_B_SSM_EMAIL_IT_CONTACT t) t where t.emailCustomerID is not null 
+		      	<dynamic>
+					<include refid="getEmailITContactSearchResultSetCon"/>
+				</dynamic>
+		      group by t.emailCustomerID, t.emailSubscriptionID
+		      <!--
+		      <dynamic>
+			      <isNotEmpty property="isExportFlag" prepend=",">
+			      	t.SVC_LEVEL2,t.emailPlan
+			      </isNotEmpty>
+		      </dynamic>
+		      -->
+		      ORDER BY CAST(emailCustomerID AS NUMBER) ASC, emailSubscriptionID ASC
+		      ) t1
+		      where t.rn = t1.ro
+	</select>
+	
+	<select id="getEmailITContactT_CONTACT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT DB.Email emailITContact,DB.TEL_NO emailITContactNo
+		  FROM T_IT_CONTACT_H DB_H
+		  LEFT JOIN T_IT_CONTACT_D DB ON DB.ID_CONTACT = DB_H.ID_CONTACT
+		                             AND DB_H.Is_Deleted = 0
+		                             AND DB.Is_Deleted = 0
+		 WHERE DB_H.ID_SUB_INFO = #emailSubscriptionID#
+		 ORDER BY DB.Contact_Type ASC
+	</select>
+	
+	<select id="getEmailT_MAIL_ACCOUNT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT BB.MAIL_ACCOUNT FROM T_MAIL_ADDRESS BA LEFT JOIN T_MAIL_ACCOUNT BB  
+		ON BA.Id_Mail=BB.Id_Mail AND BA.Is_Deleted=0 AND BB.Is_Deleted=0
+		WHERE BA.Id_Sub_Info=#emailSubscriptionID#
+	</select>
+	
+	<select id="getEmailT_IT_CONTACT_H_D" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT 
+			DB.EMAIL,
+			DB.TEL_NO,
+			DB.CONTACT_TYPE
+		FROM 
+			T_IT_CONTACT_D DB, 
+			T_IT_CONTACT_H DB_H  
+		WHERE
+			DB.CONTACT_TYPE IN ('C1','C2','C3') 
+			AND DB.ID_CONTACT = DB_H.ID_CONTACT  
+			AND DB_H.ID_SUB_INFO=#emailSubscriptionID#
+	</select>
+	
+	<!--**************************************** SQL for address ***************************************-->
+	<!-- Function get Address Search ResultSet -->
+	<!-- #180 Start -->
+	<sql id="getAddressSearchResultSetCon">
+		<isNotEmpty property="addressCustomerID" prepend="AND">
+			UPPER(addressCustomerID) LIKE UPPER('%$addressCustomerID$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressCustomerName" prepend="AND">
+			UPPER(addressCustomerName) LIKE UPPER('%$addressCustomerName$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressCustomerType" prepend="AND">
+			CUSTOMER_TYPE = #addressCustomerType# 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressICNo" prepend="AND">
+			UPPER(addressICNo) LIKE UPPER('%$addressICNo$%') 
+		</isNotEmpty>
+		
+		<dynamic open="(" close=")" prepend="AND">
+			<isNotEmpty property="addressRAFlag" prepend="OR">
+				 (1=1
+					<isNotEmpty property="addressText" prepend="AND">
+						UPPER(addressRA) LIKE UPPER('%$addressText$%')
+					</isNotEmpty>
+					<isNotEmpty property="countryValue" prepend="AND">
+						UPPER(addressRA) LIKE UPPER('%$countryValue$%')
+					</isNotEmpty>
+					<isNotEmpty property="addressPostalCode" prepend="AND">
+						UPPER(addressRA) LIKE UPPER('%$addressPostalCode$%')
+					</isNotEmpty>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="addressBAFlag" prepend="OR">
+				 (1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressBA1) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressBA1) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressBA1) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+				OR (1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressBA2) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressBA2) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressBA2) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+				OR (1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressBA3) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressBA3) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressBA3) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+				OR (1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressBA4) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressBA4) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressBA4) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="addressCAFlag" prepend="OR">
+				(1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressCA) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressCA) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressCA) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+			</isNotEmpty>
+			<isNotEmpty property="addressTAFlag" prepend="OR">
+				(1=1
+				<isNotEmpty property="addressText" prepend="AND">
+					UPPER(addressTA) LIKE UPPER('%$addressText$%')
+				</isNotEmpty>
+				<isNotEmpty property="countryValue" prepend="AND">
+					UPPER(addressTA) LIKE UPPER('%$countryValue$%')
+				</isNotEmpty>
+				<isNotEmpty property="addressPostalCode" prepend="AND">
+					UPPER(addressTA) LIKE UPPER('%$addressPostalCode$%')
+				</isNotEmpty>
+				)
+			</isNotEmpty>
+		</dynamic>
+		<dynamic open="(" close=")" prepend="AND">
+			<isNotEmpty property="addressITContactNoName">
+				<isNotEmpty property="contactBCFlag" prepend="OR">
+					UPPER(BC1Name) LIKE UPPER('%$addressITContactNoName$%') OR
+					UPPER(BC2Name) LIKE UPPER('%$addressITContactNoName$%') OR
+					UPPER(BC3Name) LIKE UPPER('%$addressITContactNoName$%') OR
+					UPPER(BC4Name) LIKE UPPER('%$addressITContactNoName$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactPCFlag" prepend="OR">
+					UPPER(BC5Name) LIKE UPPER('%$addressITContactNoName$%')
+						</isNotEmpty>
+				<isNotEmpty property="contactTCFlag" prepend="OR">
+					UPPER(BC6Name) LIKE UPPER('%$addressITContactNoName$%')
+						</isNotEmpty>
+				<isNotEmpty property="contactOCFlag" prepend="OR">
+					UPPER(BC7Name) LIKE UPPER('%$addressITContactNoName$%')
+						</isNotEmpty>
+				<isNotEmpty property="contactITCFlag" prepend="OR">
+					UPPER(ITC1Name) LIKE UPPER('%$addressITContactNoName$%') OR
+					UPPER(ITC2Name) LIKE UPPER('%$addressITContactNoName$%') OR
+					UPPER(ITC3Name) LIKE UPPER('%$addressITContactNoName$%') 
+						</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic open="(" close=")" prepend="AND">
+			<isNotEmpty property="addressITContactNoTelNo">
+				<isNotEmpty property="contactGCFlag" prepend="OR">
+					UPPER(addressCoTelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(addressHomeTelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(addressMobileNo) LIKE UPPER('%$addressITContactNoTelNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactBCFlag" prepend="OR">
+					UPPER(BC1TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC2TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC3TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC4TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC1Mobile) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC2Mobile) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC3Mobile) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC4Mobile) LIKE UPPER('%$addressITContactNoTelNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactPCFlag" prepend="OR">
+					UPPER(BC5TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC5Mobile) LIKE UPPER('%$addressITContactNoTelNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactTCFlag" prepend="OR">
+					UPPER(BC6TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC6Mobile) LIKE UPPER('%$addressITContactNoTelNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactOCFlag" prepend="OR">
+					UPPER(BC7TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(BC7Mobile) LIKE UPPER('%$addressITContactNoTelNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactITCFlag" prepend="OR">
+					UPPER(ITC1TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(ITC2TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') OR
+					UPPER(ITC3TelNo) LIKE UPPER('%$addressITContactNoTelNo$%') 
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic open="(" close=")" prepend="AND">
+			<isNotEmpty property="addressCustomerFaxNo">
+				<isNotEmpty property="contactGCFlag" prepend="OR">
+					UPPER(addressCoFaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(addressHomeTelFax) LIKE UPPER('%$addressCustomerFaxNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactBCFlag" prepend="OR">
+					UPPER(BC1FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(BC2FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(BC3FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(BC4FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') 
+				</isNotEmpty>
+				<isNotEmpty property="contactPCFlag" prepend="OR">
+					UPPER(BC5FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactTCFlag" prepend="OR">
+					UPPER(BC6FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactOCFlag" prepend="OR">
+					UPPER(BC7FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactITCFlag" prepend="OR">
+					UPPER(ITC1FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(ITC2FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') OR
+					UPPER(ITC3FaxNo) LIKE UPPER('%$addressCustomerFaxNo$%') 
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic open="(" close=")" prepend="AND">
+			<isNotEmpty property="addressITContactNoEmail">
+				<isNotEmpty property="contactGCFlag" prepend="OR">
+					UPPER(addressEmail) LIKE UPPER('%$addressITContactNoEmail$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactBCFlag" prepend="OR">
+					UPPER(BC1Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC2Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC3Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC4Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC1EmailCC) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC2EmailCC) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC3EmailCC) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC4EmailCC) LIKE UPPER('%$addressITContactNoEmail$%') 
+				</isNotEmpty>
+				<isNotEmpty property="contactPCFlag" prepend="OR">
+					UPPER(BC5Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC5EmailCC) LIKE UPPER('%$addressITContactNoEmail$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactTCFlag" prepend="OR">
+					UPPER(BC6Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC6EmailCC) LIKE UPPER('%$addressITContactNoEmail$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactOCFlag" prepend="OR">
+					UPPER(BC7Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(BC7EmailCC) LIKE UPPER('%$addressITContactNoEmail$%')
+				</isNotEmpty>
+				<isNotEmpty property="contactITCFlag" prepend="OR">
+					UPPER(ITC1Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(ITC2Email) LIKE UPPER('%$addressITContactNoEmail$%') OR
+					UPPER(ITC3Email) LIKE UPPER('%$addressITContactNoEmail$%') 
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+
+		<isNotEmpty property="addressService" prepend="AND">
+			SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#addressCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#addressService#||'%')
+	         )			
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressPlan" prepend="AND">
+			addressPlanName IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#addressCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#addressPlan#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressPlanDetail" prepend="AND">
+			SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#addressCategory# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#addressPlanDetail#||'%')
+	         )			 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressSubscriptionID" prepend="AND">
+			UPPER(addressSubscriptionID) LIKE UPPER('%$addressSubscriptionID$%') 
+		</isNotEmpty>
+		
+		<isNotEmpty property="addressServiceStatusArray" prepend="AND">				
+			<iterate prepend="PLAN_STATUS IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="addressServiceStatusArray">
+				#addressServiceStatusArray[]#
+			</iterate> 				
+		</isNotEmpty>
+	</sql>
+	<!-- #180 end -->
+	<select id="GetAddressSearchResultSet" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+			SELECT * FROM ( SELECT * FROM (
+		 		select t.*, ROWNUM rn
+  				from (select t.* from (select t.*,rownum ro from V_B_SSM_ADR t) t
+  					<dynamic prepend="WHERE">
+  						<include refid="getAddressSearchResultSetCon"/>
+  					</dynamic>
+  					ORDER BY CAST(addressCustomerID AS NUMBER) ASC, addressSubscriptionID ASC
+  				) t,
+       			(select max(rown) ro from (select t.*,rownum rown from V_B_SSM_ADR t) t where t.addressCustomerID is not null 
+       				<dynamic>
+       					<include refid="getAddressSearchResultSetCon"/>
+       				</dynamic>
+       			group by t.addressCustomerID, t.addressSubscriptionID
+       			<!--
+       			<dynamic>
+	       			<isNotEmpty property="isExportFlag" prepend=",">
+	       				t.SVC_LEVEL2,t.addressPlanName
+	       			</isNotEmpty>
+       			</dynamic>
+       			-->
+       			ORDER BY CAST(addressCustomerID AS NUMBER) ASC, addressSubscriptionID ASC
+       			) t1
+ 				where t.ro = t1.ro
+			)
+				<dynamic prepend="WHERE">
+					<isNotEmpty property="endRowIndex" prepend="AND">
+						ROWNUM <![CDATA[ <= ]]> #endRowIndex#
+					</isNotEmpty>
+				</dynamic>
+			)
+			<dynamic prepend="WHERE">
+					<isNotEmpty property="startRowIndex" prepend="AND">
+						rn <![CDATA[ > ]]> #startRowIndex#
+					</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<select id="GetAddressSearchResultSetCount" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+			select count(*) from 
+		      (select t.* from (select t.*,rownum rn from V_B_SSM_ADR t) t
+		      <dynamic prepend="WHERE">
+				<include refid="getAddressSearchResultSetCon"/>
+			  </dynamic>	
+			  ORDER BY CAST(addressCustomerID AS NUMBER) ASC, addressSubscriptionID ASC
+		      ) t,
+		      (select  max(rown) ro from (select t.*,rownum rown from V_B_SSM_ADR t) t where t.addressCustomerID is not null 
+		      <dynamic>
+				<include refid="getAddressSearchResultSetCon"/>
+			  </dynamic>
+		      group by t.addressCustomerID, t.addressSubscriptionID
+		      <!--
+		      <dynamic>
+			      <isNotEmpty property="isExportFlag" prepend=",">
+			      	t.SVC_LEVEL2,t.addressPlanName
+			      </isNotEmpty>
+		      </dynamic>
+		      -->
+		      ORDER BY CAST(addressCustomerID AS NUMBER) ASC, addressSubscriptionID ASC
+		      ) t1
+		      where t.rn = t1.ro
+	</select>
+
+	<select id="getAddressM_CUST_ADR" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT
+          (
+            ADR.ADR_LINE1||
+            CASE
+                WHEN
+                  ADR.ADR_LINE1 is not null AND
+                  ADR.ADR_LINE2 is not null
+                THEN ', ' || ADR.ADR_LINE2
+
+                WHEN ADR.ADR_LINE1 is null
+                THEN ADR.ADR_LINE2
+            END ||
+            CASE
+                WHEN
+                  ADR.ADR_LINE1 is not null AND
+                  ADR.ADR_LINE3 is not null
+                THEN ', ' || ADR.ADR_LINE3
+
+                WHEN
+                  ADR.ADR_LINE2 is not null AND
+                  ADR.ADR_LINE3 is not null
+                THEN ', ' || ADR.ADR_LINE3
+
+                WHEN
+                  ADR.ADR_LINE1 is null AND
+                  ADR.ADR_LINE2 is null
+                THEN ADR.ADR_LINE3
+            END ||
+            CASE
+                WHEN
+                  ADR.ADR_LINE1 is not null AND
+                  (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   ) is not null
+                THEN ', ' ||
+                   (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   )
+
+                WHEN
+                  ADR.ADR_LINE2 is not null AND
+                  (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   ) is not null
+                THEN ', ' ||
+                   (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   )
+
+                WHEN
+                  ADR.ADR_LINE3 is not null AND
+                  (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   ) is not null
+                THEN ', ' ||
+                   (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   )
+
+                WHEN
+                  ADR.ADR_LINE1 is null AND
+                  ADR.ADR_LINE2 is null AND
+                  ADR.ADR_LINE3 is null
+                THEN (
+                    SELECT RC.VALUE COUNTRY
+                    FROM RESOURCESMAINT RC
+                    WHERE RC.RESOURCE_ID = ADR.COUNTRY AND RC.Category ='COUNTRY' AND RC.Is_Deleted = 0 AND ROWNUM = 1
+                   )
+            END ||
+            CASE
+                WHEN
+                  ADR.ADR_LINE1 is not null AND
+                  ADR.ZIP_CODE is not null
+                THEN ', ' || ADR.ZIP_CODE
+
+                WHEN
+                  ADR.ADR_LINE2 is not null AND
+                  ADR.ZIP_CODE is not null
+                THEN ', ' || ADR.ZIP_CODE
+
+                WHEN
+                  ADR.ADR_LINE3 is not null AND
+                  ADR.ZIP_CODE is not null
+                THEN ', ' || ADR.ZIP_CODE
+
+                WHEN
+                  ADR.COUNTRY is not null AND
+                  ADR.ZIP_CODE is not null
+                THEN ', ' || ADR.ZIP_CODE
+                
+                WHEN
+                  ADR.ADR_LINE1 is null AND
+                  ADR.ADR_LINE2 is null AND
+                  ADR.ADR_LINE3 is null AND
+                  ADR.COUNTRY is null
+                THEN ADR.ZIP_CODE
+            END
+          ) addressText,ADR_TYPE addressType,
+          case ADR_TYPE when 'RA' then 1 when 'BA' then 2 when 'CA' then 3 else 4 end as SEQ
+        FROM  M_CUST_ADR ADR
+        WHERE
+             ADR.ID_CUST = #addressCustomerID#
+             <dynamic>
+	             <isNotEmpty property="addressTypeArray" prepend="AND">				
+					<iterate prepend="ADR.ADR_TYPE IN " 
+							 open="(" close=")"
+							 conjunction=","
+							 property="addressTypeArray">
+						#addressTypeArray[]#
+					</iterate> 				
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY SEQ
+	</select>
+	
+	<select id="getAddressT_IT_CONTACT_H_D" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT
+		    DB.NAME,
+			DB.EMAIL,
+			DB.TEL_NO,
+			DB.CONTACT_TYPE
+		FROM 
+			T_IT_CONTACT_D DB, 
+			T_IT_CONTACT_H DB_H  
+		WHERE
+			DB.CONTACT_TYPE IN ('C1','C2','C3') 
+			AND DB.ID_CONTACT = DB_H.ID_CONTACT  
+			AND DB_H.ID_SUB_INFO=#addressSubscriptionID#
+	    ORDER BY
+	        DB.CONTACT_TYPE
+	</select>
+	
+	<!--**************************************** Common SQLs ***************************************-->
+	<!-- Function getting user access -->
+	<select id="getUserAccess" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT TO_CHAR(access_type) "accessType"
+		FROM m_user_access
+		WHERE id_user = #logonUserID# AND
+              id_sub_module = 'B-SSM' AND
+              ROWNUM = 1
+	</select>	
+	
+	<select id="getExportDisplay" resultClass="java.lang.String">
+		SELECT SET_VALUE
+		FROM M_GSET_D
+		WHERE ID_SET = 'EXPORT_BTN'
+		AND SET_SEQ='1'
+	</select>
+	
+	<select id="getBIFDisplay" resultClass="java.lang.String">
+		SELECT IS_DISPLAY
+		FROM M_SUB_MODULES
+		WHERE ID_SUB_MODULE = 'B-BIF'
+		AND ID_MODULE='B'
+	</select>
+	
+	<!-- Function getting category code list -->
+	<select id="getCategoryCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT distinct(E.SVC_GRP) "serviceGroupID", 
+		 		E.SVC_GRP_NAME "serviceGroupName"
+		 FROM M_SVG E ORDER BY UPPER(SVC_GRP_NAME) ASC
+	</select>
+	
+	<!-- Function getting service code list -->
+	<select id="getServiceCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT distinct(F.ID_SERVICE) "serviceID", 
+		 		F.SVC_DESC "serviceDescription",
+		 		F.SVC_GRP "serviceGroupID"
+		 FROM M_SVC F 
+		 WHERE F.SVC_CATEGORY='TYP'
+		 AND F.IS_DELETED=0
+		 ORDER BY UPPER(SVC_DESC) ASC 
+	</select>
+	
+	<!-- Function getting plan code list -->
+	<select id="getPlanCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT distinct(F.ID_SERVICE) "serviceID", 
+		 		F.SVC_DESC "serviceDescription",
+		 		F.SVC_GRP "serviceGroupID"
+		 FROM M_SVC F 
+		 WHERE F.SVC_CATEGORY='ITM'
+		 AND F.IS_DELETED=0
+		 ORDER BY UPPER(SVC_DESC) ASC 
+	</select>
+	
+	<!-- Function getting plan detail code list -->
+	<select id="getPlanDetailCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT distinct(F.ID_SERVICE) "serviceID", 
+		 		F.SVC_DESC "serviceDescription",
+		 		F.SVC_GRP "serviceGroupID"
+		 FROM M_SVC F 
+		 WHERE F.SVC_CATEGORY='DTL'
+		 AND F.IS_DELETED=0
+		 ORDER BY UPPER(SVC_DESC) ASC
+	</select>
+	
+	<!-- Function getting carrier code list -->
+	<select id="getCarrierCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT distinct(f.ID_SUPPLIER) "supplierID", 
+			   f.SUPPLIER_NAME "supplierName"
+		FROM M_SUPPLIER_H f 
+		WHERE f.IS_DELETED=0
+		ORDER BY SUPPLIER_NAME ASC
+	</select>
+	
+	<!-- Function getting equipment location code list -->
+	<select id="getEquipmentLocationCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT M.ID_EQUIP_LOCATION "equipmentLocationID", 
+			   M.EQUIP_LOCATION "equipmentLocation"
+		FROM M_EQUIP_LOCATION	M
+		WHERE M.IS_DELETED=0
+		ORDER BY EQUIP_LOCATION ASC
+	</select>
+	
+	<!-- Function getting equipment suite code list -->
+	<select id="getEquipmentSuiteCodeList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT M.ID_EQUIP_SUITE "equipmentSuiteID", 
+			   M.EQUIP_SUITE "equipmentSuite"
+		FROM M_EQUIP_SUITE M
+		WHERE M.IS_DELETED=0
+		ORDER BY EQUIP_SUITE ASC
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+        <form name="/M_EMLS01Save">
+            <field depends="required,maxlength" property="serverName">
+                <arg key="Server Name" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <!-- #252 Batch Email Billing Document: generate PDF / email CT 09052017 ST -->
+            <field depends="maxlength" property="userName">
+                <arg key="SMTP Username" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <!-- #252 Batch Email Billing Document: generate PDF / email CT 09052017 EN -->
+            <field depends="required,maxlength" property="portNumber">
+                <arg key="Port Number" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <!-- #252 Batch Email Billing Document: generate PDF / email CT 09052017 ST -->
+            <field depends="maxlength" property="password">
+                <arg key="SMTP Password" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <!-- #252 Batch Email Billing Document: generate PDF / email CT 09052017 EN -->
+            <field depends="number" property="attachmentFileSize">
+                <arg key="Attachment File Size Limit(Kb)" position="0" resource="false"/>
+            </field>
+            
+            
+            <field depends="required,maxlength"
+                indexedListProperty="mailModule" property="temCode">
+                <arg key="Template Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>5</var-value>
+                </var>
+            </field>       
+        </form>
+        <form name="/M_EMLS02Save">
+            <field depends="required,maxlength" property="code">
+                <arg key="Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>5</var-value>
+                </var>
+            </field>
+            <field depends="email,maxlength" property="alwaysCc">
+                <arg key="Always Cc" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>  
+            <field depends="maxlength" property="description">
+                <arg key="Description" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>100</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="subject">
+                <arg key="Subject" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>100</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="attachpass">
+                <arg key="Attachment Password" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>20</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="attactmen1">
+                <arg key="Attachment 1 Filename" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="attactmen2">
+                <arg key="Attachment 2 Filename" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="attactmen3">
+                <arg key="Attachment 3 Filename" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="attactmen4">
+                <arg key="Attachment 4 Filename" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field depends="maxlength" property="zipFilename">
+                <arg key="ZipFile Filename" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>            
+        </form>
+    </formset>
+</form-validation>

@@ -1,0 +1,13 @@
+.InputTextbox
+{
+	text-align:left;
+	width:100%;
+}
+.datagridView
+{
+	border:2px;
+	width:100%;	
+}
+.datagridHeader {
+	background-color:#F8F8F8;
+}

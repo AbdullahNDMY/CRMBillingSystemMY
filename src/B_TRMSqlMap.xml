@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="TRM">
+<!--  
+<select id="SELECT.B_TRM.SQL001" 
+          resultClass="java.util.HashMap"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="java.util.HashMap">
+    SELECT E.CUST_NAME, C.DEBIT_REF, C.CREDIT_REF, C.AMT_PAID, 
+      TO_CHAR(C.DATE_UPDATED, 'dd/mm/yyyy') AS DATE_UPDATED, 
+      D.BILL_AMOUNT, D.BILL_AMOUNT - D.PAID_AMOUNT AS AMT_DUE
+    FROM T_TRM_D C, T_BIL_H D, M_CUST E
+    WHERE C.IS_DELETED = 0
+        AND D.ID_REF = C.CREDIT_REF
+        AND E.ID_CUST = D.ID_CUST
+    <dynamic prepend="AND">
+        <isNotEmpty prepend="AND" property="cusName">
+            UPPER(E.CUST_NAME) like UPPER('%$cusName$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="creditReference">
+            UPPER(C.CREDIT_REF) like UPPER('%$creditReference$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="debitReference">
+            UPPER(C.DEBIT_REF) like UPPER('%$debitReference$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            to_date(to_char(C.DATE_UPDATED,'DD/MM/YYYY'),'DD/MM/YYYY') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            to_date(to_char(C.DATE_UPDATED,'DD/MM/YYYY'),'DD/MM/YYYY') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+        </isNotEmpty>
+    </dynamic>
+    ORDER BY TO_CHAR(C.DATE_UPDATED, 'yyyymmdd') DESC, C.CREDIT_REF, C.DEBIT_REF
+</select>
+-->
+<select id="SELECT.B_TRM.total.SQL001" 
+          resultClass="java.lang.Integer"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="java.util.HashMap">
+    SELECT COUNT(DISTINCT(C.CREDIT_REF))  
+    FROM T_TRM_D C, T_BIL_H D, M_CUST E
+    WHERE C.IS_DELETED = 0
+        AND D.ID_REF = C.CREDIT_REF
+        AND E.ID_CUST = D.ID_CUST
+        <dynamic prepend="AND">
+            <isNotEmpty prepend="AND" property="cusName">
+                UPPER(E.CUST_NAME) like UPPER('%$cusName$%')
+            </isNotEmpty>
+            <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+            <isNotEmpty prepend="AND" property="customerType">
+                UPPER(E.CUSTOMER_TYPE) like UPPER('%$customerType$%')
+            </isNotEmpty>
+            <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+            <isNotEmpty prepend="AND" property="cusID">
+                UPPER(E.ID_CUST) like UPPER('%$cusID$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billAccountNo">
+                UPPER(D.BILL_ACC) like UPPER('%$billAccountNo$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billCurrency">
+                D.BILL_CURRENCY = '$billCurrency$'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="creditReference">
+                UPPER(C.CREDIT_REF) like UPPER('%$creditReference$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="debitReference">
+                UPPER(C.DEBIT_REF) like UPPER('%$debitReference$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+                to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="endDate">
+                to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+            </isNotEmpty>
+        </dynamic>
+</select>
+<select id="SELECT.B_TRM.export.SQL001" 
+          resultClass="java.util.HashMap"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="java.util.HashMap">
+    SELECT C.CREDIT_REF, MIN(C.TRANS_DATE) AS TRANS_DATE
+    FROM T_TRM_D C, T_BIL_H D, M_CUST E
+    WHERE C.IS_DELETED = 0
+        AND D.ID_REF = C.CREDIT_REF
+        AND E.ID_CUST = D.ID_CUST
+        <dynamic prepend="AND">
+            <isNotEmpty prepend="AND" property="cusName">
+                UPPER(E.CUST_NAME) like UPPER('%$cusName$%')
+            </isNotEmpty>
+            <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+            <isNotEmpty prepend="AND" property="customerType">
+                UPPER(E.CUSTOMER_TYPE) like UPPER('%$customerType$%')
+            </isNotEmpty>
+            <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+            <isNotEmpty prepend="AND" property="cusID">
+                UPPER(E.ID_CUST) like UPPER('%$cusID$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billAccountNo">
+                UPPER(D.BILL_ACC) like UPPER('%$billAccountNo$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billCurrency">
+                D.BILL_CURRENCY = '$billCurrency$'
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="creditReference">
+                UPPER(C.CREDIT_REF) like UPPER('%$creditReference$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="debitReference">
+                UPPER(C.DEBIT_REF) like UPPER('%$debitReference$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+                to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="endDate">
+                to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+            </isNotEmpty>
+        </dynamic>
+        GROUP BY CREDIT_REF
+        ORDER BY TRANS_DATE DESC, C.CREDIT_REF
+</select>
+<select id="SELECT.B_TRM.export.SQL002" 
+          resultClass="java.util.HashMap"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="java.util.HashMap">
+    SELECT E.CUST_NAME, C.DEBIT_REF, C.CREDIT_REF, C.AMT_PAID, E.CUSTOMER_TYPE,
+      TO_CHAR(C.TRANS_DATE, 'dd/mm/yyyy') AS DATE_UPDATED, D.ID_CUST, D.BILL_ACC, D.BILL_CURRENCY,
+      D.BILL_AMOUNT, D.BILL_AMOUNT - D.PAID_AMOUNT AS AMT_DUE
+    FROM T_TRM_D C, T_BIL_H D, M_CUST E
+    WHERE C.IS_DELETED = 0
+        AND D.ID_REF = C.CREDIT_REF
+        AND E.ID_CUST = D.ID_CUST
+    <dynamic prepend="AND">
+        <isNotEmpty prepend="AND" property="cusName">
+            UPPER(E.CUST_NAME) like UPPER('%$cusName$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="cusID">
+            UPPER(E.ID_CUST) like UPPER('%$cusID$%')
+        </isNotEmpty>
+        <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+        <isNotEmpty prepend="AND" property="customerType">
+            UPPER(E.CUSTOMER_TYPE) like UPPER('%$customerType$%')
+        </isNotEmpty>
+        <!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+        <isNotEmpty prepend="AND" property="billAccountNo">
+            UPPER(D.BILL_ACC) like UPPER('%$billAccountNo$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="billCurrency">
+            D.BILL_CURRENCY = '$billCurrency$'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="creditReference">
+            UPPER(C.CREDIT_REF) like UPPER('%$creditReference$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="debitReference">
+            UPPER(C.DEBIT_REF) like UPPER('%$debitReference$%')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="startDate">
+            to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="endDate">
+            to_date(to_char(C.TRANS_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+        </isNotEmpty>
+        <isNotEmpty property="creditRefs" prepend="AND">                
+            <iterate prepend="C.CREDIT_REF IN "  open="(" close=")"  conjunction="," property="creditRefs">
+                #creditRefs[]#
+            </iterate>              
+        </isNotEmpty>
+    </dynamic>
+    ORDER BY TO_CHAR(C.TRANS_DATE, 'yyyymmdd') DESC, C.CREDIT_REF, C.DEBIT_REF
+</select>
+
+<select id="SELECT.B_TRM.SQL010" 
+          resultClass="nttdm.bsys.b_trm.bean.DebitInfoBean"
+          parameterClass="java.util.HashMap"
+          resultSetType="SCROLL_INSENSITIVE">
+    Select    
+        1 as chkAppliedTo,
+        C.DEBIT_REF      as gdcDebitReference, 
+        (D.BILL_AMOUNT - D.PAID_AMOUNT + C.AMT_PAID) as gdcAmountDue, 
+        C.AMT_PAID       as tbxPayment, 
+        to_char(D.DATE_REQ, 'dd/mm/yyyy')       as gdcDateDebitRef, 
+        D.BILL_CURRENCY as gdcCurrency, 
+        D.BILL_AMOUNT     as gdcOriginalAmountCR, 
+        C.MATCH_ID as matchID,        
+        C.ID_BILL_ACCOUNT as billAccount
+    From    T_TRM_D C, T_BIL_H D        
+    Where            
+        C.CREDIT_REF    =    #creditRef#
+        and C.IS_DELETED    =    0    
+        and D.ID_REF        =    C.DEBIT_REF    
+    Order by D.DATE_REQ, D.ID_REF
+</select>
+
+<select id="SELECT.B_TRM.SQL011" 
+          resultClass="java.util.HashMap"
+          parameterClass="java.util.HashMap">
+    Select    
+        E.ID_CUST, D.ID_REF,
+        to_char(D.DATE_REQ, 'dd/mm/yyyy') as DATE_REQ,
+        D.BILL_CURRENCY,
+        D.BILL_AMOUNT,
+        D.BILL_AMOUNT - D.PAID_AMOUNT as AMT_DUE
+    From    T_BIL_H D, M_CUST E        
+    Where    
+        E.ID_CUST           =   D.ID_CUST
+        And D.ID_REF        =   '$creditRef$'    
+        And D.IS_DELETED    =   0    
+</select>        
+<select id="SELECT.B_TRM.SQL021" resultClass="string" parameterClass="java.util.HashMap">
+    SELECT 
+        TO_CHAR(T.TRANS_DATE,'DD/MM/YYYY') AS TRANS_DATE 
+    FROM 
+        T_TRM_D T 
+    WHERE 
+        T.CREDIT_REF = '$creditRef$'
+        AND T.IS_DELETED='0'
+        AND ROWNUM &lt;2
+</select>
+
+<select id="SELECT.B_TRM.SQL013" 
+    resultClass="org.apache.struts.util.LabelValueBean">
+    SELECT id_cust as value, cust_name as label
+    FROM m_cust 
+    WHERE is_deleted='0' 
+    ORDER BY cust_name ASC
+</select>
+
+<select id="SELECT.B_TRM.SQL014" resultClass="java.lang.Integer">
+    SELECT SEQ_T_TRM_D.NEXTVAL FROM DUAL
+</select>
+
+<select id="SELECT.B_TRM.SQL015" 
+          resultClass="nttdm.bsys.b_trm.bean.DebitInfoBean"
+          parameterClass="java.util.HashMap"
+          resultSetType="SCROLL_INSENSITIVE">
+    Select T1.* 
+    From (Select 1 as chkAppliedTo, C.DEBIT_REF as gdcDebitReference, 
+      (D.BILL_AMOUNT - D.PAID_AMOUNT + C.AMT_PAID) as gdcAmountDue, to_char(D.DATE_REQ, 'dd/mm/yyyy') as gdcDateDebitRef, D.DATE_REQ, D.ID_REF,
+      D.BILL_CURRENCY as gdcCurrency, D.BILL_AMOUNT as gdcOriginalAmountCR,
+      C.AMT_PAID as tbxPayment, C.MATCH_ID as matchID, C.ID_BILL_ACCOUNT as billAccount        
+    From T_TRM_D C, T_BIL_H D 
+    Where C.CREDIT_REF = #creditRef#
+      and C.IS_DELETED = 0
+      and D.ID_REF = C.DEBIT_REF    
+    UNION ALL
+    Select 0 as chkAppliedTo, D.ID_REF as gdcDebitReference,
+      D.BILL_AMOUNT- D.PAID_AMOUNT as gdcAmountDue, to_char(D.DATE_REQ, 'dd/mm/yyyy') as gdcDateDebitRef, D.DATE_REQ, D.ID_REF,
+      D.BILL_CURRENCY as gdcCurrency, D.BILL_AMOUNT as gdcOriginalAmountCR,
+      0 as tbxPayment, null as matchID, null as billAccount
+    From T_BIL_H  D, (Select * from T_BIL_H Where ID_REF = #creditRef#) H
+    Where D.ID_CUST = H.ID_CUST
+      <isEmpty property="cst" prepend="AND">
+          D.BILL_ACC = H.BILL_ACC
+      </isEmpty>
+      and D.IS_DELETED = 0
+      and D.BILL_CURRENCY =    H.BILL_CURRENCY
+      and D.BILL_AMOUNT - D.PAID_AMOUNT > 0    
+      and (D.BILL_TYPE = 'IN' or D.BILL_TYPE = 'DN')
+      and D.ID_REF NOT IN (Select DEBIT_REF From T_TRM_D Where CREDIT_REF = #creditRef# and IS_DELETED = 0)
+      and D.ID_REF NOT IN (#creditRef#)
+    ) T1
+    Order by T1.DATE_REQ, T1.ID_REF
+</select>
+<select id="SELECT.B_TRM.SQL016" 
+          resultClass="org.apache.struts.util.LabelValueBean"
+          parameterClass="java.util.HashMap">
+    Select    D.ID_REF as value, D.ID_REF as label
+    From    T_BIL_H  D        
+    Where    
+        D.ID_CUST        = #customer#
+        AND D.IS_DELETED    = 0    
+        AND D.PAID_AMOUNT = 0    
+        AND D.BILL_TYPE        = 'CN'
+        <isNotEmpty property="billAcc" prepend="AND">
+            D.BILL_ACC = RPAD(#billAcc#,20,' ')
+        </isNotEmpty>
+    ORDER BY D.ID_REF
+</select>
+<select id="SELECT.B_TRM.SQL017" 
+          resultClass="nttdm.bsys.b_trm.bean.DebitInfoBean"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="java.util.HashMap">
+       Select    
+           0 as chkAppliedTo,
+           to_char(D.DATE_REQ, 'dd/mm/yyyy') as gdcDateDebitRef,
+        D.ID_REF as gdcDebitReference,
+        D.BILL_CURRENCY as gdcCurrency,
+        D.BILL_AMOUNT as gdcOriginalAmountCR,
+        D.BILL_AMOUNT- D.PAID_AMOUNT as gdcAmountDue,
+        0 as tbxPayment
+    From    T_BIL_H  D        
+    Where        
+        D.ID_CUST            =    #customer#    
+        and D.IS_DELETED    =    0    
+        and D.BILL_CURRENCY    =    #currency#    
+        <isNotEmpty property="billAcc" prepend="AND">
+            D.BILL_ACC = #billAcc#
+        </isNotEmpty>
+        and D.BILL_AMOUNT - D.PAID_AMOUNT     >    0    
+        and (D.BILL_TYPE        =    'IN' or D.BILL_TYPE    = 'DN')    
+    Order by D.DATE_REQ, D.ID_REF
+</select>
+<select id="SELECT.B_TRM.SQL018" 
+          resultClass="java.util.HashMap"
+          parameterClass="java.util.HashMap">
+    Select     
+        to_char(D.DATE_REQ, 'dd/mm/yyyy') as DATE_REQ,
+        D.BILL_CURRENCY,
+        D.BILL_AMOUNT,
+        D.PAID_AMOUNT,
+        D.BILL_AMOUNT - D.PAID_AMOUNT as AMT_DUE     
+    From    T_BIL_H  D        
+    Where    
+        D.ID_REF = #creditRef#
+</select>
+<select id="SELECT.B_TRM.SQL019" 
+          resultClass="org.apache.struts.util.LabelValueBean"
+          parameterClass="java.util.HashMap">
+    Select    D.ID_REF as value, D.ID_REF as label
+    From    T_BIL_H  D        
+    Where    
+        D.ID_CUST        = #customer#
+        AND D.IS_DELETED    = 0
+        AND D.BILL_TYPE        = 'CN'    
+</select>
+<select id="SELECT.B_TRM.SQL020" 
+          resultClass="org.apache.struts.util.LabelValueBean"
+          parameterClass="java.util.HashMap">
+    SELECT ID_BILL_ACCOUNT as value, ID_BILL_ACCOUNT as label
+    FROM T_BAC_H 
+    WHERE ID_CUST = #customer#
+        AND IS_DELETED    = 0
+    ORDER BY ID_BILL_ACCOUNT
+</select>
+<select id="SELECT.B_TRM.SQL020.CURRENCY" 
+          resultClass="java.lang.String"
+          parameterClass="java.util.HashMap">
+    SELECT BILL_CURRENCY
+    FROM T_BAC_H 
+    WHERE ID_CUST = #customer#
+        AND ID_BILL_ACCOUNT = #billAccount#
+        AND IS_DELETED    = 0
+</select>
+<insert id="INSERT.B_TRM.SQL001" parameterClass="java.util.HashMap">
+    Insert            
+    Into    T_TRM_D (
+            MATCH_ID,
+            <isNotNull property="billAccount">
+                ID_BILL_ACCOUNT,
+            </isNotNull>
+            CREDIT_REF,
+            DEBIT_REF,
+            AMT_DUE,
+            AMT_PAID,
+            IS_DELETED,
+            DATE_CREATED,
+            DATE_UPDATED,
+            ID_LOGIN,
+            ID_AUDIT,
+            TRANS_DATE)
+    Values(
+            #matchID#,
+            <isNotNull property="billAccount">
+                #billAccount#,
+            </isNotNull>
+            #creditRef#,    
+            #debitRef#,    
+            #amtDue#,    
+            #payment#,    
+            0,    
+            SYSDATE,    
+            SYSDATE,    
+            #idLogin#,
+            #idAudit#,
+            to_date(#transationDate#,'DD/MM/YYYY'))
+</insert>
+
+<update id="UPDATE.B_TRM.SQL008" parameterClass="java.util.HashMap">
+    Update            
+        T_BIL_H D        
+    Set            
+        D.PAID_AMOUNT        =    D.PAID_AMOUNT + #newPaidAmt#,    
+        D.DATE_UPDATED        =     SYSDATE,    
+        D.ID_LOGIN            =    #idLogin#,
+        D.ID_AUDIT            =     #idAudit#
+    WHERE    
+        D.ID_REF             = #debitRef#    
+</update>
+
+<update id="UPDATE.B_TRM.SQL009" parameterClass="java.util.HashMap">
+    Update            
+        T_BIL_H D        
+    Set            
+        D.LAST_PAYMENT_DATE    =    to_date(#lastPaymentDate#,'dd/MM/YYYY'),    
+        D.DATE_UPDATED        =     SYSDATE,    
+        D.ID_LOGIN            =    #idLogin#,
+        D.ID_AUDIT             =     #idAudit#
+    WHERE    
+        D.ID_REF             = #debitRef#    
+        And (D.LAST_PAYMENT_DATE &lt; to_date(#lastPaymentDate#,'dd/MM/YYYY') or D.LAST_PAYMENT_DATE is null)
+</update>
+
+<update id="UPDATE.B_TRM.SQL010" parameterClass="java.util.HashMap">
+    Update            
+        T_BIL_H D        
+    Set        
+        D.IS_SETTLED     =    case when D.BILL_AMOUNT = D.PAID_AMOUNT then '1' else '0' end,    
+        D.DATE_UPDATED    =    SYSDATE,    
+        D.ID_LOGIN        =    #idLogin#,
+        D.ID_AUDIT         =     #idAudit#
+    WHERE    
+        D.ID_REF     =     #debitRef#    
+</update>
+
+<update id="UPDATE.B_TRM.SQL002" parameterClass="java.util.HashMap">
+    Update            
+        T_BIL_H D        
+    Set            
+        D.PAID_AMOUNT        =    #totalPayment#,    
+        D.DATE_UPDATED        =     SYSDATE,    
+        D.ID_LOGIN            =    #idLogin#,
+        D.ID_AUDIT            =     #idAudit#
+    WHERE    D.ID_REF = #creditRef#    
+</update>
+
+<update id="UPDATE.B_TRM.SQL004" parameterClass="java.util.HashMap">
+    Update            
+        T_TRM_D C        
+    Set        
+        C.IS_DELETED        =    1,    
+        C.DATE_UPDATED        =    sysdate,    
+        C.ID_LOGIN            =    #idLogin#,
+        C.ID_AUDIT            =     #idAudit#
+    Where
+        C.CREDIT_REF        =     #creditRef#    
+        And C.DEBIT_REF        =     #debitRef#    
+        <isNotEmpty property="matchID" prepend="AND">
+            C.MATCH_ID = #matchID#
+        </isNotEmpty>
+        <isNotEmpty property="billAccount" prepend="AND">
+            C.ID_BILL_ACCOUNT = #billAccount#
+        </isNotEmpty>
+</update>
+
+<select id="checkTrmExist" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    SELECT * FROM T_TRM_D C
+    WHERE 
+        C.CREDIT_REF = #creditRef#
+        <isNotEmpty property="matchIds" prepend="AND">                
+            <iterate prepend="C.MATCH_ID IN "  open="(" close=")"  conjunction="," property="matchIds">
+                #matchIds[]#
+            </iterate>
+        </isNotEmpty>
+</select>
+
+<select id="getTrmMatchInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    SELECT *
+    FROM (SELECT *
+          FROM T_TRM_D D
+          WHERE D.CREDIT_REF = #creditRef#
+                And D.DEBIT_REF = #debitRef#
+                AND D.IS_DELETED = '0')
+    WHERE ROWNUM = 1
+</select>
+<select id="getMachingCountNum" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+    select count(*)
+    from T_TRM_D D
+    where 
+    D.CREDIT_REF = #creditRef#
+    And D.DEBIT_REF = #debitRef#
+    AND D.IS_DELETED='0'
+</select>
+<select id="getTrmBillInfo" parameterClass="string" resultClass="java.util.HashMap">
+    SELECT (BILL_AMOUNT-PAID_AMOUNT) AS OUTSTANDING ,BILL_AMOUNT,PAID_AMOUNT
+    FROM T_BIL_H H
+    WHERE 
+        H.ID_REF = RPAD(#idref#,20,' ')
+        AND H.IS_DELETED='0'
+</select>
+<select id="getMatchsOfCreditNo" parameterClass="string" resultClass="java.util.HashMap">
+    SELECT C.* FROM T_TRM_D C
+    WHERE 
+        C.CREDIT_REF = #creditRef#
+        AND C.IS_DELETED='0'
+</select>
+<update id="UPDATE.B_TRM.SQL006" parameterClass="java.util.HashMap">
+    Update            
+        T_TRM_D C        
+    Set        
+        C.AMT_PAID         = #payment#,    
+        C.AMT_DUE          = #amtDue#,    
+        C.IS_DELETED     = 0,
+        C.DATE_UPDATED     = sysdate,    
+        C.ID_LOGIN         = #idLogin#,
+        C.TRANS_DATE     = to_date(#transationDate#,'DD/MM/YYYY'),
+        C.ID_AUDIT          = #idAudit#
+    Where
+        C.CREDIT_REF = #creditRef#
+        AND C.DEBIT_REF = #debitRef#
+        AND C.IS_DELETED = 0
+        <isNotEmpty property="matchID" prepend="AND">
+            C.MATCH_ID = #matchID#
+        </isNotEmpty>
+        <isNotEmpty property="billAccount" prepend="AND">
+            C.ID_BILL_ACCOUNT = #billAccount#
+        </isNotEmpty>
+</update>
+<select id="SELECT.B_TRM.IS_DISPLAY_BIL_ACC" resultClass="java.lang.String">
+    SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET = 'CB_AUTO_OFFSET'
+</select>
+</sqlMap>

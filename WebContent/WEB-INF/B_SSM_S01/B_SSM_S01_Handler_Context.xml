@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+   <!-- Action forwarding to B_SSM_S01_Page -->
+   <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+         name="/B_SSM_S01/B_SSM_S01_Action" 
+         scope="prototype"/>   
+	
+  <!-- Action processing request (search,...) from B_SSM_S01_Page -->	        
+  <bean class="nttdm.bsys.b_ssm.s01.action.B_SSM_S01_BProcess_Action"
+        name="/B_SSM_S01/B_SSM_S01_Request_Process_Action" 
+        scope="prototype">
+        <property name="businessLogic" 
+        ref="B_SSM_S01_Request_Process_Blogic"/>
+        <property name="queryDAO" ref="queryDAO"/>
+   </bean>  
+   
+   <!-- Bean Blogic processing request (search,...) from B_SSM_S01_Page -->
+   <bean class="nttdm.bsys.b_ssm.s01.blogic.B_SSM_S01_Request_Process_Blogic"
+         id="B_SSM_S01_Request_Process_Blogic" 
+         scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+   </bean>
+      
+   <!-- Action processing pagelist from B_SSM_S01_Page -->
+   <bean class="nttdm.bsys.b_ssm.s01.action.B_SSM_S01_Request_Process_Action"
+         name="/B_SSM_S01/B_SSM_S01_PageList_Process_Action" 
+         scope="singleton">
+   </bean>
+   
+   <!-- Action processing viewing with previous state -->
+   <bean class="nttdm.bsys.b_ssm.s01.action.B_SSM_S01_Request_Process_Action"
+         name="/B_SSM_S01/B_SSM_S01_ViewWithPreviousState_Process_Action" 
+         scope="singleton">
+   </bean>
+   
+   <!-- Action processing export from B_SSM_S01_Page -->
+   <bean class="nttdm.bsys.b_ssm.s01.action.B_SSM_S01_Request_Process_Action"
+         name="/B_SSM_S01/B_SSM_S01_Export_Process_Action" 
+         scope="singleton">
+   </bean>
+  
+   <!-- Action processing sub info displaying request from B_SSM_S01_Page -->
+   <bean class="nttdm.bsys.b_ssm.s01.action.B_SSM_S01_Request_Process_Action"
+         name="/B_SSM_S01/B_SSM_S01_SubInfo_Displaying_Action" 
+         scope="singleton">
+   </bean>
+  
+</beans>

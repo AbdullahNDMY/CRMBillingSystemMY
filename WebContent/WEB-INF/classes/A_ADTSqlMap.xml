@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="A_ADT">
+	<select id="SELECT.A_ADT.SQL001" parameterClass="nttdm.bsys.a_adt.dto.A_ADTR01Input" resultClass="java.lang.Integer">
+		SELECT COUNT(ah.id_audit)      
+		  FROM m_audit_trail_h ah
+		      ,m_user u
+		      ,m_modules m
+		      ,m_sub_modules sm
+		 WHERE ah.id_user = u.id_user(+) 
+		   AND ah.id_module = m.id_module
+		   AND ah.id_sub_module = sm.id_sub_module
+		   AND m.id_module = sm.id_module
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="dateFrom">
+				TO_CHAR(ah.date_created, 'yyyyMMdd') <![CDATA[ >= ]]> #dateFrom#
+			</isNotEmpty>	
+			<isNotEmpty prepend="AND" property="dateTo">
+				TO_CHAR(ah.date_created, 'yyyyMMdd') <![CDATA[ <= ]]> #dateTo#
+			</isNotEmpty>					
+			<isNotEmpty prepend="AND" property="subModuleID">
+				<!-- <isEqual property="subModuleIDLen" compareValue="5">
+					substr(ah.id_sub_module,1,5) = substr(#subModuleID#,1,5)
+				</isEqual>
+				<isNotEqual property="subModuleIDLen" compareValue="5"> -->
+					ah.id_sub_module = #subModuleID#
+				<!-- </isNotEqual> -->
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference">
+				LOWER(ah.reference) LIKE LOWER(#reference#)
+			</isNotEmpty>			
+			<isNotEmpty prepend="AND" property="userName">
+				(LOWER(u.user_name) LIKE LOWER(#userName#) OR LOWER(ah.id_user) LIKE LOWER(#userName#))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actionCbo">
+				LOWER(ah.action) = LOWER(#actionCbo#)
+			</isNotEmpty>
+		</dynamic>	  	
+	</select>
+	<select id="SELECT.A_ADT.SQL002" parameterClass="nttdm.bsys.a_adt.dto.A_ADTR01Input" resultClass="nttdm.bsys.a_adt.bean.AuditHeader">
+	  SELECT ROWNUM as "index", results.*
+	    FROM
+	   (SELECT ah.id_audit AS auditID
+		       ,ah.id_user AS userID
+		       ,u.user_name AS userName
+		       ,ah.id_module AS moduleID
+		       ,m.mod_name AS moduleName
+		       ,ah.id_sub_module AS subModuleID
+		       ,sm.sub_mod_name AS subModuleName
+		       ,ah.reference AS reference
+		       ,ah.status AS status
+		       ,ah.action AS action
+		       ,TO_CHAR(ah.date_created,'yyyy/MM/dd hh:mi:ss AM') AS createdDate      
+		  FROM m_audit_trail_h ah
+		      ,m_user u
+		      ,m_modules m
+		      ,m_sub_modules sm
+		 WHERE ah.id_user = u.id_user(+) 
+		   AND ah.id_module = m.id_module
+		   AND ah.id_sub_module = sm.id_sub_module
+		   AND m.id_module = sm.id_module
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="dateFrom">
+				TO_CHAR(ah.date_created, 'yyyyMMdd') <![CDATA[ >= ]]> #dateFrom#
+			</isNotEmpty>	
+			<isNotEmpty prepend="AND" property="dateTo">
+				TO_CHAR(ah.date_created, 'yyyyMMdd') <![CDATA[ <= ]]> #dateTo#
+			</isNotEmpty>					
+			<isNotEmpty prepend="AND" property="subModuleID">
+				<!-- <isEqual property="subModuleIDLen" compareValue="5">
+					substr(ah.id_sub_module,1,5) = substr(#subModuleID#,1,5)
+				</isEqual>
+				<isNotEqual property="subModuleIDLen" compareValue="5"> -->
+					ah.id_sub_module = #subModuleID#
+				<!-- </isNotEqual>-->			
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference">
+				LOWER(ah.reference) LIKE LOWER(#reference#)
+			</isNotEmpty>			
+			<isNotEmpty prepend="AND" property="userName">
+				(LOWER(u.user_name) LIKE LOWER(#userName#) OR LOWER(ah.id_user) LIKE LOWER(#userName#))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actionCbo">
+				LOWER(ah.action) = LOWER(#actionCbo#)
+			</isNotEmpty>
+		</dynamic>
+	  ORDER BY ah.date_created Desc
+	  ) results	 
+	</select>
+	
+	<select id="SELECT.A_ADT.SQL003" parameterClass="nttdm.bsys.a_adt.dto.A_ADTR02Input" resultClass="nttdm.bsys.a_adt.bean.AuditHeader">
+		SELECT ROWNUM as "index"
+		       ,ah.id_audit AS auditID
+		       ,ah.id_user AS userID
+		       ,u.user_name AS userName
+		       ,ah.id_module AS moduleID
+		       ,m.mod_name AS moduleName
+		       ,ah.id_sub_module AS subModuleID
+		       ,sm.sub_mod_name AS subModuleName
+		       ,ah.reference AS reference
+		       ,ah.status AS status
+		       ,ah.action AS action
+		       ,TO_CHAR(ah.date_created,'yyyy/MM/dd hh:mi:ss AM') AS createdDate      
+		  FROM m_audit_trail_h ah
+		      ,m_user u
+		      ,m_modules m
+		      ,m_sub_modules sm
+		 WHERE ah.id_user = u.id_user(+) 
+		   AND ah.id_module = m.id_module
+		   AND ah.id_sub_module = sm.id_sub_module
+		   AND m.id_module = sm.id_module
+		   AND ah.id_audit = #selectedAuditID#
+	</select>
+	
+	<select id="SELECT.A_ADT.SQL004" parameterClass="nttdm.bsys.a_adt.dto.A_ADTR02Input" resultClass="nttdm.bsys.a_adt.bean.AuditDetail">
+		SELECT id_audit AS auditID
+		      ,audit_seq AS auditSeq
+		      ,table_name AS tableName
+		      ,at_field AS atField
+		      ,old_data AS oldData
+		      ,new_data AS newData 				
+		 FROM m_audit_trail_d
+		WHERE id_audit = #selectedAuditID#	
+	 ORDER BY audit_seq
+	</select>	
+</sqlMap>

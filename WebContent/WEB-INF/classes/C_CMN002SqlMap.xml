@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="C_CMN002">
+<!-- selectNotification -->
+<select id="SELECT.C_CMN002.SQL001" resultClass="nttdm.bsys.c_cmn002.bean.MessageBean">
+	SELECT ROWNUM AS no,id_msg,subject,display_date,id_ref,priority,end_date, id_screen FROM(
+	SELECT	DISTINCT  B.id_msg,B.subject,TO_CHAR(C.display_date,'dd/MM/yyyy') display_date, 
+			B.id_ref, B.id_screen, B.priority, TO_CHAR(B.end_date,'dd/MM/yyyy') end_date, C.display_date as date_sort
+	FROM	m_alt_h B, m_alt_d C
+	WHERE
+	C.id_user	=	#id_user# AND
+	C.is_deleted	=	0 AND	
+	C.id_msg	=	B.id_msg AND
+	B.msg_type	=	'NOTICE'
+	order by date_sort DESC
+	)
+</select>
+<!-- selectTasks -->
+<select id="SELECT.C_CMN002.SQL002" resultClass="nttdm.bsys.c_cmn002.bean.MessageBean">
+	SELECT ROWNUM AS no,id_msg,subject,display_date,id_ref,priority,end_date FROM(
+	SELECT	DISTINCT B.id_msg,B.subject,TO_CHAR(C.display_date,'dd/MM/yyyy') display_date, 
+			B.id_ref, B.priority, TO_CHAR(B.end_date,'dd/MM/yyyy') end_date	, C.display_date as date_sort			
+	FROM	m_alt_h B, m_alt_d C				
+	WHERE
+	C.id_user	=	#id_user# and
+	C.is_deleted	=	0 and
+	
+	C.id_msg	=	B.id_msg and
+	B.msg_type	=	'TASK'
+	order by date_sort DESC
+	)
+</select>
+<!-- selectSent -->
+<select id="SELECT.C_CMN002.SQL003" resultClass="nttdm.bsys.c_cmn002.bean.MessageBean">
+	SELECT ROWNUM AS no,id_msg,subject,date_created,msg_type,priority,end_date FROM(
+	SELECT	DISTINCT B.id_msg,B.subject,TO_CHAR(B.date_created,'dd/MM/yyyy') date_created, B.msg_type, B.priority, TO_CHAR(B.end_date,'dd/MM/yyyy') end_date, B.date_created as date_sort				
+	FROM	m_alt_h B
+	WHERE
+	B.id_creator	=	#id_user# AND
+	B.is_deleted	=	0
+	order by date_sort DESC)
+</select>
+<!-- selectRowCount --> 
+<select id="SELECT.C_CMN002.SQL004" 
+  	resultClass="java.lang.String">
+	SELECT	SET_VALUE				
+	FROM	m_gset_d					
+	WHERE	 					
+	ID_SET	=	'DASHBD' AND
+	SET_SEQ	=	1 AND
+	IS_DELETED	=	0 AND
+	ID_LOGIN = #id_user#
+</select>
+<insert id="SELECT.C_CMN002.SQL005" 
+	parameterClass="nttdm.bsys.c_cmn002.bean.MessageBean">
+	UPDATE m_alt_h SET IS_DELETED	=	1
+	WHERE id_msg IN
+		<iterate property="idMsgList"
+	    	 open="(" close=")"
+         	conjunction=",">
+		      #idMsgList[]# 
+		</iterate>
+</insert> 
+<insert id="SELECT.C_CMN002.SQL006" 
+	parameterClass="nttdm.bsys.c_cmn002.bean.MessageBean">
+	UPDATE m_alt_d SET IS_DELETED	=	1
+	WHERE id_msg IN 
+		<iterate property="idMsgList"
+	    	 open="(" close=")"
+         	conjunction=",">
+		      #idMsgList[]# 
+		 </iterate>
+	and id_user = #id_login#
+</insert> 
+<select id="SELECT.C_CMN002.SQL007" 
+  	resultClass="java.lang.String">
+	SELECT	COUNT(*)			
+	FROM	m_alt_d					
+	WHERE	 					
+	is_new	=	'1' AND
+	is_deleted	=	'0' AND id_user=#id_user#
+</select>
+<select id="SELECT.C_CMN002.SQL008" parameterClass="nttdm.bsys.c_cmn002.bean.MessageBean"
+  	resultClass="java.lang.Integer">
+	SELECT	COUNT(*)			
+	FROM	m_alt_d					
+	WHERE id_msg = #id_msg# AND is_deleted = 0
+</select>
+	
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+</sqlMap>

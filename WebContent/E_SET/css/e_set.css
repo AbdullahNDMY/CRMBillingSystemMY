@@ -1,0 +1,14 @@
+.batchE, .batchE2 {
+	float: left;
+	width: 50%;
+}
+.batchE2 {
+	margin-left: -1px;
+}
+.batchE table, .batchE2 table {
+	border: 0px;
+}
+p {
+	margin-top: 1px;
+	margin-bottom: 1px;
+}

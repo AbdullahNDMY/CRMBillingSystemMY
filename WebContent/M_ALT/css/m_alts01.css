@@ -1,0 +1,110 @@
+
+.inputEmailInfo {
+	margin-top:0.05in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:75%;		
+}
+.inputEmailInfo table {
+	font-size : 11px;	
+}
+.inputEmailInfo td.col1Top {
+	padding-top: 0.05in;
+	border-top: solid 2px #CFCFCF;
+	border-left: solid 2px #CFCFCF;
+	text-align: right;
+	width : 20%;
+}
+.inputEmailInfo td.col2Top {
+	padding-top: 0.05in;
+	padding-right: 0.05in;
+	border-top: solid 2px #CFCFCF;
+	border-right: solid 2px #CFCFCF;
+	text-align: left;
+	width : 80%;
+}
+.inputEmailInfo td.colLeft {
+	border-left: solid 2px #CFCFCF;
+	text-align: right;
+}
+.inputEmailInfo td.colRight {
+	border-right: solid 2px #CFCFCF;
+	padding-right: 0.05in;
+	text-align: left;
+}
+.inputEmailInfo td.colBottom {
+	border-bottom: solid 2px #CFCFCF;
+	border-left: solid 2px #CFCFCF;
+	border-right: solid 2px #CFCFCF;
+}
+.MessageTypeCombobox {
+	width: 200px;
+}
+.FullTextBox {
+	width: 100%;
+	font-family: Tahoma;
+}
+.ToMsgTextArea {
+	width: 100%;
+	overflow: hidden;
+	font-family: Tahoma;	
+}
+.DateTextBox {
+	width: 100px;
+	font-family: Tahoma;
+}
+.MessageTextArea {
+	width: 100%;
+	height: 150px;
+	font-family: Tahoma;
+	font-size: 13px;
+}
+
+.autocompleteTable {  
+	font-family: Tahoma; 
+	border: solid 1px #000000;
+	border-top: solid 1px #000000;
+	border-bottom: solid 1px #000000;
+	border-left: solid 1px #000000;
+	border-right: solid 1px #000000;
+}
+.autocompleteTable table{
+	font-family: Tahoma;
+}
+
+.fakeButton {
+	z-index:1;
+	width:70px;
+	height:25px;
+	font-size:12px;
+}
+
+input.realFile {
+  position:absolute;
+  left:-75px;
+  width: 150px;
+  height:25px;
+  -moz-opacity:0 ;
+  filter:alpha(opacity: 0);
+  opacity: 0;
+  z-index: 2;
+}
+input.fakeFile { 
+	z-index:1;
+	width:80px;
+	height:25px;
+}
+.hideInputFile {
+	display: none;	
+}
+.uploadDisplay {
+	position: relative;
+	float: left;
+	margin-right: 5px;
+	text-indent: 15px;
+}
+.uploadDisplay img {
+	position: absolute;
+	top: 5px;
+	left: 0px;
+}

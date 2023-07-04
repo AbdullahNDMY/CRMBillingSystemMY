@@ -1,0 +1,2585 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="B_SSM_S02">
+
+	<!--************************************ Sql result map  ******************************-->		
+	
+	<!-- Result map of subscription Info Memo result -->
+	<resultMap id="subscriptionInfoMemoResult" class="java.util.HashMap">
+	  <result property="memoRemarks" column="MEMO"/>
+	  <result property="completionReportRemark" column="PRINTED_REMARK"/>
+	</resultMap>
+	
+	<!-- Result map of MRTG monitoring -->
+	<resultMap id="MRTGMonitoringResult" class="java.util.HashMap">
+	  <result property="mRTGURL" column="MRTG_URL"/>
+	  <result property="mGTRID" column="MRTG_ID"/>
+	  <result property="mRTGPassword" column="MRTG_PW"/>	  
+	</resultMap>	
+		
+	<!-- Result map of mail server info -->
+	<resultMap id="mailServerInformationResult" class="java.util.HashMap">
+	  <result property="domainName" column="DOMAIN_NAME"/>
+	  <result property="primaryDomainNameServer" column="PRIMDOMAIN_NO"/>
+	  <result property="sMTPServerName" column="SMTP_SERVER_NAME"/>
+	  <result property="pOPServerName" column="POP_SERVER_NAME"/>
+	  <result property="secondaryDomainNameServer" column="SECDOMAIN_NO"/>	  	  
+	  <result property="autoMailAcc" column="AUTO_MAIL_ACC"/>
+	  <result property="mailAccount" column="OPT_MAIL_ACC"/>
+	  <result property="baseQty" column="OPT_BASE_QTY"/>
+	  <result property="additionalOption" column="OPT_ADDT_OPTION"/>
+	  <result property="autoMailBoxQty" column="AUTO_MAILBOX_QTY"/>
+	  <result property="mailBoxQty" column="OPT_MAILBOX_QTY"/>
+	  <result property="autoVirusScan" column="AUTO_VIRUS_SCAN"/>
+	  <result property="optionVirusScan" column="OPT_VIRUS_SCAN"/>
+	  <result property="autoAntiSpam" column="AUTO_ANTI_SPAM"/>
+	  <result property="optionAntiSpam" column="OPT_ANTI_SPAM"/>
+	  <result property="autoJunkManagement" column="AUTO_JUNK_MGT"/>	
+	  <result property="optionJunkManagement" column="OPT_JUNK_MGT"/>	
+	  <result property="mailAddressMemoRemarks" column="MEMO"/>  	 			  
+	</resultMap>
+	
+	<resultMap id="mailAddressInformationResult" class="java.util.HashMap">
+	  <result property="domainName" column="DOMAIN_NAME"/>
+	  <result property="primaryDomainNameServer" column="PRIMDOMAIN_NO"/>
+	  <result property="sMTPServerName" column="SMTP_SERVER_NAME"/>
+	  <result property="pOPServerName" column="POP_SERVER_NAME"/>
+	  <result property="secondaryDomainNameServer" column="SECDOMAIN_NO"/>	  	  
+	  <result property="autoMailAcc" column="AUTO_MAIL_ACC"/>
+	  <result property="mailAccount" column="OPT_MAIL_ACC"/>
+	  <result property="baseQty" column="OPT_BASE_QTY"/>
+	  <result property="additionalOption" column="OPT_ADDT_OPTION"/>
+	  <result property="autoMailBoxQty" column="AUTO_MAILBOX_QTY"/>
+	  <result property="mailBoxQty" column="OPT_MAILBOX_QTY"/>
+	  <result property="autoVirusScan" column="AUTO_VIRUS_SCAN"/>
+	  <result property="optionVirusScan" column="OPT_VIRUS_SCAN"/>
+	  <result property="autoAntiSpam" column="AUTO_ANTI_SPAM"/>
+	  <result property="optionAntiSpam" column="OPT_ANTI_SPAM"/>
+	  <result property="autoJunkManagement" column="AUTO_JUNK_MGT"/>	
+	  <result property="optionJunkManagement" column="OPT_JUNK_MGT"/>	
+	  <result property="mailAddressMemoRemarks" column="MEMO"/>
+	  <result property="webmailURL" column="WEBMAIL_URL"/>
+	</resultMap>
+	
+	<!-- Result map of mail account -->
+	<resultMap id="mailAccountResult" class="java.util.HashMap">
+		<result property="mailAddressID" column="ID_MAIL"/>
+		<result property="mailAccountID" column="ID_MAILACC"/>
+	  	<result property="mailAccountName" column="MAIL_ACCOUNT"/>
+	  	<result property="mailAccountPassword" column="MAIL_PW"/>
+	  	<result property="mailPopAccountName" column="POP_ACCOUNT"/>
+	 	<result property="mailAccountAddBoxSize" column="MAILBOX_QTY"/>
+	  	<result property="mailAccountBoxQty" column="MAILBOX_SIZE"/>	  	  
+	  	<result property="mailAccountCheckVirusScan" column="VIRUS_SCAN"/>
+	  	<result property="mailAccountCheckAntiSpam" column="ANTI_SPAM"/>
+	 	<result property="mailAccountCheckJunkManagement" column="JUNK_MGT"/>
+	  	<result property="mailAccountAddedDate" column="DATE_CREATED"/>
+	  	<result property="mailAccountPrintedDate" column="DATE_PRINTED_ACT"/>  	 	 			  
+	</resultMap>
+	
+	<!-- Result map of deleted mail account -->
+	<resultMap id="mailAccountDeletedResult" class="java.util.HashMap">
+		<result property="mailAddressID" column="ID_MAIL"/>
+		<result property="mailAccountID" column="ID_MAILACC"/>
+	  	<result property="mailAccountDeleted" column="MAIL_ACCOUNT"/>
+	  	<result property="mailAccountDeletedDate" column="DATE_UPDATE"/>
+	  	<result property="mailAccountPrintedDate" column="DATE_PRINTED_ACT"/>	 	    	  	 	 			  
+	</resultMap>
+	
+	<!-- Result map of firewall information -->
+	<resultMap id="firewallInformationResult" class="java.util.HashMap">
+		<result property="firewallNo" column="FIREWALL_NO"/>
+		<result property="firewallType" column="FIREWALL_TYPE"/>
+	  	<result property="firewallModel" column="FIREWALL_MODEL"/>
+	  	<result property="firewallInterfaceIP_Trusted" column="INT_IP_TRUSTED"/>
+	  	<result property="firewallInterfaceIP_UnTrusted" column="INT_IP_UNTRUSTED"/>	 	
+	  	<result property="firewallSerialNumber" column="SERIAL_NO"/>	
+	  	<result property="firewallNAT" column="NAT"/>	
+	  	<result property="firewallDHCP" column="DHCP"/>	
+	  	<result property="firewallDHCPIPRange" column="DHCP_IP_RANGE"/>	    
+	  	<result property="firewallDNS" column="DNS"/>	 
+	  	<result property="firewallMemoRemarks" column="MEMO"/>	 	  	 	 			  
+	</resultMap>
+
+	<!-- Result map of firewall interface ip -->
+	<resultMap id="firewallInterfaceIPResult" class="java.util.HashMap">
+	    <result property="firewallInterfaceIP" column="INTERFACE_IP"/>
+  		<result property="firewallInterfaceZone" column="ZONE"/>
+  		<result property="firewallInterfaceIPID" column="ID_INT_IP"/>
+	</resultMap>
+
+	<!-- Result map of policy -->
+	<resultMap id="firewallPolicyResult" class="java.util.HashMap">
+	    <result property="firewallPolicySource" column="SOURCE"/>
+	    <result property="firewallPolicyProtocol" column="PROTOCOL"/>
+  		<result property="firewallPolicyDestination" column="DESTINATION"/>
+  		<result property="firewallPolicyAction" column="ACTION"/>
+  		<result property="firewallPolicyRemark" column="REMARKS"/>
+  		<result property="firewallPolicyID" column="ID_POLICY"/>
+	</resultMap>
+	
+	<!-- Result map of dns zone info -->
+	<resultMap id="dNSZoneInformationResult" class="java.util.HashMap">
+	    <result property="dNSZoneMigrationCurrentNameServer" column="MIG_SERVER"/>
+	    <result property="dNSZoneMigrationCurrentNameServer2" column="MIG_SERVER2"/>
+	    <result property="dNSZoneMigrationCurrentNameServer3" column="MIG_SERVER3"/>
+	    <result property="dNSZoneMigrationCurrentRegister" column="MIG_REGISTRAR"/>
+  		<result property="dNSZoneMemoRemarks" column="MEMO"/>
+  		<result property="dNSZoneID" column="ID_DNS_ZONE"/>
+	</resultMap>
+				
+	<!-- Result map of dns zone record -->
+	<resultMap id="dNSZoneRecordResult" class="java.util.HashMap">
+	    <result property="dNSZoneRecordDomainName" column="DNS_DOMAIN"/>
+	    <result property="dNSZoneRecordType" column="DNS_TYPE"/>
+  		<result property="dNSZoneRecordIPAddress" column="DNS_IP"/>
+  		<result property="dNSZoneRecordWeight" column="DNS_WEIGHT"/>
+  		<result property="dNSZoneRecordID" column="ID_DNS_REC"/>
+	</resultMap>
+	
+	<!-- Result map of cpe config info -->
+	<resultMap id="CPEConfigInfoResult" class="java.util.HashMap">
+	    <result property="CPEConfigurationHID" column="ID_CPE_CONF_H"/>
+	    <result property="CPEConfigurationMemoRemarks" column="MEMO"/>  
+	</resultMap>
+	
+	<!-- Result map of cpe config detail -->
+	<resultMap id="CPEConfigDetailResult" class="java.util.HashMap">
+		<result property="CPEConfigurationName" column="CPE_NAME"/>
+	    <result property="CPEConfigurationISPEdgeRouterIPAddress" column="ISP_EDGE_IP"/>
+	    <result property="CPEConfigurationRouterWANInterfacesIPAddress" column="ROUTER_WAN_IP"/>  
+	    <result property="CPEConfigurationNetworkAddressID" column="NETWORK_ADR"/>  
+	    <result property="CPEConfigurationManagedCPEIsUsed" column="IS_MANAGED_CPE"/>  
+	    <result property="CPEConfigurationCPEModelInstalled" column="CPE_MODEL_INSTALLED"/>  
+	    <result property="CPEConfigurationLAN" column="CPE_LAN"/>  
+	    <result property="CPEConfigurationWAN" column="CPE_WAN"/>  
+	    <result property="CPEConfigurationSerialNumber" column="SERIAL_NO"/>  
+	    <result property="CPEConfigurationEquipment_ItemsIncludedInManagedCPEPackage" column="EQUIP_ITEMS_PACKAGE"/>  
+	    <result property="CPEConfigurationCustomerSpecificConfigurationOnRouter" column="CUST_SPEC_CONF_ROUTER"/>  
+	    <result property="CPEConfigurationHID" column="ID_CPE_CONF_H"/>  
+	     <result property="CPEConfigurationDID" column="ID_CPE_CONF_D"/> 
+	</resultMap>
+		
+	<!-- Result map of cpe config dID -->
+	<resultMap id="CPEConfigDIDResult" class="java.util.HashMap">
+		<result property="CPEConfigurationDID" column="ID_CPE_CONF_D"/>	    
+	</resultMap>
+	
+	<!-- Result map of mail account totals -->
+	<resultMap id="mailAccountTotalResult" class="java.util.HashMap">
+	    <result property="mailAccountTotal" column="MAIL_ACCOUNT_TOTAL"/>
+  		<result property="mailAccountMailBoxQtyTotal" column="MAILBOX_QTY_TOTAL"/>
+  		<result property="mailAccountAddBoxSizeTotal" column="MAILBOX_SIZE_TOTAL"/>	
+		<result property="mailAccountVirusScanTotal" column="VIRUS_SCAN_TOTAL"/>
+		<result property="mailAccountAntiSpamTotal" column="ANTI_SPAM_TOTAL"/>
+		<result property="mailAccountJunkManagementTotal" column="JUNK_MGT_TOTAL"/>
+	</resultMap>	
+	 			
+	<!-- Result map of auto update quantity plan -->
+	<resultMap id="autoUpdateQuantityPlanResult" class="java.util.HashMap">
+	  	<result property="customerPlanLinkID" column="ID_CUST_PLAN_LINK"/>
+	  	<result property="planServiceName" column="PLAN_SERVICE_NAME"/>	  	
+	</resultMap>
+		
+	<!-- Result map of modem no info -->
+	<resultMap id="modemNoDataResult" class="java.util.HashMap">
+	  	<result property="modemNo" column="MODEM_NO"/>	  
+	  	<result property="macID" column="MAC_ID"/>	  		
+	</resultMap>
+	
+	<!-- Result map of services And subscription information -->
+	<resultMap id="servicesAndSubscriptionInformationResult" class="java.util.HashMap">
+	  	<result property="accessAccount" column="ACCESS_ACCOUNT"/>
+	  	<result property="accessPassword" column="ACCESS_PW"/>
+	  	<result property="accessTelephoneNumber" column="ACCESS_TEL"/>
+	  	<result property="sSID" column="SSID"/>
+	  	<result property="wepKey" column="WEP_KEY"/>
+	  	<result property="routerPassword" column="ROUTER_PW"/>
+	  	<result property="routerNo" column="ROUTER_NO"/>
+ 		<result property="routerType" column="ROUTER_TYPE"/>
+		<result property="modemNo" column="MODEM_NO"/>
+		<result property="macID" column="MAC_ID"/>
+	    <result property="aDSL_DelNo" column="ADSL_DEL_NO"/>
+		<result property="circuitID" column="CIRCUIT_ID"/>
+		<result property="carrier" column="CARRIER"/>
+		<result property="accessAccountTest" column="ACCESS_ACCOUNT_TEST"/>
+	</resultMap>
+	
+	<!-- Result map of browser information -->
+	<resultMap id="browserInformationResult" class="java.util.HashMap">
+	  <result property="proxyServerName" column="PROXSERV_NAME"/>
+	  <result property="proxyNumber" column="PORT_NO"/>	  
+	</resultMap>
+	
+	<!-- Result map of installation address 1 -->
+	<resultMap id="installationAddressResult1" class="java.util.HashMap">
+	  <result property="installation1Address1" column="ADR_LINE1"/>
+	  <result property="installation1Address2" column="ADR_LINE2"/>	 
+	  <result property="installation1Address3" column="ADR_LINE3"/>	
+	  <result property="installation1ZipCode" column="ZIP_CODE"/>	
+	  <result property="installation1CountryName" column="COUNTRY"/>	 	  	
+	</resultMap>
+	
+	<!-- Result map of installation address 2 -->
+	<resultMap id="installationAddressResult2" class="java.util.HashMap">
+	  <result property="installation2Address1" column="ADR_LINE1"/>
+	  <result property="installation2Address2" column="ADR_LINE2"/>	 
+	  <result property="installation2Address3" column="ADR_LINE3"/>	
+	  <result property="installation2ZipCode" column="ZIP_CODE"/>	
+	  <result property="installation2CountryName" column="COUNTRY"/>	 	  	
+	</resultMap>
+	
+	<!-- Result map of FTP interface information  -->
+	<resultMap id="FTPInterfaceInformationResult" class="java.util.HashMap">
+	  <result property="fTP_IPAddress" column="FTP_IP"/>
+	  <result property="fTPAccountName" column="FTP_ACC_NAME"/>	  
+	  <result property="fTPPassword" column="FTP_PW"/>	 
+	  <result property="capacityOfWebServer" column="SERVER_CAPACITY"/>	 
+	  <result property="fTPDefaultPage" column="DEFAULT_PAGE"/>	 
+	  <result property="fTPURL" column="FTP_URL"/>	 
+	</resultMap>
+		
+	<!-- Result map of customer name  -->
+	<resultMap id="customerNameResult" class="java.util.HashMap">
+	  <result property="customerName" column="CUST_NAME"/>	  	 
+	</resultMap>
+	
+	<!-- khaln : Result map of Rack Power header information  -->
+	<resultMap id="rackPowerHeaderInfoResult" class="java.util.HashMap">
+	  <result property="rackHeadID" column="ID_RACK_H"/>	  
+	  <result property="rackEquipmentLocationMemoRemarks" column="MEMO"/>
+	  <!-- <result property="subscriptionID" column="ID_SUB_INFO"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of Rack Power detail information  -->
+	<resultMap id="rackPowerDetailInfoResult" class="java.util.HashMap">
+	  <result property="rackDetailID" column="ID_RACK_D"/>
+	  <result property="rackNo" column="RACK_NO"/>
+	  <result property="maxPower" column="MAX_POWER"/>
+	  <result property="equipmentLocation" column="EQUIP_LOCATION"/>
+	  <result property="equipmentSuite" column="EQUIP_SUITE"/>
+	  <!-- <result property="rackHeadID" column="ID_RACK_H"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of IT Contact head information  -->
+	<resultMap id="iTContactHeadInfoResult" class="java.util.HashMap">	  
+	  <result property="iTContactHeadID" column="ID_CONTACT"/>
+	  <result property="iTContactMemoRemarks" column="MEMO"/>
+	  <!-- <result property="subscriptionID" column="ID_SUB_INFO"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of IT Contact detail information  -->
+	<resultMap id="iTContactDetailInfoResult" class="java.util.HashMap">	  
+	  <result property="contactName" column="NAME"/>
+	  <result property="contactDesignation" column="DESIGNATION"/>
+	  <result property="contactEmail" column="EMAIL"/>
+	  <result property="contactTelephoneNo" column="TEL_NO"/>
+	  <result property="contactFaxNo" column="FAX_NO"/>
+	  <result property="contactType" column="CONTACT_TYPE"/>
+	  <!-- <result property="iTContactHeadID" column="ID_CONTACT"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of Server head information  -->
+	<resultMap id="serverHeadInfoResult" class="java.util.HashMap">
+	  <result property="serverInfoHeadID" column="ID_SERVER_INFO"/>
+	  <result property="serverInfoMemoRemarks" column="MEMO"/>
+	  <!-- <result property="subscriptionID" column="ID_SUB_INFO"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of Server detail information  -->
+	<resultMap id="serverDetailInfoResult" class="java.util.HashMap">
+	  <result property="serverInfoDetailID" column="ID_SERVER_D"/>
+	  <result property="serverInfoAlias" column="SERVER"/>
+	  <result property="serverInfoName" column="SERVER_NAME"/>
+	  <result property="serverInfoHardware" column="HARDWARE"/>
+	  <result property="serverInfoOS" column="OS"/>
+	  <result property="serverInfoIP" column="IP"/>
+	  <result property="serverInfoGateway" column="GATEWAY"/>
+	  <result property="serverInfoSubnetMask" column="SUBNET_MASK"/>
+	  <result property="serverInfoMOSVersion" column="MOS"/>
+	  <result property="serverInfoHostID" column="HOST_ID"/>
+	  <result property="serverInfoSerialNo" column="SERIAL_NO"/>
+	  <result property="serverInfoUserLicense" column="USER_LICENSE"/>
+	  <result property="serverInfoPrimaryDNS" column="PRIMARY_DNS"/>
+	  <result property="serverInfoSecondaryDNS" column="SECOND_DNS"/>
+	  <result property="serverInfoModelNo" column="MODEL_NO"/>
+	  <result property="serverInfoWebHostingSpace" column="WEB_HOST_SPACE"/>
+	  <result property="serverInfoSQL" column="SQL"/>
+	  <result property="serverInfoSQLDBName" column="SQL_DB_NAME"/>
+	  <result property="serverInfoSQLSize" column="SQL_SIZE"/>
+	  <result property="serverInfoSQLID" column="SQL_ID"/>
+	  <result property="serverInfoSQLDBPassword" column="SQL_DB_PW"/>
+	  <result property="serverInfoBackup" column="BACKUP"/>
+	  <result property="serverInfoBackupSize" column="BACKUP_SIZE"/>
+	  <result property="serverInfoMonitoring" column="MONITORING"/>
+	  <result property="serverInfoInstalledApplication" column="INSTALLED_APP"/>
+	  <!-- <result property="serverInfoHeadID" column="ID_SERVER_INFO"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!-- khaln : Result map of Teamwork information  -->
+	<resultMap id="teamworkInfoResult" class="java.util.HashMap">
+	  <result property="teamworkID" column="ID_TEAMWORK"/>
+	  <result property="teamworkURL" column="URL"/>
+	  <result property="teamworkAdminID" column="ADMIN_ID"/>
+	  <result property="teamworkAdminPassword" column="ADMIN_PW"/>
+	  <result property="teamworkEmailDomainAddress" column="EMAIL_DOMAIN_ADR"/>
+	  <result property="teamworkIncomingMailServer_POP3" column="SERVER_POP3"/>
+	  <result property="teamworkIncomingMailServer_IMAP" column="SERVER_IMAP"/>
+	  <result property="teamworkIncomingMailServer_SMTP" column="SERVER_SMTP"/>
+	  <result property="teamworkAccountName" column="ACCOUNT_NAME"/>
+	  <result property="teamworkAccountPassword" column="ACCOUNT_PW"/>
+	  <result property="teamworkMemoRemarks" column="MEMO"/>
+	  <!-- <result property="subscriptionID" column="ID_SUB_INFO"/>
+	  <result property="isDeleted" column="IS_DELETED"/>
+	  <result property="createdDate" column="DATE_CREATED"/>
+	  <result property="updateDate" column="DATE_UPDATE"/>
+	  <result property="userID" column="ID_LOGIN"/>
+	  <result property="auditID" column="ID_AUDIT"/> -->
+	</resultMap>
+	
+	<!--************************************ Update Sql statements  ******************************-->
+	<!-- Update Router Setting Information -->
+	<update id="updateRouterSettingAndMemoInformation" parameterClass="java.util.HashMap">
+		UPDATE T_SUBSCRIPTION_INFO 								
+		SET 
+				<dynamic>
+					ID_SUB_INFO=#subscriptionID#,
+					ID_CUST_PLAN=#customerPlanID#,
+					MEMO=#memoRemarks#,
+					PRINTED_REMARK=#completionReportRemark#,
+					ACCESS_ACCOUNT=#accessAccount#,
+					ACCESS_PW=#accessPassword#,
+					
+					<isEmpty property="accessTelephoneNumber">
+						ACCESS_TEL=(
+										Select DEFAULT_DIALUPTELNO 
+										from M_COM 
+										where ID_COM = (select max(id_com) from M_COM)
+								   ),
+					</isEmpty>
+					<isNotEmpty property="accessTelephoneNumber">
+						ACCESS_TEL=#accessTelephoneNumber#,
+					</isNotEmpty>	
+					
+					SSID=#sSID#,
+					WEP_KEY=#wepKey#,
+					
+					<isEmpty property="routerPassword">
+						ROUTER_PW=(
+										Select DEFAULT_ROUTERPW 
+										from M_COM 
+										where ID_COM = (select max(id_com) from M_COM)
+								  ),
+					</isEmpty>
+					<isNotEmpty property="routerPassword">
+						ROUTER_PW=#routerPassword#,
+					</isNotEmpty>
+					
+					ROUTER_NO=#routerNo#,
+					ROUTER_TYPE=#routerType#,
+					MODEM_NO=#modemNo#,
+					MAC_ID=#macID#,
+					ADSL_DEL_NO=#aDSL_DelNo#,
+					CIRCUIT_ID=#circuitID#,
+					CARRIER=#carrier#,
+					IS_DELETED=0,
+					DATE_CREATED=SYSDATE,
+					DATE_UPDATED=SYSDATE,
+					ID_LOGIN=#logonUserID#,
+					ID_AUDIT=#auditID#
+				</dynamic>
+		WHERE 
+				ID_CUST_PLAN=#customerPlanID# AND
+				ID_SUB_INFO=#subscriptionID#	
+				
+				
+				
+											
+	</update>
+	
+	<!-- Update installation address 1 -->
+	<update id="updateInstallationAddress1" parameterClass="java.util.HashMap">
+		UPDATE T_INST_ADR 								
+		SET 	ID_SUB_INFO=#subscriptionID#,			
+				ADR_TYPE='A1',
+				ADR_LINE1=#installation1Address1#,
+				ADR_LINE2=#installation1Address2#,
+				ADR_LINE3=#installation1Address3#,
+				ZIP_CODE=#installation1ZipCode#,
+				COUNTRY=#installation1CountryName#,
+				IS_DELETED=0,
+				DATE_CREATED=SYSDATE,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+			 	ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# AND
+				ADR_TYPE='A1'				
+	</update>		
+	
+	<!-- Update installation address 2 -->
+	<update id="updateInstallationAddress2" parameterClass="java.util.HashMap">
+		UPDATE T_INST_ADR 								
+		SET 		
+				ID_SUB_INFO=#subscriptionID#,
+				ADR_TYPE='A2',
+				ADR_LINE1=#installation2Address1#,
+				ADR_LINE2=#installation2Address2#,
+				ADR_LINE3=#installation2Address3#,
+				ZIP_CODE=#installation2ZipCode#,
+				COUNTRY=#installation2CountryName#,
+				IS_DELETED=0,
+				DATE_CREATED=SYSDATE,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+			 	ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# AND
+				ADR_TYPE='A2'
+				
+	</update>
+	
+	<!-- Update FTP Interface Information -->
+	<update id="updateFTPInterfaceInformation" parameterClass="java.util.HashMap">
+		UPDATE T_FTP_INT 								
+		SET 								
+				ID_SUB_INFO=#subscriptionID#,
+				FTP_IP=#fTP_IPAddress#,
+				FTP_ACC_NAME=#fTPAccountName#,
+				FTP_PW=#fTPPassword#,
+				SERVER_CAPACITY=#capacityOfWebServer#,
+				DEFAULT_PAGE=#fTPDefaultPage#,
+				FTP_URL=#fTPURL#,
+				IS_DELETED=0,
+				DATE_CREATED=SYSDATE,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# 
+				
+	</update>
+				
+	<!-- Update MRTG Monitoring -->
+	<update id="updateMRTGMonitoring" parameterClass="java.util.HashMap">
+		UPDATE T_MRTG 								
+		SET 	MRTG_URL=#mRTGURL#, 
+				MRTG_ID=#mGTRID#, 
+				MRTG_PW=#mRTGPassword#, 
+				DATE_UPDATE=SYSDATE, 
+				ID_LOGIN=#logonUserID#, 
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# 				
+	</update>
+	
+	<!-- Update mail address -->
+	<update id="updateMailAddressInformation" parameterClass="java.util.HashMap">
+		UPDATE T_MAIL_ADDRESS 								
+		SET 												
+				DOMAIN_NAME=#domainName#,
+				POP_SERVER_NAME=#pOPServerName#,
+				SMTP_SERVER_NAME=#sMTPServerName#,
+                WEBMAIL_URL=#webmailURL#,
+				MEMO=#mailAddressMemoRemarks#,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# 								
+	</update>
+	
+	<!-- Update mail account -->
+	<update id="updateMailAccount" parameterClass="java.util.HashMap">
+		UPDATE T_MAIL_ACCOUNT 								
+		SET 
+				ID_MAIL=#mailAddressID#,	
+				MAIL_ACCOUNT=#mailAccountName#,
+				MAIL_PW=#mailAccountPassword#,
+				POP_ACCOUNT=#mailPopAccountName#,
+				MAILBOX_QTY=#mailAccountAddBoxSize#,
+				MAILBOX_SIZE=#mailAccountBoxQty#,
+				VIRUS_SCAN=#mailAccountCheckVirusScan#,
+				ANTI_SPAM=#mailAccountCheckAntiSpam#,
+				JUNK_MGT=#mailAccountCheckJunkManagement#,
+				IS_DELETED_DISP=1,
+				IS_DELETED=#isDeleted#,	
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_MAILACC=#mailAccountID#
+				
+	</update>
+	
+	<!-- Update printed date of mail account -->
+	<update id="updateMailAccountPrintedDate" parameterClass="java.util.HashMap">
+		UPDATE T_MAIL_ACCOUNT 								
+		SET 
+				DATE_PRINTED_ACT=SYSDATE
+		WHERE 
+				ID_MAILACC=#mailAccountID#
+				
+	</update>
+	
+	<!-- Update mail account deleted -->
+	<update id="updateMailAccountDeletedWithNoDisplay" parameterClass="java.util.HashMap">
+		UPDATE T_MAIL_ACCOUNT 								
+		SET 	
+				IS_DELETED_DISP=0,
+				IS_DELETED=1,				
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+				
+		WHERE 
+				ID_MAILACC=#mailAccountID#
+				
+	</update>
+	
+	<!-- Update mail account deleted -->
+	<update id="updateMailAccountDeleted" parameterClass="java.util.HashMap">
+		UPDATE T_MAIL_ACCOUNT 								
+		SET 															
+				IS_DELETED_DISP=1,
+				IS_DELETED=1,				
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_MAILACC=#mailAccountID#
+				
+	</update>
+
+	<!-- Update firewall information -->
+	<update id="updateFirewallInformation" parameterClass="java.util.HashMap">
+		UPDATE T_FIREWALL 								
+		SET 	
+				FIREWALL_NO=#firewallNo#,
+				FIREWALL_TYPE=#firewallType#,
+				FIREWALL_MODEL=#firewallModel#,
+				INT_IP_TRUSTED=#firewallInterfaceIP_Trusted#,
+				INT_IP_UNTRUSTED=#firewallInterfaceIP_UnTrusted#,
+				SERIAL_NO=#firewallSerialNumber#,
+				NAT=#firewallNAT#,
+				DHCP=#firewallDHCP#,
+				DHCP_IP_RANGE=#firewallDHCPIPRange#,
+				DNS=#firewallDNS#,
+				MEMO=#firewallMemoRemarks#,	
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_SUB_INFO=#subscriptionID# AND
+			  	IS_DELETED=0 
+				
+	</update> 
+
+	<!-- Update firewall interface ip -->
+	<update id="updateFirewallInterfaceIP" parameterClass="java.util.HashMap">
+		UPDATE T_FIREWALL_INT_IP 								
+		SET 	
+				INTERFACE_IP=#firewallInterfaceIP#,
+				ID_FIREWALL=#firewallID#,
+				ZONE=#firewallInterfaceZone#,
+				IS_DELETED=0,
+				DATE_CREATED=SYSDATE,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_INT_IP = #firewallInterfaceIPID# 
+				
+	</update> 
+	
+	<!-- Update firewall interface ip deleted -->
+	<update id="updateFirewallInterfaceIPDeleted" parameterClass="java.util.HashMap">
+		UPDATE T_FIREWALL_INT_IP 								
+		SET 	
+				DATE_UPDATE=SYSDATE,
+				IS_DELETED=1,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#
+		WHERE 
+				ID_INT_IP = #firewallInterfaceIPID# 
+	</update> 	
+	
+	<!-- Update firewall policy -->
+	<update id="updateFirewallPolicy" parameterClass="java.util.HashMap">
+		UPDATE T_FIREWALL_POLICY 	
+		SET 	
+				SOURCE=#firewallPolicySource#,
+				DESTINATION=#firewallPolicyDestination#,
+				PROTOCOL=#firewallPolicyProtocol#,
+				ACTION=#firewallPolicyAction#,
+				REMARKS=#firewallPolicyRemark#,	
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#,
+				IS_DELETED=0
+		WHERE 
+				ID_POLICY = #firewallPolicyID# 					   		
+	</update> 
+	
+	<!-- Update firewall policy deleted -->
+	<update id="updateFirewallPolicyDeleted" parameterClass="java.util.HashMap">
+		UPDATE T_FIREWALL_POLICY 	
+		SET
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#,
+				IS_DELETED=1
+		WHERE 
+				ID_POLICY = #firewallPolicyID# 					   		
+	</update>
+	
+	<!-- Update dns zone information -->
+	<update id="updateDNSZoneInformation" parameterClass="java.util.HashMap">
+		UPDATE T_DNS_ZONE
+		SET  
+				MIG_SERVER=#dNSZoneMigrationCurrentNameServer#,
+				MIG_SERVER2=#dNSZoneMigrationCurrentNameServer2#,
+				MIG_SERVER3=#dNSZoneMigrationCurrentNameServer3#,
+				MIG_REGISTRAR=#dNSZoneMigrationCurrentRegister#,
+				MEMO=#dNSZoneMemoRemarks#,
+				DATE_CREATED=SYSDATE,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#,
+				IS_DELETED=0
+					   				    	
+		WHERE   ID_SUB_INFO = #subscriptionID# AND
+				IS_DELETED = 0			       		
+	</update> 	
+
+	<!-- Update dns zone record -->
+	<update id="updateDNSZoneRecord" parameterClass="java.util.HashMap">
+		UPDATE T_DNS_ZONE_REC 	
+		SET				
+				DNS_DOMAIN=#dNSZoneRecordDomainName#,
+				DNS_TYPE=#dNSZoneRecordType#,
+				DNS_IP=#dNSZoneRecordIPAddress#,
+				DNS_WEIGHT=#dNSZoneRecordWeight#,
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#,
+				IS_DELETED=0
+		
+		WHERE ID_DNS_REC = #dNSZoneRecordID# AND
+			  IS_DELETED = 0 				   		
+	</update>		
+	
+	<!-- Update dns zone record deleted -->
+	<update id="updateDNSZoneRecordDeleted" parameterClass="java.util.HashMap">
+		UPDATE T_DNS_ZONE_REC 	
+		SET								
+				DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#,
+				IS_DELETED=1
+		
+		WHERE ID_DNS_REC = #dNSZoneRecordID# AND
+			  IS_DELETED = 0 				   		
+	</update>	
+		
+	<!-- Update cpe config info -->
+	<update id="updateCPEConfigurationInformation" parameterClass="java.util.HashMap">
+		UPDATE T_CPE_CONF_H	
+		SET		       						
+			    MEMO=#CPEConfigurationMemoRemarks#,
+		   		DATE_UPDATE=SYSDATE,
+				ID_LOGIN=#logonUserID#,
+				ID_AUDIT=#auditID#	  
+		
+		WHERE ID_SUB_INFO = #subscriptionID# AND
+			  IS_DELETED = 0 		  						   		
+	</update>	
+		
+	<!-- Update cpe config details -->
+	<update id="updateCPEConfigurationDetails" parameterClass="java.util.HashMap">
+		UPDATE T_CPE_CONF_D 	
+		SET		
+				ID_CPE_CONF_H=#CPEConfigurationHID#,		
+			    CPE_NAME=#CPEConfigurationName#,	
+				ISP_EDGE_IP=#CPEConfigurationISPEdgeRouterIPAddress#,
+				ROUTER_WAN_IP=#CPEConfigurationRouterWANInterfacesIPAddress#,	
+				NETWORK_ADR=#CPEConfigurationNetworkAddressID#,	
+				IS_MANAGED_CPE=#CPEConfigurationManagedCPEIsUsed#,	
+				CPE_MODEL_INSTALLED=#CPEConfigurationCPEModelInstalled#,		
+				CPE_LAN=#CPEConfigurationLAN#,	
+				CPE_WAN=#CPEConfigurationWAN#,	
+				SERIAL_NO=#CPEConfigurationSerialNumber#,	
+				EQUIP_ITEMS_PACKAGE=#CPEConfigurationEquipment_ItemsIncludedInManagedCPEPackage#,	
+				CUST_SPEC_CONF_ROUTER=#CPEConfigurationCustomerSpecificConfigurationOnRouter#,
+			    DATE_UPDATE=SYSDATE,
+			    ID_LOGIN=#logonUserID#,
+			    ID_AUDIT=#auditID#,
+			    IS_DELETED=0
+		
+		WHERE ID_CPE_CONF_D = #CPEConfigurationDID# AND
+			  IS_DELETED = 0 		  						   		
+	</update>	
+
+	<!-- Update cpe config details deleted -->
+	<update id="updateCPEConfigurationDetailsDeleted" parameterClass="java.util.HashMap">
+		UPDATE T_CPE_CONF_D 	
+		SET				       
+			   DATE_UPDATE=SYSDATE,
+			   ID_LOGIN=#logonUserID#,
+			   ID_AUDIT=#auditID#,
+			   IS_DELETED=1				
+		
+		WHERE ID_CPE_CONF_D = #CPEConfigurationDID# AND
+			  IS_DELETED = 0 		  						   		
+	</update>	
+
+	<!-- SQL to update record for Subscription Information: Rack & Power -->
+	<update id="updateRackPowerHead" parameterClass="java.util.HashMap">
+		update T_RACK_POWER_H set
+			MEMO = #rackEquipmentLocationMemoRemarks#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_RACK_H = #rackHeadID#
+	</update>
+	
+	<update id="updateRackPowerDetail" parameterClass="java.util.HashMap">
+		update T_RACK_POWER_D set
+			RACK_NO = #rackNo#,
+			MAX_POWER = #maxPower#,
+			EQUIP_LOCATION = #equipmentLocation#,
+			EQUIP_SUITE = #equipmentSuite#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_RACK_D = #rackDetailID#
+	</update>
+	
+	<update id="removeRackPowerDetail" parameterClass="java.util.HashMap">
+		update T_RACK_POWER_D set
+			IS_DELETED = 1,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_RACK_D = #rackDetailRemoveID#
+	</update>
+	<!-- end update Rack Power -->
+	
+	<!-- SQL to update record for Subscription Information: IT Contact -->
+	<update id="updateITContactHead" parameterClass="java.util.HashMap">
+		update T_IT_CONTACT_H set			
+			MEMO = #iTContactMemoRemarks#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_SUB_INFO = #subscriptionID#
+			and ID_CONTACT = #iTContactHeadID#
+	</update>
+	
+	<update id="updateITContactDetail" parameterClass="java.util.HashMap">
+		update T_IT_CONTACT_D set
+			NAME = #contactName#,
+			DESIGNATION = #contactDesignation#,
+			EMAIL = #contactEmail#,
+			TEL_NO = #contactTelephoneNo#,
+			FAX_NO = #contactFaxNo#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_CONTACT = #iTContactHeadID#
+			and CONTACT_TYPE = #contactType#	<!-- C1/C2/C3 -->
+	</update>
+	<!-- end update IT Contact -->
+	
+	<!-- SQL to update record for Subscription Information: Server Info -->
+	<update id="updateServerInfoHead" parameterClass="java.util.HashMap">
+		update T_SERVER_INFO_H set
+			MEMO = #serverInfoMemoRemarks#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_SERVER_INFO = #serverInfoHeadID#
+	</update>
+	
+	<update id="updateServerInfoDetail" parameterClass="java.util.HashMap">
+		update T_SERVER_INFO_D set
+			SERVER_NAME = #serverInfoName#,
+			HARDWARE = #serverInfoHardware#,
+			OS = #serverInfoOS#,
+			IP = #serverInfoIP#,
+			GATEWAY = #serverInfoGateway#,
+			SUBNET_MASK = #serverInfoSubnetMask#,
+			MOS = #serverInfoMOSVersion#,
+			HOST_ID = #serverInfoHostID#,
+			SERIAL_NO = #serverInfoSerialNo#,
+			USER_LICENSE = #serverInfoUserLicense#,
+			PRIMARY_DNS = #serverInfoPrimaryDNS#,
+			SECOND_DNS = #serverInfoSecondaryDNS#,
+			MODEL_NO = #serverInfoModelNo#,
+			WEB_HOST_SPACE = #serverInfoWebHostingSpace#,
+			SQL = nvl(#serverInfoSQL#,9),
+			SQL_DB_NAME = #serverInfoSQLDBName#,
+			SQL_SIZE = #serverInfoSQLSize#,
+			SQL_ID = #serverInfoSQLID#,
+			SQL_DB_PW = #serverInfoSQLDBPassword#,
+			BACKUP = nvl(#serverInfoBackup#,9),
+			BACKUP_SIZE = #serverInfoBackupSize#,
+			MONITORING = nvl(#serverInfoMonitoring#,9),
+			INSTALLED_APP = #serverInfoInstalledApplication#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_SERVER_D = #serverInfoDetailID#
+	</update>
+	
+	<update id="removeServerInfoDetail" parameterClass="java.util.HashMap">
+		update T_SERVER_INFO_D set
+			IS_DELETED = 1,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_SERVER_D = #serverInfoDetailRemoveID#
+	</update>
+	<!-- end update Server Info -->
+	
+	<!-- SQL to update record for Subscription Information: Server Info -->
+	<update id="updateTeamwork" parameterClass="java.util.HashMap">
+		update T_TEAMWORK set
+			URL = #teamworkURL#,
+			ADMIN_ID = #teamworkAdminID#,
+			ADMIN_PW = #teamworkAdminPassword#,
+			EMAIL_DOMAIN_ADR = #teamworkEmailDomainAddress#,
+			SERVER_POP3 = #teamworkIncomingMailServer_POP3#,
+			SERVER_IMAP = #teamworkIncomingMailServer_IMAP#,
+			SERVER_SMTP = #teamworkIncomingMailServer_SMTP#,
+			ACCOUNT_NAME = #teamworkAccountName#,
+			ACCOUNT_PW = #teamworkAccountPassword#,
+			MEMO = #teamworkMemoRemarks#,
+			DATE_UPDATE = sysdate,
+			ID_LOGIN = #logonUserID#,
+			ID_AUDIT = #auditID#
+		where ID_TEAMWORK = #teamworkID#
+	</update>
+	<!-- end update Teamwork info -->
+	
+	<!--************************************ Insert Sql statements  ******************************-->
+	<!-- Insert Router Setting Information -->
+	<insert id="insertRouterSettingAndMemoInformation" parameterClass="java.util.HashMap">
+		insert into T_SUBSCRIPTION_INFO (
+											ID_SUB_INFO,
+											ID_CUST_PLAN,
+											MEMO,
+											ACCESS_ACCOUNT,
+											ACCESS_PW,
+											ACCESS_TEL,
+											SSID,
+											WEP_KEY,
+											ROUTER_PW,
+											ROUTER_NO,
+											ROUTER_TYPE,
+											MODEM_NO,
+											MAC_ID,
+											ADSL_DEL_NO,
+											CIRCUIT_ID,
+											CARRIER,
+											IS_DELETED,
+											DATE_CREATED,
+											DATE_UPDATED,
+											ID_LOGIN,
+											ID_AUDIT
+										)
+								values (
+											<dynamic>
+											#subscriptionID#,
+											#customerPlanID#,
+											#memoRemarks#,
+											#accessAccount#,
+											#accessPassword#,
+											
+											<isEmpty property="accessTelephoneNumber">
+												(
+													Select DEFAULT_DIALUPTELNO 
+													from M_COM 
+													where ID_COM = (select max(id_com) from M_COM)
+												),
+											</isEmpty>
+											<isNotEmpty property="accessTelephoneNumber">
+												#accessTelephoneNumber#,
+											</isNotEmpty>
+											
+											#sSID#,
+											#wepKey#,
+											
+											<isEmpty property="routerPassword">
+												ROUTER_PW=(
+																Select DEFAULT_ROUTERPW 
+																from M_COM 
+																where ID_COM = (select max(id_com) from M_COM)
+														  ),
+											</isEmpty>
+											<isNotEmpty property="routerPassword">
+												ROUTER_PW=#routerPassword#,
+											</isNotEmpty>
+											
+											#routerNo#,
+											#routerType#,
+											#modemNo#,
+											#macID#,
+											#aDSL_DelNo#,
+											#circuitID#,
+											#carrier#,
+											0,
+											SYSDATE,
+											SYSDATE,
+											#logonUserID#,
+											#auditID#
+											</dynamic>
+										)
+	</insert>
+	
+	<!-- Insert Installation Address 1 -->
+	<insert id="insertInstallationAddress1" parameterClass="java.util.HashMap">	
+		INSERT INTO T_INST_ADR (
+									ID_INST_ADR,
+									ID_SUB_INFO,
+									ADR_TYPE,
+									ADR_LINE1,
+									ADR_LINE2,
+									ADR_LINE3,
+									ZIP_CODE,
+									COUNTRY,
+									IS_DELETED,
+									DATE_CREATED,
+									DATE_UPDATE,
+									ID_LOGIN,
+								 	ID_AUDIT
+							   )
+					     values(
+									SEQ_T_INST_ADR.NEXTVAL,
+									#subscriptionID#,
+									'A1',
+									#installation1Address1#,
+									#installation1Address2#,
+									#installation1Address3#,
+									#installation1ZipCode#,
+									#installation1CountryName#,
+									0,
+									SYSDATE,
+									SYSDATE,
+									#logonUserID#,
+								 	#auditID#
+						       )
+	</insert>
+	
+	<!-- Insert Installation Address 2 -->
+	<insert id="insertInstallationAddress2" parameterClass="java.util.HashMap">
+		INSERT INTO T_INST_ADR (
+									ID_INST_ADR,
+									ID_SUB_INFO,
+									ADR_TYPE,
+									ADR_LINE1,
+									ADR_LINE2,
+									ADR_LINE3,
+									ZIP_CODE,
+									COUNTRY,
+									IS_DELETED,
+									DATE_CREATED,
+									DATE_UPDATE,
+									ID_LOGIN,
+								 	ID_AUDIT
+							   )
+					     values(
+									SEQ_T_INST_ADR.NEXTVAL,
+									#subscriptionID#,
+									'A2',
+									#installation2Address1#,
+									#installation2Address2#,
+									#installation2Address3#,
+									#installation2ZipCode#,
+									#installation2CountryName#,
+									0,
+									SYSDATE,
+									SYSDATE,
+									#logonUserID#,
+								 	#auditID#
+						       )
+	</insert>
+	
+	<!-- Insert FTP Interface Information -->
+	<insert id="insertFTPInterfaceInformation" parameterClass="java.util.HashMap">
+		INSERT INTO T_FTP_INT (
+									ID_FTP,
+									ID_SUB_INFO,
+									FTP_IP,
+									FTP_ACC_NAME,
+									FTP_PW,
+									SERVER_CAPACITY,
+									DEFAULT_PAGE,
+									FTP_URL,
+									IS_DELETED,
+									DATE_CREATED,
+									DATE_UPDATE,
+									ID_LOGIN,
+									ID_AUDIT
+							   )
+					    values (
+									SEQ_T_FTP_INT.NEXTVAL,
+									#subscriptionID#,
+									#fTP_IPAddress#,
+									#fTPAccountName#,
+									#fTPPassword#,
+									#capacityOfWebServer#,
+									#fTPDefaultPage#,
+									#fTPURL#,
+									0,
+									SYSDATE,
+									SYSDATE,
+									#logonUserID#,
+								 	#auditID#
+						       )
+	</insert>
+		
+	<!-- Insert MRTG Monitoring -->
+	<insert id="insertMRTGMonitoring" parameterClass="java.util.HashMap">
+		INSERT INTO T_MRTG    (
+									ID_MRTG,
+									ID_SUB_INFO,
+									MRTG_URL,
+									MRTG_ID,
+									MRTG_PW,
+									DATE_UPDATE,
+									ID_LOGIN,
+									ID_AUDIT
+							   )
+					    values (
+									SEQ_T_MRTG.NEXTVAL,
+									#subscriptionID#, 									
+									#mRTGURL#, 
+									#mGTRID#,
+									#mRTGPassword#, 
+									SYSDATE, 
+									#logonUserID#, 
+									#auditID#	
+						       )
+	</insert>
+	
+	<!-- Insert mail account -->
+	<insert id="insertMailAccount" parameterClass="java.util.HashMap">
+		INSERT INTO T_MAIL_ACCOUNT(
+									ID_MAIL,
+									ID_MAILACC,
+									MAIL_ACCOUNT,
+									MAIL_PW,
+									POP_ACCOUNT,
+									MAILBOX_QTY,
+									MAILBOX_SIZE,
+									VIRUS_SCAN,
+									ANTI_SPAM,
+									JUNK_MGT,
+									DATE_PRINTED_ACT,
+									DATE_PRINTED_DEL,
+									IS_DELETED_DISP,
+									IS_DELETED,
+									DATE_CREATED,
+									DATE_UPDATE,
+									ID_LOGIN,
+									ID_AUDIT
+							   )
+					    values (
+									#mailAddressID#,
+									SEQ_T_MAIL_ACCOUNT.NEXTVAL,									
+									#mailAccountName#,
+									#mailAccountPassword#,
+									#mailPopAccountName#,
+									#mailAccountAddBoxSize#,
+									#mailAccountBoxQty#,
+									#mailAccountCheckVirusScan#,
+									#mailAccountCheckAntiSpam#,
+									#mailAccountCheckJunkManagement#,							
+									NULL,
+									NULL,
+									1,
+									0,
+									SYSDATE,
+									SYSDATE, 
+									#logonUserID#, 
+									#auditID#	
+						       )						       		
+	</insert>
+	
+	<!-- Insert firewall information -->
+	<insert id="insertFirewallInformation" parameterClass="java.util.HashMap">
+		INSERT INTO T_FIREWALL (
+									ID_FIREWALL,
+									ID_SUB_INFO,
+									FIREWALL_NO,
+									FIREWALL_TYPE,
+									FIREWALL_MODEL,
+									INT_IP_TRUSTED,
+									INT_IP_UNTRUSTED,
+									SERIAL_NO,
+									NAT,
+									DHCP,
+									DHCP_IP_RANGE,
+									DNS,
+									MEMO,
+									DATE_CREATED,
+									DATE_UPDATE,
+									ID_LOGIN,
+									ID_AUDIT
+							   )
+					    values (
+									SEQ_T_FIREWALL.NEXTVAL,	
+									#subscriptionID#,
+									#firewallNo#,
+									#firewallType#,
+									#firewallModel#,
+									#firewallInterfaceIP_Trusted#,
+									#firewallInterfaceIP_UnTrusted#,
+									#firewallSerialNumber#,
+									#firewallNAT#,
+									#firewallDHCP#,
+									#firewallDHCPIPRange#,
+									#firewallDNS#,
+									#firewallMemoRemarks#,
+									SYSDATE,
+									SYSDATE,
+									#logonUserID#,
+									#auditID#
+						       )
+	</insert> 
+	
+	<!-- Insert firewall interface ip -->
+	<insert id="insertFirewallInterfaceIP" parameterClass="java.util.HashMap">
+		INSERT INTO T_FIREWALL_INT_IP (
+										ID_INT_IP,
+										INTERFACE_IP,
+										ID_FIREWALL,
+										ZONE,
+										IS_DELETED,
+										DATE_CREATED,
+										DATE_UPDATE,
+										ID_LOGIN,
+										ID_AUDIT
+							   		 )
+					    	  values (
+										SEQ_T_FIREWALL_INT_IP.NEXTVAL,	
+										#firewallInterfaceIP#,
+										#firewallID#,
+										#firewallInterfaceZone#,
+										0,
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#
+						       		)
+		
+				
+	</insert> 
+	
+	<!-- Insert mail address -->
+	<insert id="insertMailAddressInformation" parameterClass="java.util.HashMap">
+		INSERT INTO T_MAIL_ADDRESS (
+										ID_MAIL,
+										ID_SUB_INFO,
+										DOMAIN_NAME,
+										POP_SERVER_NAME,
+										SMTP_SERVER_NAME,
+										MEMO,
+										DATE_UPDATE,
+										ID_LOGIN,
+										ID_AUDIT,
+                                        WEBMAIL_URL
+							   )
+					    values (
+										SEQ_T_MAIL_ADDRESS.NEXTVAL,
+										#subscriptionID#,
+										#domainName#,
+										#pOPServerName#,
+										#sMTPServerName#,
+										#mailAddressMemoRemarks#,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+                                        #webmailURL#
+						       )
+	</insert>				
+						 												
+	<!-- Insert firewall policy -->
+	<insert id="insertFirewallPolicy" parameterClass="java.util.HashMap">
+		INSERT INTO T_FIREWALL_POLICY (
+										ID_POLICY,
+										ID_FIREWALL,
+										SOURCE,
+										DESTINATION,
+										PROTOCOL,
+										ACTION,
+										REMARKS,
+										DATE_UPDATE,
+										DATE_CREATED,
+										ID_LOGIN,
+										ID_AUDIT,
+										IS_DELETED
+							   		)
+					    	values  (
+										SEQ_T_FIREWALL_POLICY.NEXTVAL,	
+										#firewallID#,
+										#firewallPolicySource#,
+										#firewallPolicyDestination#,
+										#firewallPolicyProtocol#,
+										#firewallPolicyAction#,
+										#firewallPolicyRemark#,	
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+										0
+						       		)
+	</insert> 
+	
+	<!-- Insert dns zone record -->
+	<insert id="insertDNSZoneRecord" parameterClass="java.util.HashMap">
+		INSERT INTO T_DNS_ZONE_REC (
+										ID_DNS_ZONE,										
+										ID_DNS_REC,
+										DNS_DOMAIN,
+										DNS_TYPE,
+										DNS_IP,
+										DNS_WEIGHT,
+										DATE_CREATED,
+										DATE_UPDATE,
+										ID_LOGIN,
+										ID_AUDIT,
+										IS_DELETED
+							   		)
+					    	values  (
+										#dNSZoneID#,
+										SEQ_T_DNS_ZONE_REC.NEXTVAL,	
+										#dNSZoneRecordDomainName#,
+										#dNSZoneRecordType#,
+										#dNSZoneRecordIPAddress#,
+										#dNSZoneRecordWeight#,								
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+										0
+						       		)
+	</insert> 
+	
+	<!-- Insert dns zone information -->
+	<insert id="insertDNSZoneInformation" parameterClass="java.util.HashMap">
+		INSERT INTO T_DNS_ZONE     (
+										ID_SUB_INFO,
+										ID_DNS_ZONE,
+										MIG_SERVER,
+										MIG_SERVER2,
+										MIG_SERVER3,
+										MIG_REGISTRAR,
+										MEMO,
+										DATE_CREATED,
+										DATE_UPDATE,
+										ID_LOGIN,
+										ID_AUDIT,
+										IS_DELETED
+							   		)
+					    	values  (
+										#subscriptionID#,										
+										SEQ_T_DNS_ZONE.NEXTVAL,	
+										#dNSZoneMigrationCurrentNameServer#,
+										#dNSZoneMigrationCurrentNameServer2#,
+										#dNSZoneMigrationCurrentNameServer3#,
+										#dNSZoneMigrationCurrentRegister#,
+										#dNSZoneMemoRemarks#,							
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+										0
+						       		)
+	</insert>
+	
+	<!-- Insert cpe config details -->
+	<insert id="insertCPEConfigurationDetails" parameterClass="java.util.HashMap">
+		INSERT INTO T_CPE_CONF_D     (
+										   ID_CPE_CONF_D,
+										   ID_CPE_CONF_H,		       						
+										   CPE_NAME,		
+										   ISP_EDGE_IP,		
+										   ROUTER_WAN_IP,		
+										   NETWORK_ADR,		
+										   IS_MANAGED_CPE,		
+										   CPE_MODEL_INSTALLED,		
+										   CPE_LAN,		
+										   CPE_WAN,		
+										   SERIAL_NO,		
+										   EQUIP_ITEMS_PACKAGE,		
+										   CUST_SPEC_CONF_ROUTER,
+										   DATE_CREATED,
+										   DATE_UPDATE,
+										   ID_LOGIN,
+										   ID_AUDIT,
+										   IS_DELETED	
+							   		)
+					    	values  (
+										SEQ_T_CPE_CONF_D.NEXTVAL,	
+										#CPEConfigurationHID#,										
+										#CPEConfigurationName#,	
+										#CPEConfigurationISPEdgeRouterIPAddress#,
+										#CPEConfigurationRouterWANInterfacesIPAddress#,
+										#CPEConfigurationNetworkAddressID#,		
+										#CPEConfigurationManagedCPEIsUsed#,	
+										#CPEConfigurationCPEModelInstalled#,	
+										#CPEConfigurationLAN#,	
+										#CPEConfigurationWAN#,	
+										#CPEConfigurationSerialNumber#,	
+										#CPEConfigurationEquipment_ItemsIncludedInManagedCPEPackage#,	
+										#CPEConfigurationCustomerSpecificConfigurationOnRouter#,						
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+										0
+						       		)
+	</insert>
+		
+	<!-- Insert cpe config information -->
+	<insert id="insertCPEConfigurationInformation" parameterClass="java.util.HashMap">
+		INSERT INTO T_CPE_CONF_H     (
+										ID_SUB_INFO,
+										ID_CPE_CONF_H,
+										MEMO,
+										DATE_CREATED,
+										DATE_UPDATE,
+										ID_LOGIN,
+										ID_AUDIT,
+										IS_DELETED
+							   		)
+					    	values  (
+										#subscriptionID#,										
+										SEQ_T_CPE_CONF_H.NEXTVAL,	
+										#CPEConfigurationMemoRemarks#,			
+										SYSDATE,
+										SYSDATE,
+										#logonUserID#,
+										#auditID#,
+										0
+						       		)
+	</insert>
+	
+	<!-- SQL to insert record for Subscription Information: Rack & Power -->
+	<insert id="insertRackPowerHead" parameterClass="java.util.HashMap">
+		insert into T_RACK_POWER_H (
+			ID_SUB_INFO,
+			ID_RACK_H,
+			MEMO,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			#subscriptionID#,
+			SEQ_T_RACK_H.NEXTVAL,
+			#rackEquipmentLocationMemoRemarks#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	
+	<insert id="insertRackPowerDetail" parameterClass="java.util.HashMap">
+		insert into T_RACK_POWER_D (
+			ID_RACK_H,
+			ID_RACK_D,
+			RACK_NO,
+			MAX_POWER,
+			EQUIP_LOCATION,
+			EQUIP_SUITE,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			#rackHeadID#,
+			SEQ_T_RACK_D.NEXTVAL,
+			#rackNo#,
+			#maxPower#,
+			#equipmentLocation#,
+			#equipmentSuite#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	<!-- end insert Rack Power -->
+	
+	<!-- SQL to insert record for Subscription Information: IT Contact -->
+	<insert id="insertITContactHead" parameterClass="java.util.HashMap">
+		insert into T_IT_CONTACT_H (
+			ID_CONTACT,
+			ID_SUB_INFO,
+			MEMO,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			SEQ_T_IT_CONTACT_H.NEXTVAL,
+			#subscriptionID#,
+			#iTContactMemoRemarks#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	
+	<insert id="insertITContactDetail" parameterClass="java.util.HashMap">
+		insert into T_IT_CONTACT_D (
+			ID_CONTACT,
+			CONTACT_TYPE,
+			NAME,
+			DESIGNATION,
+			EMAIL,
+			TEL_NO,
+			FAX_NO,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			#iTContactHeadID#,
+			#contactType#,			<!-- C1/C2/C3 -->
+			#contactName#,
+			#contactDesignation#,
+			#contactEmail#,
+			#contactTelephoneNo#,
+			#contactFaxNo#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	<!-- end insert IT Contact -->
+	
+	<!-- SQL to insert record for Subscription Information: Server Info -->
+	<insert id="insertServerInfoHead" parameterClass="java.util.HashMap">
+		insert into T_SERVER_INFO_H (
+			ID_SERVER_INFO,
+			ID_SUB_INFO,
+			MEMO,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			SEQ_T_SERVER_INFO_H.NEXTVAL,
+			#subscriptionID#,
+			#serverInfoMemoRemarks#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	
+	<insert id="insertServerInfoDetail" parameterClass="java.util.HashMap">
+		insert into T_SERVER_INFO_D (
+			ID_SERVER_D,	<!-- 01 -->
+			ID_SERVER_INFO,	<!-- 02 -->
+			SERVER,			<!-- 03 -->
+			SERVER_NAME,	<!-- 04 -->
+			HARDWARE,		<!-- 05 -->
+			OS,				<!-- 06 -->
+			IP,				<!-- 07 -->
+			GATEWAY,		<!-- 08 -->
+			SUBNET_MASK,	<!-- 09 -->
+			MOS,			<!-- 10 -->
+			HOST_ID,		<!-- 11 -->
+			SERIAL_NO,		<!-- 12 -->
+			USER_LICENSE,	<!-- 13 -->
+			PRIMARY_DNS,	<!-- 14 -->
+			SECOND_DNS,		<!-- 15 -->
+			MODEL_NO,		<!-- 16 -->
+			WEB_HOST_SPACE,	<!-- 17 -->
+			SQL,			<!-- 18 -->
+			SQL_DB_NAME,	<!-- 19 -->
+			SQL_SIZE,		<!-- 20 -->
+			SQL_ID,			<!-- 21 -->
+			SQL_DB_PW,		<!-- 22 -->
+			BACKUP,			<!-- 23 -->
+			BACKUP_SIZE,	<!-- 24 -->
+			MONITORING,		<!-- 25 -->
+			INSTALLED_APP,	<!-- 26 -->
+			IS_DELETED,		<!-- 27 -->
+			DATE_CREATED,	<!-- 28 -->
+			DATE_UPDATE,	<!-- 29 -->
+			ID_LOGIN,		<!-- 30 -->
+			ID_AUDIT		<!-- 31 -->
+		) values (
+			SEQ_T_SERVER_INFO_D.NEXTVAL,	<!-- 01 -->
+			#serverInfoHeadID#,				<!-- 02 -->
+			#serverInfoAlias#,				<!-- 03 -->
+			#serverInfoName#,				<!-- 04 -->
+			#serverInfoHardware#,			<!-- 05 -->
+			#serverInfoOS#,					<!-- 06 -->
+			#serverInfoIP#,					<!-- 07 -->
+			#serverInfoGateway#,			<!-- 08 -->
+			#serverInfoSubnetMask#,			<!-- 09 -->
+			#serverInfoMOSVersion#,			<!-- 10 -->
+			#serverInfoHostID#,				<!-- 11 -->
+			#serverInfoSerialNo#,			<!-- 12 -->
+			#serverInfoUserLicense#,		<!-- 13 -->
+			#serverInfoPrimaryDNS#,			<!-- 14 -->
+			#serverInfoSecondaryDNS#,		<!-- 15 -->
+			#serverInfoModelNo#,			<!-- 16 -->
+			#serverInfoWebHostingSpace#,	<!-- 17 -->
+			nvl(#serverInfoSQL#,9),			<!-- 18 -->
+			#serverInfoSQLDBName#,			<!-- 19 -->
+			#serverInfoSQLSize#,			<!-- 20 -->
+			#serverInfoSQLID#,				<!-- 21 -->
+			#serverInfoSQLDBPassword#,		<!-- 22 -->
+			nvl(#serverInfoBackup#,9),		<!-- 23 -->
+			#serverInfoBackupSize#,			<!-- 24 -->
+			nvl(#serverInfoMonitoring#,9),	<!-- 25 -->
+			#serverInfoInstalledApplication#,<!-- 26 -->
+			0,								<!-- 27 -->
+			sysdate,						<!-- 28 -->
+			sysdate,						<!-- 29 -->
+			#logonUserID#,					<!-- 30 -->
+			#auditID#						<!-- 31 -->
+		)
+	</insert>
+	<!-- end insert Server Info -->
+	
+	<!-- SQL to insert record for Subscription Information: Server Info -->
+	<insert id="insertTeamwork" parameterClass="java.util.HashMap">
+		insert into T_TEAMWORK (
+			ID_TEAMWORK,			
+			ID_SUB_INFO,
+			URL,
+			ADMIN_ID,
+			ADMIN_PW,
+			EMAIL_DOMAIN_ADR,
+			SERVER_POP3,
+			SERVER_IMAP,
+			SERVER_SMTP,
+			ACCOUNT_NAME,
+			ACCOUNT_PW,
+			MEMO,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATE,
+			ID_LOGIN,
+			ID_AUDIT
+		)
+		values (
+			SEQ_T_TEAMWORK.NEXTVAL,			
+			#subscriptionID#,
+			#teamworkURL#,
+			#teamworkAdminID#,
+			#teamworkAdminPassword#,
+			#teamworkEmailDomainAddress#,
+			#teamworkIncomingMailServer_POP3#,
+			#teamworkIncomingMailServer_IMAP#,
+			#teamworkIncomingMailServer_SMTP#,
+			#teamworkAccountName#,
+			#teamworkAccountPassword#,
+			#serverInfoMemoRemarks#,
+			0,
+			sysdate,
+			sysdate,
+			#logonUserID#,
+			#auditID#
+		)
+	</insert>
+	<!-- end insert Teamwork info -->
+	
+	
+	<!--************************************ Select Sql statements  ******************************-->
+	<!-- Function get mail address id -->
+	<select id="getMailAddressID" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT	NVL(ID_MAIL, -1)			
+		FROM	T_MAIL_ADDRESS T
+		WHERE
+			T.ID_SUB_INFO = #subscriptionID# AND
+			T.IS_DELETED = 0			
+	</select>
+	
+	<!-- Function get plan info -->
+	<select id="getPlanInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	*			
+		FROM	T_CUST_PLAN_H K, 
+				T_CUST_PLAN_D L,
+				T_CUST_PLAN_LINK M	
+		WHERE
+			<dynamic>	
+				<isNotEmpty property="customerID">
+					K.ID_CUST = #customerID# AND	
+				</isNotEmpty>					
+				<isNotEmpty property="customerPlanID">
+					K.ID_CUST_PLAN = #customerPlanID#	AND	
+				</isNotEmpty>						
+			</dynamic>					
+			L.ID_CUST_PLAN_GRP = M.ID_CUST_PLAN_GRP	AND	
+			L.ID_CUST_PLAN = K.ID_CUST_PLAN AND
+			M.IS_DELETED = 0
+	</select>
+	
+	<!-- Function get service name -->
+	<select id="getServiceName" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT Distinct(SVC_LEVEL2)				
+		FROM T_CUST_PLAN_LINK M	
+		WHERE
+			<dynamic>
+				<isNotEmpty property="customerPlanLinkID">
+					M.ID_CUST_PLAN_LINK	= #customerPlanLinkID# AND	
+				</isNotEmpty>				
+			</dynamic>			
+			M.IS_DELETED = 0
+	</select>
+	
+	<!-- Function get services and subscription information -->
+	<select id="getServicesAndSubscriptionInformation" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT *			
+		FROM M_SSM O	
+		WHERE			
+			O.IS_DELETED = 0
+	</select>
+		
+    <!-- Function get service array info -->
+	<select id="getServiceArrayInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT	M.SVC_LEVEL2, 
+				O.ENTRY, 
+				P.SVC_DESC, 
+				O.INFO_ID			
+		FROM	T_CUST_PLAN_H K, 
+		        T_CUST_PLAN_D L,
+		        T_CUST_PLAN_LINK M,
+		        M_SSM O,
+		        M_SVC P
+		WHERE				
+		      <dynamic>	
+				<isNotEmpty property="customerID">
+					K.ID_CUST = #customerID# AND	
+				</isNotEmpty>					
+				<isNotEmpty property="customerPlanID">
+					K.ID_CUST_PLAN = #customerPlanID#	AND	
+				</isNotEmpty>
+				<isNotEmpty property="customerPlanLinkID">
+					M.ID_CUST_PLAN_LINK = #customerPlanLinkID#	AND	
+				</isNotEmpty>						
+			  </dynamic>
+		      L.ID_CUST_PLAN_GRP = M.ID_CUST_PLAN_GRP AND	
+		      L.ID_CUST_PLAN = K.ID_CUST_PLAN AND
+		      M.IS_DELETED = 0 AND
+		      O.ID_SERVICE = M.SVC_LEVEL2 AND
+		      O.SVC_GRP = M.SVC_LEVEL1 AND
+		      O.ENTRY = 1 AND
+		      O.IS_DELETED = 0 AND
+		      P.ID_SERVICE = M.SVC_LEVEL2
+	</select>
+	
+	<!-- Function getting router setting information -->
+	<select id="getRouterSettingInformation" parameterClass="java.util.HashMap" resultMap="servicesAndSubscriptionInformationResult">
+		SELECT  	ACCESS_ACCOUNT,
+	                ACCESS_PW,
+	                (
+	                  CASE
+	                          WHEN ACCESS_TEL is not null THEN ACCESS_TEL
+	                          WHEN ACCESS_TEL is null THEN (
+	                                                                    Select DEFAULT_DIALUPTELNO 
+	                                                                    from M_COM 
+	                                                                    where ID_COM = (select max(id_com) from M_COM)
+	                                                      )
+	                  END
+	                ) ACCESS_TEL,
+	                SSID,
+	                WEP_KEY,
+	                (
+	                  CASE
+	                          WHEN ROUTER_PW is not null THEN ROUTER_PW
+	                          WHEN ROUTER_PW is null THEN (
+	                                                                    Select DEFAULT_ROUTERPW 
+	                                                                    from M_COM 
+	                                                                    where ID_COM = (select max(id_com) from M_COM)
+	                                                      )
+	                  END
+	                ) ROUTER_PW,	                
+	                ROUTER_NO,
+	                ROUTER_TYPE,
+	                MODEM_NO,
+	                MAC_ID,
+	                ADSL_DEL_NO,
+	                CIRCUIT_ID,
+	                CARRIER,
+	                ACCESS_ACCOUNT_TEST
+		FROM T_SUBSCRIPTION_INFO AA	
+		WHERE			
+		        AA.IS_DELETED = 0  AND
+			  	AA.ID_CUST_PLAN = #customerPlanID# AND
+			  	AA.ID_SUB_INFO = #subscriptionID#
+	</select>
+	
+	<!-- Function getting browser information -->
+	<select id="getBrowserInformation" parameterClass="java.util.HashMap" resultMap="browserInformationResult">
+		SELECT  PROXSERV_NAME,
+				PORT_NO			
+		FROM M_COM G
+		WHERE					
+    		G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)
+	</select>
+	
+	<!-- Function getting installation address 1 -->
+	<select id="getInstallationAddress1" parameterClass="java.util.HashMap" resultMap="installationAddressResult1">
+		SELECT  AE.ADR_LINE1,
+		        AE.ADR_LINE2,
+		        AE.ADR_LINE3,
+		        AE.ZIP_CODE,
+		        NVL(
+		            ( 
+		              SELECT RC.VALUE 
+		              FROM RESOURCESMAINT RC
+		              WHERE AE.COUNTRY=RC.RESOURCE_ID AND
+            	  			CATEGORY='COUNTRY'              
+		            ),
+		            '') COUNTRY				
+		FROM T_INST_ADR AE		
+		WHERE					
+			AE.ADR_TYPE='A1'AND			
+			AE.ID_SUB_INFO=#subscriptionID# AND
+			AE.IS_DELETED=0
+	</select>		
+		
+	<!-- Function getting country code -->
+	<select id="getCountryCode" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		 
+        SELECT RC.RESOURCE_ID 
+        FROM RESOURCESMAINT RC
+        WHERE RC.VALUE=#installationCountryName# AND
+    	  	  CATEGORY='COUNTRY'              
+		            
+	</select>	
+	
+	<!-- Function getting customer name -->
+	<select id="getCustomerName" parameterClass="java.util.HashMap" resultMap="customerNameResult">
+		SELECT  R.CUST_NAME			
+		FROM M_CUST R			
+		WHERE					
+			R.ID_CUST=#customerID# AND
+			R.IS_DELETED=0
+	</select>
+	
+	<!-- Function getting installation address 2 -->
+	<select id="getInstallationAddress2" parameterClass="java.util.HashMap" resultMap="installationAddressResult2">
+		SELECT  AE.ADR_LINE1,
+		        AE.ADR_LINE2,
+		        AE.ADR_LINE3,
+		        AE.ZIP_CODE,
+		        NVL(
+		            ( 
+		              SELECT RC.VALUE 
+		              FROM RESOURCESMAINT RC
+		              WHERE AE.COUNTRY=RC.RESOURCE_ID AND
+            	  			CATEGORY='COUNTRY'              
+		            ),
+		            '') COUNTRY				
+		FROM T_INST_ADR AE			
+		WHERE					
+			AE.ADR_TYPE='A2'AND			
+			AE.ID_SUB_INFO=#subscriptionID# AND
+			AE.IS_DELETED=0
+	</select>	
+	
+	<!-- Function getting FTP interface information -->
+	<select id="getFTPInterfaceInformation" 
+			parameterClass="java.util.HashMap" 
+			resultMap="FTPInterfaceInformationResult">
+		SELECT  AC.FTP_IP,
+		        AC.FTP_ACC_NAME,
+		        AC.FTP_PW,
+		        AC.SERVER_CAPACITY,
+		        AC.DEFAULT_PAGE,
+		        AC.FTP_URL		
+		FROM T_FTP_INT AC
+		WHERE AC.ID_SUB_INFO=#subscriptionID# AND
+			  AC.IS_DELETED=0
+	</select>	
+	
+	<!-- Function getting MRTG monitoring -->
+	<select id="getMRTGMonitoring" parameterClass="java.util.HashMap" resultMap="MRTGMonitoringResult">
+		SELECT  AD.MRTG_URL,
+				AD.MRTG_ID,
+				AD.MRTG_PW	
+		FROM T_MRTG AD
+		WHERE AD.ID_SUB_INFO=#subscriptionID# AND
+			  AD.IS_DELETED=0
+	</select>	
+	
+	<!-- Function getting subscription MEMO -->
+	<select id="getSubscriptionInfoMemo" parameterClass="java.util.HashMap" resultMap="subscriptionInfoMemoResult">
+		SELECT  TO_CHAR(AA.MEMO) MEMO, TO_CHAR(AA.PRINTED_REMARK) PRINTED_REMARK
+		FROM T_SUBSCRIPTION_INFO AA	
+		WHERE AA.IS_DELETED = 0 AND
+			  AA.ID_CUST_PLAN = #customerPlanID# AND
+			  AA.ID_SUB_INFO = #subscriptionID#
+	</select>			
+	
+	<!-- Function getting count of installation address 1 -->
+	<select id="getInstallationAddress1Count" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM T_INST_ADR T	
+		WHERE IS_DELETED = 0 AND
+			  ID_SUB_INFO=#subscriptionID# AND
+			  ADR_TYPE='A1'
+	</select>
+	
+	<!-- Function getting count of installation address 2 -->
+	<select id="getInstallationAddress2Count" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM T_INST_ADR T	
+		WHERE IS_DELETED = 0 AND
+			  ID_SUB_INFO=#subscriptionID# AND
+			  ADR_TYPE='A2'
+	</select>
+	
+	<!-- Function getting count of FTP Interface Information -->
+	<select id="getFTPInterfaceInformationCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM T_FTP_INT AC			
+		WHERE AC.ID_SUB_INFO=#subscriptionID# AND
+			  AC.IS_DELETED=0
+	</select>
+			
+	<!-- Function getting count of MRTG Monitoring -->
+	<select id="getMRTGMonitoringCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM T_MRTG T			
+		WHERE T.ID_SUB_INFO=#subscriptionID# AND
+			  T.IS_DELETED=0
+	</select>	
+	
+	<!-- Function getting mail server info -->
+	<select id="getMailServerInformation" parameterClass="java.util.HashMap" resultMap="mailAddressInformationResult">
+		SELECT  T.DOMAIN_NAME,
+				to_char(T.MEMO) MEMO,
+				(
+					SELECT  PRIMDOMAIN_NO	
+					FROM M_COM G
+				 	WHERE					
+		    			G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)
+		    	) PRIMDOMAIN_NO,					
+				T.SMTP_SERVER_NAME,						
+				T.POP_SERVER_NAME,				
+				(
+					SELECT  SECDOMAIN_NO	
+					FROM M_COM G
+				 	WHERE					
+		    		G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)
+		    	) SECDOMAIN_NO,
+		    	T.AUTO_MAIL_ACC,
+                T.WEBMAIL_URL,
+		    	TO_CHAR(T.OPT_MAIL_ACC) OPT_MAIL_ACC,
+		    	TO_CHAR(T.OPT_BASE_QTY) OPT_BASE_QTY,
+		    	TO_CHAR(T.OPT_ADDT_OPTION) OPT_ADDT_OPTION,
+				TO_CHAR(T.AUTO_MAILBOX_QTY) AUTO_MAILBOX_QTY,
+				TO_CHAR(T.OPT_MAILBOX_QTY) OPT_MAILBOX_QTY,
+				TO_CHAR(T.AUTO_VIRUS_SCAN) AUTO_VIRUS_SCAN,
+				TO_CHAR(T.OPT_VIRUS_SCAN) OPT_VIRUS_SCAN,
+				TO_CHAR(T.AUTO_ANTI_SPAM) AUTO_ANTI_SPAM,
+				TO_CHAR(T.OPT_ANTI_SPAM) OPT_ANTI_SPAM,
+				TO_CHAR(T.AUTO_JUNK_MGT) AUTO_JUNK_MGT,
+				TO_CHAR(T.OPT_JUNK_MGT) OPT_JUNK_MGT		
+		FROM T_MAIL_ADDRESS T	
+		WHERE T.IS_DELETED = 0 AND			  
+			  T.ID_SUB_INFO = #subscriptionID#			  		
+	</select>
+	<select id="getDefaultSetting" resultClass="java.util.HashMap">
+	   SELECT
+	       T.DOMAIN_NAME,
+	       T.SMTP_SERVER_NAME,                     
+           T.POP_SERVER_NAME,
+           T.WEBMAIL_URL
+       FROM
+           M_COM T
+       WHERE
+           IS_DELETED = 0
+	</select>
+	<select id="getCustomerPlanLinkInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			TO_CHAR(M.BILL_DESC) AS PLAN_NAME, TO_CHAR(I.ITEM_DESC) AS ITEM_GRP_NAME, M.SERVICES_STATUS, I.ID_CUST_PLAN_LINK
+		FROM 
+			T_CUST_PLAN_LINK I, T_CUST_PLAN_D M
+		WHERE 
+			I.ID_CUST_PLAN_GRP = M.ID_CUST_PLAN_GRP
+			AND I.IS_DELETED = '0'
+		    AND 
+		    <iterate prepend="I.ID_CUST_PLAN_LINK IN " 
+					 open="(" close=")"
+					 conjunction=","
+					 property="idCustPlanLinkList">
+				#idCustPlanLinkList[]#
+			</iterate>
+	</select>
+
+	<!-- Function getting mail server info with codes -->
+	<select id="getMailServerInformationWithCode" parameterClass="java.util.HashMap" resultMap="mailServerInformationResult">
+		SELECT  T.DOMAIN_NAME,
+				to_char(T.MEMO) MEMO,
+				(
+					SELECT  PRIMDOMAIN_NO	
+					FROM M_COM G
+				 	WHERE					
+		    			G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)
+		    	) PRIMDOMAIN_NO,					
+				T.SMTP_SERVER_NAME,						
+				T.POP_SERVER_NAME,				
+				(
+					SELECT  SECDOMAIN_NO	
+					FROM M_COM G
+				 	WHERE					
+		    		G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)
+		    	) SECDOMAIN_NO,
+		    	T.AUTO_MAIL_ACC,
+		    	TO_CHAR(T.OPT_MAIL_ACC) OPT_MAIL_ACC,
+		    	TO_CHAR(T.OPT_BASE_QTY) OPT_BASE_QTY,
+		    	TO_CHAR(T.OPT_ADDT_OPTION) OPT_ADDT_OPTION,
+				TO_CHAR(T.AUTO_MAILBOX_QTY) AUTO_MAILBOX_QTY,
+				TO_CHAR(T.OPT_MAILBOX_QTY) OPT_MAILBOX_QTY,
+				TO_CHAR(T.AUTO_VIRUS_SCAN) AUTO_VIRUS_SCAN,
+				TO_CHAR(T.OPT_VIRUS_SCAN) OPT_VIRUS_SCAN,
+				TO_CHAR(T.AUTO_ANTI_SPAM) AUTO_ANTI_SPAM,
+				TO_CHAR(T.OPT_ANTI_SPAM) OPT_ANTI_SPAM,
+				TO_CHAR(T.AUTO_JUNK_MGT) AUTO_JUNK_MGT,
+				TO_CHAR(T.OPT_JUNK_MGT)	OPT_JUNK_MGT		
+		FROM T_MAIL_ADDRESS T	
+		WHERE T.IS_DELETED = 0 AND			  
+			  T.ID_SUB_INFO = #subscriptionID#			  		
+	</select>
+	
+    <!-- Function check mail accounts -->
+    <select id="checkMailAccountDuplication" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT S.ID_SUB_INFO, A.MAIL_ACCOUNT FROM 
+        T_SUBSCRIPTION_INFO S,T_CUST_PLAN_H H,T_MAIL_ADDRESS M,T_MAIL_ACCOUNT A
+        WHERE S.ID_CUST_PLAN = H.ID_CUST_PLAN
+        AND S.ID_SUB_INFO = M.ID_SUB_INFO
+        AND M.ID_MAIL= A.ID_MAIL
+        AND M.IS_DELETED='0'
+        AND A.IS_DELETED='0'
+        AND H.IS_DELETED='0'
+        AND S.IS_DELETED='0'
+        <isNotEmpty prepend="AND" property="mailAccountNames">
+             A.MAIL_ACCOUNT IN
+             <iterate property="mailAccountNames"
+                  open="(" close=")"
+                  conjunction=",">
+               #mailAccountNames[]# 
+             </iterate>
+        </isNotEmpty>
+        AND (H.PLAN_STATUS='PS6' OR H.PLAN_STATUS = 'PS3')
+        AND S.ID_SUB_INFO&lt;&gt;#subscriptionID#
+    </select>
+	<!-- Function getting mail accounts -->
+	<select id="getMailAccounts" parameterClass="java.util.HashMap" resultMap="mailAccountResult">
+		SELECT  T_M.ID_MAIL,
+				T_A.ID_MAILACC,
+				T_A.MAIL_ACCOUNT,
+				T_A.MAIL_PW,
+				T_A.POP_ACCOUNT,				
+				T_A.MAILBOX_QTY,
+				T_A.MAILBOX_SIZE,
+				T_A.VIRUS_SCAN,
+				T_A.ANTI_SPAM,
+				T_A.JUNK_MGT,
+				TO_CHAR(T_A.DATE_CREATED, 'dd/mm/yyyy') DATE_CREATED,
+				TO_CHAR(T_A.DATE_PRINTED_ACT, 'dd/mm/yyyy') DATE_PRINTED_ACT
+		 			
+		FROM T_MAIL_ADDRESS T_M,
+			 T_MAIL_ACCOUNT T_A	
+		WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+			  T_M.ID_SUB_INFO = #subscriptionID# AND
+			  T_A.IS_DELETED = 0	
+		ORDER BY to_char(T_A.DATE_CREATED,'yyyymmdd'),upper(T_A.MAIL_ACCOUNT)
+	</select>
+	
+	<!-- Function getting auto update quantity plan -->
+	<select id="getModemNoData" parameterClass="java.util.HashMap" resultMap="modemNoDataResult">
+		  SELECT AB.MODEM_NO, AB.MAC_ID
+		  FROM M_MODEM_INFO AB
+		  WHERE AB.IS_DELETED=0 AND 
+		        AB.MODEM_NO IS NOT NULL
+    </select>
+    
+    <!-- Function getting auto update quantity plan -->
+	<select id="getAutoUpdateQuantityPlan" parameterClass="java.util.HashMap" resultMap="autoUpdateQuantityPlanResult">
+		SELECT T_L.ID_CUST_PLAN_LINK,
+			   (T_L.PLAN_NAME || ' ' || T_L.ITEM_GRP_NAME) PLAN_SERVICE_NAME
+		FROM T_CUST_PLAN_H T_H,
+		     T_CUST_PLAN_D T_D,
+		     T_CUST_PLAN_LINK T_L
+	    WHERE T_H.ID_CUST_PLAN = T_D.ID_CUST_PLAN AND
+	          T_D.ID_CUST_PLAN_GRP = T_L.ID_CUST_PLAN_GRP AND
+	          T_L.IS_DELETED = 0  AND
+	          T_H.ID_CUST_PLAN = #customerPlanID#
+    </select>
+	
+	<!-- Function getting mail accounts totals -->
+	<select id="getMailAccountTotals" parameterClass="java.util.HashMap" resultMap="mailAccountTotalResult">
+		SELECT 
+			<!-- Mail account total -->
+			(
+				SELECT  TO_CHAR(COUNT(T_A.ID_MAIL)) MAIL_ACCOUNT_TOTAL
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0	
+			) MAIL_ACCOUNT_TOTAL,
+			<!-- Mail box qty total -->
+			(
+				SELECT  TO_CHAR(SUM(T_A.MAILBOX_QTY)) MAILBOX_QTY_TOTAL 
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0		
+			) MAILBOX_QTY_TOTAL,
+			<!-- Mail box size total -->
+			(
+				SELECT  TO_CHAR(SUM(T_A.MAILBOX_SIZE)) MAILBOX_SIZE_TOTAL 
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0		
+			) MAILBOX_SIZE_TOTAL,
+			<!-- Mail box virus scan total -->
+			(
+				SELECT  TO_CHAR(COUNT(T_A.VIRUS_SCAN)) VIRUS_SCAN_TOTAL
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0 AND
+					  T_A.VIRUS_SCAN = 1
+			) VIRUS_SCAN_TOTAL,
+			<!-- Mail box anti spam total -->
+			(
+				SELECT  TO_CHAR(COUNT(T_A.ANTI_SPAM)) ANTI_SPAM_TOTAL
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0 AND
+					  T_A.ANTI_SPAM = 1
+			) ANTI_SPAM_TOTAL,
+			<!-- Mail box junk mgt total -->	
+			(
+				SELECT  TO_CHAR(COUNT(T_A.JUNK_MGT)) JUNK_MGT_TOTAL
+				FROM T_MAIL_ADDRESS T_M,
+					 T_MAIL_ACCOUNT T_A	
+				WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+					  T_M.ID_SUB_INFO = #subscriptionID# AND
+					  T_A.IS_DELETED = 0 AND
+					  T_A.JUNK_MGT = 1
+			) JUNK_MGT_TOTAL
+		FROM DUAL		  		
+	</select>
+	
+	<!-- Function getting carrier name -->
+	<select id="getCarrierName" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT f.SUPPLIER_NAME 
+		FROM M_SUPPLIER_H f 
+		WHERE f.IS_DELETED=0 AND
+			  f.ID_SUPPLIER=#carrierID#  		
+	</select>
+	
+	<!-- Function getting deleted mail accounts -->
+	<select id="getMailAccountsDeleted" parameterClass="java.util.HashMap" resultMap="mailAccountDeletedResult">
+		SELECT  T_M.ID_MAIL,
+				T_A.ID_MAILACC,
+				T_A.MAIL_ACCOUNT,
+				T_A.MAIL_PW,
+				T_A.POP_ACCOUNT,
+				TO_CHAR(T_A.DATE_UPDATE, 'dd/mm/yyyy') DATE_UPDATE,
+				TO_CHAR(T_A.DATE_PRINTED_ACT, 'dd/mm/yyyy') DATE_PRINTED_ACT
+		 			
+		FROM T_MAIL_ADDRESS T_M,
+			 T_MAIL_ACCOUNT T_A	
+		WHERE T_M.ID_MAIL = T_A.ID_MAIL AND			  
+			  T_M.ID_SUB_INFO = #subscriptionID# AND
+			  T_A.IS_DELETED = 1 AND
+			  T_A.IS_DELETED_DISP = 1
+		ORDER BY to_char(T_A.DATE_UPDATE,'yyyymmdd') desc,upper(T_A.MAIL_ACCOUNT)			  		
+	</select>
+		
+	<!-- Function getting firewall information -->
+	<select id="getFirewallInformation" parameterClass="java.util.HashMap" resultMap="firewallInformationResult">	
+		SELECT  FD.FIREWALL_NO,
+				FD.FIREWALL_TYPE,
+				FD.FIREWALL_MODEL,
+				FD.INT_IP_TRUSTED,
+				FD.INT_IP_UNTRUSTED,
+				FD.SERIAL_NO,
+				FD.NAT,
+				FD.DHCP,
+				FD.DHCP_IP_RANGE,
+				FD.DNS,
+				to_char(FD.MEMO) MEMO
+		 			
+		FROM T_FIREWALL FD
+		WHERE FD.ID_SUB_INFO = #subscriptionID# AND
+			  FD.IS_DELETED = 0 		  		
+	</select>
+
+	<!-- Function getting firewall interface ips -->
+	<select id="getFirewallInterfaceIPs" parameterClass="java.util.HashMap" resultMap="firewallInterfaceIPResult">	
+		SELECT  FF.INTERFACE_IP,
+				FF.ZONE,
+	 			FF.ID_INT_IP
+		FROM T_FIREWALL_INT_IP FF,
+			 T_FIREWALL FD
+		WHERE FD.ID_SUB_INFO = #subscriptionID# AND
+			  FD.ID_FIREWALL = FF.ID_FIREWALL AND
+			  FF.IS_DELETED = 0 		  		
+	</select>
+	
+	<!-- Function getting firewall id -->
+	<select id="getFirewallID" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">	
+		SELECT  NVL(FD.ID_FIREWALL, -1)
+		 			
+		FROM T_FIREWALL FD
+		WHERE FD.ID_SUB_INFO = #subscriptionID# AND
+			  FD.IS_DELETED = 0 		  		
+	</select>
+
+	<!-- Function getting firewall policies -->
+	<select id="getFirewallPolicies" parameterClass="java.util.HashMap" resultMap="firewallPolicyResult">	
+		SELECT  TRIM(NVL(FE.SOURCE, '')) SOURCE,
+				TRIM(NVL(FE.DESTINATION, '')) DESTINATION,
+				TRIM(NVL(FE.PROTOCOL, '')) PROTOCOL,
+				TRIM(NVL(FE.ACTION, '')) ACTION,
+				TRIM(NVL(FE.REMARKS, '')) REMARKS,
+				TRIM(NVL(FE.ID_POLICY, '')) ID_POLICY
+
+		FROM T_FIREWALL_POLICY FE,
+			 T_FIREWALL FD
+		WHERE FD.ID_SUB_INFO = #subscriptionID# AND
+			  FD.ID_FIREWALL = FE.ID_FIREWALL AND
+			  FE.IS_DELETED = 0 		  		
+	</select>
+	
+	<!-- Function getting dns zone info -->
+	<select id="getDNSZoneInformation" parameterClass="java.util.HashMap" resultMap="dNSZoneInformationResult">	
+		SELECT  HA.MIG_SERVER,
+				HA.MIG_SERVER2,
+				HA.MIG_SERVER3,
+				HA.MIG_REGISTRAR,				
+				to_char(HA.MEMO) MEMO,
+				HA.ID_DNS_ZONE
+
+		FROM T_DNS_ZONE HA
+		WHERE HA.ID_SUB_INFO = #subscriptionID# AND
+			  HA.IS_DELETED = 0 		  		
+	</select>
+	
+	<!-- Function getting dns zone records -->
+	<select id="getDNSZoneRecords" parameterClass="java.util.HashMap" resultMap="dNSZoneRecordResult">	
+		SELECT  HB.DNS_DOMAIN,
+				HB.DNS_TYPE,
+				HB.DNS_IP,
+				HB.DNS_WEIGHT,
+				HB.ID_DNS_REC
+
+		FROM T_DNS_ZONE_REC HB,
+			 T_DNS_ZONE HA
+		WHERE HA.ID_SUB_INFO = #subscriptionID# AND
+			  HA.ID_DNS_ZONE = HB.ID_DNS_ZONE  AND
+			  HB.IS_DELETED = 0 		  		
+	</select>
+	
+	<!-- Function getting dns zone record id -->
+	<select id="getDNSZoneID" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">	
+		SELECT HA.ID_DNS_ZONE
+
+		FROM T_DNS_ZONE HA
+		WHERE HA.ID_SUB_INFO = #subscriptionID# AND
+			  HA.IS_DELETED = 0 		  		
+	</select>
+		
+	<!-- Function getting cpe configuration info -->
+	<select id="getCPEConfigurationInformation" parameterClass="java.util.HashMap" resultMap="CPEConfigInfoResult">	
+		SELECT GA.ID_CPE_CONF_H,
+			   to_char(GA.MEMO) MEMO
+
+		FROM T_CPE_CONF_H GA
+		WHERE GA.ID_SUB_INFO = #subscriptionID# AND
+			  GA.IS_DELETED = 0 		  		
+	</select>
+		
+	<!-- Function getting cpe configuration details -->
+	<select id="getCPEConfigurationDetails" parameterClass="java.util.HashMap" resultMap="CPEConfigDetailResult">	
+		SELECT NVL(TO_CHAR(GB.CPE_NAME), ' ') CPE_NAME,
+			   NVL(TO_CHAR(GB.ISP_EDGE_IP), ' ') ISP_EDGE_IP,
+			   NVL(TO_CHAR(GB.ROUTER_WAN_IP), ' ') ROUTER_WAN_IP,
+			   NVL(TO_CHAR(GB.NETWORK_ADR), ' ') NETWORK_ADR,
+			   NVL(TO_CHAR(GB.IS_MANAGED_CPE), ' ') IS_MANAGED_CPE,
+			   NVL(TO_CHAR(GB.CPE_MODEL_INSTALLED), ' ') CPE_MODEL_INSTALLED,
+			   NVL(TO_CHAR(GB.CPE_LAN), ' ') CPE_LAN,
+			   NVL(TO_CHAR(GB.CPE_WAN), ' ') CPE_WAN,
+			   NVL(TO_CHAR(GB.SERIAL_NO), ' ') SERIAL_NO,
+			   NVL(TO_CHAR(GB.EQUIP_ITEMS_PACKAGE), ' ') EQUIP_ITEMS_PACKAGE,
+			   NVL(TO_CHAR(GB.CUST_SPEC_CONF_ROUTER), ' ') CUST_SPEC_CONF_ROUTER,
+			   NVL(TO_CHAR(GB.ID_CPE_CONF_D), ' ') ID_CPE_CONF_D,
+			   NVL(TO_CHAR(GA.ID_CPE_CONF_H), ' ') ID_CPE_CONF_H
+
+		FROM T_CPE_CONF_H GA,
+			 T_CPE_CONF_D GB
+		WHERE GA.ID_SUB_INFO = #subscriptionID# AND
+		      GA.ID_CPE_CONF_H = GB.ID_CPE_CONF_H AND
+			  GB.IS_DELETED = 0 
+		ORDER BY TO_NUMBER(SUBSTR(CPE_NAME, 5)) ASC	  		  		
+	</select>
+	
+	<!-- Function getting cpe dIDs -->
+	<select id="getCPEConfigurationDIDs" parameterClass="java.util.HashMap" resultMap="CPEConfigDIDResult">	
+		SELECT GB.ID_CPE_CONF_D
+
+		FROM T_CPE_CONF_H GA,
+			 T_CPE_CONF_D GB
+		WHERE GA.ID_SUB_INFO = #subscriptionID# AND
+		      GA.ID_CPE_CONF_H = GB.ID_CPE_CONF_H AND
+			  GB.IS_DELETED = 0 		  		
+	</select>
+
+	<!-- Function getting cpe hID -->
+	<select id="getCPEConfigurationHID" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">	
+		SELECT GA.ID_CPE_CONF_H
+
+		FROM T_CPE_CONF_H GA
+		WHERE GA.ID_SUB_INFO = #subscriptionID# AND
+			  GA.IS_DELETED = 0 		  		
+	</select>
+	
+	<!-- khaln : Function getting Rack Power header information -->
+	<select id="getRackPowerMemoInfo" parameterClass="java.util.HashMap" resultMap="rackPowerHeaderInfoResult">
+		select distinct to_char(RPH.ID_RACK_H) ID_RACK_H, to_char(RPH.MEMO) MEMO
+		from T_RACK_POWER_H RPH inner join T_SUBSCRIPTION_INFO SI
+			on (RPH.ID_SUB_INFO = SI.ID_SUB_INFO)
+		where RPH.IS_DELETED = 0
+			and RPH.ID_SUB_INFO = #subscriptionID#
+			and SI.ID_CUST_PLAN = #customerPlanID#
+	</select>
+	
+	<!-- khaln : Function getting Rack Power detail information -->
+	<select id="getRackPowerDetailInfo" parameterClass="java.util.HashMap" resultMap="rackPowerDetailInfoResult">
+		select to_char(RPD.ID_RACK_D) ID_RACK_D, RPD.MAX_POWER, RPD.EQUIP_LOCATION, RPD.EQUIP_SUITE, RPD.RACK_NO
+		from T_RACK_POWER_D RPD 
+		where RPD.IS_DELETED = 0 
+			and RPD.ID_RACK_H = #rackHeadID#
+			<dynamic>
+				<isNotEmpty property="rackDetailID">
+					and RPD.ID_RACK_D = #rackDetailID#
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY to_number(ID_RACK_D)
+	</select>
+	
+	<!-- khaln : Function getting IT Contact information -->
+	<select id="getITContactMemoInfo" parameterClass="java.util.HashMap" resultMap="iTContactHeadInfoResult">
+		select to_char(ITH.ID_CONTACT) ID_CONTACT, to_char(ITH.MEMO) MEMO
+		from T_IT_CONTACT_H ITH
+		where ITH.IS_DELETED = 0
+			and ITH.ID_SUB_INFO = #subscriptionID#
+	</select>
+	
+	<select id="getITContactDetailInfo" parameterClass="java.util.HashMap" resultMap="iTContactDetailInfoResult">
+		select ITD.CONTACT_TYPE, ITD.NAME, ITD.DESIGNATION, ITD.EMAIL, ITD.TEL_NO, ITD.FAX_NO
+		from T_IT_CONTACT_D ITD
+		where ITD.IS_DELETED = 0
+			and ITD.ID_CONTACT = #iTContactHeadID#
+			<dynamic>
+				<isNotEmpty property="contactType">
+					and ITD.CONTACT_TYPE = #contactType#
+				</isNotEmpty>
+			</dynamic>
+	</select>
+	
+	<!-- khaln : Function getting Server information -->
+	<select id="getServerMemoInfo" parameterClass="java.util.HashMap" resultMap="serverHeadInfoResult">
+		select distinct to_char(SIH.ID_SERVER_INFO) ID_SERVER_INFO, to_char(SIH.MEMO) MEMO
+		from T_SERVER_INFO_H SIH inner join T_SUBSCRIPTION_INFO SI
+			on (SIH.ID_SUB_INFO = SI.ID_SUB_INFO)
+		where SIH.IS_DELETED = 0
+			and SIH.ID_SUB_INFO = #subscriptionID#
+			and SI.ID_CUST_PLAN = #customerPlanID#
+	</select>
+	
+	<select id="getServerDetailInfo" parameterClass="java.util.HashMap" resultMap="serverDetailInfoResult">
+		select to_char("SID".ID_SERVER_D) ID_SERVER_D, "SID".SERVER, "SID".SERVER_NAME,
+			"SID".HARDWARE, "SID".OS, "SID".IP, "SID".GATEWAY, "SID".SUBNET_MASK, "SID".MOS, "SID".HOST_ID,
+			"SID".SERIAL_NO, "SID".USER_LICENSE, "SID".PRIMARY_DNS, "SID".SECOND_DNS, "SID".MODEL_NO,
+			"SID".WEB_HOST_SPACE, "SID".SQL, "SID".SQL_DB_NAME, "SID".SQL_SIZE, "SID".SQL_ID, "SID".SQL_DB_PW,
+			"SID".BACKUP, "SID".BACKUP_SIZE, "SID".MONITORING, "SID".INSTALLED_APP 
+		from T_SERVER_INFO_D "SID"
+		where "SID".IS_DELETED = 0
+			and "SID".ID_SERVER_INFO = #serverInfoHeadID#
+		order by to_char(substr(SERVER,7), '000') asc
+	</select>
+	
+	<!-- khaln : Function getting Teamwork information -->
+	<select id="getTeamworkInfo" parameterClass="java.util.HashMap" resultMap="teamworkInfoResult">
+		select distinct to_char(TW.ID_TEAMWORK) ID_TEAMWORK, TW.URL, TW.ADMIN_ID, TW.ADMIN_PW, TW.EMAIL_DOMAIN_ADR, 
+			TW.SERVER_POP3, TW.SERVER_IMAP, TW.SERVER_SMTP, TW.ACCOUNT_NAME, TW.ACCOUNT_PW, to_char(TW.MEMO) MEMO
+		from T_TEAMWORK TW inner join T_SUBSCRIPTION_INFO SI
+			on (TW.ID_SUB_INFO = SI.ID_SUB_INFO)
+		where TW.IS_DELETED = 0
+			and TW.ID_SUB_INFO = #subscriptionID#
+			and SI.ID_CUST_PLAN = #customerPlanID#
+	</select>
+	<!-- BEGIN B_RPT_SB02 -->
+	<select id="GET_CUSTOMER_INFO" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT a.CUST_NAME, a.CO_TEL_NO, a.CO_FAX_NO, a. HOME_TEL_NO, 
+			a.HOME_FAX_NO, b.ADR_LINE1, b.ADR_LINE2, b.ADR_LINE3, b.ZIP_CODE, 
+			b.COUNTRY, c.CONTACT_NAME
+		FROM M_CUST a, M_CUST_ADR b, M_CUST_CTC c
+		WHERE a.ID_CUST	=	#ID_CUST#
+			AND a.ID_CUST	=	b.ID_CUST
+			AND b.ADR_TYPE	=	'BA'
+			AND a.ID_CUST	=	c.ID_CUST
+			AND c.CONTACT_TYPE	=	'PC'
+	</select>
+	<select id="GET_NEW_MAIL" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT TO_CHAR(ROWNUM) as ROW_NUMBER,t.* FROM(
+		SELECT  a.MAIL_ACCOUNT, a.MAIL_PW, a.POP_ACCOUNT
+		FROM T_MAIL_ACCOUNT a, T_MAIL_ADDRESS b, T_SUBSCRIPTION_INFO c
+		WHERE c.ID_CUST_PLAN	=	#customerPlanID#
+			AND c.ID_SUB_INFO	=	b.ID_SUB_INFO
+			AND b.ID_MAIL	=	a.ID_MAIL
+			AND a.IS_DELETED	=	0
+			<isNotEmpty property="selectedMailAccountIDs">
+			AND a.ID_MAILACC IN
+			<iterate open="(" close=")" property="selectedMailAccountIDs" conjunction=",">
+			#selectedMailAccountIDs[]#
+			</iterate>
+			</isNotEmpty>
+			<isEmpty property="selectedMailAccountIDs">
+			AND a.ID_MAILACC IS NULL
+			</isEmpty>
+		ORDER BY to_char(a.DATE_CREATED,'yyyymmdd'),upper(a.MAIL_ACCOUNT)) t
+	</select>
+	<select id="GET_DELETION_MAIL" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT TO_CHAR(ROWNUM) as ROW_NUMBER,t.* FROM(
+		SELECT MAIL_ACCOUNT
+		FROM T_MAIL_ACCOUNT a, T_MAIL_ADDRESS b, T_SUBSCRIPTION_INFO c
+		WHERE c.ID_CUST_PLAN	=	#customerPlanID#
+			AND c.ID_SUB_INFO	=	b.ID_SUB_INFO
+			AND b.ID_MAIL	=	a.ID_MAIL
+			AND a.IS_DELETED	=	1
+			AND IS_DELETED_DISP = 1
+			<isNotEmpty property="selectedDeletedMailAccountIDs">
+			AND a.ID_MAILACC IN
+			<iterate open="(" close=")" property="selectedDeletedMailAccountIDs" conjunction=",">
+			#selectedDeletedMailAccountIDs[]#
+			</iterate>
+			</isNotEmpty>
+			<isEmpty property="selectedDeletedMailAccountIDs">
+			AND a.ID_MAILACC IS NULL
+			</isEmpty>
+		ORDER BY to_char(a.DATE_CREATED,'yyyymmdd'),upper(a.MAIL_ACCOUNT)) t
+	</select>
+	<!-- END B_RPT_SB02 -->
+	
+	<!-- Get user access -->
+	<select id="getUserAccess" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT TO_CHAR(access_type) "accessType"
+		FROM m_user_access
+		WHERE id_user = #logonUserID# AND
+              id_sub_module = 'B-SSM' AND
+              ROWNUM = 1
+	</select>
+	
+	<!-- Get count from M_PLAN_BATCH_MAPPING -->
+	<select id="getCountByCustomerPlanId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM m_plan_batch_mapping 
+		WHERE 
+			batch_id = 'RD' AND 
+			id_plan_grp IN 
+				(
+  					SELECT id_plan_grp 
+  					FROM t_cust_plan_link, t_cust_plan_d
+  					WHERE t_cust_plan_d.id_cust_plan = #customerPlanID# AND 
+  						  t_cust_plan_d.id_cust_plan_grp = t_cust_plan_link.id_cust_plan_grp
+  						  AND t_cust_plan_d.is_deleted='0' AND t_cust_plan_link.is_deleted='0'
+				)
+	</select>
+	<select id="getCountByCustomerPlanIdWithStatus" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM m_plan_batch_mapping 
+		WHERE 
+			batch_id = 'RD' AND 
+			id_plan_grp IN 
+				(
+  					SELECT id_plan_grp 
+  					FROM t_cust_plan_link, t_cust_plan_h, t_cust_plan_d
+  					WHERE t_cust_plan_h.id_cust_plan = #customerPlanID# AND 
+  						  t_cust_plan_h.id_cust_plan = t_cust_plan_d.id_cust_plan AND 
+  						  t_cust_plan_d.id_cust_plan_grp = t_cust_plan_link.id_cust_plan_grp AND
+  						  t_cust_plan_d.services_status = 'PS3' AND t_cust_plan_h.is_deleted='0'
+  						  AND t_cust_plan_d.is_deleted='0' AND t_cust_plan_link.is_deleted='0'
+				)
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_PLAN_GRP" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE
+			ID_PLAN_GRP IN
+	   		<iterate open="(" close=")" conjunction="," property="idPlanGrpList">
+	   			#idPlanGrpList[]#
+	   		</iterate>
+			AND BATCH_ID = 'RD'
+	</select>
+	
+	<!-- To judge whether the Access Account exists in the table T_SUBSCRIPTION_INFO or not -->
+	<select id="getCountByAccessAccount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_subscription_info
+		WHERE
+			access_account = #accessAccount# AND
+			id_sub_info != #subscriptionID#
+	</select>
+	<select id="getServiceNameRecord" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT SVC_LEVEL2,UNIT_PRICE
+		FROM T_CUST_PLAN_LINK
+		WHERE ID_CUST_PLAN_LINK = #customerPlanLinkID# AND
+      			IS_DELETED = 0
+	</select>
+		<select id="getUnitPriceRecord" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		SELECT UNIT_PRICE  
+		FROM T_CUST_PLAN_LINK
+		WHERE ID_CUST_PLAN_LINK = #customerPlanLinkID# AND
+      			IS_DELETED = 0
+	</select>
+	<select id="getDisplayMemo" resultClass="java.lang.String">
+		select SET_VALUE
+		from M_GSET_D
+		where
+		ID_SET='DISPLAY_MEMO'
+		AND IS_DELETED = '0'
+    </select>
+	<update id="updateAutoMailAcc" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_LINK 								
+		SET 												
+				QUANTITY=#newQuantity#,
+				TOTAL_AMOUNT=#totalAmount#
+		WHERE 
+				ID_CUST_PLAN_LINK=#customerPlanLinkID# 	
+	</update>
+	<select id="getRadiusServiceByIdSubInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT
+			  T.ID_CUST_PLAN,
+			  T.ID_SUB_INFO,
+			  A.PLAN_STATUS,
+			  B.SERVICES_STATUS
+		FROM
+			  T_SUBSCRIPTION_INFO T INNER JOIN T_CUST_PLAN_H A
+			  ON T.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+			  INNER JOIN T_CUST_PLAN_D B
+			  ON A.ID_CUST_PLAN = B.ID_CUST_PLAN AND B.IS_DELETED = '0'
+			  INNER JOIN T_CUST_PLAN_LINK C
+			  ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+			  INNER JOIN M_PLAN_BATCH_MAPPING M
+			  ON C.ID_PLAN_GRP = M.ID_PLAN_GRP AND M.BATCH_ID = 'RD'
+		WHERE
+			  T.ID_SUB_INFO = #idSubInfo#
+			  AND T.IS_DELETED = '0'
+	</select>
+	<select id="getPlanStatusByIdSubInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT
+			  T.ID_CUST_PLAN,
+			  T.ID_SUB_INFO,
+			  A.PLAN_STATUS
+		FROM
+			  T_SUBSCRIPTION_INFO T INNER JOIN T_CUST_PLAN_H A
+			  ON T.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+		WHERE
+			  T.ID_SUB_INFO = #idSubInfo#
+			  AND T.IS_DELETED = '0'
+	</select>
+	<update id="updateAccessAccountTest" parameterClass="java.util.HashMap">
+		UPDATE
+		      T_SUBSCRIPTION_INFO
+		SET
+		      ACCESS_ACCOUNT_TEST=#accessAccountTest#,
+		      ID_LOGIN=#idLogin#,
+		      ID_AUDIT=#idAudit#,
+		      DATE_UPDATED=sysdate
+		WHERE
+		      ID_SUB_INFO=#idSubInfo#
+	</update>
+	<select id="getCustomerPlanH" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+    SELECT
+          ID_CUST_PLAN,
+          PLAN_STATUS
+    FROM
+          T_CUST_PLAN_H H
+    WHERE
+          ID_CUST_PLAN = #customerplanid#
+    	  AND IS_DELETED = 0
+    </select>
+</sqlMap>

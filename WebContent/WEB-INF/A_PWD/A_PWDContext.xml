@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/A_PWD/A_PWDS01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_PWD/A_PWDS01R01BL" scope="singleton">
+        <property name="businessLogic" ref="A_PWDR01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_pwd.blogic.A_PWDR01BLogic"
+        id="A_PWDR01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_PWD/A_PWDS01R02BL" scope="singleton">
+        <property name="businessLogic" ref="A_PWDR02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_pwd.blogic.A_PWDR02BLogic"
+        id="A_PWDR02BLogic" scope="singleton"/>
+</beans>

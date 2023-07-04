@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+	  <bean name="E_MEX_SP1Job" class="org.springframework.scheduling.quartz.JobDetailBean">
+		  <property name="jobClass" value="nttdm.bsys.e_mex.batch.E_MEX_SP1Job"/>
+		  <property name="jobDataAsMap">
+		    <map>
+		      <entry key="message" value="This is message from server" />
+		    </map>
+		  </property>
+		</bean>
+		
+		<bean id="E_MEX_SP1Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		  <property name="jobDetail" ref="E_MEX_SP1Job" />
+		  <property name="cronExpression" value="0/5 * * * * ?"/>
+		</bean>
+		
+		<bean id="bsysSchedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false">
+		  <property name="triggers">
+		    <list>
+		    	<ref bean="E_MEX_SP1Trigger" />
+		    </list>
+		  </property>
+		  <property name="autoStartup">
+		  	<value>false</value>
+		  </property>
+		</bean>
+</beans>

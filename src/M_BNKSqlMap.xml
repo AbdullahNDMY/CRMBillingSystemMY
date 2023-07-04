@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+
+<sqlMap namespace="M_BNK">
+
+<select id="SELECT.M_BNK.SQL001" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS01Input"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_bankbean"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT ID_BANK, BANK_FULL_NAME, BANK_CODE, BANK_NAME, BRANCH_CODE, BRANCH_NAME, BANK_TEL_NO, BANK_FAX_NO,BIC_CODE    	
+	FROM 	M_BANK Where UPPER(bank_full_name) like UPPER('%$bank_fullname$%') and bank_code like '%$bank_code$%' and branch_code like '%$branch_code$%'
+	<isNotEmpty prepend="AND" property="bank_bic_code"> 
+	   bic_code like '%$bank_bic_code$%' 
+	</isNotEmpty>
+	and IS_DELETED ='0'
+	ORDER by id_bank ASC
+</select> 
+
+<select id="SELECT.M_BNK.SQL010" parameterClass="java.lang.String" resultClass="java.util.HashMap" resultSetType="SCROLL_INSENSITIVE">
+    SELECT * FROM M_BANK_CTC WHERE ID_BANK =#ID_BANK#
+</select>
+
+<select id="SELECT.M_BNK.SQL011" parameterClass="java.lang.String" resultClass="java.util.HashMap" resultSetType="SCROLL_INSENSITIVE">
+    SELECT * FROM M_BANK_ADR WHERE ID_BANK =#ID_BANK#
+</select>
+
+<select id="SELECT.M_BNK.SQL012"
+		resultClass="java.lang.String"> 		    
+    SELECT 
+    Max(ID_BANK) as MAX_VALUE
+    FROM M_BANK	
+</select>
+
+<select id="SELECT.M_BNK.SQL017" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput" resultClass="java.lang.String">
+	SELECT ID_BANK FROM M_BANK WHERE DATE_CREATED = (SELECT MAX(DATE_CREATED) FROM M_BANK WHERE ID_LOGIN=#lblidlogin#) AND rownum &lt; 2
+</select>
+
+<select id="SELECT.M_BNK.SQL002" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_bankbean"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT ID_BANK, BANK_FULL_NAME, BANK_CODE, BANK_NAME, BRANCH_CODE, BRANCH_NAME, BANK_TEL_NO, BANK_FAX_NO,BIC_CODE    	
+	FROM 	M_BANK Where ID_BANK=#hypBankReference#
+	
+</select>
+
+<select id="SELECT.M_BNK.SQL019" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02deInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_bankbean"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT ID_BANK, BANK_FULL_NAME, BANK_CODE, BANK_NAME, BRANCH_CODE, BRANCH_NAME, BANK_TEL_NO, BANK_FAX_NO,BIC_CODE    	
+	FROM 	M_BANK Where ID_BANK=#lblidbank#
+	
+</select>
+
+<select id="SELECT.M_BNK.SQL003" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_AdressRA"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT BK_ADR_LINE1, BK_ADR_LINE2, BK_ADR_LINE3,BK_ZIP_CODE,COUNTRY 	
+	FROM 	M_BANK_ADR Where ID_BANK=#hypBankReference# and BK_ADR_TYPE='RA'
+	
+</select>
+
+<select id="SELECT.M_BNK.SQL004" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_AdressRA"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT BK_ADR_LINE1, BK_ADR_LINE2, BK_ADR_LINE3,BK_ZIP_CODE,COUNTRY 	
+	FROM 	M_BANK_ADR Where ID_BANK=#hypBankReference# and BK_ADR_TYPE='CA'
+	
+</select>
+<select id="SELECT.M_BNK.SQL005" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNKContactInfo"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT BK_CTC_NAME, BK_CTC_DESIGNATION, BK_CTC_EMAIL,BK_CTC_TEL_NO,BK_CTC_DID_NO,BK_CTC_FAX_NO,BK_CTC_MOBILE_NO 	
+	FROM 	m_BANK_CTC Where ID_BANK=#hypBankReference# and BK_CTC_TYPE='PC'
+	
+</select>
+
+<select id="SELECT.M_BNK.SQL006" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNKContactInfo"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT BK_CTC_NAME, BK_CTC_DESIGNATION, BK_CTC_EMAIL,BK_CTC_TEL_NO,BK_CTC_DID_NO,BK_CTC_FAX_NO,BK_CTC_MOBILE_NO 	
+	FROM 	m_BANK_CTC Where ID_BANK=#hypBankReference# and BK_CTC_TYPE='BC'
+	
+</select>
+<select id="SELECT.M_BNK.SQL007" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02vInput"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNKContactInfo"     
+		    resultSetType="SCROLL_INSENSITIVE">
+    SELECT BK_CTC_NAME, BK_CTC_DESIGNATION, BK_CTC_EMAIL,BK_CTC_TEL_NO,BK_CTC_DID_NO,BK_CTC_FAX_NO,BK_CTC_MOBILE_NO 	
+	FROM 	m_BANK_CTC Where ID_BANK=#hypBankReference# and BK_CTC_TYPE='OC'
+	
+</select>
+
+<select id="SELECT.ID_MAX_BANK" resultClass="java.lang.String">
+	select SEQ_M_BANK.nextval as id_maxbank from dual
+</select>
+
+<select id="getbankduplicate" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	select count(*) from M_BANK t where  t.BANK_CODE=#bankCode# AND t.BRANCH_CODE=#branchCode#
+</select>
+<select id="getbankduplicateForEdit" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	select * from M_BANK t where  t.BANK_CODE=#bankCode# AND t.BRANCH_CODE=#branchCode#
+</select>
+
+<insert id="INSERT.M_BNK.SQL001" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	insert into  m_bank (ID_BANK, BANK_FULL_NAME, BANK_CODE, BANK_NAME, BRANCH_CODE, BRANCH_NAME, bank_tel_no, bank_fax_no,DATE_CREATED, DATE_UPDATED ,ID_LOGIN, ID_AUDIT,BIC_CODE) 
+	values( #id_maxbank#,#lblBankFullName#,#tbxBankCode#,#tbxBankName#,#tbxBranchCode#,#tbxBranchName#,#tbxTelNo#,#tbxFaxNo#,SYSDATE ,SYSDATE, #lblidlogin#, #idAudit#,#tbxBankBICCode#)
+
+</insert>
+<insert id="INSERT.M_BNK.SQL002" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	   insert into M_BANK_ADR (ID_BANK, BK_ADR_TYPE, BK_ADR_LINE1, BK_ADR_LINE2, BK_ADR_LINE3, BK_ZIP_CODE, COUNTRY,  DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+	   values (#id_maxbank#,'RA', #tbxAddressLine1RA#,#tbxAddressLine2RA#,#tbxAddressLine3RA#,#tbxZipCodeRA#,#cboAddressCountryRA#,Sysdate,Sysdate,#lblidlogin#, #idAudit#)
+</insert>
+
+<insert id="INSERT.M_BNK.SQL003" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	   insert into M_BANK_ADR (ID_BANK, BK_ADR_TYPE, BK_ADR_LINE1, BK_ADR_LINE2, BK_ADR_LINE3, BK_ZIP_CODE, COUNTRY,DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)	   
+	   values (#id_maxbank#,'CA', #tbxAddressLine1CA#,#tbxAddressLine2CA#,#tbxAddressLine3CA#,#tbxZipCodeCA#,#cboAddressCountryCA#,Sysdate,Sysdate,#lblidlogin#, #idAudit#)
+	   
+</insert>
+<insert id="INSERT.M_BNK.SQL004" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	   insert into M_BANK_CTC 
+	   (id_bank, bk_ctc_type, bk_ctc_name, bk_ctc_designation, bk_ctc_email, bk_ctc_tel_no,bk_ctc_fax_no ,bk_ctc_did_no , bk_ctc_mobile_no, date_created, date_updated, id_login, ID_AUDIT)
+	   values(#id_maxbank#,'PC',#tbxContactNamePC#,#tbxDesignationPC#,#tbxEmailPC#,#tbxTelephoneNoPC#,#tbxFaxNoPC#,#tbxDIDNoPC#,#tbxMobileNoPc#,sysdate,sysdate,#lblidlogin#, #idAudit#)
+</insert>
+
+<insert id="INSERT.M_BNK.SQL005" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	   insert into M_BANK_CTC 
+	   (id_bank, bk_ctc_type, bk_ctc_name, bk_ctc_designation, bk_ctc_email, bk_ctc_tel_no, bk_ctc_did_no, bk_ctc_fax_no, bk_ctc_mobile_no, date_created, date_updated, id_login, ID_AUDIT)
+	   values(#id_maxbank#,'BC',#tbxContactNameBC#,#tbxDesignationBC#,#tbxEmailBC#,#tbxTelephoneNoBC#,#tbxDIDNoBC#,#tbxFaxNoBC#,#tbxMobileNoBC#,sysdate,sysdate,#lblidlogin#, #idAudit#)
+</insert>
+
+<insert id="INSERT.M_BNK.SQL006" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02neInput">
+	   insert into M_BANK_CTC (ID_BANK, BK_CTC_TYPE, BK_CTC_NAME, BK_CTC_DESIGNATION, BK_CTC_EMAIL, BK_CTC_TEL_NO, BK_CTC_DID_NO, BK_CTC_FAX_NO, BK_CTC_MOBILE_NO, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+	   values(#id_maxbank#,'OC',#tbxContactNameOC#,#tbxDesignationOC#,#tbxEmailOC#,#tbxTelephoneNoOC#,#tbxDIDNoOC#,#tbxFaxNoOC#,#tbxMobileNoOC#,sysdate,sysdate,#lblidlogin#, #idAudit#)
+</insert>
+
+
+<update id="UPDATE.M_BNK.SQL008"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02deInput">
+	update m_bank set  id_login=#lblidlogin#, is_deleted='1', date_updated=sysdate, id_audit=#idAudit# 
+		where id_bank=#lblidbank#
+</update>
+
+
+
+
+<update id="UPDATE.M_BNK.SQL001"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank set bank_full_name=#lblBankFullName# , bank_code=#tbxBankCode#, bank_name=#tbxBankName#, branch_code=#tbxBranchCode#, branch_name=#tbxBranchName#, bank_tel_no=#tbxTelNo#, bank_fax_no=#tbxFaxNo#, date_updated=Sysdate, id_login=#lblidlogin#, id_audit=#idAudit#,bic_code=#tbxBankBICCode#
+where id_bank=#lblidbank#	
+</update>
+
+<update id="UPDATE.M_BNK.SQL002"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank_adr set bk_adr_line1=#tbxAddressLine1RA#, bk_adr_line2=#tbxAddressLine2RA#, bk_adr_line3=#tbxAddressLine3RA#, bk_zip_code=#tbxZipCodeRA#, country=#cboAddressCountryRA#, date_updated=sysdate, id_login=#lblidlogin#, id_audit=#idAudit#
+where id_bank=#lblidbank# and bk_adr_type='RA'	
+</update>
+
+<update id="UPDATE.M_BNK.SQL003"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank_adr set bk_adr_line1=#tbxAddressLine1CA#, bk_adr_line2=#tbxAddressLine2CA#, bk_adr_line3=#tbxAddressLine3CA#, bk_zip_code=#tbxZipCodeCA#, country=#cboAddressCountryCA#, date_updated=sysdate, id_login=#lblidlogin#, id_audit=#idAudit#
+where id_bank=#lblidbank# and bk_adr_type='CA'	
+</update>
+
+<update id="UPDATE.M_BNK.SQL004"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank_ctc set bk_ctc_name=#tbxContactNamePC#, bk_ctc_designation=#tbxDesignationPC#, bk_ctc_email=#tbxEmailPC#, bk_ctc_tel_no=#tbxTelephoneNoPC#, bk_ctc_did_no=#tbxDIDNoPC#, bk_ctc_fax_no=#tbxFaxNoPC#, bk_ctc_mobile_no=#tbxMobileNoPc#, date_updated=sysdate, id_login=#lblidlogin#, id_audit=#idAudit#
+where id_bank=#lblidbank# and bk_ctc_type='PC'
+</update>
+
+<update id="UPDATE.M_BNK.SQL005"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank_ctc set bk_ctc_name=#tbxContactNameBC#, bk_ctc_designation=#tbxDesignationBC#, bk_ctc_email=#tbxEmailBC#, bk_ctc_tel_no=#tbxTelephoneNoBC#, bk_ctc_did_no=#tbxDIDNoBC#, bk_ctc_fax_no=#tbxFaxNoBC#, bk_ctc_mobile_no=#tbxMobileNoBC#, date_updated=sysdate, id_login=#lblidlogin#, id_audit=#idAudit#
+where id_bank=#lblidbank# and bk_ctc_type='BC'
+</update>
+
+<update id="UPDATE.M_BNK.SQL006"  parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS02edInput">
+	update m_bank_ctc set bk_ctc_name=#tbxContactNameOC#, bk_ctc_designation=#tbxDesignationOC#, bk_ctc_email=#tbxEmailOC#, bk_ctc_tel_no=#tbxTelephoneNoOC#, bk_ctc_did_no=#tbxDIDNoOC#, bk_ctc_fax_no=#tbxFaxNoOC#, bk_ctc_mobile_no=#tbxMobileNoOC#, date_updated=sysdate, id_login=#lblidlogin#, id_audit=#idAudit#
+where id_bank=#lblidbank# and bk_ctc_type='OC'
+</update>
+
+<select id="SELECT.M_BNK.SQL018" parameterClass="nttdm.bsys.m_bnk.dto.M_BNKS03Input"
+		resultClass="nttdm.bsys.m_bnk.bean.M_BNK_bankbean" >
+    SELECT ID_BANK, BANK_FULL_NAME, BANK_CODE, BRANCH_CODE    	
+	FROM M_BANK 
+    Where 
+    UPPER(bank_full_name) like UPPER('%'||#bank_fullname#||'%') 
+    and bank_code like '%'||#bank_code#||'%' 
+    and branch_code like '%'||#branch_code#||'%'
+    and IS_DELETED ='0'
+	ORDER by id_bank ASC
+</select>
+</sqlMap>

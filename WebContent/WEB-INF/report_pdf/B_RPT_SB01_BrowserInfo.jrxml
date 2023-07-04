@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_RPT_SB01_BrowserInfo" pageWidth="461" pageHeight="802" columnWidth="461" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_RPT_SB01_STYLE.jrtx"]]></template>
+	<field name="proxyServer" class="java.lang.String"/>
+	<field name="port" class="java.lang.String"/>
+	<title>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement style="default_font" x="0" y="10" width="461" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[* Browser Information]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement style="border_top_left_bottom" x="0" y="0" width="100" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Proxy Server Name]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="border_top_right_bottom" x="106" y="0" width="182" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{proxyServer}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="border_top_right_bottom" x="361" y="0" width="100" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{port}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_top_bottom" x="100" y="0" width="6" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_top_bottom" x="288" y="0" width="67" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Port Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_top_bottom" x="355" y="0" width="6" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

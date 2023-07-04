@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_MIM_US1">
+	<!-- SELECT_T_IPASS_IMP_HD  -->
+	<select id="SELECT.E_MIM_US1.01" resultClass="nttdm.bsys.e_mim_us1.dto.TIpassImpHdDto" >
+	
+	  SELECT 
+	  		ROWNUM AS "index",
+	  		T.FILENAME AS "fileName",
+	  		T.ID_IPASS_IMP_BATCH AS "idIpassImpBatch",	  		
+	  		T.CLOSE_MONTHYEAR AS "closeMonthYear",
+	  		to_char(DATE_UPLOADED,'DD/MM/yyyy')  AS "dateUploaded",
+	  		T.STATUS AS "status",
+	  		to_char(DATE_CREATED,'DD/MM/yyyy')  AS "dateCreated",
+	  		to_char(DATE_UPDATED,'DD/MM/yyyy HH:MM:SS')  AS "dateUpdated",
+	  		T.ID_LOGIN AS "idLogin" 		
+	    FROM T_IPASS_IMP_HD T
+	    ORDER BY T.ID_IPASS_IMP_BATCH DESC
+	</select>
+	<select id="SELECT.E_MIM_US1.03" resultClass="java.lang.Integer">
+	  SELECT count(*)
+	   	    FROM T_IPASS_IMP_HD
+	 </select>
+	<select id="SELECT.E_MIM_US1.04" parameterClass="java.lang.String" resultClass="nttdm.bsys.e_dim_gr1.dto.TBatchLogDto" >
+	  SELECT 
+	  		ROWNUM AS "index",
+	  		T.ID_BATCH_LOG AS "idBatchLog",
+	  		T.ID_BATCH_REF_NO AS "idBatchRefNo",	  		
+	  		T.ERROR_MSG AS "errorMsg",	  		
+	  		to_char(DATE_CREATED,'DD/MM/yyyy')  AS "dateCreated",
+	  		to_char(DATE_UPDATED,'DD/MM/yyyy')  AS "dateUpdated",
+	  		T.ID_LOGIN AS "idLogin" 		
+	    FROM T_BATCH_LOG T 
+		WHERE T.ID_BATCH_REF_NO = #id#
+			AND T.ID_BATCH_TYPE = 'G_IPS_P01'
+		ORDER BY T.ID_BATCH_LOG ASC
+	</select>	
+		
+	<select id="SELECT.E_MIM_US1.05" resultClass="java.lang.Integer">
+	  SELECT count(*)
+	   	    FROM T_BATCH_LOG
+	 </select>
+	<select id="SELECT.E_MIM_US1.06" parameterClass="java.lang.String" resultClass="java.lang.String">
+	  SELECT SET_VALUE
+	   	    FROM M_GSET_D
+	   	    WHERE ID_SET = #idSet#
+	 </select>
+	 <!-- SELECT.LOCATION_PATH -->
+	<select id="SELECT.E_MIM_US1.07" parameterClass="java.lang.String" resultClass="java.lang.String">
+	  SELECT SET_VALUE
+	   	    FROM M_GSET_D
+	   	    WHERE ID_SET = #idSet#
+	   	    	AND SET_SEQ = 1
+	 </select>
+	
+</sqlMap>

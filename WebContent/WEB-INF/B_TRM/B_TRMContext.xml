@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_TRM/B_TRMS01BLDSP" scope="singleton">
+    </bean>  
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/B_TRM/B_TRMExport" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS01ExportBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS01ExportBLogic"
+        id="B_TRMS01ExportBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/B_TRM/B_TRMS01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS01BL" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS01BL"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS01BLogic"
+        id="B_TRMS01BL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02SCR" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02SCR"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_SCRBLogic"
+        id="B_TRMS02SCR" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02AD" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02AD"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_ADBLogic"
+        id="B_TRMS02AD" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02NE" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02NE"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_NEBLogic"
+        id="B_TRMS02NE" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02V" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02V"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_VBLogic"
+        id="B_TRMS02V" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02D" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02D"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_DBLogic"
+        id="B_TRMS02D" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+        <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_TRM/B_TRMS02FAIL" scope="singleton">
+        <property name="businessLogic" ref="B_TRMS02FAIL"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_FAILLogic"
+        id="B_TRMS02FAIL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_trm.blogic.B_TRMS02_CheckDeleteStatusAction"
+        name="/B_TRM/checkTrmAlreadyDelete" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+</beans>

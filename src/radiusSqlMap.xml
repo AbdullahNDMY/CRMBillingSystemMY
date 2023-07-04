@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<update id="UPDATE.RAD_USERS_T.BYUSERNAME" parameterClass="java.util.HashMap">
+		UPDATE RAD_USERS_T
+		SET 
+			password = #accessPassword#,
+			modify_date = SYSDATE,
+			modify_counter = modify_counter + 1
+		WHERE  
+			username = #accessAccount#
+	</update>
+	
+	<select id="SELECT.RAD_USERS_T.BYPK" parameterClass="java.lang.String" resultClass="nttdm.bsys.common.bean.RAD_USERS_T">
+		SELECT 
+			USERNAME, PASSWORD, EXPIRE_DATE, CREDIT_TIME, 
+			STATUS, PLAN_ID, AUTH_METHOD, ATTRIBUTE_RULE, 
+			CREATE_DATE, MODIFY_DATE, MODIFY_COUNTER
+		FROM 
+			RAD_USERS_T
+		WHERE 
+			USERNAME = #userName#
+	</select>
+	<insert id="INSERT.RAD_USERS_T.SQL001"
+          parameterClass="nttdm.bsys.common.bean.RAD_USERS_T">
+	    INSERT INTO RAD_USERS_T (
+	        USERNAME,
+	        PASSWORD,
+			EXPIRE_DATE,
+			CREDIT_TIME,
+			STATUS,
+			PLAN_ID,
+			AUTH_METHOD,
+			ATTRIBUTE_RULE,
+			CREATE_DATE,
+			MODIFY_DATE,
+			MODIFY_COUNTER
+	    )
+	    VALUES (
+	        #userName#,
+	        #password#,
+			TO_DATE(#expireDate#,'yyyy-mm-dd hh24:mi:ss'),
+			#creditTime#,
+			#status#,
+			#planId#,
+			#authMethod#,
+			#attrbuteRule#,
+			SYSDATE,
+			SYSDATE,
+			#modifyCounter#
+	    )
+  	</insert>
+  	
+  		<update id="UPDATE_STATUS" parameterClass="nttdm.bsys.common.bean.RAD_USERS_T">
+		UPDATE
+			RAD_USERS_T
+		SET
+			STATUS=#status#,
+			MODIFY_DATE = sysdate,
+			MODIFY_COUNTER=MODIFY_COUNTER+1
+		WHERE 
+			USERNAME =#userName#
+    </update>
+	<select id="SELECT_COUNT_OF_USERNAME" parameterClass="java.lang.String" resultClass="java.lang.String">
+		select count(*) 
+		from RAD_USERS_T
+		where USERNAME=#userName#
+	</select>
+      <delete id="DELETE_BY_USERNAME" parameterClass="java.lang.String">
+		delete from RAD_USERS_T
+		where USERNAME=#userName#
+	</delete>
+</sqlMap>

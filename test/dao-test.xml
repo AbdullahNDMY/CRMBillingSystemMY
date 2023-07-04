@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <!-- 共通定義のインポート -->
+    <import resource="commonContext.xml"/>
+    
+	<!-- Properties Settings -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>test.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- DataSource Settings -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${jdbc.driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+	</bean>
+
+	<!-- SqlMap Settings -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="testsqlMapConfig.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- ===================== DAO Definition: IBATIS Implementation =============== -->
+	<!-- Query DAO -->
+	<bean id="queryDAO" class="jp.terasoluna.fw.dao.ibatis.QueryDAOiBatisImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- Update DAO -->
+	<bean id="updateDAO" class="jp.terasoluna.fw.dao.ibatis.UpdateDAOiBatisImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- Update DAO Nuked -->
+	<bean id="updateDAONuked" class="nttdm.bsys.common.dao.UpdateDAOiBatisNukedImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- ===================== Bean Definition =============== -->
+	<bean id="contextApplicationContextProvider" class="nttdm.bsys.util.ApplicationContextProvider"></bean>
+
+	
+	<!-- LIST_COUNTRY -->
+	<bean id="LIST_COUNTRY" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="AF">
+					<value> Afghanistan </value>
+				</entry>
+				<entry key="AL">
+					<value> Albania </value>
+				</entry>
+				<entry key="DZ">
+					<value> Algeria </value>
+				</entry>
+				<entry key="AS">
+					<value> American Samoa  </value>
+				</entry>
+				<entry key="AD">
+					<value> Andorra </value>
+				</entry>
+				<entry key="AO">
+					<value> Angola  </value>
+				</entry>
+				<entry key="AI">
+					<value> Anguilla    </value>
+				</entry>
+				<entry key="AQ">
+					<value> Antarctica  </value>
+				</entry>
+				<entry key="AG">
+					<value> Antigua and Barbuda </value>
+				</entry>
+				<entry key="AR">
+					<value> Argentina   </value>
+				</entry>
+				<entry key="AM">
+					<value> Armenia </value>
+				</entry>
+				<entry key="AW">
+					<value> Aruba   </value>
+				</entry>
+				<entry key="AU">
+					<value> Australia   </value>
+				</entry>
+				<entry key="AT">
+					<value> Austria </value>
+				</entry>
+				<entry key="AZ">
+					<value> Azerbaijan  </value>
+				</entry>
+				<entry key="BS">
+					<value> Bahamas </value>
+				</entry>
+				<entry key="BH">
+					<value> Bahrain </value>
+				</entry>
+				<entry key="BD">
+					<value> Bangladesh  </value>
+				</entry>
+				<entry key="BB">
+					<value> Barbados    </value>
+				</entry>
+				<entry key="BY">
+					<value> Belarus </value>
+				</entry>
+				<entry key="BE">
+					<value> Belgium </value>
+				</entry>
+				<entry key="BZ">
+					<value> Belize  </value>
+				</entry>
+				<entry key="BJ">
+					<value> Benin   </value>
+				</entry>
+				<entry key="BM">
+					<value> Bermuda </value>
+				</entry>
+				<entry key="BT">
+					<value> Bhutan  </value>
+				</entry>
+				<entry key="BO">
+					<value> Bolivia </value>
+				</entry>
+				<entry key="BA">
+					<value> Bosnia and Herzegovina  </value>
+				</entry>
+				<entry key="BW">
+					<value> Botswana    </value>
+				</entry>
+				<entry key="BV">
+					<value> Bouvet Island   </value>
+				</entry>
+				<entry key="BR">
+					<value> Brazil  </value>
+				</entry>
+				<entry key="IO">
+					<value> British Indian Ocean Territory  </value>
+				</entry>
+				<entry key="BN">
+					<value> Brunei Darussalam   </value>
+				</entry>
+				<entry key="BG">
+					<value> Bulgaria    </value>
+				</entry>
+				<entry key="BF">
+					<value> Burkina Faso    </value>
+				</entry>
+				<entry key="BI">
+					<value> Burundi </value>
+				</entry>
+				<entry key="KH">
+					<value> Cambodia    </value>
+				</entry>
+				<entry key="CM">
+					<value> Cameroon    </value>
+				</entry>
+				<entry key="CA">
+					<value> Canada  </value>
+				</entry>
+				<entry key="CV">
+					<value> Cape Verde  </value>
+				</entry>
+				<entry key="KY">
+					<value> Cayman Islands  </value>
+				</entry>
+				<entry key="CF">
+					<value> Central African Republic    </value>
+				</entry>
+				<entry key="TD">
+					<value> Chad    </value>
+				</entry>
+				<entry key="CL">
+					<value> Chile   </value>
+				</entry>
+				<entry key="CN">
+					<value> China   </value>
+				</entry>
+				<entry key="CX">
+					<value> Christmas Island    </value>
+				</entry>
+				<entry key="CC">
+					<value> Cocos (Keeling) Islands </value>
+				</entry>
+				<entry key="CO">
+					<value> Colombia    </value>
+				</entry>
+				<entry key="KM">
+					<value> Comoros </value>
+				</entry>
+				<entry key="CG">
+					<value> Congo   </value>
+				</entry>
+				<entry key="CK">
+					<value> Cook Islands    </value>
+				</entry>
+				<entry key="CR">
+					<value> Costa Rica  </value>
+				</entry>
+				<entry key="CI">
+					<value> Cote D'Ivoire (Ivory Coast) </value>
+				</entry>
+				<entry key="HR">
+					<value> Croatia (Hrvatska)  </value>
+				</entry>
+				<entry key="CU">
+					<value> Cuba    </value>
+				</entry>
+				<entry key="CY">
+					<value> Cyprus  </value>
+				</entry>
+				<entry key="CZ">
+					<value> Czech Republic  </value>
+				</entry>
+				<entry key="CS">
+					<value> Czechoslovakia (former) </value>
+				</entry>
+				<entry key="DK">
+					<value> Denmark </value>
+				</entry>
+				<entry key="DJ">
+					<value> Djibouti    </value>
+				</entry>
+				<entry key="DM">
+					<value> Dominica    </value>
+				</entry>
+				<entry key="TP">
+					<value> East Timor  </value>
+				</entry>
+				<entry key="EC">
+					<value> Ecuador </value>
+				</entry>
+				<entry key="EG">
+					<value> Egypt   </value>
+				</entry>
+				<entry key="SV">
+					<value> El Salvador </value>
+				</entry>
+				<entry key="GQ">
+					<value> Equatorial Guinea   </value>
+				</entry>
+				<entry key="ER">
+					<value> Eritrea </value>
+				</entry>
+				<entry key="EE">
+					<value> Estonia </value>
+				</entry>
+				<entry key="ET">
+					<value> Ethiopia    </value>
+				</entry>
+				<entry key="FK">
+					<value> Falkland Islands (Malvinas) </value>
+				</entry>
+				<entry key="FO">
+					<value> Faroe Islands   </value>
+				</entry>
+				<entry key="FJ">
+					<value> Fiji    </value>
+				</entry>
+				<entry key="FI">
+					<value> Finland </value>
+				</entry>
+				<entry key="FR">
+					<value> France  </value>
+				</entry>
+				<entry key="FX">
+					<value> France, Metropolitan    </value>
+				</entry>
+				<entry key="GF">
+					<value> French Guiana   </value>
+				</entry>
+				<entry key="PF">
+					<value> French Polynesia    </value>
+				</entry>
+				<entry key="TF">
+					<value> French Southern Territories </value>
+				</entry>
+				<entry key="GA">
+					<value> Gabon   </value>
+				</entry>
+				<entry key="GM">
+					<value> Gambia  </value>
+				</entry>
+				<entry key="GE">
+					<value> Georgia </value>
+				</entry>
+				<entry key="DE">
+					<value> Germany </value>
+				</entry>
+				<entry key="GH">
+					<value> Ghana   </value>
+				</entry>
+				<entry key="GI">
+					<value> Gibraltar   </value>
+				</entry>
+				<entry key="GB">
+					<value> Great Britain (UK)  </value>
+				</entry>
+				<entry key="GR">
+					<value> Greece  </value>
+				</entry>
+				<entry key="GL">
+					<value> Greenland   </value>
+				</entry>
+				<entry key="GD">
+					<value> Grenada </value>
+				</entry>
+				<entry key="GP">
+					<value> Guadeloupe  </value>
+				</entry>
+				<entry key="GU">
+					<value> Guam    </value>
+				</entry>
+				<entry key="GT">
+					<value> Guatemala   </value>
+				</entry>
+				<entry key="GN">
+					<value> Guinea  </value>
+				</entry>
+				<entry key="GW">
+					<value> Guinea-Bissau   </value>
+				</entry>
+				<entry key="GY">
+					<value> Guyana  </value>
+				</entry>
+				<entry key="HT">
+					<value> Haiti   </value>
+				</entry>
+				<entry key="HM">
+					<value> Heard and McDonald Islands  </value>
+				</entry>
+				<entry key="HN">
+					<value> Honduras    </value>
+				</entry>
+				<entry key="HK">
+					<value> Hong Kong   </value>
+				</entry>
+				<entry key="HU">
+					<value> Hungary </value>
+				</entry>
+				<entry key="IS">
+					<value> Iceland </value>
+				</entry>
+				<entry key="IN">
+					<value> India   </value>
+				</entry>
+				<entry key="ID">
+					<value> Indonesia   </value>
+				</entry>
+				<entry key="IR">
+					<value> Iran    </value>
+				</entry>
+				<entry key="IQ">
+					<value> Iraq    </value>
+				</entry>
+				<entry key="IE">
+					<value> Ireland </value>
+				</entry>
+				<entry key="IL">
+					<value> Israel  </value>
+				</entry>
+				<entry key="IT">
+					<value> Italy   </value>
+				</entry>
+				<entry key="JM">
+					<value> Jamaica </value>
+				</entry>
+				<entry key="JP">
+					<value> Japan   </value>
+				</entry>
+				<entry key="JO">
+					<value> Jordan  </value>
+				</entry>
+				<entry key="KZ">
+					<value> Kazakhstan  </value>
+				</entry>
+				<entry key="KE">
+					<value> Kenya   </value>
+				</entry>
+				<entry key="KI">
+					<value> Kiribati    </value>
+				</entry>
+				<entry key="KP">
+					<value> Korea (North)   </value>
+				</entry>
+				<entry key="KR">
+					<value> Korea (South)   </value>
+				</entry>
+				<entry key="KW">
+					<value> Kuwait  </value>
+				</entry>
+				<entry key="KG">
+					<value> Kyrgyzstan  </value>
+				</entry>
+				<entry key="LA">
+					<value> Laos    </value>
+				</entry>
+				<entry key="LV">
+					<value> Latvia  </value>
+				</entry>
+				<entry key="LB">
+					<value> Lebanon </value>
+				</entry>
+				<entry key="LS">
+					<value> Lesotho </value>
+				</entry>
+				<entry key="LR">
+					<value> Liberia </value>
+				</entry>
+				<entry key="LY">
+					<value> Libya   </value>
+				</entry>
+				<entry key="LI">
+					<value> Liechtenstein   </value>
+				</entry>
+				<entry key="LT">
+					<value> Lithuania   </value>
+				</entry>
+				<entry key="LU">
+					<value> Luxembourg  </value>
+				</entry>
+				<entry key="MO">
+					<value> Macau   </value>
+				</entry>
+				<entry key="MK">
+					<value> Macedonia   </value>
+				</entry>
+				<entry key="MG">
+					<value> Madagascar  </value>
+				</entry>
+				<entry key="MW">
+					<value> Malawi  </value>
+				</entry>
+				<entry key="MY">
+					<value> Malaysia    </value>
+				</entry>
+				<entry key="MV">
+					<value> Maldives    </value>
+				</entry>
+				<entry key="ML">
+					<value> Mali    </value>
+				</entry>
+				<entry key="MT">
+					<value> Malta   </value>
+				</entry>
+				<entry key="MH">
+					<value> Marshall Islands    </value>
+				</entry>
+				<entry key="MQ">
+					<value> Martinique  </value>
+				</entry>
+				<entry key="MR">
+					<value> Mauritania  </value>
+				</entry>
+				<entry key="MU">
+					<value> Mauritius   </value>
+				</entry>
+				<entry key="YT">
+					<value> Mayotte </value>
+				</entry>
+				<entry key="MX">
+					<value> Mexico  </value>
+				</entry>
+				<entry key="FM">
+					<value> Micronesia  </value>
+				</entry>
+				<entry key="MD">
+					<value> Moldova </value>
+				</entry>
+				<entry key="MC">
+					<value> Monaco  </value>
+				</entry>
+				<entry key="MN">
+					<value> Mongolia    </value>
+				</entry>
+				<entry key="MS">
+					<value> Montserrat  </value>
+				</entry>
+				<entry key="MA">
+					<value> Morocco </value>
+				</entry>
+				<entry key="MZ">
+					<value> Mozambique  </value>
+				</entry>
+				<entry key="MM">
+					<value> Myanmar </value>
+				</entry>
+				<entry key="NA">
+					<value> Namibia </value>
+				</entry>
+				<entry key="NR">
+					<value> Nauru   </value>
+				</entry>
+				<entry key="NP">
+					<value> Nepal   </value>
+				</entry>
+				<entry key="NL">
+					<value> Netherlands </value>
+				</entry>
+				<entry key="AN">
+					<value> Netherlands Antilles    </value>
+				</entry>
+				<entry key="NT">
+					<value> Neutral Zone    </value>
+				</entry>
+				<entry key="NC">
+					<value> New Caledonia   </value>
+				</entry>
+				<entry key="NZ">
+					<value> New Zealand (Aotearoa)  </value>
+				</entry>
+				<entry key="NI">
+					<value> Nicaragua   </value>
+				</entry>
+				<entry key="NE">
+					<value> Niger   </value>
+				</entry>
+				<entry key="NG">
+					<value> Nigeria </value>
+				</entry>
+				<entry key="NU">
+					<value> Niue    </value>
+				</entry>
+				<entry key="NF">
+					<value> Norfolk Island  </value>
+				</entry>
+				<entry key="MP">
+					<value> Northern Mariana Islands    </value>
+				</entry>
+				<entry key="NO">
+					<value> Norway  </value>
+				</entry>
+				<entry key="OM">
+					<value> Oman    </value>
+				</entry>
+				<entry key="PK">
+					<value> Pakistan    </value>
+				</entry>
+				<entry key="PW">
+					<value> Palau   </value>
+				</entry>
+				<entry key="PA">
+					<value> Panama  </value>
+				</entry>
+				<entry key="PG">
+					<value> Papua New Guinea    </value>
+				</entry>
+				<entry key="PY">
+					<value> Paraguay    </value>
+				</entry>
+				<entry key="PE">
+					<value> Peru    </value>
+				</entry>
+				<entry key="PH">
+					<value> Philippines </value>
+				</entry>
+				<entry key="PN">
+					<value> Pitcairn    </value>
+				</entry>
+				<entry key="PL">
+					<value> Poland  </value>
+				</entry>
+				<entry key="PT">
+					<value> Portugal    </value>
+				</entry>
+				<entry key="PR">
+					<value> Puerto Rico </value>
+				</entry>
+				<entry key="QA">
+					<value> Qatar   </value>
+				</entry>
+				<entry key="RE">
+					<value> Reunion </value>
+				</entry>
+				<entry key="RO">
+					<value> Romania </value>
+				</entry>
+				<entry key="RU">
+					<value> Russian Federation  </value>
+				</entry>
+				<entry key="RW">
+					<value> Rwanda  </value>
+				</entry>
+				<entry key="GS">
+					<value> S. Georgia and S. Sandwich Isls.    </value>
+				</entry>
+				<entry key="KN">
+					<value> Saint Kitts and Nevis   </value>
+				</entry>
+				<entry key="LC">
+					<value> Saint Lucia </value>
+				</entry>
+				<entry key="VC">
+					<value> Saint Vincent and the Grenadines    </value>
+				</entry>
+				<entry key="WS">
+					<value> Samoa   </value>
+				</entry>
+				<entry key="SM">
+					<value> San Marino  </value>
+				</entry>
+				<entry key="ST">
+					<value> Sao Tome and Principe   </value>
+				</entry>
+				<entry key="SA">
+					<value> Saudi Arabia    </value>
+				</entry>
+				<entry key="SN">
+					<value> Senegal </value>
+				</entry>
+				<entry key="SC">
+					<value> Seychelles  </value>
+				</entry>
+				<entry key="SL">
+					<value> Sierra Leone    </value>
+				</entry>
+				<entry key="SG">
+					<value> Singapore   </value>
+				</entry>
+				<entry key="SK">
+					<value> Slovak Republic </value>
+				</entry>
+				<entry key="SI">
+					<value> Slovenia    </value>
+				</entry>
+				<entry key="Sb">
+					<value> Solomon Islands </value>
+				</entry>
+				<entry key="SO">
+					<value> Somalia </value>
+				</entry>
+				<entry key="ZA">
+					<value> South Africa    </value>
+				</entry>
+				<entry key="ES">
+					<value> Spain   </value>
+				</entry>
+				<entry key="LK">
+					<value> Sri Lanka   </value>
+				</entry>
+				<entry key="SH">
+					<value> St. Helena  </value>
+				</entry>
+				<entry key="PM">
+					<value> St. Pierre and Miquelon </value>
+				</entry>
+				<entry key="SD">
+					<value> Sudan   </value>
+				</entry>
+				<entry key="SR">
+					<value> Suriname    </value>
+				</entry>
+				<entry key="SJ">
+					<value> Svalbard and Jan Mayen Islands  </value>
+				</entry>
+				<entry key="SZ">
+					<value> Swaziland   </value>
+				</entry>
+				<entry key="SE">
+					<value> Sweden  </value>
+				</entry>
+				<entry key="CH">
+					<value> Switzerland </value>
+				</entry>
+				<entry key="SY">
+					<value> Syria   </value>
+				</entry>
+				<entry key="TW">
+					<value> Taiwan  </value>
+				</entry>
+				<entry key="TJ">
+					<value> Tajikistan  </value>
+				</entry>
+				<entry key="TZ">
+					<value> Tanzania    </value>
+				</entry>
+				<entry key="TH">
+					<value> Thailand    </value>
+				</entry>
+				<entry key="TG">
+					<value> Togo    </value>
+				</entry>
+				<entry key="TK">
+					<value> Tokelau </value>
+				</entry>
+				<entry key="TO">
+					<value> Tonga   </value>
+				</entry>
+				<entry key="TT">
+					<value> Trinidad and Tobago </value>
+				</entry>
+				<entry key="TN">
+					<value> Tunisia </value>
+				</entry>
+				<entry key="TR">
+					<value> Turkey  </value>
+				</entry>
+				<entry key="TM">
+					<value> Turkmenistan    </value>
+				</entry>
+				<entry key="TC">
+					<value> Turks and Caicos Islands    </value>
+				</entry>
+				<entry key="TV">
+					<value> Tuvalu  </value>
+				</entry>
+				<entry key="UG">
+					<value> Uganda  </value>
+				</entry>
+				<entry key="UA">
+					<value> Ukraine </value>
+				</entry>
+				<entry key="AE">
+					<value> United Arab Emirates    </value>
+				</entry>
+				<entry key="UK">
+					<value> United Kingdom  </value>
+				</entry>
+				<entry key="US">
+					<value> United States   </value>
+				</entry>
+				<entry key="UY">
+					<value> Uruguay </value>
+				</entry>
+				<entry key="UM">
+					<value> US Minor Outlying Islands   </value>
+				</entry>
+				<entry key="SU">
+					<value> USSR (former)   </value>
+				</entry>
+				<entry key="UZ">
+					<value> Uzbekistan  </value>
+				</entry>
+				<entry key="VU">
+					<value> Vanuatu </value>
+				</entry>
+				<entry key="VA">
+					<value> Vatican City State (Holy See)   </value>
+				</entry>
+				<entry key="VE">
+					<value> Venezuela   </value>
+				</entry>
+				<entry key="VN">
+					<value> Viet Nam    </value>
+				</entry>
+				<entry key="VG">
+					<value> Virgin Islands (British)    </value>
+				</entry>
+				<entry key="VI">
+					<value> Virgin Islands (U.S.)   </value>
+				</entry>
+				<entry key="WF">
+					<value> Wallis and Futuna Islands   </value>
+				</entry>
+				<entry key="EH">
+					<value> Western Sahara  </value>
+				</entry>
+				<entry key="YE">
+					<value> Yemen   </value>
+				</entry>
+				<entry key="YU">
+					<value> Yugoslavia  </value>
+				</entry>
+				<entry key="ZR">
+					<value> Zaire   </value>
+				</entry>
+				<entry key="ZM">
+					<value> Zambia  </value>
+				</entry>
+				<entry key="ZW">
+					<value> Zimbabwe    </value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+    <bean id="LIST_PAYMENT_METHOD"
+        class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+        init-method="load">
+        <property name="codeListMap">
+            <map>
+                <entry key="CQ">
+                    <value>Cheque</value>
+                </entry>
+                <entry key="CC">
+                    <value>Credit Card</value>
+                </entry>    
+                <entry key="GR">
+                    <value>GIRO</value>
+                </entry>
+                <entry key="CA">
+                    <value>Cash</value>
+                </entry>
+                <entry key="NT">
+                    <value>Netting/ Inter Company Transaction</value>
+                </entry>
+                <entry key="BT">
+                    <value>BTMU</value>
+                </entry>
+                <entry key="RE">
+                    <value>Remittance</value>
+                </entry>
+                <entry key="SP">
+                    <value>SingPost</value>
+                </entry>
+                <entry key="AR">
+                    <value>Advance Receipt</value>
+                </entry>
+                <entry key="OT">
+                    <value>Others</value>
+                </entry>            
+            </map>
+        </property>
+    </bean> 
+    
+    <bean id="LIST_RATEMODE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="1"><value>Yearly</value></entry>
+			<entry key="2"><value>Bi-Annually</value></entry>
+			<entry key="3"><value>Quarterly</value></entry>
+			<entry key="4"><value>Bi-Monthly</value></entry>
+			<entry key="5"><value>Monthly</value></entry>
+			<entry key="6"><value>Once</value></entry>
+			<entry key="7"><value>Hourly</value></entry>
+			<entry key="8"><value>Minute</value></entry>
+		</map>
+		</property> 
+	</bean>
+	
+	<bean id="LIST_ORIGIN_CODE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="0">
+		  		<value>OTH</value>
+				</entry>
+				<entry key="1">
+					<value>SIT</value>
+				</entry>
+				<entry key="2">
+					<value>IDC</value>
+				</entry>
+				<entry key="3">
+					<value>ARSA</value>
+				</entry>
+				<entry key="4">
+					<value>ARSB</value>
+				</entry>
+				<entry key="5">
+					<value>ARN</value>
+				</entry>												
+			</map>
+		</property>		
+    </bean> 
+	
+    <bean id="LIST_CURRENCY"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		<entry key="AFN"><value>Afghanistan, Afghanis     </value></entry>
+		<entry key="ALL"><value>Albania, Leke     </value></entry>
+		<entry key="DZD"><value>Algeria, Algeria Dinars    </value></entry>
+		<entry key="AOA"><value>Angola, Kwanza     </value></entry>
+		<entry key="ARS"><value>Argentina, Pesos     </value></entry>
+		<entry key="AMD"><value>Armenia, Drams     </value></entry>
+		<entry key="AWG"><value>Aruba, Guilders (also called Florins)  </value></entry>
+		<entry key="AUD"><value>Australia, Dollars     </value></entry>
+		<entry key="AZN"><value>Azerbaijan, New Manats    </value></entry>
+		<entry key="BSD"><value>Bahamas, Dollars     </value></entry>
+		<entry key="BHD"><value>Bahrain, Dinars     </value></entry>
+		<entry key="BDT"><value>Bangladesh, Taka     </value></entry>
+		<entry key="BBD"><value>Barbados, Dollars     </value></entry>
+		<entry key="BYR"><value>Belarus, Rubles     </value></entry>
+		<entry key="BZD"><value>Belize, Dollars     </value></entry>
+		<entry key="BMD"><value>Bermuda, Dollars     </value></entry>
+		<entry key="BTN"><value>Bhutan, Ngultrum     </value></entry>
+		<entry key="BOB"><value>Bolivia, Bolivianos     </value></entry>
+		<entry key="BAM"><value>Bosnia and Herzegovina, Convertible Marka  </value></entry>
+		<entry key="BWP"><value>Botswana, Pulas     </value></entry>
+		<entry key="BRL"><value>Brazil, Brazil Real    </value></entry>
+		<entry key="BND"><value>Brunei Darussalam, Dollars    </value></entry>
+		<entry key="BGN"><value>Bulgaria, Leva     </value></entry>
+		<entry key="BIF"><value>Burundi, Francs     </value></entry>
+		<entry key="KHR"><value>Cambodia, Riels     </value></entry>
+		<entry key="CAD"><value>Canada, Dollars     </value></entry>
+		<entry key="CVE"><value>Cape Verde, Escudos    </value></entry>
+		<entry key="KYD"><value>Cayman Islands, Dollars    </value></entry>
+		<entry key="CLP"><value>Chile, Pesos     </value></entry>
+		<entry key="CNY"><value>China, Yuan Renminbi    </value></entry>
+		<entry key="COP"><value>Colombia, Pesos     </value></entry>
+		<entry key="XOF"><value>Communauté Financière Africaine BCEAO, Francs  </value></entry>
+		<entry key="XAF"><value>Communauté Financière Africaine BEAC, Francs  </value></entry>
+		<entry key="KMF"><value>Comoros, Francs     </value></entry>
+		<entry key="XPF"><value>Comptoirs Français du Pacifique Francs  </value></entry>
+		<entry key="CDF"><value>Congo/Kinshasa, Congolese Francs    </value></entry>
+		<entry key="CRC"><value>Costa Rica, Colones    </value></entry>
+		<entry key="HRK"><value>Croatia, Kuna     </value></entry>
+		<entry key="CUP"><value>Cuba, Pesos     </value></entry>
+		<entry key="CYP"><value>Cyprus, Pounds (expires 2008-Jan-31)   </value></entry>
+		<entry key="CZK"><value>Czech Republic, Koruny    </value></entry>
+		<entry key="DKK"><value>Denmark, Kroner     </value></entry>
+		<entry key="DJF"><value>Djibouti, Francs     </value></entry>
+		<entry key="DOP"><value>Dominican Republic, Pesos    </value></entry>
+		<entry key="XCD"><value>East Caribbean Dollars    </value></entry>
+		<entry key="EGP"><value>Egypt, Pounds     </value></entry>
+		<entry key="SVC"><value>El Salvador, Colones    </value></entry>
+		<entry key="ERN"><value>Eritrea, Nakfa     </value></entry>
+		<entry key="EEK"><value>Estonia, Krooni     </value></entry>
+		<entry key="ETB"><value>Ethiopia, Birr     </value></entry>
+		<entry key="EUR"><value>Euro Member Countries, Euro   </value></entry>
+		<entry key="FKP"><value>Falkland Islands (Malvinas), Pounds   </value></entry>
+		<entry key="FJD"><value>Fiji, Dollars     </value></entry>
+		<entry key="GMD"><value>Gambia, Dalasi     </value></entry>
+		<entry key="GEL"><value>Georgia, Lari     </value></entry>
+		<entry key="GHS"><value>Ghana, Cedis     </value></entry>
+		<entry key="GIP"><value>Gibraltar, Pounds     </value></entry>
+		<entry key="XAU"><value>Gold, Ounces     </value></entry>
+		<entry key="GTQ"><value>Guatemala, Quetzales     </value></entry>
+		<entry key="GGP"><value>Guernsey, Pounds     </value></entry>
+		<entry key="GNF"><value>Guinea, Francs     </value></entry>
+		<entry key="GYD"><value>Guyana, Dollars     </value></entry>
+		<entry key="HTG"><value>Haiti, Gourdes     </value></entry>
+		<entry key="HNL"><value>Honduras, Lempiras     </value></entry>
+		<entry key="HKD"><value>Hong Kong, Dollars    </value></entry>
+		<entry key="HUF"><value>Hungary, Forint     </value></entry>
+		<entry key="ISK"><value>Iceland, Kronur     </value></entry>
+		<entry key="INR"><value>India, Rupees     </value></entry>
+		<entry key="IDR"><value>Indonesia, Rupiahs     </value></entry>
+		<entry key="XDR"><value>International Monetary Fund (IMF) Special Drawing Rights</value></entry>
+		<entry key="IRR"><value>Iran, Rials     </value></entry>
+		<entry key="IQD"><value>Iraq, Dinars     </value></entry>
+		<entry key="IMP"><value>Isle of Man, Pounds   </value></entry>
+		<entry key="ILS"><value>Israel, New Shekels    </value></entry>
+		<entry key="JMD"><value>Jamaica, Dollars     </value></entry>
+		<entry key="JPY"><value>Japan, Yen     </value></entry>
+		<entry key="JEP"><value>Jersey, Pounds     </value></entry>
+		<entry key="JOD"><value>Jordan, Dinars     </value></entry>
+		<entry key="KZT"><value>Kazakhstan, Tenge     </value></entry>
+		<entry key="KES"><value>Kenya, Shillings     </value></entry>
+		<entry key="KPW"><value>Korea (North), Won    </value></entry>
+		<entry key="KRW"><value>Korea (South), Won    </value></entry>
+		<entry key="KWD"><value>Kuwait, Dinars     </value></entry>
+		<entry key="KGS"><value>Kyrgyzstan, Soms     </value></entry>
+		<entry key="LAK"><value>Laos, Kips     </value></entry>
+		<entry key="LVL"><value>Latvia, Lati     </value></entry>
+		<entry key="LBP"><value>Lebanon, Pounds     </value></entry>
+		<entry key="LSL"><value>Lesotho, Maloti     </value></entry>
+		<entry key="LRD"><value>Liberia, Dollars     </value></entry>
+		<entry key="LYD"><value>Libya, Dinars     </value></entry>
+		<entry key="LTL"><value>Lithuania, Litai     </value></entry>
+		<entry key="MOP"><value>Macau, Patacas     </value></entry>
+		<entry key="MKD"><value>Macedonia, Denars     </value></entry>
+		<entry key="MGA"><value>Madagascar, Ariary     </value></entry>
+		<entry key="MWK"><value>Malawi, Kwachas     </value></entry>
+		<entry key="MYR"><value>Malaysia, Ringgits     </value></entry>
+		<entry key="MVR"><value>Maldives (Maldive Islands), Rufiyaa   </value></entry>
+		<entry key="MTL"><value>Malta, Liri (expires 2008-Jan-31)   </value></entry>
+		<entry key="MRO"><value>Mauritania, Ouguiyas     </value></entry>
+		<entry key="MUR"><value>Mauritius, Rupees     </value></entry>
+		<entry key="MXN"><value>Mexico, Pesos     </value></entry>
+		<entry key="MDL"><value>Moldova, Lei     </value></entry>
+		<entry key="MNT"><value>Mongolia, Tugriks     </value></entry>
+		<entry key="MAD"><value>Morocco, Dirhams     </value></entry>
+		<entry key="MZN"><value>Mozambique, Meticais     </value></entry>
+		<entry key="MMK"><value>Myanmar (Burma), Kyats    </value></entry>
+		<entry key="NAD"><value>Namibia, Dollars     </value></entry>
+		<entry key="NPR"><value>Nepal, Nepal Rupees    </value></entry>
+		<entry key="ANG"><value>Netherlands Antilles, Guilders (also called Florins) </value></entry>
+		<entry key="NZD"><value>New Zealand, Dollars    </value></entry>
+		<entry key="NIO"><value>Nicaragua, Cordobas     </value></entry>
+		<entry key="NGN"><value>Nigeria, Nairas     </value></entry>
+		<entry key="NOK"><value>Norway, Krone     </value></entry>
+		<entry key="OMR"><value>Oman, Rials     </value></entry>
+		<entry key="PKR"><value>Pakistan, Rupees     </value></entry>
+		<entry key="XPD"><value>Palladium Ounces     </value></entry>
+		<entry key="PAB"><value>Panama, Balboa     </value></entry>
+		<entry key="PGK"><value>Papua New Guinea, Kina   </value></entry>
+		<entry key="PYG"><value>Paraguay, Guarani     </value></entry>
+		<entry key="PEN"><value>Peru, Nuevos Soles    </value></entry>
+		<entry key="PHP"><value>Philippines, Pesos     </value></entry>
+		<entry key="XPT"><value>Platinum, Ounces     </value></entry>
+		<entry key="PLN"><value>Poland, Zlotych     </value></entry>
+		<entry key="QAR"><value>Qatar, Rials     </value></entry>
+		<entry key="RON"><value>Romania, New Lei    </value></entry>
+		<entry key="RUB"><value>Russia, Rubles     </value></entry>
+		<entry key="RWF"><value>Rwanda, Rwanda Francs    </value></entry>
+		<entry key="SHP"><value>Saint Helena, Pounds    </value></entry>
+		<entry key="WST"><value>Samoa, Tala     </value></entry>
+		<entry key="STD"><value>São Tome and Principe, Dobras  </value></entry>
+		<entry key="SAR"><value>Saudi Arabia, Riyals    </value></entry>
+		<entry key="SPL"><value>Seborga, Luigini     </value></entry>
+		<entry key="RSD"><value>Serbia, Dinars     </value></entry>
+		<entry key="SCR"><value>Seychelles, Rupees     </value></entry>
+		<entry key="SLL"><value>Sierra Leone, Leones    </value></entry>
+		<entry key="XAG"><value>Silver, Ounces     </value></entry>
+		<entry key="SGD"><value>Singapore, Dollars     </value></entry>
+		<entry key="SBD"><value>Solomon Islands, Dollars    </value></entry>
+		<entry key="SOS"><value>Somalia, Shillings     </value></entry>
+		<entry key="ZAR"><value>South Africa, Rand    </value></entry>
+		<entry key="LKR"><value>Sri Lanka, Rupees    </value></entry>
+		<entry key="SDG"><value>Sudan, Pounds     </value></entry>
+		<entry key="SRD"><value>Suriname, Dollars     </value></entry>
+		<entry key="SZL"><value>Swaziland, Emalangeni     </value></entry>
+		<entry key="SEK"><value>Sweden, Kronor     </value></entry>
+		<entry key="CHF"><value>Switzerland, Francs     </value></entry>
+		<entry key="SYP"><value>Syria, Pounds     </value></entry>
+		<entry key="TWD"><value>Taiwan, New Dollars    </value></entry>
+		<entry key="TJS"><value>Tajikistan, Somoni     </value></entry>
+		<entry key="TZS"><value>Tanzania, Shillings     </value></entry>
+		<entry key="THB"><value>Thailand, Baht     </value></entry>
+		<entry key="TOP"><value>Tonga, Pa'anga     </value></entry>
+		<entry key="TTD"><value>Trinidad and Tobago, Dollars   </value></entry>
+		<entry key="TND"><value>Tunisia, Dinars     </value></entry>
+		<entry key="TRY"><value>Turkey, New Lira    </value></entry>
+		<entry key="TMM"><value>Turkmenistan, Manats     </value></entry>
+		<entry key="TVD"><value>Tuvalu, Tuvalu Dollars    </value></entry>
+		<entry key="UGX"><value>Uganda, Shillings     </value></entry>
+		<entry key="UAH"><value>Ukraine, Hryvnia     </value></entry>
+		<entry key="AED"><value>United Arab Emirates, Dirhams   </value></entry>
+		<entry key="GBP"><value>United Kingdom, Pounds    </value></entry>
+		<entry key="USD"><value>United States of America, Dollars  </value></entry>
+		<entry key="UYU"><value>Uruguay, Pesos     </value></entry>
+		<entry key="UZS"><value>Uzbekistan, Sums     </value></entry>
+		<entry key="VUV"><value>Vanuatu, Vatu     </value></entry>
+		<entry key="VEB"><value>Venezuela, Bolivares (expires 2008-Jun-30)   </value></entry>
+		<entry key="VEF"><value>Venezuela, Bolivares Fuertes    </value></entry>
+		<entry key="VND"><value>Viet Nam, Dong    </value></entry>
+		<entry key="YER"><value>Yemen, Rials     </value></entry>
+		<entry key="ZMK"><value>Zambia, Kwacha     </value></entry>
+		<entry key="ZWD"><value>Zimbabwe, Zimbabwe Dollars    </value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="BILL_INSTRUCTION_LIST"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="1">
+		  		<value>12 (Yearly)</value>
+				</entry>
+				<entry key="2">
+					<value>6 (Bi-Annually)</value>
+				</entry>
+				<entry key="3">
+					<value>3 (Quarterly)</value>
+				</entry>				
+				<entry key="4">
+		  		<value>2 (Bi-Monthly)</value>
+				</entry>
+				<entry key="5">
+					<value>1 (Monthly)</value>
+				</entry>
+				<entry key="6">
+					<value>0 (One Time)</value>
+				</entry>				
+			</map>
+		</property>
+  </bean>
+  <bean id="LIST_SALUTATION"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="MR">
+					<value>Mr</value>
+				</entry>
+				<entry key="MS">
+					<value>Ms</value>
+				</entry>
+				<entry key="MRS">
+					<value>Mrs</value>
+				</entry>				
+			</map>
+		</property>
+   </bean>
+   <bean id="PAYMENT_REF_HEADER"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                SELECT r.RESOURCE_ID, r.VALUE FROM RESOURCESMAINT r WHERE r.category='PAYMENT_REF_HEADER'
+            </value>
+        </property>
+    </bean>
+    <bean id="AFFILIATE_CODE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+			<entry key="11101">
+	  			<value>NTT EAST</value>
+			</entry>
+			<entry key="21101">
+				<value>NTT COMMUNICATION</value>
+			</entry>
+			<entry key="21207">
+				<value>NTT AMERICA</value>
+			</entry>				
+			<entry key="21213">
+	  			<value>NTT AUSTRALIA</value>
+			</entry>
+			<entry key="21215">
+				<value>NTT WT</value>
+			</entry>
+			<entry key="21218">
+				<value>NTT THAILAND</value>
+			</entry>
+			<entry key="21219">
+				<value>NTT COM ASIA</value>
+			</entry>
+			<entry key="21222">
+				<value>NTT SINGAPORE</value>
+			</entry>
+			<entry key="21227">
+				<value>NTT EUROPE</value>
+			</entry>
+			<entry key="21237">
+				<value>NTT TAIWAN</value>
+			</entry>
+			<entry key="41169">
+				<value>NTT DATA MALAYSIA</value>
+			</entry>
+			<entry key="71103">
+				<value>NTT FACILITIES</value>
+			</entry>
+		</map>
+	</property>
+  </bean>
+</beans>

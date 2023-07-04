@@ -1,0 +1,125 @@
+@CHARSET "Shift_JIS";
+
+.rootPanel {
+	width : 100%;
+  	margin-left: auto;
+  	margin-right: auto;
+  	text-align: center;
+  	font-family : "Calibri";
+  	font-size: 12pt;
+}
+
+.logoHeaderPanel {
+	float: left;
+	width: 455px;
+}
+
+.userHeaderPanel {
+	float: right;
+	width: 400px;
+ 	text-align: right;
+ 	vertical-align: middle;
+ 	padding-top: 20px;
+ 	padding-right: 5px;
+}
+
+.headerPanel {
+	width:100%;
+	background-color: #FFFFFF;
+}
+
+.subHeaderPanel {
+	background-image: url(../../image/header.png);
+	background-repeat: repeat-x;
+	height: 28px;
+	width: 100%;
+	color: #FFFFFF;
+	
+	text-align: left;
+	vertical-align: middle;
+	border: solid 1px #000000;
+}
+
+.menuHeaderPanel {
+	float: left;
+	height: 26px;
+	width: 2.2in;
+  	text-align: center;
+  	padding-top: 3px;
+  	float: left;
+  	border-right: 1px solid #000000;
+  	font-weight: bold;
+}
+.functionHeaderPanel {
+	float: left;
+	font-weight: bold;
+  	text-align: right;
+  	width: 75%
+}
+
+.screenNamePanel {
+	padding-top: 3px;
+	float: left;
+}
+.buttonHeaderPanel {
+	cursor: pointer;
+	padding-top: 3px;
+	float: none;
+}
+.tableMain{
+	width:100%;
+	font-family:Calibri;
+	font-size: 12pt;
+}
+.tdLogo{
+	width:30%;
+	padding-left:23px
+}
+.tdWelcomeUser{
+	width:70%;
+	text-align:right;
+	vertical-align:bottom;
+	padding-right:5px;
+	padding-bottom:5px;
+}
+.tdMenu{
+	width:10%;
+	background-image: url(../../image/header.png);
+	background-repeat: repeat-x;
+	height: 28px;
+	color: #FFFFFF;
+	text-align: center;
+	vertical-align: middle;
+	border: solid 1px #000000;
+}
+.tdMenuDiv{
+	width:2.2in;
+	font-weight: bold;
+	text-align: center;
+}
+.tdMenu1{
+	width:20%;
+	font-weight: bold;
+	background-image: url(../../image/header.png);
+	background-repeat: repeat-x;
+	height: 28px;
+	color: #FFFFFF;
+	text-align: left;
+	vertical-align: middle;
+	border-top: solid 1px #000000;
+	border-bottom: solid 1px #000000;
+}
+.tdMenu2{
+	width:70%;
+	font-weight: bold;
+	padding-right:105px;
+	background-image: url(../../image/header.png);
+	background-repeat: repeat-x;
+	height: 28px;
+	color: #FFFFFF;
+	text-align: right;
+	vertical-align: middle;
+	border-top: solid 1px #000000;
+	border-bottom: solid 1px #000000;
+	border-right: solid 1px #000000;
+}

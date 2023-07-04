@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<!-- モジュール固有のBean定義 -->
+
+  <!-- 共通定義のインポート -->
+  <import resource="../commonContext.xml" />
+
+<!-- ======================================== アクション・業務ロジック定義 -->
+  <!-- アクション定義 -->
+  <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_ATM/M_ATMS01SCR" scope="singleton"/>
+	<bean name="/M_ATM/M_ATMS01Action" scope="singleton"
+          class="jp.terasoluna.fw.web.struts.actions.DispatchAction">
+    </bean>  
+    <!-- Search action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_ATM/M_ATMS01SearchBL" scope="singleton">
+        <property name="businessLogic" ref="M_ATMS01SearchBlogic"/>
+    </bean>
+     <bean id="M_ATMS01SearchBlogic" scope="singleton"
+		class="nttdm.bsys.m_atm.blogic.M_ATMS01SearchBlogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    <!-- Search action -->
+    <!-- save action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_ATM/M_ATMS01SaveBL" scope="singleton">
+        <property name="businessLogic" ref="M_ATMS01SaveBLogic"/>
+    </bean>
+     <bean id="M_ATMS01SaveBLogic" scope="singleton"
+		class="nttdm.bsys.m_atm.blogic.M_ATMS01SaveBLogic">
+            <property name="updateDAO" ref="updateDAO"></property>
+    </bean>
+    <!-- save action -->
+</beans>

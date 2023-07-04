@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE blogic-io PUBLIC "-//NTTDATA//DTD TERASOLUNA for Spring blogic-io 1.0//JA"
+                           "../dtd/blogic-io.dtd">
+
+<blogic-io>
+    <action path="/B_SSM_S03_Request_Process_Action">
+        <blogic-params bean-name="java.util.HashMap">
+            <set-property blogic-property="uvo" property="USER_VALUE_OBJECT" source="session"/>
+            <set-property blogic-property="processMode" source="form" property="processMode" />
+            <set-property blogic-property="customerName" source="form" property="customerName" />
+            <set-property blogic-property="customerID" source="form" property="customerID" />
+            <set-property blogic-property="subscriptionID" source="form" property="subscriptionID" />
+            <set-property blogic-property="logonUserID" source="form" property="logonUserID" />
+            <set-property blogic-property="customerPlanID" source="form" property="customerPlanID" />
+            <set-property blogic-property="serviceName" source="form" property="serviceName" />
+            <set-property blogic-property="serviceNameList" source="form" property="serviceNameList" />
+            <set-property blogic-property="selectedServices" source="form" property="selectedServices" />
+            <set-property blogic-property="serviceIDs" source="form" property="serviceIDs" />
+            <set-property blogic-property="customerPlanLinkIDs" source="form" property="customerPlanLinkIDs" />
+            <set-property blogic-property="reportTemplatePath" source="form" property="reportTemplatePath" />
+            <set-property blogic-property="reportLogoPath" source="form" property="reportLogoPath" />
+            <set-property blogic-property="reportPath" source="form" property="reportPath" />
+            <set-property blogic-property="subReportPath" source="form" property="subReportPath" />
+            <set-property blogic-property="addressType" source="form" property="addressType" />
+            <set-property blogic-property="addressList" source="form" property="addressList" />
+            <set-property blogic-property="customerType" source="form" property="customerType" />
+            <set-property blogic-property="noticeMode" source="form" property="noticeMode" />
+            <set-property blogic-property="selectedServiceIds" source="form" property="selectedServiceIds" />
+            <set-property blogic-property="serviceDescs" source="form" property="serviceDescs" />
+        </blogic-params>
+        <blogic-result>
+            <set-property blogic-property="processMode" dest="form" property="processMode" />
+            <set-property blogic-property="customerName" dest="form" property="customerName" />
+            <set-property blogic-property="customerID" dest="form" property="customerID" />
+            <set-property blogic-property="subscriptionID" dest="form" property="subscriptionID" />
+            <set-property blogic-property="logonUserID" dest="form" property="logonUserID" />
+            <set-property blogic-property="customerPlanID" dest="form" property="customerPlanID" />
+            <set-property blogic-property="serviceName" dest="form" property="serviceName" />
+            <set-property blogic-property="serviceNameList" dest="form" property="serviceNameList" />
+            <set-property blogic-property="selectedServices" dest="form" property="selectedServices" />
+            <set-property blogic-property="serviceIDs" dest="form" property="serviceIDs" />
+            <set-property blogic-property="customerPlanLinkIDs" dest="form" property="customerPlanLinkIDs" />
+            <set-property blogic-property="reportErrorStatus" dest="form" property="reportErrorStatus" />
+            <set-property blogic-property="addressType" dest="form" property="addressType" />
+            <set-property blogic-property="addressList" dest="form" property="addressList" />
+            <set-property blogic-property="customerType" dest="form" property="customerType" />
+            <set-property blogic-property="accMgrPrim" dest="form" property="accMgrPrim" />
+        </blogic-result>
+    </action>
+</blogic-io>

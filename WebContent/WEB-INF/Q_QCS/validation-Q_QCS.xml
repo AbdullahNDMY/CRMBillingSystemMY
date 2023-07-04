@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+<formset>
+      <form name="/Q_QCSR03BLogic">
+        <field property="id_conslt"
+            depends="required">
+          <arg key="screen.q_qcs02.idConsultant" position="0" />
+        </field>
+        <field property="date_req"
+            depends="required">
+          <arg key="screen.q_qcs02.requestDate" position="0" />
+        </field>
+        <field property="req_user"
+            depends="required">
+          <arg key="screen.q_qcs02.requestedby" position="0" />
+        </field>
+        <field property="id_cust"
+            depends="required">
+          <arg key="screen.q_qcs02.customerName" position="0" />
+        </field>
+      </form>
+    </formset>
+</form-validation>

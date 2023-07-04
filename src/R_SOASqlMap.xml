@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_SOA">
+	<sql id="searchCondition">
+		<isNotEmpty prepend="AND" property="statementYearMonth">
+			TO_CHAR(C.STMT_DATE,'yyyymm') = #statementYearMonth#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxCustomerName">
+			UPPER(C.CUST_NAME) like UPPER('%$tbxCustomerName$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxCustomerId">
+			UPPER(C.ID_CUST) like UPPER('%$tbxCustomerId$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cboCustomerType">
+			E.CUSTOMER_TYPE = #cboCustomerType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxStatementNoFrom">
+			UPPER(C.ID_STMT) &gt;= UPPER('$tbxStatementNoFrom$') 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxStatementNoTo">
+			UPPER(C.ID_STMT) &lt;= UPPER('$tbxStatementNoTo$') 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxBillingAccount">
+			UPPER(C.CUST_ACC_NO) like UPPER('%$tbxBillingAccount$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cboPrintStatement">
+			E.PRINT_STATEMENT = #cboPrintStatement#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cboBillingCurrency">
+			C.STMT_CURRENCY = #cboBillingCurrency#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cboPaymentCurrency">
+			G.EXPORT_CURRENCY = #cboPaymentCurrency#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="chkStatementTotal">
+			C.STMT_TOTAL &gt; 0
+		</isNotEmpty>
+	</sql>
+	<select id="getT_AR_STMT_H" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT C.ID_STMT, C.ID_CUST, to_char(C.STMT_DATE,'dd/mm/yyyy') STMT_DATE, C.STMT_CURRENCY,
+               C.STMT_TOTAL, C.CUST_ACC_NO, C.CUST_NAME, E.CUSTOMER_TYPE, G.EXPORT_CURRENCY
+  		FROM 
+  			T_BAC_H G , T_AR_STMT_H C 
+ 		INNER JOIN M_CUST E ON C.ID_CUST = E.ID_CUST
+ 		<dynamic prepend="WHERE">
+ 			<include refid="searchCondition"/>
+ 		</dynamic>
+ 		AND 
+ 		C.CUST_ACC_NO = G.ID_BILL_ACCOUNT 
+ 		ORDER BY C.STMT_DATE DESC,ID_STMT ASC
+	</select>
+	
+	<select id="countT_AR_STMT_H" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT COUNT(*)
+  		FROM 
+  			T_AR_STMT_H C
+ 		INNER JOIN M_CUST E ON C.ID_CUST = E.ID_CUST
+ 		<dynamic prepend="WHERE">
+ 			<include refid="searchCondition"/>
+ 		</dynamic>
+	</select>
+	
+	<select id="getGrandTotal" resultClass="java.lang.String">
+    	SELECT DISTINCT CUR_CODE as value
+    	FROM M_CURRENCY
+    	WHERE IS_DELETED = 0
+    	ORDER BY CUR_CODE
+    </select>
+</sqlMap>

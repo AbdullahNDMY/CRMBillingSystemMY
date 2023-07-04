@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/BIF/B_BIFS01Action" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS01SCR_SESSION" scope="singleton"/>
+    <!-- Search action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS01BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS01BLogic"
+        id="B_BIFS01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS01InitBL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS01InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS01InitBLogic"
+        id="B_BIFS01InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- Search action -->
+    <!-- S02 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_01BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_01BLogic"
+        id="B_BIFS02_01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_02BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_02BLogic"
+        id="B_BIFS02_02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_03BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_03BLogic"
+        id="B_BIFS02_03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_04BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_04BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_04BLogic"
+        id="B_BIFS02_04BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_05BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_05BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_05BLogic"
+        id="B_BIFS02_05BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_06BL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS02_06BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_06BLogic"
+        id="B_BIFS02_06BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.BIFDownloadBL"
+        name="/BIF/BIFDownloadBL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- S02 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS02SCR" scope="singleton"/>
+    <!-- S03 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03LoadBL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03LoadBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03LoadBLogic"
+        id="B_BIFS03LoadBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/testSCR" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03SaveBL" scope="singleton">
+        <property name="businessLogic" ref="B_BIFS03SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03SaveBLogic"
+        id="B_BIFS03SaveBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <!-- S03 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03_02SCR" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03_03SCR" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03_04SCR" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03_05SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/BIF/B_BIFS03_06SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_01BLogic"
+        id="B_BIFS03_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_02BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_02BLogic"
+        id="B_BIFS03_02BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_03BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_03BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_04BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_04BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_05BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_05BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_06BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_06BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_02_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_02_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_04BLogic"
+        id="B_BIFS03_04BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_03BLogic"
+        id="B_BIFS03_03BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_02_01BLogic"
+        id="B_BIFS03_02_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_05BLogic"
+        id="B_BIFS03_05BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_06BLogic"
+        id="B_BIFS03_06BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS01_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS01_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS01_01BLogic"
+        id="B_BIFS01_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS03_03_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS03_03_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS03_03_01BLogic"
+        id="B_BIFS03_03_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02BLogic"
+        id="B_BIFS02BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_04_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS02_04_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_04_01BLogic"
+        id="B_BIFS02_04_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_07BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS02_07BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_08BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS02_08BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_07BLogic"
+        id="B_BIFS02_07BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_08BLogic"
+        id="B_BIFS02_08BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/BIF/B_BIFS02_03_01BL" scope="prototype">
+        <property name="businessLogic" ref="B_BIFS02_03_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.bif.blogic.B_BIFS02_03_01BLogic"
+        id="B_BIFS02_03_01BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

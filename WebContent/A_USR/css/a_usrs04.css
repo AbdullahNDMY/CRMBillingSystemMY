@@ -1,0 +1,59 @@
+
+.searchCondition{
+	width:94.7%;
+	background-color:#F8F8F8;
+	border-top:2px solid #DFDFDF;
+	border-bottom:2px solid #DFDFDF;
+	margin-top:6px;
+	padding: 8px 25px 13px 25px;
+}
+.USRTextBox{
+	width: 180px;
+}
+.groupButton{
+	margin-top:7px;
+	margin-bottom:5px;
+}
+.groupButton button{
+	margin-right:4px;
+}
+h4{
+	width:99.9%;
+	margin-top:8px;
+	border-top:1px solid #CFCFCF;
+	background-color:#EAEAEA;
+	padding:6px 0px 6px 5px;
+	font-weight:bold;
+	font-size:medium;
+	margin-bottom:0px;
+}
+.wrapper{
+	width:100%;
+	background-color:#F8F8F8;
+}
+
+#roleAccessInformation{
+	background-color:#FFFFFF;
+}
+#roleAccessInformation table{
+	width:99%;
+	border-collapse:collapse;
+	margin-top:10px;
+}
+#roleAccessInformation .header{
+	background-color:#EBEADB;
+	text-align:center;
+}
+#roleAccessInformation td{
+	border:1px solid #282828;
+}
+#roleAccessInformation .colModule{
+	width:26.33%;
+}
+#roleAccessInformation .colSubModule{
+	width:40.67%;
+}
+#roleAccessInformation .colAccessType{
+	width:11%;
+	text-align:center;
+}

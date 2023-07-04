@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_BTH_F01_NTTMSC_FOOTER" pageWidth="553" pageHeight="802" columnWidth="553" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_BTH_F01_NTTMSC_STYLE.jrtx"]]></template>
+	<subDataset name="DS1">
+		<parameter name="subFooter" class="java.lang.Object"/>
+	</subDataset>
+	<subDataset name="DS2">
+		<field name="info" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="footer" class="java.lang.Object"/>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table" x="0" y="0" width="553" height="14"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DS1">
+						<datasetParameter name="subFooter">
+							<datasetParameterExpression><![CDATA[$P{footer}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="554">
+						<jr:detailCell height="70" rowSpan="1">
+							<componentElement>
+								<reportElement x="0" y="0" width="554" height="14">
+									<printWhenExpression><![CDATA[$P{subFooter} != null]]></printWhenExpression>
+								</reportElement>
+								<jr:list printOrder="Vertical">
+									<datasetRun subDataset="DS2">
+										<dataSourceExpression><![CDATA[$P{subFooter}]]></dataSourceExpression>
+									</datasetRun>
+									<jr:listContents height="14" width="554">
+										<textField>
+											<reportElement style="font_9_TimesNewRoman" x="0" y="0" width="553" height="14"/>
+											<textElement/>
+											<textFieldExpression class="java.lang.String"><![CDATA[$F{info}]]></textFieldExpression>
+										</textField>
+									</jr:listContents>
+								</jr:list>
+							</componentElement>
+							<staticText>
+								<reportElement style="font_9_TimesNewRoman" stretchType="RelativeToBandHeight" x="0" y="14" width="554" height="56"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+								<text><![CDATA[This document is computer generated and no signature is required.]]></text>
+							</staticText>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

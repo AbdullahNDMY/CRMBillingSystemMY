@@ -1,0 +1,860 @@
+<jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.RootModel>
+  <dtdName>struts-config</dtdName>
+  <dtdPublicId>-//Apache Software Foundation//DTD Struts Configuration 1.2//EN</dtdPublicId>
+  <dtdSystemId>http://struts.apache.org/dtds/struts-config_1_2.dtd</dtdSystemId>
+  <charset>UTF-8</charset>
+  <extension>.do</extension>
+  <children>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel>
+      <path>/M_JNMS01.jsp</path>
+      <moduleName>/M_JNM</moduleName>
+      <extension>.do</extension>
+      <root reference="../../.."/>
+      <constraint>
+        <x>407</x>
+        <y>24</y>
+        <width>-1</width>
+        <height>-1</height>
+      </constraint>
+      <sourceConnections>
+        <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel>
+          <name>submit1</name>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel" reference="../../.."/>
+          <target class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel">
+            <className></className>
+            <path>/M_JNMR01BLogic</path>
+            <type></type>
+            <scope>request</scope>
+            <validate>true</validate>
+            <name>_m_jnmForm</name>
+            <prefix></prefix>
+            <suffix></suffix>
+            <attribute></attribute>
+            <roles></roles>
+            <unknown></unknown>
+            <forward></forward>
+            <b__name>nttdm.bsys.m_jnm.dto.M_JNMR01Input</b__name>
+            <b__param__properties>
+              <ids>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+              </ids>
+              <labelA>
+                <string>USER_VALUE_OBJECT</string>
+                <string>id_cust</string>
+                <string>id_jobno</string>
+                <string>clickEvent</string>
+                <string>hid_id_cust</string>
+                <string>hid_id_jobno</string>
+                <string>listCustomer</string>
+              </labelA>
+              <labelB>
+                <string>uvo</string>
+                <string>id_cust</string>
+                <string>id_jobno</string>
+                <string>clickEvent</string>
+                <string>hid_id_cust</string>
+                <string>hid_id_jobno</string>
+                <string>listCustomer</string>
+              </labelB>
+              <labelC>
+                <string>session</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+              </labelC>
+            </b__param__properties>
+            <b__result__properties>
+              <ids>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+                <null/>
+              </ids>
+              <labelA>
+                <string>jnmInfos</string>
+                <string>hid_id_cust</string>
+                <string>id_cust</string>
+                <string>name_cust</string>
+                <string>access_type</string>
+                <string>listCustomer</string>
+              </labelA>
+              <labelB>
+                <string>jnmInfos</string>
+                <string>hid_id_cust</string>
+                <string>id_cust</string>
+                <string>name_cust</string>
+                <string>access_type</string>
+                <string>listCustomer</string>
+              </labelB>
+              <labelC>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <string>form</string>
+                <null/>
+              </labelC>
+            </b__result__properties>
+            <r__reset__properties>
+              <ids/>
+              <names/>
+              <selects/>
+            </r__reset__properties>
+            <m__class__name>jp.terasoluna.fw.web.struts.actions.BLogicAction</m__class__name>
+            <m__action__type>1</m__action__type>
+            <exceptionList/>
+            <extension>.do</extension>
+            <root reference="../../../../../.."/>
+            <constraint>
+              <x>110</x>
+              <y>178</y>
+              <width>-1</width>
+              <height>-1</height>
+            </constraint>
+            <sourceConnections>
+              <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.InputModel>
+                <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../.."/>
+                <target class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel" reference="../../../../../.."/>
+                <bendpoints/>
+                <comment></comment>
+                <id></id>
+                <properties>
+                  <ids/>
+                  <names/>
+                  <values/>
+                </properties>
+                <small__icon></small__icon>
+                <large__icon></large__icon>
+                <display__name></display__name>
+                <description></description>
+                <listeners serialization="custom">
+                  <java.beans.PropertyChangeSupport>
+                    <default>
+                      <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                      <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.InputModel" reference="../../../.."/>
+                    </default>
+                    <null/>
+                  </java.beans.PropertyChangeSupport>
+                </listeners>
+              </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.InputModel>
+              <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+                <className></className>
+                <name>success</name>
+                <redirect></redirect>
+                <currentModule>M_JNM</currentModule>
+                <extension>.do</extension>
+                <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../.."/>
+                <target class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel">
+                  <className></className>
+                  <path>/M_JNMS01SCR</path>
+                  <type></type>
+                  <scope>request</scope>
+                  <validate>false</validate>
+                  <name>_m_jnmForm</name>
+                  <prefix></prefix>
+                  <suffix></suffix>
+                  <attribute></attribute>
+                  <roles></roles>
+                  <unknown></unknown>
+                  <forward></forward>
+                  <b__name></b__name>
+                  <b__param__properties>
+                    <ids/>
+                    <labelA/>
+                    <labelB/>
+                    <labelC/>
+                  </b__param__properties>
+                  <b__result__properties>
+                    <ids/>
+                    <labelA/>
+                    <labelB/>
+                    <labelC/>
+                  </b__result__properties>
+                  <r__reset__properties>
+                    <ids/>
+                    <names/>
+                    <selects/>
+                  </r__reset__properties>
+                  <m__class__name>jp.terasoluna.fw.web.struts.actions.ForwardAction</m__class__name>
+                  <m__action__type>2</m__action__type>
+                  <exceptionList/>
+                  <extension>.do</extension>
+                  <root reference="../../../../../../../../.."/>
+                  <constraint>
+                    <x>115</x>
+                    <y>19</y>
+                    <width>-1</width>
+                    <height>-1</height>
+                  </constraint>
+                  <sourceConnections>
+                    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+                      <className></className>
+                      <name>success</name>
+                      <redirect></redirect>
+                      <currentModule>M_JNM</currentModule>
+                      <extension>.do</extension>
+                      <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../.."/>
+                      <target class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel" reference="../../../../../../../../.."/>
+                      <bendpoints/>
+                      <comment></comment>
+                      <id></id>
+                      <properties>
+                        <ids/>
+                        <names/>
+                        <values/>
+                      </properties>
+                      <small__icon></small__icon>
+                      <large__icon></large__icon>
+                      <display__name></display__name>
+                      <description></description>
+                      <listeners serialization="custom">
+                        <java.beans.PropertyChangeSupport>
+                          <default>
+                            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel" reference="../../../.."/>
+                          </default>
+                          <null/>
+                        </java.beans.PropertyChangeSupport>
+                      </listeners>
+                    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+                  </sourceConnections>
+                  <targetConnections>
+                    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel reference="../../.."/>
+                  </targetConnections>
+                  <comment></comment>
+                  <id></id>
+                  <properties>
+                    <ids/>
+                    <names/>
+                    <values/>
+                  </properties>
+                  <small__icon></small__icon>
+                  <large__icon></large__icon>
+                  <display__name></display__name>
+                  <description></description>
+                  <listeners serialization="custom">
+                    <java.beans.PropertyChangeSupport>
+                      <default>
+                        <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                        <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../../.."/>
+                      </default>
+                      <null/>
+                    </java.beans.PropertyChangeSupport>
+                  </listeners>
+                </target>
+                <bendpoints/>
+                <comment></comment>
+                <id></id>
+                <properties>
+                  <ids/>
+                  <names/>
+                  <values/>
+                </properties>
+                <small__icon></small__icon>
+                <large__icon></large__icon>
+                <display__name></display__name>
+                <description></description>
+                <listeners serialization="custom">
+                  <java.beans.PropertyChangeSupport>
+                    <default>
+                      <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                      <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel" reference="../../../.."/>
+                    </default>
+                    <null/>
+                  </java.beans.PropertyChangeSupport>
+                </listeners>
+              </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+              <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+                <className></className>
+                <name>failure</name>
+                <redirect></redirect>
+                <currentModule>M_JNM</currentModule>
+                <extension>.do</extension>
+                <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../.."/>
+                <target class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel" reference="../../../../../.."/>
+                <bendpoints/>
+                <comment></comment>
+                <id></id>
+                <properties>
+                  <ids/>
+                  <names/>
+                  <values/>
+                </properties>
+                <small__icon></small__icon>
+                <large__icon></large__icon>
+                <display__name></display__name>
+                <description></description>
+                <listeners serialization="custom">
+                  <java.beans.PropertyChangeSupport>
+                    <default>
+                      <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                      <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel" reference="../../../.."/>
+                    </default>
+                    <null/>
+                  </java.beans.PropertyChangeSupport>
+                </listeners>
+              </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel>
+            </sourceConnections>
+            <targetConnections>
+              <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel reference="../../.."/>
+            </targetConnections>
+            <comment></comment>
+            <id></id>
+            <properties>
+              <ids/>
+              <names/>
+              <values/>
+            </properties>
+            <small__icon></small__icon>
+            <large__icon></large__icon>
+            <display__name></display__name>
+            <description></description>
+            <listeners serialization="custom">
+              <java.beans.PropertyChangeSupport>
+                <default>
+                  <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                  <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel" reference="../../../.."/>
+                </default>
+                <null/>
+              </java.beans.PropertyChangeSupport>
+            </listeners>
+          </target>
+          <bendpoints/>
+          <comment></comment>
+          <id></id>
+          <properties>
+            <ids/>
+            <names/>
+            <values/>
+          </properties>
+          <small__icon></small__icon>
+          <large__icon></large__icon>
+          <display__name></display__name>
+          <description></description>
+          <listeners serialization="custom">
+            <java.beans.PropertyChangeSupport>
+              <default>
+                <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+                <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel" reference="../../../.."/>
+              </default>
+              <null/>
+            </java.beans.PropertyChangeSupport>
+          </listeners>
+        </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel>
+      </sourceConnections>
+      <targetConnections>
+        <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel reference="../../sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel"/>
+        <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.InputModel reference="../../sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.InputModel"/>
+        <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel reference="../../sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel[2]"/>
+      </targetConnections>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids/>
+        <names/>
+        <values/>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel reference="../jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel/target"/>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel reference="../jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target"/>
+  </children>
+  <allChildren>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel reference="../../children/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel"/>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.FormBeanModel>
+      <root reference="../../.."/>
+      <name>_m_jnmForm</name>
+      <type>nttdm.bsys.m_jnm.bean.M_JNMFormBean</type>
+      <className></className>
+      <dynamic></dynamic>
+      <formProperties>
+        <names/>
+        <types/>
+        <sizes/>
+        <initials/>
+        <classNames/>
+        <properties/>
+      </formProperties>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids/>
+        <names/>
+        <values/>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.FormBeanModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.FormBeanModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel>
+      <root reference="../../.."/>
+      <bundle></bundle>
+      <type>jp.terasoluna.fw.exception.SystemException</type>
+      <path>/error.jsp</path>
+      <key>errors.default.mesasge</key>
+      <handler>jp.terasoluna.fw.web.struts.action.SystemExceptionHandler</handler>
+      <className>jp.terasoluna.fw.web.struts.action.ExceptionConfigEx</className>
+      <scope></scope>
+      <comment>???</comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+          <string></string>
+        </ids>
+        <names>
+          <string>logLevel</string>
+          <string>module</string>
+        </names>
+        <values>
+          <string>error</string>
+          <string>/</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel>
+      <root reference="../../.."/>
+      <bundle></bundle>
+      <type>java.lang.Exception</type>
+      <path>/error.jsp</path>
+      <key>errors.default.mesasge</key>
+      <handler>jp.terasoluna.fw.web.struts.action.DefaultExceptionHandler</handler>
+      <className>jp.terasoluna.fw.web.struts.action.ExceptionConfigEx</className>
+      <scope></scope>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+          <string></string>
+        </ids>
+        <names>
+          <string>logLevel</string>
+          <string>module</string>
+        </names>
+        <values>
+          <string>error</string>
+          <string>/</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalForwardModel>
+      <root reference="../../.."/>
+      <name>welcome</name>
+      <path>/welcome.do</path>
+      <className></className>
+      <module></module>
+      <redirect>true</redirect>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids/>
+        <names/>
+        <values/>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalForwardModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalForwardModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel reference="../../children/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ForwardModel/target"/>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionModel reference="../../children/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PageModel/sourceConnections/jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.SubmitModel/target"/>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.MessageResourcesModel>
+      <parameter>M_JNM-messages</parameter>
+      <key></key>
+      <className></className>
+      <factory>jp.terasoluna.fw.web.struts.action.PropertyMessageResourcesExFactory</factory>
+      <nullVal></nullVal>
+      <comment>======================================== ??????????? 
+    &lt;message-resources
+        factory=&quot;jp.terasoluna.fw.web.struts.util.SpringMessageResourcesFactory&quot;
+        parameter=&quot;messageSource&quot; /&gt;</comment>
+      <id></id>
+      <properties>
+        <ids/>
+        <names/>
+        <values/>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.MessageResourcesModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.MessageResourcesModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ControllerModel>
+      <bufferSize></bufferSize>
+      <className></className>
+      <contentType></contentType>
+      <forwardPattern></forwardPattern>
+      <inputForward></inputForward>
+      <locale></locale>
+      <maxFileSize></maxFileSize>
+      <memFileSize></memFileSize>
+      <multipartClass></multipartClass>
+      <nocache></nocache>
+      <pagePattern></pagePattern>
+      <processorClass>jp.terasoluna.fw.web.struts.action.RequestProcessorEx</processorClass>
+      <tempDir></tempDir>
+      <comment>======================================== ????????</comment>
+      <id></id>
+      <properties>
+        <ids/>
+        <names/>
+        <values/>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ControllerModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ControllerModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+      <className>org.springframework.web.struts.ContextLoaderPlugIn</className>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+        </ids>
+        <names>
+          <string>contextConfigLocation</string>
+        </names>
+        <values>
+          <string>/WEB-INF/M_JNM/M_JNMContext.xml</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+      <className>org.apache.struts.validator.ValidatorPlugIn</className>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+          <string></string>
+        </ids>
+        <names>
+          <string>pathnames</string>
+          <string>stopOnFirstError</string>
+        </names>
+        <values>
+          <string>/WEB-INF/validator-rules.xml,/WEB-INF/validator-rules-ex.xml,/WEB-INF/M_JNM/validation-M_JNM.xml</string>
+          <string>false</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+      <className>jp.terasoluna.fw.web.struts.plugins.BLogicIOPlugIn</className>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+          <string></string>
+          <string></string>
+        </ids>
+        <names>
+          <string>digesterRules</string>
+          <string>mapperClass</string>
+          <string>resources</string>
+        </names>
+        <values>
+          <string>/WEB-INF/blogic-io-rules.xml</string>
+          <string>jp.terasoluna.fw.service.thin.BLogicMapper</string>
+          <string>/WEB-INF/M_JNM/blogic-M_JNM-io.xml</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+    <jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+      <className>jp.terasoluna.fw.web.struts.plugins.ResetterPlugIn</className>
+      <comment></comment>
+      <id></id>
+      <properties>
+        <ids>
+          <string></string>
+          <string></string>
+          <string></string>
+        </ids>
+        <names>
+          <string>resetter</string>
+          <string>digesterRules</string>
+          <string>resources</string>
+        </names>
+        <values>
+          <string>jp.terasoluna.fw.web.struts.reset.ResetterImpl</string>
+          <string>/WEB-INF/reset-rules.xml</string>
+          <string>/WEB-INF/M_JNM/reset-M_JNM.xml</string>
+        </values>
+      </properties>
+      <small__icon></small__icon>
+      <large__icon></large__icon>
+      <display__name></display__name>
+      <description></description>
+      <listeners serialization="custom">
+        <java.beans.PropertyChangeSupport>
+          <default>
+            <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+            <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel" reference="../../../.."/>
+          </default>
+          <null/>
+        </java.beans.PropertyChangeSupport>
+      </listeners>
+    </jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.PluginModel>
+  </allChildren>
+  <globalForwardsModel>
+    <type></type>
+    <comment>======================================== ????????????</comment>
+    <id></id>
+    <properties>
+      <ids/>
+      <names/>
+      <values/>
+    </properties>
+    <small__icon></small__icon>
+    <large__icon></large__icon>
+    <display__name></display__name>
+    <description></description>
+    <listeners serialization="custom">
+      <java.beans.PropertyChangeSupport>
+        <default>
+          <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalForwardsModel" reference="../../../.."/>
+        </default>
+        <null/>
+      </java.beans.PropertyChangeSupport>
+    </listeners>
+  </globalForwardsModel>
+  <globalExceptionsModel>
+    <comment>======================================== ???????????????</comment>
+    <id></id>
+    <properties>
+      <ids/>
+      <names/>
+      <values/>
+    </properties>
+    <small__icon></small__icon>
+    <large__icon></large__icon>
+    <display__name></display__name>
+    <description></description>
+    <listeners serialization="custom">
+      <java.beans.PropertyChangeSupport>
+        <default>
+          <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.GlobalExceptionsModel" reference="../../../.."/>
+        </default>
+        <null/>
+      </java.beans.PropertyChangeSupport>
+    </listeners>
+  </globalExceptionsModel>
+  <actionMappingsModel>
+    <type>jp.terasoluna.fw.web.struts.action.ActionMappingEx</type>
+    <comment>======================================== ????????????</comment>
+    <id></id>
+    <properties>
+      <ids/>
+      <names/>
+      <values/>
+    </properties>
+    <small__icon></small__icon>
+    <large__icon></large__icon>
+    <display__name></display__name>
+    <description></description>
+    <listeners serialization="custom">
+      <java.beans.PropertyChangeSupport>
+        <default>
+          <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.ActionMappingsModel" reference="../../../.."/>
+        </default>
+        <null/>
+      </java.beans.PropertyChangeSupport>
+    </listeners>
+  </actionMappingsModel>
+  <dataSourcesModel>
+    <comment></comment>
+    <id></id>
+    <properties>
+      <ids/>
+      <names/>
+      <values/>
+    </properties>
+    <small__icon></small__icon>
+    <large__icon></large__icon>
+    <display__name></display__name>
+    <description></description>
+    <listeners serialization="custom">
+      <java.beans.PropertyChangeSupport>
+        <default>
+          <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.DataSourcesModel" reference="../../../.."/>
+        </default>
+        <null/>
+      </java.beans.PropertyChangeSupport>
+    </listeners>
+  </dataSourcesModel>
+  <formBeansModel>
+    <type></type>
+    <comment></comment>
+    <id></id>
+    <properties>
+      <ids/>
+      <names/>
+      <values/>
+    </properties>
+    <small__icon></small__icon>
+    <large__icon></large__icon>
+    <display__name></display__name>
+    <description></description>
+    <listeners serialization="custom">
+      <java.beans.PropertyChangeSupport>
+        <default>
+          <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+          <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.FormBeansModel" reference="../../../.."/>
+        </default>
+        <null/>
+      </java.beans.PropertyChangeSupport>
+    </listeners>
+  </formBeansModel>
+  <comment>Generated by TERASOLUNA IDE</comment>
+  <id></id>
+  <properties>
+    <ids/>
+    <names/>
+    <values/>
+  </properties>
+  <small__icon></small__icon>
+  <large__icon></large__icon>
+  <display__name></display__name>
+  <description></description>
+  <listeners serialization="custom">
+    <java.beans.PropertyChangeSupport>
+      <default>
+        <propertyChangeSupportSerializedDataVersion>2</propertyChangeSupportSerializedDataVersion>
+        <source class="jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.RootModel" reference="../../../.."/>
+      </default>
+      <null/>
+    </java.beans.PropertyChangeSupport>
+  </listeners>
+</jp.co.nttdata.terasoluna.ide.thin.pd.editors.models.RootModel>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_ALT">
+
+	<select id="SELECT.M_ALT.SQL001" parameterClass="java.lang.String" resultClass="nttdm.bsys.m_alt.bean.Notice">
+		SELECT  id_msg
+		        ,msg_type
+		        ,priority
+		        ,TO_CHAR(start_date,'dd/MM/yyyy') start_date
+		        ,TO_CHAR(end_date,'dd/MM/yyyy') end_date
+		        ,TO_CHAR(reminder_date,'dd/MM/yyyy') reminder_date
+		        ,to_msg
+		        ,cc_msg
+		        ,subject
+		        ,msg
+		        ,id_creator
+		FROM m_alt_h
+		WHERE id_msg = #id_msg# and is_deleted = '0'
+	</select>
+	<select id="SELECT.M_ALT.SQL002"  resultClass="java.lang.Long">
+		SELECT  NVL(MAX(id_msg),1)		        
+		FROM m_alt_h
+	</select>
+	
+	<insert id="INSERT.M_ALT.SQL003" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR02Input">
+		INSERT
+		    INTO
+		        m_alt_h (
+		             id_msg
+		            ,msg_type
+		            ,priority
+		            ,start_date
+		            ,end_date
+		            ,reminder_date
+		            ,to_msg
+		            ,cc_msg
+		            ,subject
+		            ,msg
+		            ,id_login
+		            ,id_creator
+		            ,is_deleted
+		        )
+		    VALUES (
+		    	SEQ_M_ALT_H.nextval
+		        ,#msg_type#
+		        ,#priority#
+		        ,TO_DATE(#start_date#,'dd/MM/yyyy')
+		        ,TO_DATE(#end_date#,'dd/MM/yyyy')
+		        ,TO_DATE(#reminder_date#,'dd/MM/yyyy')
+		        ,#to_msg#
+		        ,#cc_msg#
+		        ,#subject#
+		        ,#msg#
+		        ,#id_login#
+		        ,#id_creator#
+		        ,'0'
+		    )
+	</insert>	
+	
+	<insert id="INSERT.M_ALT.SQL004" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR02Input">
+		INSERT
+		    INTO
+		        m_alt_d (
+		            id_msg
+		            ,id_user
+		            ,id_login
+		            ,is_deleted
+		            ,is_new
+		            ,display_date
+		        )
+
+		    SELECT #id_msg# as "id_msg", #id_user# as "id_user", #id_login# as "id_login", '0' as "is_deleted",'1' as "is_new" , sysdate as "display_date"
+		    FROM dual
+		    WHERE #id_user# in (SELECT id_user from m_user WHERE is_deleted=0 and id_user = #id_user#)
+		    	and (#id_user# not in (SELECT id_user from m_alt_d WHERE is_deleted=0 and id_user = #id_user# and id_msg = #id_msg#))
+		    	 
+	</insert>
+	
+	<select id="SELECT.M_ALT.SQL005"  resultClass="nttdm.bsys.a_usr.bean.UserBean">
+		SELECT id_user,user_name FROM m_user WHERE is_deleted=0
+	</select>
+	
+	<select id="SELECT.M_ALT.SQL006"  resultClass="java.lang.Long">
+		SELECT NVL(MAX(id_doc),0) FROM t_doc 
+	</select>
+	
+	<insert id="INSERT.M_ALT.SQL007" parameterClass="nttdm.bsys.m_alt.bean.FileInfo">
+		INSERT
+		    INTO
+		        t_doc (
+		            id_doc
+		            ,doc_type
+		            ,filename
+		            ,filelocation
+		            ,is_deleted
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		 	VALUES(
+		 		#id_doc#
+	            ,'ALTN'
+	            ,#filename#
+	            ,#filelocation#
+	            ,'0'
+	            ,sysdate
+	            ,sysdate
+	            ,#id_login#		 	
+		 	)		   		    	 
+	</insert>
+	<insert id="INSERT.M_ALT.SQL008" parameterClass="nttdm.bsys.m_alt.bean.FileInfo">
+		INSERT
+		    INTO
+		        m_alt_atc (
+		            id_msg
+		            ,id_file
+		            ,is_deleted
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		 	VALUES(
+		 		#id_msg#
+	            ,#id_doc#
+	            ,'0'
+	            ,sysdate
+	            ,sysdate
+	            ,#id_login#		 	
+		 	)		   		    	 
+	</insert>
+	<select id="SELECT.M_ALT.SQL009" parameterClass="java.lang.Long" resultClass="nttdm.bsys.m_alt.bean.FileInfo">
+		SELECT d.filename,d.id_doc,d.filelocation, d.id_login as id_login
+		FROM m_alt_atc a, t_doc d
+		WHERE a.is_deleted='0' and d.is_deleted='0' 
+			and a.id_file=d.id_doc and a.id_msg=#id_msg#
+	</select>
+	<select id="SELECT.M_ALT.SQL010" parameterClass="java.lang.Long" resultClass="java.util.HashMap">
+		SELECT FILENAME, FILELOCATION FROM T_DOC WHERE ID_DOC = #id_doc#
+	</select>
+	<select id="SELECT.M_ALT.SQL011" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR04Input" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM M_ALT_D WHERE id_msg = #id_msg# AND is_deleted = 0
+	</select>
+	<update id="UPDATE.M_ALT.SQL010" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR04Input">
+		UPDATE m_alt_h 
+		SET is_deleted = '1' 
+		WHERE id_msg = #id_msg#
+	</update>
+	<update id="UPDATE.M_ALT.SQL011" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR04Input">
+		UPDATE m_alt_d
+		SET is_deleted = '1' 
+		WHERE id_msg = #id_msg# and id_user = #id_user#
+	</update>
+	<update id="UPDATE.M_ALT.SET_NEWSTATUS.SQL0012" parameterClass="java.util.HashMap">
+		update M_ALT_D set is_new='0', date_updated= sysdate, id_login='$id_login$' where id_msg='$id_msg$'
+	</update>
+	<update id="UPDATE.M_ALT.SQL0013" parameterClass="nttdm.bsys.m_alt.dto.M_ALTR02Input">
+		UPDATE m_alt_h
+		SET msg_type = #msg_type#,
+			priority = #priority#,
+			start_date = TO_DATE(#start_date#,'dd/MM/yyyy'),
+			end_date = TO_DATE(#end_date#,'dd/MM/yyyy'),
+			reminder_date = TO_DATE(#reminder_date#,'dd/MM/yyyy'),
+			to_msg = #to_msg#,
+			cc_msg = #cc_msg#,
+			subject = #subject#,
+			msg = #msg#,
+			id_login = #id_login#,
+			id_creator = #id_creator#,
+			is_deleted = '0'
+		WHERE id_msg = #id_msg#
+	</update>
+	<update id="UPDATE.M_ALT.SQL0014" parameterClass="nttdm.bsys.m_alt.bean.FileInfo">
+		UPDATE m_alt_atc
+		SET is_deleted = '1'
+		WHERE id_msg = #id_msg# 
+	</update>
+	<update id="UPDATE.M_ALT.SQL0015" parameterClass="nttdm.bsys.m_alt.bean.FileInfo">
+		UPDATE m_alt_atc
+		SET is_deleted = '0',
+			date_updated = sysdate,
+			id_login = #id_login#
+		WHERE id_file = #id_doc# 
+	</update>
+	
+</sqlMap>

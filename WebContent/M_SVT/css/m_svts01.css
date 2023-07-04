@@ -1,0 +1,236 @@
+
+.searchCondition{
+	width:100%;
+	background-color:#F8F8F8;
+	border-top:2px solid #DFDFDF;
+	border-bottom:2px solid #DFDFDF;
+	margin-top:6px;
+	padding: 8px 25px 13px 25px;
+}
+.groupButton{
+	width:100%;
+	margin-top:4px;
+	margin-bottom:27px;
+	margin-left:10px;
+}
+.groupButton button{
+	margin-right:5px;
+}
+
+h4{
+	width:98.7%;
+	background-color:#EAEAEA;
+	font-weight:bold;
+	padding:4px 10px 3px 2px;
+}
+#serviceGroupName{
+	width:98%;
+	margin:12px 11px 11px 4px;
+}
+
+.planService {
+	width:100%;
+	position:relative;
+	background-color:white;
+	border:1px solid #D0D0BF;
+}
+.planService .wrapper{
+	width:100%;
+	overflow:auto;
+}
+.planService table{
+	text-align:left;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin:9px 10px 9px 10px;
+
+}
+
+.planService table .header{
+	background-color:#CEE7FF;
+	border-width: 0px;
+}
+.planService td{
+	border-color: #CEE7FF;
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.planService .colEmpty{
+	width:45px;
+	border-width: 0px;
+}
+.planService .colServiceType{
+	width:370px;
+	border-width: 0px;
+}
+.planService .colAccCode{
+	width:220px;
+	border-width: 0px;
+}
+.planService .colUQTY{
+	width:200px;
+	border-width: 0px;
+}
+.planService .colGST{
+	width:35px;
+	border-width: 0px;
+}
+.planService .hlAction{
+	position:absolute;
+	top:2px;
+	right:300px;
+}
+.hlAction a{
+	font-weight:bold;
+	margin-right:5px;
+}
+.hlAction a:visited{
+	color:blue;
+}
+.planService input{
+	width:97%;
+}
+input.descAbbr{
+	width:91%;
+	text-align: left;
+}
+.planService ul{
+	list-style-type:none;
+	margin:0 0 0 0;
+	width:100%;
+	background-color:#EAEAEA;
+	padding-top:5px;
+	padding-bottom:4px;
+}
+
+.planService li{
+	display:inline;
+	margin-top:5px;
+	margin-bottom:4px;
+	margin:5px 0px 4px 3px;	
+}
+.planService li.header{
+	width:500px;
+}
+a.hlDelete:visited{
+	color:#0000FF;
+}
+
+a.hlAdd:visited{
+	color:#0000FF;
+}
+
+.disableLink{
+	color:gray;
+}
+
+.addPlanService{
+	width:100%;
+	position:relative;
+}
+
+.addPlanService table{
+	text-align:left;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin:9px 0px 9px 0px;
+	width:99%
+}
+
+.addPlanService table .header{
+	background-color:#CEE7FF;
+	border-width: 0px;
+}
+.addPlanService td{
+	border-color: #CEE7FF;
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+}
+.addPlanService input{
+	width:97%;
+}
+.addPlanService .colPlan{
+	/* width:370px; */
+	border-width: 0px;
+}
+.addPlanService .colDescAbbrSI{
+	 /* width:220px; */
+	border-width: 0px;
+}
+
+.subCategory table{
+	text-align:left;
+	margin:5px 0px 0px 0px;
+}
+
+/* add by Jing start */
+.newService{
+	text-align:left;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin:9px 5px 9px 0px;
+}
+
+.newService .header{
+	background-color:#CEE7FF;
+	border-width: 0px;
+}
+.newService td{
+	border-color: #CEE7FF; 
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.newService .colEmpty{
+	width:5%;
+	border-width: 0px;
+}
+.newService .colServiceType{
+	width:37%;
+	border-width: 0px;
+}
+.newService .colAbbr{
+	width:12%;
+	border-width: 0px;
+}
+.newService .colAccCode{
+	width:12%;
+	border-width: 0px;
+}
+.newService .colProduceCode{
+	width:12%;
+	border-width: 0px;
+}
+.newService .colReference1{
+	width:12%;
+	border-width: 0px;
+}
+.newService .colReference2{
+	width:12%;
+	border-width: 0px;
+}
+.newService .colGST{
+	width:35px;
+	border-width: 0px;
+}
+.newService .serviceDescription{
+	width:100%;
+}
+.newService .descAbbr{
+	width:100%;
+}
+.newService .accCode{
+	width:100%;
+}
+
+/* add by Jing end */

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+	
+   <!-- Modem No List -->
+   <bean id="modemNoCodeList"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	  SELECT AB.MODEM_NO, AB.MODEM_NO
+				  FROM M_MODEM_INFO AB
+				  WHERE AB.IS_DELETED=0 AND 
+				        AB.MODEM_NO IS NOT NULL
+			</value>
+        </property>
+    </bean>  
+    
+    <!-- Carrier List -->
+    <bean id="carrierCodeList"
+          class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+          init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT f.ID_SUPPLIER, f.SUPPLIER_NAME 
+				FROM M_SUPPLIER_H f 
+				WHERE f.IS_DELETED=0
+				ORDER BY SUPPLIER_NAME ASC
+			</value>
+        </property>
+    </bean>
+    
+   <!-- Country List -->
+   <bean id="countryCodeList"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	  SELECT RESOURCE_ID, VALUE 
+            	  FROM RESOURCESMAINT
+            	  WHERE VALUE IS NOT NULL AND
+            	  		CATEGORY='COUNTRY'
+            	  ORDER BY VALUE ASC
+			</value>
+        </property>
+    </bean> 
+         
+   <!-- Firewall No List -->
+   <bean id="firewallNoCodeList"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	  SELECT FB.FIREWALL_NO, FB.FIREWALL_NO 
+            	  FROM M_FIREWALL_NO FB
+            	  WHERE FIREWALL_NO IS NOT NULL 
+            	  ORDER BY FB.FIREWALL_NO ASC
+			</value>
+        </property>
+    </bean> 
+   
+   <!-- Firewall Type List -->
+   <bean id="firewallTypeCodeList"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	  SELECT FA.FIREWALL_TYPE, FA.FIREWALL_TYPE
+            	  FROM M_FIREWALL_TYPE FA
+            	  WHERE FIREWALL_TYPE IS NOT NULL
+                  AND FA.IS_DELETED='0'
+            	  ORDER BY FA.FIREWALL_TYPE ASC
+			</value>
+        </property>
+    </bean>  
+
+   <!-- Firewall Model List -->
+   <bean id="firewallModelCodeList"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	  SELECT FC.FIREWALL_MODEL, FC.FIREWALL_MODEL
+            	  FROM M_FIREWALL_MODEL FC
+            	  WHERE FIREWALL_MODEL IS NOT NULL
+                  AND FC.IS_DELETED='0'
+            	  ORDER BY FC.FIREWALL_MODEL ASC
+			</value>
+        </property>
+    </bean>  
+   
+   <bean id="LIST_EQUIP_MAXPOWER"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>select ID_MAX_POWER, MAX_POWER 
+            		from M_EQUIP_MAXPOWER
+            		where IS_DELETED = 0
+            		order by MAX_POWER asc</value>
+        </property>
+    </bean>
+    
+    <bean id="LIST_EQUIP_LOCATION"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>select ID_EQUIP_LOCATION, EQUIP_LOCATION 
+            		from M_EQUIP_LOCATION
+            		where IS_DELETED = 0
+            		order by EQUIP_LOCATION asc</value>
+        </property>
+    </bean>
+    
+    <bean id="LIST_EQUIP_SUITE"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>select ID_EQUIP_SUITE, EQUIP_SUITE 
+            		from M_EQUIP_SUITE
+            		where IS_DELETED = 0
+            		order by EQUIP_SUITE asc</value>
+        </property>
+    </bean>
+  
+</beans>

@@ -1,0 +1,56 @@
+#tableCompanyBank{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+}
+#tableCompanyBank tr.header{
+	background-color:#CEE7FF;
+}
+
+.groupButton{
+	margin-top:20px;
+}
+
+.subHeader {
+	background-color:#F8F8F8;
+	height: 0.28in;
+	color: #333399;	
+	text-align: left;
+	vertical-align: middle;
+	border: solid 2px #CECECE;
+	border-left-color: white;
+	border-right-color: white;
+	width: 100%;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+a img{
+	border:0px;
+}
+
+.companyBank td{
+   padding-top:5px;
+   vertical-align: top;
+   border-top:1px solid #CEE7FF;
+}
+.bankAccount td{
+   vertical-align: top;
+   border-bottom:1px solid #CEE7FF;
+}
+.grayCode{
+    padding-top: 10px;
+    color: gray;
+}
+#tableBankAccount{
+    width:100%;
+    border-collapse:collapse;
+    border:1px solid #F2DCDA;
+}
+#tableBankAccount td{
+    border-top:1px solid #F2DCDA;
+    border-bottom:1px solid #F2DCDA;
+}
+#tableBankAccount .subtableHeader{
+    background-color: #F2DCDA;
+}

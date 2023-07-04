@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_GBS">
+
+<update id="updateGlobalSetting" parameterClass="nttdm.bsys.m_gbs.bean.ParameterObject">
+	UPDATE M_GSET_D C 
+		SET 
+			C.SET_VALUE = #setValue#,
+			C.DATE_UPDATED = sysdate,
+			C.ID_LOGIN = #idLogin#,
+			C.ID_AUDIT = #idAudit#
+		WHERE
+			C.ID_SET = #idSet# 
+			AND C.SET_SEQ = #setSeq#
+</update>
+<select id="selectGlobalSettings" resultClass="nttdm.bsys.m_gbs.bean.GSettingBean">
+		SELECT
+			ID_SET AS idSet,
+			SET_SEQ AS setSeq,
+			SET_VALUE AS setValue,
+			SET_DESC AS setDesc,
+			IS_DELETED AS isDeleted,
+			ID_LOGIN AS idLogin,
+			SET_APPLY as setApply
+		FROM
+			M_GSET_D C
+  </select>
+  <select id="GET_IS_CHECK_MUL_CHAR" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'MULTI_BYTE_CHK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+  </select>
+  
+  <select id="getCarriers" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        SELECT 
+        f.ID_SUPPLIER as itemId, 
+        f.SUPPLIER_NAME as itemName
+        FROM M_SUPPLIER_H f 
+        WHERE f.IS_DELETED=0
+        ORDER BY SUPPLIER_NAME ASC
+  </select>
+  <!--Add by MiffyAn Start  -->
+  <select id="getComplayType" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+      SELECT A.ID_CO_TYPE as itemId 
+           , A.co_type as itemCode
+           , A.CO_TYPE_DESC as itemName
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_CO_TYPE A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                 , CO_TYPE  
+            FROM M_CUST 
+            WHERE IS_DELETED ='0' 
+            GROUP BY CO_TYPE
+              ) B 
+      ON A.CO_TYPE = B.CO_TYPE
+      WHERE A.IS_DELETED = '0'
+      ORDER BY A.CO_TYPE ASC
+  </select>
+  <select id="getComplayCategory" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+      SELECT A.ID_CO_CATEGORY as itemId 
+           , A.CO_CATEGORY as itemCode
+           , A.CO_CATEGORY_DESC as itemName
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_CO_CATEGORY A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                 , CO_CATEGORY  
+            FROM M_CUST 
+            WHERE IS_DELETED ='0' 
+            GROUP BY CO_CATEGORY
+              ) B 
+      ON TRIM(A.CO_CATEGORY) = TRIM(B.CO_CATEGORY)
+         WHERE A.IS_DELETED = '0'
+         ORDER BY A.CO_CATEGORY
+  </select>
+  <select id="getComplaySubCategory" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+       SELECT A.ID_CO_SUBCATEGORY as itemId 
+         , A.CO_SUBCATEGORY as itemCode
+           , A.CO_SUBCATEGORY_DESC as itemName
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_CO_SUBCATEGORY A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                 , CO_SUB_CATEGORY  
+            FROM M_CUST 
+            WHERE IS_DELETED ='0' 
+            GROUP BY CO_SUB_CATEGORY
+              ) B 
+      ON TRIM(A.CO_SUBCATEGORY) = TRIM(B.CO_SUB_CATEGORY)
+         WHERE A.IS_DELETED = '0'
+         ORDER BY A.CO_SUBCATEGORY
+  </select>
+  <select id="getComplayPrpduct" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+       SELECT A.ID_PRODUCT as itemId 
+           , A.PRODUCT_CODE as itemCode
+           , A.PRODUCT_DESC as itemName
+           , A.SVC_GRP as category
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_PRODUCT A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                 , PRODUCT_CODE
+            FROM M_SVC
+            WHERE IS_DELETED ='0' 
+            GROUP BY PRODUCT_CODE
+              ) B 
+      ON TRIM(A.PRODUCT_CODE) = TRIM(B.PRODUCT_CODE)
+         WHERE A.IS_DELETED = '0'
+         ORDER BY A.SVC_GRP, A.PRODUCT_CODE
+  </select>
+  <select id="getCTUsedCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_CUST T WHERE T.IS_DELETED='0' AND TRIM(T.CO_TYPE)= TRIM(#itemCode#)
+  </select>
+  <select id="getCCUsedCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_CUST T WHERE T.IS_DELETED='0' AND TRIM(T.CO_CATEGORY)= TRIM(#itemCode#)
+  </select>
+  <select id="getCSUsedCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_CUST T WHERE T.IS_DELETED='0' AND TRIM(T.CO_SUB_CATEGORY)= TRIM(#itemCode#)
+  </select>
+  <select id="getProductUsedCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_SVC T WHERE T.IS_DELETED='0' AND TRIM(T.PRODUCT_CODE) =TRIM(#itemCode#)
+  </select>
+  <select id="getJNUsedCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_SVG T WHERE TRIM(T.JOURNAL_NO) = #itemCode#
+  </select>
+   <select id="getJournalNo" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+       SELECT A.JOURNAL_ID as itemId 
+           , A.JOURNAL_NO as itemCode
+           , A.DESCRIPTION as itemName
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_JOURNAL_NO A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                , JOURNAL_NO  
+            FROM M_SVG 
+         GROUP BY JOURNAL_NO
+              ) B 
+      ON TRIM(A.JOURNAL_NO) = TRIM(B.JOURNAL_NO)
+         WHERE A.IS_DELETED = '0'
+  </select>
+  <!--Add by MiffyAn End  -->
+    
+  <select id="getCarrierIsUsed" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_SUBSCRIPTION_INFO T WHERE T.IS_DELETED='0' AND T.CARRIER=#itemId#
+  </select>
+  
+  <select id="getCustomerGroup" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+         SELECT A.ID_AFFILIATE as itemId 
+           , A.AFFILIATE_CODE  as itemCode
+           , A.AFFILIATE_DESC as itemName
+           ,A.DESC_ABBR AS abbreviation
+           , DECODE(NVL(B.countNum, '0'),'0','N','Y')  AS isUsed
+      FROM M_AFFILIATE A 
+      LEFT JOIN (
+            SELECT COUNT(1) AS countNum 
+                 , AFFILIATE_CODE  
+            FROM M_CUST 
+            WHERE IS_DELETED ='0' 
+            GROUP BY AFFILIATE_CODE
+              ) B 
+      ON A.AFFILIATE_CODE = B.AFFILIATE_CODE
+         WHERE A.IS_DELETED = '0'
+         ORDER BY A.AFFILIATE_DESC
+        
+        
+  </select>
+  <!-- Add by Jing For #147 Start -->
+   <select id="getEndUser" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        select ID_END_USER as itemId,
+        	END_USER_CODE as itemCode,
+            END_USER_DESC  as itemName
+        from M_END_USER
+        where IS_DELETED = 0
+        order by END_USER_CODE ASC
+  </select> 
+  
+  <insert id="insertEndUser" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_END_USER.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_END_USER
+          (ID_END_USER, END_USER_CODE, END_USER_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+  </insert>
+    <!-- Add by MiffyAn Start  -->
+  <insert id="insertComplayType" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_CO_TYPE.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_CO_TYPE
+          (ID_CO_TYPE, CO_TYPE,CO_TYPE_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ID_AUDIT)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#,#idAudit#)
+   </insert>
+   <insert id="insertComplayCategory" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_CO_CATEGORY.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_CO_CATEGORY
+          (ID_CO_CATEGORY, CO_CATEGORY,CO_CATEGORY_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ID_AUDIT)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#,#idAudit#)
+   </insert>
+   <insert id="insertComplaySubCategory" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_CO_SUBCATEGORY.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_CO_SUBCATEGORY
+          (ID_CO_SUBCATEGORY, CO_SUBCATEGORY,CO_SUBCATEGORY_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ID_AUDIT)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#,#idAudit#)
+   </insert>
+   <insert id="insertComplayProduct" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_PRODUCT.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_PRODUCT
+          (ID_PRODUCT, PRODUCT_CODE,PRODUCT_DESC,SVC_GRP,IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ID_AUDIT)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#,#category#,#isDeleted#, sysdate, sysdate, #idLogin#,#idAudit#)
+   </insert>
+   <insert id="insertJournalNo" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_JOURNAL_NO.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_JOURNAL_NO
+          (JOURNAL_ID, JOURNAL_NO,DESCRIPTION, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ID_AUDIT)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#,#idAudit#)
+   </insert>
+    <update id="updateComplayType" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_CO_TYPE
+        SET 
+           CO_TYPE = #itemCode#,
+           CO_TYPE_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_CO_TYPE = #itemId#
+  </update>
+     <update id="updateComplayCategory" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_CO_CATEGORY
+        SET 
+           CO_CATEGORY = #itemCode#,
+           CO_CATEGORY_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_CO_CATEGORY = #itemId#
+  </update>
+     <update id="updateComplaySubCategory" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_CO_SUBCATEGORY
+        SET 
+           CO_SUBCATEGORY = #itemCode#,
+           CO_SUBCATEGORY_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_CO_SUBCATEGORY = #itemId#
+  </update>
+     <update id="updateComplayProduct" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_PRODUCT
+        SET 
+           PRODUCT_CODE = #itemCode#,
+           PRODUCT_DESC = #itemName#,
+           SVC_GRP=#category#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_PRODUCT = #itemId#
+  </update>
+   <update id="updateJournalNo" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_JOURNAL_NO
+        SET 
+           JOURNAL_NO = #itemCode#,
+           DESCRIPTION = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE JOURNAL_ID = #itemId#
+  </update>
+    <!--Add by MiffyAn End -->
+    
+    
+  <update id="updateEndUser" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_END_USER
+        SET 
+           END_USER_CODE = #itemCode#,
+           END_USER_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_END_USER = #itemId#
+  </update>
+  <!-- Add by Jing For #147 End -->
+  <select id="getCom" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_COM T WHERE T.IS_DELETED='0' AND T.AFFILIATE_CODE = #itemCode#
+  </select>
+  <select id="getCust" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_CUST T WHERE T.IS_DELETED='0' AND T.AFFILIATE_CODE = #itemCode#
+  </select>
+    
+  <select id="getEquipLocations" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        select ID_EQUIP_LOCATION as itemId,
+            EQUIP_LOCATION  as itemName
+        from M_EQUIP_LOCATION
+        where IS_DELETED = 0
+        order by EQUIP_LOCATION asc
+  </select>
+  <select id="getLocationIsUsed" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_RACK_POWER_D T WHERE T.IS_DELETED='0' AND T.EQUIP_LOCATION = #itemId#
+  </select>
+  
+  <!--  wcbeh@20160920 - add Master Location -->
+  <select id="getMasterLocation" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        select M.ID_LOCATION as itemId,
+            M.LOCATION_NAME  as itemName
+        from M_LOCATION M
+        where M.IS_DELETED = 0
+        order by M.LOCATION_NAME asc
+  </select>
+  <select id="getMasterLocationIsUsed" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(1) FROM T_CUST_PLAN_LINK T WHERE T.IS_DELETED='0' AND T.LOCATION = #itemName#
+  </select>
+    
+  <select id="getFirewallTypes" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        SELECT FA.ID_FIREWALL_TYPE as itemId, 
+        FA.FIREWALL_TYPE as itemName
+        FROM M_FIREWALL_TYPE FA
+        WHERE FIREWALL_TYPE IS NOT NULL
+        AND FA.IS_DELETED='0'
+        ORDER BY FA.FIREWALL_TYPE ASC
+  </select>
+  
+  <select id="getFirewallTypesIsUsed" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_FIREWALL T WHERE T.IS_DELETED='0' AND T.FIREWALL_TYPE=#itemName#
+  </select>
+  
+  <select id="getFirewallModels" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        SELECT FC.ID_FIREWALL_MODEL as itemId,
+        FC.FIREWALL_MODEL as itemName
+        FROM M_FIREWALL_MODEL FC
+        WHERE FIREWALL_MODEL IS NOT NULL
+        AND FC.IS_DELETED='0'
+        ORDER BY FC.FIREWALL_MODEL ASC
+  </select>
+    
+  <select id="getFirewallModelsIsUsed" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_FIREWALL T WHERE T.IS_DELETED='0' AND T.FIREWALL_MODEL = #itemName#
+  </select>
+  
+  <select id="getRateType" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        select ID_RATETYPE as itemId,
+        	RATETYPE_CODE as itemCode,
+            RATETYPE_DESC  as itemName,
+            END_USER as endUser,
+            MODE_TYPE as modeType
+        from M_RATE_TYPE2
+        where IS_DELETED = 0
+        order by RATETYPE_CODE ASC
+  </select>
+  <select id="getCustPlanLink" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_CUST_PLAN_LINK T WHERE T.IS_DELETED='0' AND T.RATE_TYPE2 = #itemCode#
+  </select>
+    
+  <insert id="insertCarriers" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_SUPPLIER_H.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_SUPPLIER_H
+            (ID_SUPPLIER, SUPPLIER_NAME, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES
+            (#itemIdInt#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+  </insert>
+  
+  <update id="updateCarriers" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_SUPPLIER_H
+        SET
+           SUPPLIER_NAME = #itemName#,
+           IS_DELETED    = #isDeleted#,
+           DATE_UPDATED  = sysdate,
+           ID_LOGIN      = #idLogin#
+        WHERE ID_SUPPLIER = #itemId#
+  </update>
+  
+  <insert id="insertCustomerGroup" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_AFFILIATE.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_AFFILIATE
+          (ID_AFFILIATE, AFFILIATE_CODE, AFFILIATE_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,DESC_ABBR)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#,#abbreviation#)
+  </insert>
+    
+  <update id="updateCustomerGroup" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_AFFILIATE
+        SET 
+           AFFILIATE_CODE = #itemCode#,
+           AFFILIATE_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#,
+           DESC_ABBR=#abbreviation#
+        WHERE ID_AFFILIATE = #itemId#
+  </update>
+  
+  <insert id="insertEquipLocations" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_EQUIP_LOCATION.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_EQUIP_LOCATION
+          (ID_EQUIP_LOCATION, EQUIP_LOCATION, IS_DELETED, DATE_CREATED, DATE_UPDATE, ID_LOGIN)
+        VALUES
+          (#itemIdInt#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+  </insert>
+    
+  <update id="updateEquipLocations" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_EQUIP_LOCATION
+        SET 
+           EQUIP_LOCATION = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATE = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_EQUIP_LOCATION = #itemId#
+  </update>
+  
+  <!-- wcbeh@20160920 - Master Location -->
+  <insert id="insertMasterLocation" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_LOCATION.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_LOCATION
+          (ID_LOCATION, LOCATION_NAME, IS_DELETED, DATE_CREATED, DATE_UPDATE, ID_LOGIN)
+        VALUES
+          (#itemIdInt#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+  </insert>
+    
+  <update id="updateMasterLocation" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_LOCATION
+        SET 
+           LOCATION_NAME = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATE = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_LOCATION = #itemId#
+  </update>
+  
+  <insert id="insertFirewallTypes" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_FIREWALL_TYPE.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_FIREWALL_TYPE
+          (ID_FIREWALL_TYPE, FIREWALL_TYPE, IS_DELETED, DATE_CREATED, DATE_UPDATE, ID_LOGIN)
+        VALUES
+          (#itemIdInt#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+  </insert>
+  
+  <update id="updateFirewallTypes" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_FIREWALL_TYPE
+        SET 
+           FIREWALL_TYPE = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATE = sysdate,
+           ID_LOGIN = #idLogin#
+         WHERE ID_FIREWALL_TYPE = #itemId#
+   </update>
+   
+   <insert id="insertFirewallModels" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_FIREWALL_MODEL.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_FIREWALL_MODEL
+          (ID_FIREWALL_MODEL, FIREWALL_MODEL, IS_DELETED, DATE_CREATED, DATE_UPDATE, ID_LOGIN)
+        VALUES
+          (#itemIdInt#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#)
+   </insert>
+   
+   <update id="updateFirewallModels" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_FIREWALL_MODEL
+        SET 
+           FIREWALL_MODEL = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATE = sysdate,
+           ID_LOGIN = #idLogin#
+        WHERE ID_FIREWALL_MODEL = #itemId#
+    </update>
+    
+  <insert id="insertRateType" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        <selectKey keyProperty="itemIdInt" resultClass="java.lang.Integer" type="pre">
+			SELECT SEQ_M_RATE_TYPE2.NEXTVAL FROM dual
+		</selectKey>
+        INSERT INTO M_RATE_TYPE2
+          (ID_RATETYPE, RATETYPE_CODE, RATETYPE_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, END_USER, MODE_TYPE)
+        VALUES
+          (#itemIdInt#, #itemCode#, #itemName#, #isDeleted#, sysdate, sysdate, #idLogin#, #endUser#, #modeType#)
+  </insert>
+    
+  <update id="updateRateType" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_RATE_TYPE2
+        SET 
+           RATETYPE_CODE = #itemCode#,
+           RATETYPE_DESC = #itemName#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#,
+           END_USER = #endUser#,
+           MODE_TYPE = #modeType#
+        WHERE ID_RATETYPE = #itemId#
+  </update>
+  
+  <select id="getTaxCode" resultClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        SELECT ID_TAX as taxId,
+        		TAX_CODE as taxCode,
+        		TAX_RATE as taxRate,
+        		ACC_CODE as accountCode,
+        		DESCRIPTION1 taxDesr1,
+        		DESCRIPTION2 taxDesr2
+		FROM M_TAX
+		WHERE IS_DELETED='0'
+		ORDER BY TAX_CODE 
+  </select>
+  <select id="getPPMTaxCodeIsUsed" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_PLAN_D M WHERE M.APPLY_GST =#taxId# AND M.IS_DELETED='0'
+  </select>
+  <select id="getCPMTaxCodeIsUsed" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM T_CUST_PLAN_LINK T WHERE T.APPLY_GST =#taxId# AND T.IS_DELETED='0'
+  </select>
+  <insert id="insertTaxCode" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+  	<selectKey keyProperty="taxIdInt" resultClass="java.lang.Integer" type="pre">
+		SELECT SEQ_M_TAX.NEXTVAL FROM dual
+	</selectKey>	
+        INSERT INTO M_TAX
+          (ID_TAX,TAX_CODE, TAX_RATE, DESCRIPTION1, DESCRIPTION2,IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN,ACC_CODE)
+        VALUES
+          (#taxIdInt#, #taxCode#,#taxRate#,#taxDesr1#,#taxDesr2#,#isDeleted#, sysdate, sysdate, #idLogin#,#accountCode#)
+   </insert>
+   <update id="updateTaxCode" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+        UPDATE M_TAX
+        SET 
+           TAX_CODE = #taxCode#,
+           TAX_RATE=#taxRate#,
+           DESCRIPTION1=#taxDesr1#,
+           DESCRIPTION2=#taxDesr2#,
+           IS_DELETED = #isDeleted#,
+           DATE_UPDATED = sysdate,
+           ID_LOGIN = #idLogin#,
+           ACC_CODE = #accountCode#
+        WHERE ID_TAX = #taxId#
+    </update>
+    <select id="selectTaxId" resultClass="java.lang.String">
+    	SELECT  ID_TAX FROM M_TAX
+    	WHERE IS_DELETED = '0'  
+    </select>
+    <delete id="deleteTaxCode" parameterClass="nttdm.bsys.m_gbs.bean.ResultItem">
+    	UPDATE  M_TAX
+    		SET IS_DELETED = #isDeleted#,
+    		ID_LOGIN = #idLogin#,
+    		DATE_UPDATED = sysdate
+    	WHERE ID_TAX = #taxId#  
+    </delete>
+      <select id="getEndUserCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_CUST T WHERE T.IS_DELETED='0' AND T.END_USER = #itemCode#
+  	</select>
+	 <select id="getRTEndUserCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) FROM M_RATE_TYPE2 I WHERE I.IS_DELETED='0' AND I.END_USER = #itemCode#
+  	</select>
+</sqlMap>

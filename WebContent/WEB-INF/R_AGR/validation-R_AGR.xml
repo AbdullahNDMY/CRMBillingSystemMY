@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+        <form name="/R_AGR_R02BL">
+            <field property="tbxBillYear" depends="mask">
+                <msg name="mask" key="errors.ERR1SC018" />
+                <arg position="0" key="screen.r_agr.billYearFrom" />
+                <arg position="1" key="4 numerical value" resource="false" />
+                <var>
+                    <var-name>mask</var-name>
+                    <var-value>^\d{4}$</var-value><!-- number(4) -->
+                </var>
+            </field>
+            <field property="tbxBillYearTo" depends="mask">
+                <msg name="mask" key="errors.ERR1SC018" />
+                <arg position="0" key="screen.r_agr.billYearTo" />
+                <arg position="1" key="4 numerical value" resource="false" />
+                <var>
+                    <var-name>mask</var-name>
+                    <var-value>^\d{4}$</var-value><!-- number(4) -->
+                </var>
+            </field>
+        </form>
+        <form name="/R_AGR_R03BL">
+            <field property="tbxBillYear" depends="mask">
+                <msg name="mask" key="errors.ERR1SC018" />
+                <arg position="0" key="screen.r_agr.billYearFrom" />
+                <arg position="1" key="4 numerical value" resource="false" />
+                <var>
+                    <var-name>mask</var-name>
+                    <var-value>^\d{4}$</var-value><!-- number(4) -->
+                </var>
+            </field>
+            <field property="tbxBillYearTo" depends="mask">
+                <msg name="mask" key="errors.ERR1SC018" />
+                <arg position="0" key="screen.r_agr.billYearTo" />
+                <arg position="1" key="4 numerical value" resource="false" />
+                <var>
+                    <var-name>mask</var-name>
+                    <var-value>^\d{4}$</var-value><!-- number(4) -->
+                </var>
+            </field>
+        </form>
+    </formset>
+</form-validation>

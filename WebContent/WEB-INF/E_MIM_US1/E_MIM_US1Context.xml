@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <!--Blogic-->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MIM_US1/E_MIM_US1Blogic" scope="singleton">
+        <property name="businessLogic" ref="E_MIM_US1BlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mim_us1.blogic.E_MIM_US1BlogicBLogic"
+        id="E_MIM_US1BlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/E_MIM_US1/E_MIN_US1DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MIM_US1/E_MIM_US1_2Blogic" scope="singleton">
+        <property name="businessLogic" ref="E_MIM_US1_2BlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mim_us1.blogic.E_MIM_US1_2BlogicBLogic"
+        id="E_MIM_US1_2BlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_MIM_US1/E_MIM_US1_3Blogic" scope="singleton">
+        <property name="businessLogic" ref="E_MIM_US1_3BlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mim_us1.blogic.E_MIM_US1_3BlogicBLogic"
+        id="E_MIM_US1_3BlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MIM_US1/E_MIM_US2Blogic" scope="singleton">
+        <property name="businessLogic" ref="E_MIM_US2BlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mim_us1.blogic.E_MIM_US2BlogicBLogic"
+        id="E_MIM_US2BlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

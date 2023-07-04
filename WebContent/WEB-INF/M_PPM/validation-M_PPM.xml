@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+      <form name="/M_PPM_S02SaveBL">
+      	<field property="plan.txtPlanName" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.serviceName"/>
+		</field>
+      	<field property="plan.txtPlanDescription" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.serviceDesc"/>
+		</field>
+      	<field property="plan.rdbCustomerType" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.customertype"/>
+		</field>
+      	<field property="plan.cboBillCurrenc" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.billcurr"/>
+		</field>
+		<field indexedListProperty="plan.services" property="tbxServiceName" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.svcName"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel1" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel2" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateType" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratetype"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateMode" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratemode"/>
+		</field>
+		<field indexedListProperty="plan.services" property="tbxRate" depends="required,mask">
+			<msg name="required" key="errors.ERR1SC018"/>
+			<msg name="mask" key="errors.ERR1SC018"/>
+			<arg position="0" key="screen.m_ppms02.rate"/>
+			<arg position="1" key="screen.m_ppms02.value"/>
+			<var>
+				<var-name>mask</var-name>
+				<var-value>^\d{1,13}([.]\d{0,2})?$</var-value><!-- number(15,2) -->
+			</var>
+		</field>
+      </form>
+      <form name="/M_PPM_S02Save2BL">
+      	<field property="plan.txtPlanName" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.serviceName"/>
+		</field>
+      	<field property="plan.txtPlanDescription" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.serviceDesc"/>
+		</field>
+      	<field property="plan.rdbCustomerType" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.customertype"/>
+		</field>
+      	<field property="plan.cboBillCurrenc" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.billcurr"/>
+		</field>
+		<field indexedListProperty="plan.services" property="tbxServiceName" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.svcName"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel1" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel2" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateType" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratetype"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateMode" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratemode"/>
+		</field>
+		<field indexedListProperty="plan.services" property="tbxRate" depends="required,mask">
+			<msg name="required" key="errors.ERR1SC018"/>
+			<msg name="mask" key="errors.ERR1SC018"/>
+			<arg position="0" key="screen.m_ppms02.rate"/>
+			<arg position="1" key="screen.m_ppms02.value"/>
+			<var>
+				<var-name>mask</var-name>
+				<var-value>^\d{1,13}([.]\d{0,2})?$</var-value><!-- number(15,2) -->
+			</var>
+		</field>
+      </form>
+      <!-- Save Plan Validation Start -->
+      <form name="/M_PPM_S02SavePlanBL">
+      <field indexedListProperty="plan.services" property="tbxServiceName" depends="required">
+			<msg name="required" key="errors.ERR1SC005"/>
+			<arg position="0" key="screen.m_ppms02.svcName"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel1" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboSvcLevel2" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.categoryAndService"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateType" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratetype"/>
+		</field>
+		<field indexedListProperty="plan.services" property="cboRateMode" depends="required">
+			<msg name="required" key="errors.ERR1SC038"/>
+			<arg position="0" key="screen.m_ppms02.ratemode"/>
+		</field>
+		<field indexedListProperty="plan.services" property="tbxRate" depends="required,mask">
+			<msg name="required" key="errors.ERR1SC018"/>
+			<msg name="mask" key="errors.ERR1SC018"/>
+			<arg position="0" key="screen.m_ppms02.rate"/>
+			<arg position="1" key="screen.m_ppms02.value"/>
+			<var>
+				<var-name>mask</var-name>
+				<var-value>^\d{1,13}([.]\d{0,2})?$</var-value><!-- number(15,2) -->
+			</var>
+		</field>
+      </form>
+      <!-- Save Plan Validation End -->
+    </formset>
+</form-validation>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_BTH/RP_B_BTH_P01_01BL" scope="singleton">
+        <property name="businessLogic" ref="RP_B_BTH_P01_01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_BTH/RP_B_BTH_P01_02BL" scope="singleton">
+        <property name="businessLogic" ref="RP_B_BTH_P01_02BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/B_BTH/SC_B_BTH_P01SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.b_bth.blogic.RP_B_BTH_P01_01BLogic"
+        id="RP_B_BTH_P01_01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    <bean class="nttdm.bsys.b_bth.blogic.RP_B_BTH_P01_02BLogic"
+        id="RP_B_BTH_P01_02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_BTH/SC_B_BTH_P01DSP" scope="singleton"/>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/B_BTH/RP_B_BTH_P01_03BL" scope="singleton">
+        <property name="businessLogic" ref="RP_B_BTH_P01_03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_bth.blogic.RP_B_BTH_P01_03BLogic"
+        id="RP_B_BTH_P01_03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/B_BTH/RP_B_BTH_P01_04BL" scope="singleton">
+        <property name="businessLogic" ref="RP_B_BTH_P01_04BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_bth.blogic.RP_B_BTH_P01_04BLogic"
+        id="RP_B_BTH_P01_04BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+</beans>

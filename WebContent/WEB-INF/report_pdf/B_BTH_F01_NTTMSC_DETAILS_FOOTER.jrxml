@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_BTH_F01_NTTMSC_DETAILS_FOOTER" pageWidth="553" pageHeight="802" columnWidth="553" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_BTH_F01_NTTMSC_STYLE.jrtx"]]></template>
+	<style name="border_bg" backcolor="#CCCCCC" isBlankWhenNull="true" fontName="Times New Roman" fontSize="10" isBold="true">
+		<box leftPadding="2" rightPadding="2">
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="currency" class="java.lang.String"/>
+	<parameter name="convertCur" class="java.lang.String"/>
+	<parameter name="curRate" class="java.lang.String"/>
+	<parameter name="billAmount" class="java.math.BigDecimal"/>
+	<parameter name="exportAmount" class="java.math.BigDecimal"/>
+	<parameter name="isDisplay" class="java.lang.String"/>
+	<parameter name="fixedForex" class="java.math.BigDecimal"/>
+	<parameter name="curWording" class="java.lang.String"/>
+	<parameter name="totalWording" class="java.lang.String"/>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement style="border_bg" x="0" y="0" width="481" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["GrandTotal ("+$P{currency}+")"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="border_bg" x="481" y="0" width="72" height="14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{billAmount}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{isDisplay}.equals( "1" ) && $P{fixedForex} == null]]></printWhenExpression>
+			<textField>
+				<reportElement style="border_bg" x="0" y="0" width="481" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["GrandTotal ("+$P{convertCur}+") @ Forex "+$P{curRate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="border_bg" x="481" y="0" width="72" height="14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{exportAmount}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{isDisplay}.equals( "1" ) && $P{fixedForex} != null]]></printWhenExpression>
+			<textField>
+				<reportElement style="border_bg" x="0" y="0" width="481" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["GrandTotal ("+$P{convertCur}+") @ Fixed Forex "+$P{curRate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="border_bg" x="481" y="0" width="72" height="14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{exportAmount}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="553" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["(" + $P{curWording} + " : " + $P{totalWording} + " only)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

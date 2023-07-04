@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+   <!-- Action forwarding to B_SSM_S04_Page -->
+   <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+         name="/B_SSM_S04/B_SSM_S04_Action" 
+         scope="prototype"/>
+   
+   <!-- Action processing requests displaying sub info from B_SSM_S04_Page -->	        
+   <bean  class="nttdm.bsys.b_ssm.s04.action.B_SSM_S04_Request_Process_Action"
+          name="/B_SSM_S04/B_SSM_S04_View_Action" 
+          scope="prototype">      
+   </bean>        
+  
+   <!-- Action processing business from requests of B_SSM_S04_Page -->	        
+   <bean class="nttdm.bsys.b_ssm.s04.action.B_SSM_S04_BProcess_Action"
+         name="/B_SSM_S04/B_SSM_S04_Request_Process_Action" 
+         scope="prototype">
+        <property name="businessLogic" 
+        		  ref="B_SSM_S04_Request_Process_Blogic"/>
+   </bean>  
+   
+   <!-- Bean Blogic processing request from B_SSM_S04_Page -->
+   <bean class="nttdm.bsys.b_ssm.s04.blogic.B_SSM_S04_Request_Process_Blogic"
+         id="B_SSM_S04_Request_Process_Blogic" 
+         scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+   </bean>    
+   
+   <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/B_SSM_S04/B_SSM_S04_SCR" scope="singleton"/>
+   <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_SSM_S04/B_SSM_S04_DSP" scope="singleton"/>
+        
+   <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_SSM_S04/B_SSM_S04e_InitBlogic" scope="singleton">
+        <property name="businessLogic" ref="B_SSM_S04e_InitBlogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_ssm.s04.blogic.B_SSM_S04e_InitBlogic"
+        id="B_SSM_S04e_InitBlogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_SSM_S04/B_SSM_S04e_SaveBlogic" scope="singleton">
+        <property name="businessLogic" ref="B_SSM_S04e_SaveBlogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_ssm.s04.blogic.B_SSM_S04e_SaveBlogic"
+        id="B_SSM_S04e_SaveBlogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

@@ -1,0 +1,3139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+ 	<import resource="./B_SSM_S01/B_SSM_S01_Context.xml"/>	
+ 	<import resource="./B_SSM_S02/B_SSM_S02_Context.xml"/>
+ 	<import resource="./RadiusApplicationContext.xml"/>
+  	<bean id="LIST_SYSTEM_BASE"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT m.id_set,m.set_value
+            	FROM m_gset_d m 
+            	WHERE m.id_set='SYSTEMBASE' and m.set_seq=1 and m.set_apply=1
+			</value>
+        </property>
+    </bean>
+    <bean id="LIST_SERVICE_ROW"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader" init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT m.id_set,m.set_value
+            	FROM m_gset_d m 
+            	WHERE m.id_set='SERVICEROW' and m.set_seq=1 and m.set_apply=1
+			</value>
+        </property>
+    </bean>
+    <bean id="LIST_MASTER_LOCATION" 
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader" init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT m.location_name, m.id_location
+            	FROM  m_location m
+            	WHERE m.is_deleted='0'
+            	ORDER BY m.location_name asc
+			</value>
+        </property>
+    </bean>
+  	<bean id="LIST_TRANSFER_NAME"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT m.id_user, m.user_name 
+            	FROM m_user m 
+            	WHERE m.id_user in(
+					SELECT e.pic
+					FROM m_wf_action e, m_atr_tfr d
+					WHERE
+					e.section_no = d.section_no and e.action_type='AA'
+				)
+			</value>
+        </property>
+    </bean>
+    <bean id="LIST_ROLE_BY_USER"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	 SELECT a.id_user, b.role_name 
+					FROM m_user a, rolemaint b
+					WHERE a.id_role=b.id_role
+			</value>
+        </property>
+    </bean>
+    <bean id="PAYMENT_REF_HEADER"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+                SELECT r.RESOURCE_ID, r.VALUE FROM RESOURCESMAINT r WHERE r.category='PAYMENT_REF_HEADER'
+            </value>
+        </property>
+    </bean>
+    <bean id="LIST_BANK_NAME" 
+    		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        	init-method="load">
+        	<property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+	            SELECT bank_full_name, bank_full_name 
+	            FROM m_bank 
+            </value>
+        </property>
+    
+    </bean>
+    <bean id="LIST_MODULE"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+	            SELECT id_sub_module,sub_mod_name
+				FROM m_sub_modules
+				where IS_FUNCTION_NAME= '1'
+				ORDER BY sub_mod_name ASC
+            </value>
+        </property>
+    </bean>    
+    <bean id="LIST_USER_ID"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_user, id_user as name FROM m_user ORDER BY id_user</value>
+        </property>
+    </bean>
+    <bean id="LIST_USER_NAME"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_user, user_name FROM m_user WHERE is_deleted=0 AND user_status=1 ORDER BY user_name</value>
+        </property>
+    </bean>
+    <bean id="LIST_PIC"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT a.id_user, a.user_name FROM m_user a WHERE a.is_deleted=0 ORDER BY a.user_name</value>
+        </property>
+    </bean>
+    <bean id="LIST_DEPARTMENT"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_dept, dept_name FROM deptmaint WHERE is_deleted='0' ORDER BY dept_name </value>
+        </property>
+    </bean>
+    <bean id="LIST_DIVISION"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_div, div_name FROM divmaint WHERE is_deleted='0' ORDER BY div_name </value>
+        </property>
+    </bean>
+    <bean id="LIST_ROLE"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_role, role_name FROM rolemaint WHERE is_deleted='0' ORDER BY role_name </value>
+        </property>
+    </bean>
+    <bean id="LIST_CUSTOMER"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_cust, cust_name FROM m_cust WHERE is_deleted='0' ORDER BY cust_name ASC </value>
+        </property>
+    </bean>
+    <bean id="LIST_SCREEN"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>SELECT id_screen, screen_desc FROM m_screen ORDER BY id_screen </value>
+        </property>
+  	</bean> 
+	<bean id="LIST_DOCTYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="DQUO">
+					<value>Quotation</value>
+				</entry>
+				<entry key="DPMR">
+					<value>PMR</value>
+				</entry>
+				<entry key="DBZR">
+					<value>Business Risk</value>
+				</entry>
+				<entry key="DCTC">
+					<value>Contract/ T;ampC</value>
+				</entry>
+				<entry key="DPRI">
+					<value>Pricing</value>
+				</entry>
+				<entry key="DMRG">
+					<value>Margin</value>
+				</entry>
+				<entry key="DCRC">
+					<value>Credit Control</value>
+				</entry>
+				<entry key="DFRX">
+					<value>Forex</value>
+				</entry>
+				<entry key="DCOV">
+					<value>Contact Value</value>
+				</entry>
+				<entry key="DCPO">
+					<value>Customer PO</value>
+				</entry>
+				<entry key="DSGC">
+					<value>Signed Contract</value>
+				</entry>
+				<entry key="DIPA">
+					<value>IP Add. Allocation Form</value>
+				</entry>
+				<entry key="DIMP">
+					<value>Implementation Form</value>
+				</entry>
+				<entry key="DTMF">
+					<value>Termination Form</value>
+				</entry>
+				<entry key="DTML">
+					<value>Termination Letter</value>
+				</entry>
+				<entry key="DPCO">
+					<value>Purchase Order</value>
+				</entry>
+				<entry key="DAGM">
+					<value>Agreement</value>
+				</entry>
+				<entry key="DCRF">
+					<value>Change Request Form</value>
+				</entry>
+				<entry key="DINV">
+					<value>Invoice</value>
+				</entry>
+				<entry key="DMRT">
+					<value>MRTG</value>
+				</entry>
+				<entry key="DTTT">
+					<value>Trouble Ticket</value>
+				</entry>
+				<entry key="ALTN">
+					<value>Alert Notification</value>
+				</entry>
+				<entry key="DOTH">
+					<value>Others</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="LIST_CODEMAINT"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="USRID">
+					<value>User ID</value>
+				</entry>
+				<entry key="QCSNO">
+					<value>QCS No.</value>
+				</entry>
+				<entry key="QUONO">
+					<value>Quotation No.</value>
+				</entry>
+				<entry key="BIFNO">
+					<value>BIF Invoice No.</value>
+				</entry>
+				<entry key="BIFDN">
+				    <value>BIF Debit Note No.</value>
+			    </entry>
+			    <entry key="BIFCN">
+					<value>BIF Credit Note No.</value>
+				</entry>
+				<entry key="INVNO">
+					<value>Tax Invoice No.</value>
+				</entry>
+				<entry key="DBTNO">
+					<value>Debit Note No.</value>
+				</entry>
+				<entry key="CDTNO">
+					<value>Credit Note No.</value>
+				</entry>
+				<entry key="NTINV">
+					<value>Non Tax Invoice No.</value>
+				</entry>
+				<entry key="BACNO">
+					<value>Billing Account No.</value>
+				</entry>
+				<entry key="SCPID">
+					<value>Subscription ID</value>
+				</entry>
+				<entry key="RCPNO">
+					<value>Receipt No.</value>
+				</entry>
+				<entry key="CSTID">
+					<value>Customer ID</value>
+				</entry>	
+				<entry key="SOANO">
+					<value>Statement of Account</value>
+				</entry>						
+			</map>
+		</property>
+	</bean>  	
+	<bean id="LIST_TYPE_VAL"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="01">
+					<value>YY</value>
+				</entry>
+				<entry key="02">
+					<value>YYYY</value>
+				</entry>
+				<entry key="03">
+					<value>YYYYMMDD</value>
+				</entry>
+				<entry key="04">
+					<value>YYMMDD</value>
+				</entry>
+				<entry key="07">
+					<value>YYY</value>
+				</entry>
+				<entry key="08">
+					<value>YYMM</value>
+				</entry>
+				<entry key="09">
+					<value>MM</value>
+				</entry>
+				<entry key="05">
+					<value>Running No.</value>
+				</entry>
+				<entry key="06">
+					<value>Prefix</value>
+				</entry>
+				
+			</map>
+		</property>
+	</bean>	
+	<bean id="LIST_OPERATOR"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="EQL">
+					<value>=</value>
+				</entry>
+				<entry key="LRG">
+					<value>&gt;</value>
+				</entry>
+				<entry key="SML">
+					<value>&lt;</value>
+				</entry>
+				<entry key="ELR">
+					<value>=&gt;</value>
+				</entry>
+				<entry key="ESM">
+					<value>=&lt;</value>
+				</entry>
+				<entry key="NTE">
+					<value>!=</value>
+				</entry>
+			</map>
+		</property>
+	</bean>	
+	<bean id="LIST_RESET_NO"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>No Reset</value>
+				</entry>
+				<entry key="1">
+					<value>Reset by Year</value>
+				</entry>
+				<entry key="2">
+					<value>Reset by Month</value>
+				</entry>
+			</map>
+		</property>
+	</bean>	
+	<bean id="LIST_CON1"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="contractvalue">
+					<value>Contract Value</value>
+				</entry>
+			</map>
+		</property>
+	</bean>	
+	<bean id="LIST_ACTION_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="AA">
+					<value>Approval &amp; Alert</value>
+				</entry>
+				<entry key="AO">
+					<value>Alert Only</value>
+				</entry>
+			</map>
+		</property>
+	</bean>	
+	<bean id="LIST_CURRENCY_SYMBOL"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		   	<entry key="CNY"><value>¥</value></entry>
+			<entry key="EUR"><value>€</value></entry>
+			<entry key="GBP"><value>£</value></entry>
+			<entry key="JPY"><value>¥</value></entry>
+			<entry key="MYR"><value>RM</value></entry>
+			<entry key="SGD"><value>$</value></entry>
+			<entry key="THB"><value>฿</value></entry>
+			<entry key="USD"><value>$</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="LIST_ADDRESS"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		   	<entry key="BA"><value>Billing Address1</value></entry>
+		   	<entry key="BA2"><value>Billing Address2</value></entry>
+		   	<entry key="BA3"><value>Billing Address3</value></entry>
+		   	<entry key="BA4"><value>Billing Address4</value></entry>
+			<entry key="CA"><value>Correspondence</value></entry>
+			<entry key="RA"><value>Registered Address</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="LIST_MAILING_ADDRESS"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+	   		<entry key="RA"><value>Registered Address</value></entry>
+	   		<entry key="BA"><value>Billing Address</value></entry>
+		   	<entry key="CA"><value>Correspondence Address</value></entry>
+			<entry key="TA"><value>Technical Address</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="LIST_CURRENCY"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		<entry key="AFN"><value>Afghan Afghani</value></entry>
+		<entry key="ALL"><value>Albanian Lek</value></entry>
+		<entry key="DZD"><value>Algerian Dinar</value></entry>
+		<entry key="AOA"><value>Angolan Kwanza</value></entry>
+		<entry key="ARS"><value>Argentine Peso</value></entry>
+		<entry key="AMD"><value>Armenian Dram</value></entry>
+		<entry key="AWG"><value>Aruban Florin</value></entry>
+		<entry key="AUD"><value>Australian Dollar</value></entry>
+		<entry key="AZN"><value>Azerbaijan Manat</value></entry>
+		<entry key="BSD"><value>Bahamian Dollar</value></entry>
+		<entry key="BHD"><value>Bahraini Dinar</value></entry>
+		<entry key="BDT"><value>Bangladeshi Taka</value></entry>
+		<entry key="BBD"><value>Barbadian Dollar</value></entry>
+		<entry key="BYR"><value>Belarusian Ruble</value></entry>
+		<entry key="BZD"><value>Belize Dollar</value></entry>
+		<entry key="BMD"><value>Bermudian Dollar</value></entry>
+		<entry key="BTN"><value>Bhutanese Ngultrum</value></entry>
+		<entry key="BOB"><value>Bolivian Boliviano</value></entry>
+		<entry key="BAM"><value>Bosnia And Herzegovina Convertible Mark</value></entry>
+		<entry key="BWP"><value>Botswana Pula</value></entry>
+		<entry key="BRL"><value>Brazilian Real</value></entry>
+		<entry key="BND"><value>Brunei Dollar</value></entry>
+		<entry key="BGN"><value>Bulgarian Lev</value></entry>
+		<entry key="BIF"><value>Burundi Franc</value></entry>
+		<entry key="KHR"><value>Cambodian Riel</value></entry>
+		<entry key="CAD"><value>Canadian Dollar</value></entry>
+		<entry key="CVE"><value>Cape Verdean Escudo</value></entry>
+		<entry key="KYD"><value>Cayman Islands Dollar</value></entry>
+		<entry key="CLP"><value>Chilean Peso</value></entry>
+		<entry key="CNY"><value>Chinese Yuan Renminbi</value></entry>
+		<entry key="COP"><value>Colombian Peso</value></entry>
+		<entry key="XOF"><value>West African CFA Franc</value></entry>
+		<entry key="XAF"><value>Central African CFA Franc</value></entry>
+		<entry key="KMF"><value>Comorian Franc</value></entry>
+		<entry key="XPF"><value>CFP Franc</value></entry>
+		<entry key="CDF"><value>Congolese Franc</value></entry>
+		<entry key="CRC"><value>Costa Rican Colon</value></entry>
+		<entry key="HRK"><value>Croatian Kuna</value></entry>
+		<entry key="CUP"><value>Cuban Peso</value></entry>
+		<entry key="CYP"><value>Cyprus Pounds</value></entry>
+		<entry key="CZK"><value>Czech Koruna</value></entry>
+		<entry key="DKK"><value>Danish Krone</value></entry>
+		<entry key="DJF"><value>Djiboutian Franc</value></entry>
+		<entry key="DOP"><value>Dominican Peso</value></entry>
+		<entry key="XCD"><value>East Caribbean Dollar</value></entry>
+		<entry key="EGP"><value>Egyptian Pound</value></entry>
+		<entry key="SVC"><value>Salvadoran Colon</value></entry>
+		<entry key="ERN"><value>Eritrean Nakfa</value></entry>
+		<entry key="EEK"><value>Estonia Krooni </value></entry>
+		<entry key="ETB"><value>Ethiopian Birr</value></entry>
+		<entry key="EUR"><value>European Euro</value></entry>
+		<entry key="FKP"><value>Falkland Islands Pound</value></entry>
+		<entry key="FJD"><value>Fijian Dollar</value></entry>
+		<entry key="GMD"><value>Gambian Dalasi</value></entry>
+		<entry key="GEL"><value>Georgian Lari</value></entry>
+		<entry key="GHS"><value>Ghanaian Cedi</value></entry>
+		<entry key="GIP"><value>Gibraltar Pound</value></entry>
+		<entry key="XAU"><value>Gold Ounce</value></entry>
+		<entry key="GTQ"><value>Guatemalan Quetzal</value></entry>
+		<entry key="GGP"><value>Guernsey Pound</value></entry>
+		<entry key="GNF"><value>Guinean Franc</value></entry>
+		<entry key="GYD"><value>Guyanese Dollar</value></entry>
+		<entry key="HTG"><value>Haitian Gourde</value></entry>
+		<entry key="HNL"><value>Honduran Lempira</value></entry>
+		<entry key="HKD"><value>Hong Kong Dollar</value></entry>
+		<entry key="HUF"><value>Hungarian Forint</value></entry>
+		<entry key="ISK"><value>Icelandic Krona</value></entry>
+		<entry key="INR"><value>Indian Rupee</value></entry>
+		<entry key="IDR"><value>Indonesian Rupiah</value></entry>
+		<entry key="XDR"><value>SDR (Special Drawing Right)</value></entry>
+		<entry key="IRR"><value>Iranian Rial</value></entry>
+		<entry key="IQD"><value>Iraqi Dinar</value></entry>
+		<entry key="IMP"><value>Manx Pound</value></entry>
+		<entry key="ILS"><value>Israeli New Shekel</value></entry>
+		<entry key="JMD"><value>Jamaican Dollar</value></entry>
+		<entry key="JPY"><value>Japanese Yen</value></entry>
+		<entry key="JEP"><value>Jersey Pound</value></entry>
+		<entry key="JOD"><value>Jordanian Dinar</value></entry>
+		<entry key="KZT"><value>Kazakhstani Tenge</value></entry>
+		<entry key="KES"><value>Kenyan Shilling</value></entry>
+		<entry key="KPW"><value>North Korean Won</value></entry>
+		<entry key="KRW"><value>South Korean Won</value></entry>
+		<entry key="KWD"><value>Kuwaiti Dinar</value></entry>
+		<entry key="KGS"><value>Kyrgyzstani Som</value></entry>
+		<entry key="LAK"><value>Lao Kip</value></entry>
+		<entry key="LVL"><value>Latvian Lats</value></entry>
+		<entry key="LBP"><value>Lebanese Pound</value></entry>
+		<entry key="LSL"><value>Lesotho Loti</value></entry>
+		<entry key="LRD"><value>Liberian Dollar</value></entry>
+		<entry key="LYD"><value>Libyan Dinar</value></entry>
+		<entry key="LTL"><value>Lithuanian Litas</value></entry>
+		<entry key="MOP"><value>Macanese Pataca</value></entry>
+		<entry key="MKD"><value>Macedonian Denar</value></entry>
+		<entry key="MGA"><value>Malagasy Ariary</value></entry>
+		<entry key="MWK"><value>Malawian Kwacha</value></entry>
+		<entry key="MYR"><value>Malaysian Ringgit</value></entry>
+		<entry key="MVR"><value>Maldivian Rufiyaa</value></entry>
+		<entry key="MTL"><value>Malta Liri</value></entry>
+		<entry key="MRO"><value>Mauritania Ouguiyas</value></entry>
+		<entry key="MUR"><value>Mauritian Rupee</value></entry>
+		<entry key="MXN"><value>Mexican Peso</value></entry>
+		<entry key="MDL"><value>Moldovan Leu</value></entry>
+		<entry key="MNT"><value>Mongolian Tugrik</value></entry>
+		<entry key="MAD"><value>Moroccan Dirham</value></entry>
+		<entry key="MZN"><value>Mozambican Metical</value></entry>
+		<entry key="MMK"><value>Myanmar Kyat</value></entry>
+		<entry key="NAD"><value>Namibian Dollar</value></entry>
+		<entry key="NPR"><value>Nepalese Rupee</value></entry>
+		<entry key="ANG"><value>Netherlands Antillean Guilder</value></entry>
+		<entry key="NZD"><value>New Zealand Dollar</value></entry>
+		<entry key="NIO"><value>Nicaraguan Cordoba</value></entry>
+		<entry key="NGN"><value>Nigerian Naira</value></entry>
+		<entry key="NOK"><value>Norwegian Krone</value></entry>
+		<entry key="OMR"><value>Omani Rial</value></entry>
+		<entry key="PKR"><value>Pakistani Rupee</value></entry>
+		<entry key="XPD"><value>Palladium Ounces</value></entry>
+		<entry key="PAB"><value>Panama Balboa</value></entry>
+		<entry key="PGK"><value>Papua New Guinean Kina</value></entry>
+		<entry key="PYG"><value>Paraguayan Guarani</value></entry>
+		<entry key="PEN"><value>Peruvian Sol</value></entry>
+		<entry key="PHP"><value>Philippine Peso</value></entry>
+		<entry key="XPT"><value>Platinum Ounces</value></entry>
+		<entry key="PLN"><value>Polish Zloty</value></entry>
+		<entry key="QAR"><value>Qatari Riyal</value></entry>
+		<entry key="RON"><value>Romanian Leu</value></entry>
+		<entry key="RUB"><value>Russian Ruble</value></entry>
+		<entry key="RWF"><value>Rwandan Franc</value></entry>
+		<entry key="SHP"><value>Saint Helena Pound</value></entry>
+		<entry key="WST"><value>Samoan Tala</value></entry>
+		<entry key="STD"><value>Sao Tomean Dobra</value></entry>
+		<entry key="SAR"><value>Saudi Arabian Riyal</value></entry>
+		<entry key="SPL"><value>Seborga Luigini </value></entry>
+		<entry key="RSD"><value>Serbian Dinar</value></entry>
+		<entry key="SCR"><value>Seychellois Rupee</value></entry>
+		<entry key="SLL"><value>Sierra Leonean Leone</value></entry>
+		<entry key="XAG"><value>Silver Ounces</value></entry>
+		<entry key="SGD"><value>Singapore Dollar</value></entry>
+		<entry key="SBD"><value>Solomon Islands Dollar</value></entry>
+		<entry key="SOS"><value>Somali Shilling</value></entry>
+		<entry key="ZAR"><value>South African Rand</value></entry>
+		<entry key="LKR"><value>Sri Lankan Rupee</value></entry>
+		<entry key="SDG"><value>Sudanese Pound</value></entry>
+		<entry key="SRD"><value>Surinamese Dollar</value></entry>
+		<entry key="SZL"><value>Swazi Lilangeni</value></entry>
+		<entry key="SEK"><value>Swedish Krona</value></entry>
+		<entry key="CHF"><value>Swiss Franc</value></entry>
+		<entry key="SYP"><value>Syrian Pound</value></entry>
+		<entry key="TWD"><value>New Taiwan Dollar</value></entry>
+		<entry key="TJS"><value>Tajikistani Somoni</value></entry>
+		<entry key="TZS"><value>Tanzanian Shilling</value></entry>
+		<entry key="THB"><value>Thai Baht</value></entry>
+		<entry key="TOP"><value>Tongan Pa’anga</value></entry>
+		<entry key="TTD"><value>Trinidad And Tobago Dollar</value></entry>
+		<entry key="TND"><value>Tunisian Dinar</value></entry>
+		<entry key="TRY"><value>Turkish Lira</value></entry>
+		<entry key="TMM"><value>Turkmenistan Manat</value></entry>
+		<entry key="TVD"><value>Tuvalu Dollars</value></entry>
+		<entry key="UGX"><value>Ugandan Shilling</value></entry>
+		<entry key="UAH"><value>Ukrainian Hryvnia</value></entry>
+		<entry key="AED"><value>UAE Dirham</value></entry>
+		<entry key="GBP"><value>Pound Sterling</value></entry>
+		<entry key="USD"><value>United States Dollar</value></entry>
+		<entry key="UYU"><value>Uruguayan Peso</value></entry>
+		<entry key="UZS"><value>Uzbekistani Som</value></entry>
+		<entry key="VUV"><value>Vanuatu Vatu</value></entry>
+		<entry key="VEB"><value>Venezuelan Bolivar</value></entry>
+		<entry key="VEF"><value>Venezuelan Bolivar</value></entry>
+		<entry key="VND"><value>Vietnamese Dong</value></entry>
+		<entry key="YER"><value>Yemeni Rial</value></entry>
+		<entry key="ZMK"><value>Zambian Kwacha</value></entry>
+		<entry key="ZWD"><value>Zimbabwe Dollar</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="LIST_CUSTOMERTYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="CORP">
+					<value>Corporate</value>
+				</entry>
+				<entry key="CONS">
+					<value>Consumer</value>
+				</entry>		
+				<entry key="BOTH">
+					<value>Both</value>
+				</entry>		
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="LIST_GST"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT ID_TAX,'[' || TAX_RATE || '%]' || DESCRIPTION1 AS TD FROM M_TAX  WHERE IS_DELETED=0 order by ID_TAX
+			</value>
+        </property>
+    </bean>
+    
+    <bean id="LIST_GST_VALUE"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+            	SELECT ID_TAX,TAX_RATE TD FROM M_TAX  WHERE IS_DELETED=0 order by ID_TAX
+			</value>
+        </property>
+    </bean>
+     
+    <bean id="LIST_GST_CSB" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="0"><value>No</value></entry>
+			<entry key="1"><value>Yes</value></entry>
+		</map>
+		</property>
+	</bean>
+	<bean id="LIST_YES_NO" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+        <property name="codeListMap">
+        <map>
+            <entry key="1"><value>YES</value></entry>
+            <entry key="0"><value>NO</value></entry>
+        </map>
+        </property>
+    </bean>
+    <bean id="LIST_DISPLAY_ORDER" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+        <property name="codeListMap">
+        <map>
+            <entry key="0"><value>N/A</value></entry>
+            <entry key="1"><value>1</value></entry>
+            <entry key="2"><value>2</value></entry>
+            <entry key="3"><value>3</value></entry>
+        </map>
+        </property>
+    </bean>
+	<bean id="LIST_CONTACT_TYPE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="C1"><value>Contact 1</value> </entry>
+			<entry key="C2"><value>Contact 2</value></entry>
+			<entry key="C3"><value>Contact 3</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_PLANTAB" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="newplan"><value>New Plan</value> </entry>
+			<entry key="activeplan"><value>Active Plan</value></entry>
+			<entry key="terminatedplan"><value>Terminated Plan</value></entry>
+			<entry key="rejectedplan"><value>Rejected Plan</value></entry>
+			<entry key="inactiveplan"><value>Inactive Plan</value></entry>
+			<entry key="onetime"><value>One Time</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_PLANSTATUS" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+		    <entry key="PS0"><value>Cancelled</value> </entry>
+			<entry key="PS1"><value>Draft</value> </entry>
+			<entry key="PS2"><value>In-Approval</value></entry>
+			<entry key="PS3"><value>Active</value></entry>
+			<entry key="PS4"><value>Inactive</value></entry>
+			<entry key="PS5"><value>One Time</value></entry>
+			<entry key="PS6"><value>Suspended</value></entry>
+			<entry key="PS7"><value>Terminated</value></entry>
+			<entry key="PS8"><value>Rejected</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_PLANSTATUS_DISPLAY" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+		    <entry key="PS0"><value>PS0: Cancelled</value> </entry>
+			<entry key="PS1"><value>PS1: Draft</value> </entry>
+			<entry key="PS2"><value>PS2: In-Approval</value></entry>
+			<entry key="PS3"><value>PS3: Active</value></entry>
+			<entry key="PS4"><value>PS4: Inactive</value></entry>
+			<entry key="PS5"><value>PS5: One Time</value></entry>
+			<entry key="PS6"><value>PS6: Suspended</value></entry>
+			<entry key="PS7"><value>PS7: Terminated</value></entry>
+			<entry key="PS8"><value>PS8: Rejected</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_BILLINGSTATUS" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="BS0"><value>-</value></entry>
+			<entry key="BS1"><value>Not Started</value></entry>
+			<entry key="BS2"><value>In Progress</value></entry>
+			<entry key="BS3"><value>Completed</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_BILLINGSTATUS_DISPLAY" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="BS0"><value>BS0: -</value></entry>
+			<entry key="BS1"><value>BS1: Not Started</value></entry>
+			<entry key="BS2"><value>BS2: In Progress</value></entry>
+			<entry key="BS3"><value>BS3: Completed</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_PLANTYPE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="S"><value>Sub Plan</value> </entry>
+			<entry key="O"><value>Option Service</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_RATETYPE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="BA"><value>Base</value></entry>
+			<entry key="EX"><value>Excess</value></entry>
+		</map>
+		</property> 
+	</bean>
+	
+	<bean id="LIST_RATETYPE2" 
+    		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        	init-method="load" scope="prototype">
+        	<property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+	            SELECT  A.RATETYPE_CODE,'[' || A.RATETYPE_CODE || ']' || A.RATETYPE_DESC AS TD
+                              FROM M_RATE_TYPE2 A 
+                              WHERE A.IS_DELETED=0 
+                              ORDER BY A.ID_RATETYPE
+            </value>
+        </property>
+    </bean>
+
+	<bean id="LIST_TRANSACTIONTYPE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="IN"><value>Invoice</value></entry>
+			<entry key="DN"><value>Debit Note</value></entry>
+			<entry key="CN"><value>Credit Note</value></entry>
+			<entry key="NT"><value>Non Tax Invoice</value></entry>
+		</map>
+		</property> 
+	</bean>
+	
+	<bean id="LIST_RATEMODE" init-method="load" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader">
+		<property name="codeListMap">
+		<map>
+			<entry key="1"><value>Yearly</value></entry>
+			<entry key="2"><value>Bi-Annually</value></entry>
+			<entry key="3"><value>Quarterly</value></entry>
+			<entry key="4"><value>Bi-Monthly</value></entry>
+			<entry key="5"><value>Monthly</value></entry>
+			<entry key="6"><value>Once</value></entry>
+			<entry key="7"><value>Hourly</value></entry>
+			<entry key="8"><value>Minute</value></entry>
+		</map>
+		</property> 
+	</bean>
+	<bean id="LIST_COUNTRY"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		  <entry key="AF">
+				<value>		Afghanistan	</value>
+			</entry>
+			<entry key="AL">
+				<value>		Albania	</value>
+			</entry>
+			<entry key="DZ">
+				<value>		Algeria	</value>
+			</entry>
+			<entry key="AS">
+				<value>		American Samoa	</value>
+			</entry>
+			<entry key="AD">
+				<value>		Andorra	</value>
+			</entry>
+			<entry key="AO">
+				<value>		Angola	</value>
+			</entry>
+			<entry key="AI">
+				<value>		Anguilla	</value>
+			</entry>
+			<entry key="AQ">
+				<value>		Antarctica	</value>
+			</entry>
+			<entry key="AG">
+				<value>		Antigua and Barbuda	</value>
+			</entry>
+			<entry key="AR">
+				<value>		Argentina	</value>
+			</entry>
+			<entry key="AM">
+				<value>		Armenia	</value>
+			</entry>
+			<entry key="AW">
+				<value>		Aruba	</value>
+			</entry>
+			<entry key="AU">
+				<value>		Australia	</value>
+			</entry>
+			<entry key="AT">
+				<value>		Austria	</value>
+			</entry>
+			<entry key="AZ">
+				<value>		Azerbaijan	</value>
+			</entry>
+			<entry key="BS">
+				<value>		Bahamas	</value>
+			</entry>
+			<entry key="BH">
+				<value>		Bahrain	</value>
+			</entry>
+			<entry key="BD">
+				<value>		Bangladesh	</value>
+			</entry>
+			<entry key="BB">
+				<value>		Barbados	</value>
+			</entry>
+			<entry key="BY">
+				<value>		Belarus	</value>
+			</entry>
+			<entry key="BE">
+				<value>		Belgium	</value>
+			</entry>
+			<entry key="BZ">
+				<value>		Belize	</value>
+			</entry>
+			<entry key="BJ">
+				<value>		Benin	</value>
+			</entry>
+			<entry key="BM">
+				<value>		Bermuda	</value>
+			</entry>
+			<entry key="BT">
+				<value>		Bhutan	</value>
+			</entry>
+			<entry key="BO">
+				<value>		Bolivia	</value>
+			</entry>
+			<entry key="BA">
+				<value>		Bosnia and Herzegovina	</value>
+			</entry>
+			<entry key="BW">
+				<value>		Botswana	</value>
+			</entry>
+			<entry key="BV">
+				<value>		Bouvet Island	</value>
+			</entry>
+			<entry key="BR">
+				<value>		Brazil	</value>
+			</entry>
+			<entry key="IO">
+				<value>		British Indian Ocean Territory	</value>
+			</entry>
+			<entry key="BN">
+				<value>		Brunei Darussalam	</value>
+			</entry>
+			<entry key="BG">
+				<value>		Bulgaria	</value>
+			</entry>
+			<entry key="BF">
+				<value>		Burkina Faso	</value>
+			</entry>
+			<entry key="BI">
+				<value>		Burundi	</value>
+			</entry>
+			<entry key="KH">
+				<value>		Cambodia	</value>
+			</entry>
+			<entry key="CM">
+				<value>		Cameroon	</value>
+			</entry>
+			<entry key="CA">
+				<value>		Canada	</value>
+			</entry>
+			<entry key="CV">
+				<value>		Cape Verde	</value>
+			</entry>
+			<entry key="KY">
+				<value>		Cayman Islands	</value>
+			</entry>
+			<entry key="CF">
+				<value>		Central African Republic	</value>
+			</entry>
+			<entry key="TD">
+				<value>		Chad	</value>
+			</entry>
+			<entry key="CL">
+				<value>		Chile	</value>
+			</entry>
+			<entry key="CN">
+				<value>		China	</value>
+			</entry>
+			<entry key="CX">
+				<value>		Christmas Island	</value>
+			</entry>
+			<entry key="CC">
+				<value>		Cocos (Keeling) Islands	</value>
+			</entry>
+			<entry key="CO">
+				<value>		Colombia	</value>
+			</entry>
+			<entry key="KM">
+				<value>		Comoros	</value>
+			</entry>
+			<entry key="CG">
+				<value>		Congo	</value>
+			</entry>
+			<entry key="CK">
+				<value>		Cook Islands	</value>
+			</entry>
+			<entry key="CR">
+				<value>		Costa Rica	</value>
+			</entry>
+			<entry key="CI">
+				<value>		Cote D'Ivoire (Ivory Coast)	</value>
+			</entry>
+			<entry key="HR">
+				<value>		Croatia (Hrvatska)	</value>
+			</entry>
+			<entry key="CU">
+				<value>		Cuba	</value>
+			</entry>
+			<entry key="CY">
+				<value>		Cyprus	</value>
+			</entry>
+			<entry key="CZ">
+				<value>		Czech Republic	</value>
+			</entry>
+			<entry key="CS">
+				<value>		Czechoslovakia (former)	</value>
+			</entry>
+			<entry key="DK">
+				<value>		Denmark	</value>
+			</entry>
+			<entry key="DJ">
+				<value>		Djibouti	</value>
+			</entry>
+			<entry key="DM">
+				<value>		Dominica	</value>
+			</entry>
+			<entry key="TP">
+				<value>		East Timor	</value>
+			</entry>
+			<entry key="EC">
+				<value>		Ecuador	</value>
+			</entry>
+			<entry key="EG">
+				<value>		Egypt	</value>
+			</entry>
+			<entry key="SV">
+				<value>		El Salvador	</value>
+			</entry>
+			<entry key="GQ">
+				<value>		Equatorial Guinea	</value>
+			</entry>
+			<entry key="ER">
+				<value>		Eritrea	</value>
+			</entry>
+			<entry key="EE">
+				<value>		Estonia	</value>
+			</entry>
+			<entry key="ET">
+				<value>		Ethiopia	</value>
+			</entry>
+			<entry key="FK">
+				<value>		Falkland Islands (Malvinas)	</value>
+			</entry>
+			<entry key="FO">
+				<value>		Faroe Islands	</value>
+			</entry>
+			<entry key="FJ">
+				<value>		Fiji	</value>
+			</entry>
+			<entry key="FI">
+				<value>		Finland	</value>
+			</entry>
+			<entry key="FR">
+				<value>		France	</value>
+			</entry>
+			<entry key="FX">
+				<value>		France, Metropolitan	</value>
+			</entry>
+			<entry key="GF">
+				<value>		French Guiana	</value>
+			</entry>
+			<entry key="PF">
+				<value>		French Polynesia	</value>
+			</entry>
+			<entry key="TF">
+				<value>		French Southern Territories	</value>
+			</entry>
+			<entry key="GA">
+				<value>		Gabon	</value>
+			</entry>
+			<entry key="GM">
+				<value>		Gambia	</value>
+			</entry>
+			<entry key="GE">
+				<value>		Georgia	</value>
+			</entry>
+			<entry key="DE">
+				<value>		Germany	</value>
+			</entry>
+			<entry key="GH">
+				<value>		Ghana	</value>
+			</entry>
+			<entry key="GI">
+				<value>		Gibraltar	</value>
+			</entry>
+			<entry key="GB">
+				<value>		Great Britain (UK)	</value>
+			</entry>
+			<entry key="GR">
+				<value>		Greece	</value>
+			</entry>
+			<entry key="GL">
+				<value>		Greenland	</value>
+			</entry>
+			<entry key="GD">
+				<value>		Grenada	</value>
+			</entry>
+			<entry key="GP">
+				<value>		Guadeloupe	</value>
+			</entry>
+			<entry key="GU">
+				<value>		Guam	</value>
+			</entry>
+			<entry key="GT">
+				<value>		Guatemala	</value>
+			</entry>
+			<entry key="GN">
+				<value>		Guinea	</value>
+			</entry>
+			<entry key="GW">
+				<value>		Guinea-Bissau	</value>
+			</entry>
+			<entry key="GY">
+				<value>		Guyana	</value>
+			</entry>
+			<entry key="HT">
+				<value>		Haiti	</value>
+			</entry>
+			<entry key="HM">
+				<value>		Heard and McDonald Islands	</value>
+			</entry>
+			<entry key="HN">
+				<value>		Honduras	</value>
+			</entry>
+			<entry key="HK">
+				<value>		Hong Kong	</value>
+			</entry>
+			<entry key="HU">
+				<value>		Hungary	</value>
+			</entry>
+			<entry key="IS">
+				<value>		Iceland	</value>
+			</entry>
+			<entry key="IN">
+				<value>		India	</value>
+			</entry>
+			<entry key="ID">
+				<value>		Indonesia	</value>
+			</entry>
+			<entry key="IR">
+				<value>		Iran	</value>
+			</entry>
+			<entry key="IQ">
+				<value>		Iraq	</value>
+			</entry>
+			<entry key="IE">
+				<value>		Ireland	</value>
+			</entry>
+			<entry key="IL">
+				<value>		Israel	</value>
+			</entry>
+			<entry key="IT">
+				<value>		Italy	</value>
+			</entry>
+			<entry key="JM">
+				<value>		Jamaica	</value>
+			</entry>
+			<entry key="JP">
+				<value>		Japan	</value>
+			</entry>
+			<entry key="JO">
+				<value>		Jordan	</value>
+			</entry>
+			<entry key="KZ">
+				<value>		Kazakhstan	</value>
+			</entry>
+			<entry key="KE">
+				<value>		Kenya	</value>
+			</entry>
+			<entry key="KI">
+				<value>		Kiribati	</value>
+			</entry>
+			<entry key="KP">
+				<value>		Korea (North)	</value>
+			</entry>
+			<entry key="KR">
+				<value>		Korea (South)	</value>
+			</entry>
+			<entry key="KW">
+				<value>		Kuwait	</value>
+			</entry>
+			<entry key="KG">
+				<value>		Kyrgyzstan	</value>
+			</entry>
+			<entry key="LA">
+				<value>		Laos	</value>
+			</entry>
+			<entry key="LV">
+				<value>		Latvia	</value>
+			</entry>
+			<entry key="LB">
+				<value>		Lebanon	</value>
+			</entry>
+			<entry key="LS">
+				<value>		Lesotho	</value>
+			</entry>
+			<entry key="LR">
+				<value>		Liberia	</value>
+			</entry>
+			<entry key="LY">
+				<value>		Libya	</value>
+			</entry>
+			<entry key="LI">
+				<value>		Liechtenstein	</value>
+			</entry>
+			<entry key="LT">
+				<value>		Lithuania	</value>
+			</entry>
+			<entry key="LU">
+				<value>		Luxembourg	</value>
+			</entry>
+			<entry key="MO">
+				<value>		Macau	</value>
+			</entry>
+			<entry key="MK">
+				<value>		Macedonia	</value>
+			</entry>
+			<entry key="MG">
+				<value>		Madagascar	</value>
+			</entry>
+			<entry key="MW">
+				<value>		Malawi	</value>
+			</entry>
+			<entry key="MY">
+				<value>		Malaysia	</value>
+			</entry>
+			<entry key="MV">
+				<value>		Maldives	</value>
+			</entry>
+			<entry key="ML">
+				<value>		Mali	</value>
+			</entry>
+			<entry key="MT">
+				<value>		Malta	</value>
+			</entry>
+			<entry key="MH">
+				<value>		Marshall Islands	</value>
+			</entry>
+			<entry key="MQ">
+				<value>		Martinique	</value>
+			</entry>
+			<entry key="MR">
+				<value>		Mauritania	</value>
+			</entry>
+			<entry key="MU">
+				<value>		Mauritius	</value>
+			</entry>
+			<entry key="YT">
+				<value>		Mayotte	</value>
+			</entry>
+			<entry key="MX">
+				<value>		Mexico	</value>
+			</entry>
+			<entry key="FM">
+				<value>		Micronesia	</value>
+			</entry>
+			<entry key="MD">
+				<value>		Moldova	</value>
+			</entry>
+			<entry key="MC">
+				<value>		Monaco	</value>
+			</entry>
+			<entry key="MN">
+				<value>		Mongolia	</value>
+			</entry>
+			<entry key="MS">
+				<value>		Montserrat	</value>
+			</entry>
+			<entry key="MA">
+				<value>		Morocco	</value>
+			</entry>
+			<entry key="MZ">
+				<value>		Mozambique	</value>
+			</entry>
+			<entry key="MM">
+				<value>		Myanmar	</value>
+			</entry>
+			<entry key="NA">
+				<value>		Namibia	</value>
+			</entry>
+			<entry key="NR">
+				<value>		Nauru	</value>
+			</entry>
+			<entry key="NP">
+				<value>		Nepal	</value>
+			</entry>
+			<entry key="NL">
+				<value>		Netherlands	</value>
+			</entry>
+			<entry key="AN">
+				<value>		Netherlands Antilles	</value>
+			</entry>
+			<entry key="NT">
+				<value>		Neutral Zone	</value>
+			</entry>
+			<entry key="NC">
+				<value>		New Caledonia	</value>
+			</entry>
+			<entry key="NZ">
+				<value>		New Zealand (Aotearoa)	</value>
+			</entry>
+			<entry key="NI">
+				<value>		Nicaragua	</value>
+			</entry>
+			<entry key="NE">
+				<value>		Niger	</value>
+			</entry>
+			<entry key="NG">
+				<value>		Nigeria	</value>
+			</entry>
+			<entry key="NU">
+				<value>		Niue	</value>
+			</entry>
+			<entry key="NF">
+				<value>		Norfolk Island	</value>
+			</entry>
+			<entry key="MP">
+				<value>		Northern Mariana Islands	</value>
+			</entry>
+			<entry key="NO">
+				<value>		Norway	</value>
+			</entry>
+			<entry key="OM">
+				<value>		Oman	</value>
+			</entry>
+			<entry key="PK">
+				<value>		Pakistan	</value>
+			</entry>
+			<entry key="PW">
+				<value>		Palau	</value>
+			</entry>
+			<entry key="PA">
+				<value>		Panama	</value>
+			</entry>
+			<entry key="PG">
+				<value>		Papua New Guinea	</value>
+			</entry>
+			<entry key="PY">
+				<value>		Paraguay	</value>
+			</entry>
+			<entry key="PE">
+				<value>		Peru	</value>
+			</entry>
+			<entry key="PH">
+				<value>		Philippines	</value>
+			</entry>
+			<entry key="PN">
+				<value>		Pitcairn	</value>
+			</entry>
+			<entry key="PL">
+				<value>		Poland	</value>
+			</entry>
+			<entry key="PT">
+				<value>		Portugal	</value>
+			</entry>
+			<entry key="PR">
+				<value>		Puerto Rico	</value>
+			</entry>
+			<entry key="QA">
+				<value>		Qatar	</value>
+			</entry>
+			<entry key="RE">
+				<value>		Reunion	</value>
+			</entry>
+			<entry key="RO">
+				<value>		Romania	</value>
+			</entry>
+			<entry key="RU">
+				<value>		Russian Federation	</value>
+			</entry>
+			<entry key="RW">
+				<value>		Rwanda	</value>
+			</entry>
+			<entry key="GS">
+				<value>		S. Georgia and S. Sandwich Isls.	</value>
+			</entry>
+			<entry key="KN">
+				<value>		Saint Kitts and Nevis	</value>
+			</entry>
+			<entry key="LC">
+				<value>		Saint Lucia	</value>
+			</entry>
+			<entry key="VC">
+				<value>		Saint Vincent and the Grenadines	</value>
+			</entry>
+			<entry key="WS">
+				<value>		Samoa	</value>
+			</entry>
+			<entry key="SM">
+				<value>		San Marino	</value>
+			</entry>
+			<entry key="ST">
+				<value>		Sao Tome and Principe	</value>
+			</entry>
+			<entry key="SA">
+				<value>		Saudi Arabia	</value>
+			</entry>
+			<entry key="SN">
+				<value>		Senegal	</value>
+			</entry>
+			<entry key="SC">
+				<value>		Seychelles	</value>
+			</entry>
+			<entry key="SL">
+				<value>		Sierra Leone	</value>
+			</entry>
+			<entry key="SG">
+				<value>		Singapore	</value>
+			</entry>
+			<entry key="SK">
+				<value>		Slovak Republic	</value>
+			</entry>
+			<entry key="SI">
+				<value>		Slovenia	</value>
+			</entry>
+			<entry key="Sb">
+				<value>		Solomon Islands	</value>
+			</entry>
+			<entry key="SO">
+				<value>		Somalia	</value>
+			</entry>
+			<entry key="ZA">
+				<value>		South Africa	</value>
+			</entry>
+			<entry key="ES">
+				<value>		Spain	</value>
+			</entry>
+			<entry key="LK">
+				<value>		Sri Lanka	</value>
+			</entry>
+			<entry key="SH">
+				<value>		St. Helena	</value>
+			</entry>
+			<entry key="PM">
+				<value>		St. Pierre and Miquelon	</value>
+			</entry>
+			<entry key="SD">
+				<value>		Sudan	</value>
+			</entry>
+			<entry key="SR">
+				<value>		Suriname	</value>
+			</entry>
+			<entry key="SJ">
+				<value>		Svalbard and Jan Mayen Islands	</value>
+			</entry>
+			<entry key="SZ">
+				<value>		Swaziland	</value>
+			</entry>
+			<entry key="SE">
+				<value>		Sweden	</value>
+			</entry>
+			<entry key="CH">
+				<value>		Switzerland	</value>
+			</entry>
+			<entry key="SY">
+				<value>		Syria	</value>
+			</entry>
+			<entry key="TW">
+				<value>		Taiwan	</value>
+			</entry>
+			<entry key="TJ">
+				<value>		Tajikistan	</value>
+			</entry>
+			<entry key="TZ">
+				<value>		Tanzania	</value>
+			</entry>
+			<entry key="TH">
+				<value>		Thailand	</value>
+			</entry>
+			<entry key="TG">
+				<value>		Togo	</value>
+			</entry>
+			<entry key="TK">
+				<value>		Tokelau	</value>
+			</entry>
+			<entry key="TO">
+				<value>		Tonga	</value>
+			</entry>
+			<entry key="TT">
+				<value>		Trinidad and Tobago	</value>
+			</entry>
+			<entry key="TN">
+				<value>		Tunisia	</value>
+			</entry>
+			<entry key="TR">
+				<value>		Turkey	</value>
+			</entry>
+			<entry key="TM">
+				<value>		Turkmenistan	</value>
+			</entry>
+			<entry key="TC">
+				<value>		Turks and Caicos Islands	</value>
+			</entry>
+			<entry key="TV">
+				<value>		Tuvalu	</value>
+			</entry>
+			<entry key="UG">
+				<value>		Uganda	</value>
+			</entry>
+			<entry key="UA">
+				<value>		Ukraine	</value>
+			</entry>
+			<entry key="AE">
+				<value>		United Arab Emirates	</value>
+			</entry>
+			<entry key="UK">
+				<value>		United Kingdom	</value>
+			</entry>
+			<entry key="US">
+				<value>		United States	</value>
+			</entry>
+			<entry key="UY">
+				<value>		Uruguay	</value>
+			</entry>
+			<entry key="UM">
+				<value>		US Minor Outlying Islands	</value>
+			</entry>
+			<entry key="SU">
+				<value>		USSR (former)	</value>
+			</entry>
+			<entry key="UZ">
+				<value>		Uzbekistan	</value>
+			</entry>
+			<entry key="VU">
+				<value>		Vanuatu	</value>
+			</entry>
+			<entry key="VA">
+				<value>		Vatican City State (Holy See)	</value>
+			</entry>
+			<entry key="VE">
+				<value>		Venezuela	</value>
+			</entry>
+			<entry key="VN">
+				<value>		Viet Nam	</value>
+			</entry>
+			<entry key="VG">
+				<value>		Virgin Islands (British)	</value>
+			</entry>
+			<entry key="VI">
+				<value>		Virgin Islands (U.S.)	</value>
+			</entry>
+			<entry key="WF">
+				<value>		Wallis and Futuna Islands	</value>
+			</entry>
+			<entry key="EH">
+				<value>		Western Sahara	</value>
+			</entry>
+			<entry key="YE">
+				<value>		Yemen	</value>
+			</entry>
+			<entry key="YU">
+				<value>		Yugoslavia	</value>
+			</entry>
+			<entry key="ZR">
+				<value>		Zaire	</value>
+			</entry>
+			<entry key="ZM">
+				<value>		Zambia	</value>
+			</entry>
+			<entry key="ZW">
+				<value>		Zimbabwe	</value>
+			</entry>
+	  </map>
+	</property>
+	</bean>  
+	
+	<bean id="LIST_NOTIFICATION"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="NOTICE">
+					<value>Notification</value>
+				</entry>
+				<entry key="TASK">
+					<value>My Task</value>
+				</entry>				
+			</map>
+		</property>
+	</bean>  
+	<bean id="LIST_SERVICE_GROUP"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="1">
+					<value>ISP</value>
+				</entry>
+				<entry key="2">
+					<value>IDC</value>
+				</entry>	
+				<entry key="3">
+					<value>GIN</value>
+				</entry>	
+				<entry key="4">
+					<value>SI &amp; MT</value>
+				</entry>						
+			</map>
+		</property>
+	</bean>   
+	
+	<bean id="LIST_ISSUE_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="1">
+					<value>Singpost</value>
+				</entry>
+				<entry key="0">
+					<value>Non-Singpost</value>
+				</entry>			
+			</map>
+		</property>
+	</bean> 
+	
+	<bean id="LIST_PAYMENT_METHOD"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="SP">
+					<value>SingPost</value>
+				</entry>
+				<entry key="CC">
+					<value>Credit Card</value>
+				</entry>
+				<entry key="GR">
+					<value>GIRO</value>
+				</entry>	
+				<entry key="CQ">
+					<value>Cheque</value>
+				</entry>
+				<entry key="CA">
+					<value>Cash</value>
+				</entry>
+				<entry key="NT">
+					<value>Netting/ Inter Company Transaction</value>
+				</entry>
+				<entry key="BT">
+					<value>Other Banks</value>
+				</entry>
+				<entry key="RE">
+					<value>Remittance</value>
+				</entry>
+				<entry key="AR">
+					<value>Advance Receipt</value>
+				</entry>
+				<entry key="OT">
+					<value>Others</value>
+				</entry>			
+			</map>
+		</property>
+	</bean> 
+	<bean id="LIST_PAYMENT_STATUS"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="N">
+					<value>Normal</value>
+				</entry>
+				<entry key="R">
+					<value>Rejected</value>
+				</entry>
+				<entry key="F">
+                    <value>Refund</value>
+                </entry>
+			</map>
+		</property>
+	</bean>   
+	<!-- V3.06 #277 [Ver3.06-1] NTTS Baseline without BIF CT -->
+	<!-- <bean id="CLOSEDOCTYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="QCS">
+					<value>Quotation Control Sheet</value>
+				</entry>
+				<entry key="BIF">
+					<value>Billing Instruction Form</value>
+				</entry>
+				<entry key="BIL">
+					<value>Billing Document</value>
+				</entry>
+				<entry key="CSB">
+					<value>Cash Book</value>
+				</entry>			
+			</map>
+		</property>
+	</bean> -->
+	<bean id="CLOSEDOCTYPE"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+		init-method="load" scope="prototype">
+		<property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+          <value>
+          	SELECT H.RESOURCE_ID, H.VALUE FROM RESOURCESMAINT H WHERE H.CATEGORY='CLOSEDOCTYPE' AND H.IS_DELETED=0
+	      </value>
+        </property>
+	</bean>
+	<!-- V3.06 #277 [Ver3.06-1] NTTS Baseline without BIF CT -->
+	<bean id="CLOSESTATUS"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>OPEN</value>
+				</entry>
+				<entry key="1">
+					<value>CLOSED</value>
+				</entry>				
+			</map>
+		</property>
+	</bean>   
+	
+	<bean id="COMPANY_CATEGORY"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+		init-method="load"  scope="prototype">
+		 <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+                SELECT 	CO_CATEGORY, CO_CATEGORY_DESC FROM M_CO_CATEGORY ORDER BY CO_CATEGORY_DESC ASC
+            </value>
+        </property>
+	</bean>		
+	<bean id="COMPANY_SUB_CATEGORY"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+		init-method="load"  scope="prototype">
+		 <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+                SELECT 	CO_SUBCATEGORY, CO_SUBCATEGORY_DESC FROM M_CO_SUBCATEGORY ORDER BY CO_SUBCATEGORY_DESC ASC
+            </value>
+        </property>
+	</bean>		
+	
+	<bean id="LIST_TAX_TYPE" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader" init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>GST</value>
+				</entry>
+				<entry key="1">
+					<value>SST</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+<!-- Customer -->
+<!-- アプリケーション全体のBean定義 -->
+
+<!-- ======================================== 各種フィルタコントローラ定義 -->
+  <!-- ログオン済みチェック設定例 -->
+  <!-- 
+  <bean id="authenticationController"
+        class="jp.terasoluna.sample.common.filter.SampleAuthenticationController">
+    <property name="authenticatedNoCheckPaths">
+      <list>
+        <!- - ログイン済みチェック対象外のパス - ->
+        <value>common.css</value>
+        <value>logon.do</value>
+        <value>welcome.do</value>
+      </list>
+    </property>
+  </bean>
+  -->
+
+  <!-- アクセス権限チェック設定例 -->
+  
+  <!-- 
+  <bean id="authorizationController"
+        class="jp.terasoluna.sample.common.filter.SampleAuthorizationController">
+    <property name="authorizedCheckPaths">
+      <list>
+        <value>welcome.do</value>
+        <value>logon.do</value>
+        <value>common.css</value>
+      </list>
+    </property>
+    <property name="authorizedCodes">
+      <list>
+        <value>0</value>
+      </list>
+    </property>
+  </bean>
+  -->
+
+<!-- ======================================== データソース定義 -->
+  <!-- 
+     WTPを利用してTomcatを起動する場合、<ContextRoot>/META-INF/context.xmlに
+     データソースの接続情報を設定する。
+     またTomcatでJDBC接続を行う場合、各種JDBCドライバのjarにクラスパスを通すこと。
+  -->
+  <bean id="BsysDataSource"
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName">
+      <!-- Tomcatの例  -->
+      <value>java:comp/env/jdbc/BsysDataSource</value>
+      <!-- Tomcat以外のAPサーバの例 -->
+      <!-- 
+      <value>jdbc/BsysDataSource</value>
+      -->
+    </property>
+ 
+  </bean>
+
+<!-- ======================================== トランザクション・AOP定義 -->
+  <!-- トランザクションマネージャの定義 -->
+  <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource">
+      <ref bean="BsysDataSource"/>
+    </property>
+  </bean>
+
+  <!-- トランザクションインタセプタの定義 -->
+  <!-- 
+    トランザクションを設定するメソッドと実行モードを定義する。
+    transaction-manager="transactionManager" の設定は省略可能。
+  -->
+  <tx:advice id="transactionInterceptor" >
+    <tx:attributes>
+      <tx:method name="execute*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+    </tx:attributes>
+  </tx:advice>
+
+  <!-- AOPの定義 -->
+  <!-- 
+    下記で指定したパターンのBeanに対してインタセプタを適用する。
+    applicationContext.xmlで定義されたBeanのみ対象となるので注意すること。
+   -->  
+  <aop:config>
+    <aop:pointcut id="daoBeans" expression="bean(*DAO)"/>
+    <aop:advisor pointcut-ref="daoBeans" 
+                 advice-ref="transactionInterceptor"/>
+  </aop:config>
+
+<!-- ======================================== リソースバンドル定義 -->
+  <!-- 
+    この定義を利用する場合、
+    struts-config.xmlのmessage-resources要素を以下のように設定する。
+    (モジュールごとに設定)
+    <message-resources
+      factory="jp.terasoluna.fw.web.struts.util.SpringMessageResourcesFactory"
+      parameter="messageSource" />
+   -->  
+
+  <!-- プロパティファイル利用設定例 -->
+  <!-- 
+    basenamesプロパティでメッセージプロパティファイルを設定する。
+   -->  
+  <!--
+  <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames" value="application-messages, system-messages"/>
+  </bean>
+  -->
+
+  <!-- DBメッセージ利用(第2メッセージリソースにプロパティファイル利用)設定例 -->
+  <!--
+    別途applicationContext.xmlにてDBMessageResourceDAOの設定が必要
+  -->
+  <!-- 
+  <bean id="messageSource" 
+        class="jp.terasoluna.fw.message.DataSourceMessageSource">
+    <property name="parentMessageSource" ref="propertyMessageSource"/>
+    <property name="dbMessageResourceDAO" ref="dbMessageResourceDAO"/>
+    <property name="defaultLocale"  value="ja_JP"/>
+  </bean>
+
+  <bean id="propertyMessageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames" value="application-messages, system-messages"/>
+  </bean>
+  -->
+
+  <!-- プロパティファイル利用(第2メッセージリソースにDBメッセージ利用)設定例 -->
+  <!--
+    別途applicationContext.xmlにてDBMessageResourceDAOの設定が必要
+  -->
+  <!-- 
+  <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames" value="application-messages, system-messages"/>
+    <property name="parentMessageSource" ref="dbMessageSource"/>
+  </bean>
+
+  <bean id="dbMessageSource" 
+        class="jp.terasoluna.fw.message.DataSourceMessageSource">
+    <property name="dbMessageResourceDAO" ref="dbMessageResourceDAO"/>
+    <property name="defaultLocale"  value="ja_JP"/>
+  </bean>
+  -->
+
+<!-- ======================================== iBATIS定義 -->
+   <bean id="simpleExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"/>
+   <bean id="oracleLobHandler"
+            class="org.springframework.jdbc.support.lob.OracleLobHandler">
+     <property name="nativeJdbcExtractor" ref="simpleExtractor"/>
+   </bean>
+
+  <!-- SqlMap定義 -->
+  <bean id="sqlMapClient"
+        class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+    <property name="configLocation" value="WEB-INF/sqlMapConfig.xml">
+    </property>
+    <property name="dataSource">
+      <ref bean="BsysDataSource"/>
+    </property>
+    <property name="lobHandler" ref="oracleLobHandler"/>
+  </bean>
+
+   <!-- 照会系のDAO定義 -->
+  <bean id="queryDAO" 
+        class="jp.terasoluna.fw.dao.ibatis.QueryDAOiBatisImpl">
+    <property name="sqlMapClient"><ref local="sqlMapClient"/></property>
+  </bean>
+  
+  <!-- 更新系のDAO定義 -->
+  <bean id="updateDAO"
+        class="jp.terasoluna.fw.dao.ibatis.UpdateDAOiBatisImpl">
+    <property name="sqlMapClient"><ref local="sqlMapClient"/></property>
+  </bean>
+  
+  <bean id="updateDAONuked"
+		class="nttdm.bsys.common.dao.UpdateDAOiBatisNukedImpl">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient" />
+		</property>
+	</bean>
+  
+  <!-- ストアドプロシジャ用のDAO定義 -->
+  <bean id="spDAO"
+        class="jp.terasoluna.fw.dao.ibatis.StoredProcedureDAOiBatisImpl">
+    <property name="sqlMapClient"><ref local="sqlMapClient"/></property>
+  </bean>
+  <!-- get service group from resource for m_svt -->
+  <bean id="beanCodeList"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  <map>
+		<entry key="0">
+		  <value> - Please Select One - </value>
+		</entry>
+		<entry key="1">
+		  <value>ISP</value>
+		</entry>
+		<entry key="2">
+		  <value>IDC</value>
+		</entry>
+		<entry key="3">
+		  <value>GIN</value>
+		</entry>
+		<entry key="4">
+		  <value>SI and Maintenance</value>
+		</entry>
+	  </map>
+	</property>
+  </bean>
+  <!-- plan group -->
+  <bean id="LIST_ITEMTYPE" class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader" init-method="load">
+    <property name="codeListMap">
+	  <map>
+		<entry key="S">
+		  <value> sub </value>
+		</entry>
+		<entry key="O">
+		  <value>opt</value>
+		</entry>
+	  </map>
+	</property>
+  </bean>
+	<bean id="LIST_SALUTATION"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="MR">
+					<value>Mr</value>
+				</entry>
+				<entry key="MS">
+					<value>Ms</value>
+				</entry>
+				<entry key="MRS">
+					<value>Mrs</value>
+				</entry>				
+			</map>
+		</property>
+	</bean>   	
+	<bean id="LIST_BANK"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="AFF">
+					<value>Affin Bank Berhad</value>
+				</entry>
+				<entry key="ALL">
+					<value>Alliance Bank Malaysia Berhad</value>
+				</entry>
+				<entry key="AMB">
+					<value>AmBank (M) Berhad</value>
+				</entry>
+				<entry key="BAN">
+					<value>Bangkok Bank Berhad</value>
+				</entry>
+				<entry key="BAM">
+					<value>Bank of America Malaysia Berhad</value>
+				</entry>
+				<entry key="BCH">
+					<value>Bank of China (Malaysia) Berhad</value>
+				</entry>				
+				<entry key="BTM">
+					<value>Bank of Tokyo-Mitsubishi UFJ (Malaysia) Berhad</value>
+				</entry>
+				<entry key="CIMB">
+					<value>CIMB Bank Berhad</value>
+				</entry>
+				<entry key="CITI">
+					<value>Citibank Berhad</value>
+				</entry>				
+				<entry key="DBB">
+					<value>Deutsche Bank (Malaysia) Berhad</value>
+				</entry>
+				<entry key="EON">
+					<value>EON Bank Berhad</value>
+				</entry>
+				<entry key="HLB">
+					<value>Hong Leong Bank Berhad</value>
+				</entry>				
+				<entry key="HSBC">
+					<value>HSBC Bank Malaysia Berhad</value>
+				</entry>
+				<entry key="JPMC">
+					<value>J.P. Morgan Chase Bank Berhad</value>
+				</entry>
+				<entry key="MBB">
+					<value>Malayan Banking Berhad</value>
+				</entry>				
+				<entry key="OCBC">
+					<value>OCBC Bank (Malaysia) Berhad</value>
+				</entry>
+				<entry key="PBB">
+					<value>Public Bank Berhad</value>
+				</entry>
+				<entry key="RHB">
+					<value>RHB Bank Berhad</value>
+				</entry>				
+				<entry key="SCB">
+					<value>Standard Chartered Bank Malaysia Berhad</value>
+				</entry>
+				<entry key="NSB">
+					<value>The Bank of Nova Scotia Berhad</value>
+				</entry>
+				<entry key="BSB">
+					<value>The Royal Bank of Scotland Berhad</value>
+				</entry>				
+				<entry key="UOB">
+					<value>United Overseas Bank (Malaysia) Bhd.</value>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<bean id="LIST_CREDIT_CARD_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="AMEX">
+					<value>American Express</value>
+				</entry>
+				<entry key="DINE">
+					<value>Diner's Club/Carte Blanche</value>
+				</entry>
+				<entry key="DISC">
+					<value>Discover</value>
+				</entry>
+				<entry key="MAST">
+					<value>MasterCard</value>
+				</entry>
+				<entry key="VISA">
+					<value>VISA</value>
+				</entry>				
+								
+			</map>
+		</property>
+	</bean> 
+	<bean id="NO_OF_MONTH"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="1">
+					<value>01</value>
+				</entry>
+				<entry key="2">
+					<value>02</value>
+				</entry>
+				<entry key="3">
+					<value>03</value>
+				</entry>
+				<entry key="4">
+					<value>04</value>
+				</entry>
+				<entry key="5">
+					<value>05</value>
+				</entry>				
+				<entry key="6">
+					<value>06</value>
+				</entry>
+				<entry key="7">
+					<value>07</value>
+				</entry>				
+				<entry key="8">
+					<value>08</value>
+				</entry>
+				<entry key="9">
+					<value>09</value>
+				</entry>				
+				<entry key="10">
+					<value>10</value>
+				</entry>
+				<entry key="11">
+					<value>11</value>
+				</entry>				
+				<entry key="12">
+					<value>12</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="DAY_OF_MONTH"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="1">
+					<value>1</value>
+				</entry>
+				<entry key="2">
+					<value>2</value>
+				</entry>
+				<entry key="3">
+					<value>3</value>
+				</entry>
+				<entry key="4">
+					<value>4</value>
+				</entry>
+				<entry key="5">
+					<value>5</value>
+				</entry>				
+				<entry key="6">
+					<value>6</value>
+				</entry>
+				<entry key="7">
+					<value>7</value>
+				</entry>				
+				<entry key="8">
+					<value>8</value>
+				</entry>
+				<entry key="9">
+					<value>9</value>
+				</entry>				
+				<entry key="10">
+					<value>10</value>
+				</entry>
+				<entry key="11">
+					<value>11</value>
+				</entry>				
+				<entry key="12">
+					<value>12</value>
+				</entry>
+				<entry key="13">
+					<value>13</value>
+				</entry>
+				<entry key="14">
+					<value>14</value>
+				</entry>
+				<entry key="15">
+					<value>15</value>
+				</entry>
+				<entry key="16">
+					<value>16</value>
+				</entry>
+				<entry key="17">
+					<value>17</value>
+				</entry>
+				<entry key="18">
+					<value>18</value>
+				</entry>
+				<entry key="19">
+					<value>19</value>
+				</entry>
+				<entry key="20">
+					<value>20</value>
+				</entry>
+				<entry key="21">
+					<value>21</value>
+				</entry>
+				<entry key="22">
+					<value>22</value>
+				</entry>
+				<entry key="23">
+					<value>23</value>
+				</entry>
+				<entry key="24">
+					<value>24</value>
+				</entry>
+				<entry key="25">
+					<value>25</value>
+				</entry>
+				<entry key="26">
+					<value>26</value>
+				</entry>
+				<entry key="27">
+					<value>27</value>
+				</entry>
+				<entry key="28">
+					<value>28</value>
+				</entry>
+				<entry key="29">
+					<value>29</value>
+				</entry>
+				<entry key="30">
+					<value>30</value>
+				</entry>
+				<entry key="31">
+					<value>31</value>
+				</entry>
+				<entry key="32">
+					<value>End of Month</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="TIME_HOUR"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>0</value>
+				</entry>
+				<entry key="1">
+					<value>1</value>
+				</entry>
+				<entry key="2">
+					<value>2</value>
+				</entry>
+				<entry key="3">
+					<value>3</value>
+				</entry>
+				<entry key="4">
+					<value>4</value>
+				</entry>
+				<entry key="5">
+					<value>5</value>
+				</entry>				
+				<entry key="6">
+					<value>6</value>
+				</entry>
+				<entry key="7">
+					<value>7</value>
+				</entry>				
+				<entry key="8">
+					<value>8</value>
+				</entry>
+				<entry key="9">
+					<value>9</value>
+				</entry>				
+				<entry key="10">
+					<value>10</value>
+				</entry>
+				<entry key="11">
+					<value>11</value>
+				</entry>				
+				<entry key="12">
+					<value>12</value>
+				</entry>
+				<entry key="13">
+					<value>13</value>
+				</entry>
+				<entry key="14">
+					<value>14</value>
+				</entry>
+				<entry key="15">
+					<value>15</value>
+				</entry>
+				<entry key="16">
+					<value>16</value>
+				</entry>
+				<entry key="17">
+					<value>17</value>
+				</entry>
+				<entry key="18">
+					<value>18</value>
+				</entry>
+				<entry key="19">
+					<value>19</value>
+				</entry>
+				<entry key="20">
+					<value>20</value>
+				</entry>
+				<entry key="21">
+					<value>21</value>
+				</entry>
+				<entry key="22">
+					<value>22</value>
+				</entry>
+				<entry key="23">
+					<value>23</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="TIME_MINUTE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>0</value>
+				</entry>
+				<entry key="1">
+					<value>1</value>
+				</entry>
+				<entry key="2">
+					<value>2</value>
+				</entry>
+				<entry key="3">
+					<value>3</value>
+				</entry>
+				<entry key="4">
+					<value>4</value>
+				</entry>
+				<entry key="5">
+					<value>5</value>
+				</entry>				
+				<entry key="6">
+					<value>6</value>
+				</entry>
+				<entry key="7">
+					<value>7</value>
+				</entry>				
+				<entry key="8">
+					<value>8</value>
+				</entry>
+				<entry key="9">
+					<value>9</value>
+				</entry>				
+				<entry key="10">
+					<value>10</value>
+				</entry>
+				<entry key="11">
+					<value>11</value>
+				</entry>				
+				<entry key="12">
+					<value>12</value>
+				</entry>
+				<entry key="13">
+					<value>13</value>
+				</entry>
+				<entry key="14">
+					<value>14</value>
+				</entry>
+				<entry key="15">
+					<value>15</value>
+				</entry>
+				<entry key="16">
+					<value>16</value>
+				</entry>
+				<entry key="17">
+					<value>17</value>
+				</entry>
+				<entry key="18">
+					<value>18</value>
+				</entry>
+				<entry key="19">
+					<value>19</value>
+				</entry>
+				<entry key="20">
+					<value>20</value>
+				</entry>
+				<entry key="21">
+					<value>21</value>
+				</entry>
+				<entry key="22">
+					<value>22</value>
+				</entry>
+				<entry key="23">
+					<value>23</value>
+				</entry>
+				<entry key="24">
+					<value>24</value>
+				</entry>
+				<entry key="25">
+					<value>25</value>
+				</entry>
+				<entry key="26">
+					<value>26</value>
+				</entry>
+				<entry key="27">
+					<value>27</value>
+				</entry>
+				<entry key="28">
+					<value>28</value>
+				</entry>
+				<entry key="29">
+					<value>29</value>
+				</entry>
+				<entry key="30">
+					<value>30</value>
+				</entry>
+				<entry key="31">
+					<value>31</value>
+				</entry>
+				<entry key="32">
+					<value>32</value>
+				</entry>
+				<entry key="33">
+					<value>33</value>
+				</entry>
+				<entry key="34">
+					<value>34</value>
+				</entry>
+				<entry key="35">
+					<value>35</value>
+				</entry>				
+				<entry key="36">
+					<value>36</value>
+				</entry>
+				<entry key="37">
+					<value>37</value>
+				</entry>				
+				<entry key="38">
+					<value>38</value>
+				</entry>
+				<entry key="39">
+					<value>39</value>
+				</entry>				
+				<entry key="40">
+					<value>40</value>
+				</entry>
+				<entry key="41">
+					<value>41</value>
+				</entry>				
+				<entry key="42">
+					<value>42</value>
+				</entry>
+				<entry key="43">
+					<value>43</value>
+				</entry>
+				<entry key="44">
+					<value>44</value>
+				</entry>
+				<entry key="45">
+					<value>45</value>
+				</entry>
+				<entry key="46">
+					<value>46</value>
+				</entry>
+				<entry key="47">
+					<value>47</value>
+				</entry>
+				<entry key="48">
+					<value>48</value>
+				</entry>
+				<entry key="49">
+					<value>49</value>
+				</entry>
+				<entry key="50">
+					<value>50</value>
+				</entry>
+				<entry key="51">
+					<value>51</value>
+				</entry>
+				<entry key="52">
+					<value>52</value>
+				</entry>
+				<entry key="53">
+					<value>53</value>
+				</entry>
+				<entry key="54">
+					<value>54</value>
+				</entry>
+				<entry key="55">
+					<value>55</value>
+				</entry>
+				<entry key="56">
+					<value>56</value>
+				</entry>
+				<entry key="57">
+					<value>57</value>
+				</entry>
+				<entry key="58">
+					<value>58</value>
+				</entry>
+				<entry key="59">
+					<value>59</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="LIST_RUNTIME_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="1">
+					<value>Scheduler</value>
+				</entry>
+				<entry key="2">
+					<value>Manual Execute</value>
+				</entry>
+			</map>
+		</property>
+  </bean>
+  
+  <bean id="TRANSACTION_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="IN">
+		  		<value>IN : Invoice</value>
+				</entry>
+				<entry key="DN">
+					<value>DN : Debit Note</value>
+				</entry>
+				<entry key="CN">
+					<value>CN : Credit Note</value>
+				</entry>
+				<entry key="NT">
+					<value>NT : Non Tax Invoice</value>
+				</entry>
+			</map>
+		</property>
+  </bean>
+  
+  <bean id="BILL_INSTRUCTION_LIST"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="1">
+		  		<value>12 (Yearly)</value>
+				</entry>
+				<entry key="2">
+					<value>6 (Bi-Annually)</value>
+				</entry>
+				<entry key="3">
+					<value>3 (Quarterly)</value>
+				</entry>				
+				<entry key="4">
+		  		<value>2 (Bi-Monthly)</value>
+				</entry>
+				<entry key="5">
+					<value>1 (Monthly)</value>
+				</entry>
+				<entry key="6">
+					<value>0 (One Time)</value>
+				</entry>				
+			</map>
+		</property>
+  </bean>   
+  <bean id="SETTLEMENT_STATUS"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="Outstanding">
+		  		<value>Outstanding</value>
+				</entry>
+				<entry key="Partial Settled">
+					<value>Partial Settled</value>
+				</entry>
+				<entry key="Fully Settled">
+					<value>Fully Settled</value>
+				</entry>
+			</map>
+		</property>
+  </bean>
+  <!-- ログオン済みチェックコントローラ -->
+  <bean id="authorizationController" scope="prototype"
+  class="nttdm.bsys.common.fw.BillingSystemAuthorizationController">
+      <property name="queryDAO">
+    <ref bean="queryDAO"/>
+    </property>
+  </bean>
+  <bean id="authenticationController" scope="prototype"
+        class="nttdm.bsys.common.fw.BillingSystemAuthenticationController">
+    <!-- ログオン済みチェックを行わないパス -->
+  </bean>  
+  <bean id="LIST_ORIGIN_CODE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="0">
+		  		<value>OTH</value>
+				</entry>
+				<entry key="1">
+					<value>SIT</value>
+				</entry>
+				<entry key="2">
+					<value>IDC</value>
+				</entry>
+				<entry key="3">
+					<value>ARSA</value>
+				</entry>
+				<entry key="4">
+					<value>ARSB</value>
+				</entry>
+				<entry key="5">
+					<value>ARN</value>
+				</entry>												
+			</map>
+		</property>		
+  </bean>  
+  
+  <bean id="LIST_BATCH"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="CC"> <value>Clear Call</value></entry>
+				<entry key="RD"> <value>Radius</value></entry>
+                <entry key="MH"> <value>Mail Hosting</value></entry>
+				<!-- <entry key="DU"> <value>Dial Up</value></entry>
+				<entry key="AD"> <value>ADSL</value></entry>
+				<entry key="IP"> <value>iPass</value></entry>-->
+			</map>
+		</property>		
+  </bean>
+  
+   <bean id="LIST_UOM"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="HR"> <value>Hours</value></entry>
+				<entry key="MIN"> <value>Minutes</value></entry>				
+			</map>
+		</property>		
+  	</bean>
+  	
+  	<bean id="LIST_CODE_VALUE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="1"> <value>1</value></entry>
+				<entry key="2"> <value>2</value></entry>
+				<entry key="3"> <value>3</value></entry>				
+			</map>
+		</property>		
+  	</bean>
+  	
+  	<bean id="BANK_ACCOUNT_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    	<property name="codeListMap">
+	  		<map>
+				<entry key="1"> <value>Saving</value></entry>
+				<entry key="2"> <value>Current</value></entry>
+				<entry key="3"> <value>Others</value></entry>				
+			</map>
+		</property>		
+  	</bean>			
+  <bean id="MODE_LIST"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+				<entry key="1">
+		  		<value>Yearly</value>
+				</entry>
+				<entry key="2">
+					<value>Bi Annually</value>
+				</entry>
+				<entry key="3">
+					<value>Quarterly</value>
+				</entry>				
+				<entry key="4">
+		  		<value>Bi-Monthly</value>
+				</entry>
+				<entry key="5">
+					<value>Monthly</value>
+				</entry>
+				<entry key="6">
+					<value>Once</value>
+				</entry>
+				<entry key="7">
+					<value>Hourly</value>
+				</entry>				
+				<entry key="8">
+					<value>Minute</value>
+				</entry>				
+			</map>
+		</property>
+  </bean> 
+  <bean id="DOC_STATUS_LIST"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+			<entry key="DS0">
+	  			<value>Drafted</value>
+			</entry>
+			<entry key="DS1">
+				<value>Open</value>
+			</entry>
+			<entry key="DS2">
+				<value>Approval in-Progress</value>
+			</entry>				
+			<entry key="DS3">
+	  			<value>Completed</value>
+			</entry>
+			<entry key="DS4">
+				<value>Rejected</value>
+			</entry>
+			<entry key="DS5">
+				<value>Cancelled</value>
+			</entry>
+		</map>
+	</property>
+  </bean>
+  <bean id="APPROVAL_STATUS_LIST"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+			<entry key="AS1">
+	  			<value>Pending for Approval</value>
+			</entry>
+			<entry key="AS2">
+				<value>Approved</value>
+			</entry>
+			<entry key="AS3">
+				<value>Rejected</value>
+			</entry>				
+			<entry key="AS4">
+	  			<value>Canceled</value>
+			</entry>
+			<entry key="AS5">
+				<value>Not Require Approval</value>
+			</entry>
+			<entry key="AS6">
+				<value>Forwarded</value>
+			</entry>
+			<entry key="AS7">
+				<value>Escalation/Forward</value>
+			</entry>
+		</map>
+	</property>
+  </bean>
+  
+  <bean id="AFFILIATE_CODE"
+      class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+      init-method="load" scope="prototype">
+      <property name="dataSource" ref="BsysDataSource"/>
+      <property name="sql">
+          <value>
+          	SELECT AFFILIATE_CODE, AFFILIATE_DESC FROM M_AFFILIATE WHERE IS_DELETED=0 order by ID_AFFILIATE
+	</value>
+      </property>
+  </bean>
+  
+  <bean id="COLOR_CODE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+    <property name="codeListMap">
+	  	<map>
+			<entry key="AS1"><value>A3-Color-Code</value></entry>
+			<entry key="AS2"><value>A2-Color-Code</value></entry>
+			<entry key="AS3"><value>A5-Color-Code</value></entry>
+			<entry key="AS4"><value>A6-Color-Code</value></entry>
+			<entry key="AS5"><value>A7-Color-Code</value></entry>
+			<entry key="AS6"><value>A0-Color-Code</value></entry>
+			<entry key="AS7"><value>A0-Color-Code</value></entry>
+			<entry key="DS0"><value>A1-Color-Code</value></entry>
+			<entry key="DS1"><value>A2-Color-Code</value></entry>
+			<entry key="DS2"><value>A3-Color-Code</value></entry>
+			<entry key="DS3"><value>A4-Color-Code</value></entry>
+			<entry key="DS4"><value>A5-Color-Code</value></entry>
+			<entry key="DS5"><value>A6-Color-Code</value></entry>
+			<entry key="PS0"><value>A8-Color-Code</value></entry>
+			<entry key="PS1"><value>A1-Color-Code</value></entry>
+			<entry key="PS2"><value>A3-Color-Code</value></entry>
+			<entry key="PS3"><value>A2-Color-Code</value></entry>
+			<entry key="PS4"><value>A4-Color-Code</value></entry>
+			<entry key="PS5"><value>A4-Color-Code</value></entry>
+			<entry key="PS6"><value>A6-Color-Code</value></entry>
+			<entry key="PS7"><value>A6-Color-Code</value></entry>
+			<entry key="PS8"><value>A5-Color-Code</value></entry>
+			
+		</map>
+	</property>
+  </bean>  
+
+
+   <bean name="G_SET_P02_Task" class="nttdm.bsys.batch.G_SET_P02_Task">
+   		<property name="queryDAO" ref="queryDAO"/>
+       <property name="updateDAO" ref="updateDAO"/>
+       <property name="updateDAONuked" ref="updateDAONuked"/>
+       <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+       <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+   </bean>
+   		<bean name="schedulerJob"
+	   	class="org.springframework.scheduling.quartz.JobDetailBean">  		
+ 	
+    	 <property name="jobClass" value="nttdm.bsys.batch.G_SET_P02_Scheluder" />
+ 
+     	<property name="jobDataAsMap">
+	    <map>
+	      <entry key="schedulerTask" value-ref="G_SET_P02_Task" />
+	     </map>
+      </property>
+   </bean>     
+
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="schedulerJob" />
+		<property name="cronExpression" value="0 0/1 * * * ?" /> 
+	</bean>
+	 <!-- Scheduler -->
+	
+	   <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+	   <list>
+	      <ref bean="schedulerJob" />
+	   </list>
+	</property>
+ 
+		<property name="triggers">
+	    <list>
+		<ref bean="cronTrigger" />
+	    </list>
+	</property>
+	
+	
+	
+	<property name="waitForJobsToCompleteOnShutdown" value="false" />
+	 <property name="applicationContextSchedulerContextKey">
+       <value>applicationContext</value>
+     </property>
+	</bean>
+	
+	<bean id="LIST_AUDIT_ACTION"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		   	<entry key="LOGIN"><value>Login</value></entry>
+		   	<entry key="LOGOUT"><value>Logout</value></entry>
+		   	<entry key="CREATED"><value>Created</value></entry>
+			<entry key="EDITED"><value>Edited</value></entry>
+			<entry key="DELETED"><value>Deleted</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<bean id="LIST_ORGANIZATION_TYPE"
+        class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+        init-method="load">
+       <property name="codeListMap">
+       <map>
+            <entry key="Division"><value>Division</value></entry>
+            <entry key="Department"><value>Department</value></entry>
+            <entry key="Role"><value>Role</value></entry>
+       </map>
+       </property>
+    </bean>
+    
+    <bean id="LIST_GBS02_COLUMNS"
+      class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+      init-method="load" scope="prototype">
+      <property name="dataSource" ref="BsysDataSource"/>
+      <property name="sql">
+          <value>
+          	SELECT SET_VALUE,SET_DESC FROM M_GSET_D WHERE ID_SET = 'COLUMN_VALUE_NAME' AND SET_APPLY = 1 ORDER BY SET_SEQ
+	      </value>
+      </property>
+    </bean>
+    
+    <bean id="LIST_PDF_ZIP"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="0">
+					<value>No</value>
+				</entry>
+				<entry key="1">
+					<value>Yes</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="LIST_SERVICE_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="TYP">
+					<value>Service</value>
+				</entry>
+				<entry key="ITM">
+					<value>Plan</value>
+				</entry>
+				<entry key="DTL">
+					<value>Plan Details</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="LIST_CATEGORY"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+            <value>
+                SELECT 	SVC_GRP, SVC_GRP_NAME FROM M_SVG ORDER BY SVC_GRP_NAME ASC
+            </value>
+        </property>
+    </bean>
+    <!-- Add by Jing Start -->
+	<bean id="LIST_End_User"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT END_USER_CODE, END_USER_DESC FROM M_END_USER WHERE IS_DELETED = 0 ORDER BY ID_END_USER ASC</value>
+	   </property>
+	</bean>
+	<bean id="LIST_Mode_Type"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+	   <property name="codeListMap">
+	   <map>
+		   	<entry key="M"><value>Monthly Recurring</value></entry>
+			<entry key="O"><value>One Time Charge</value></entry>
+			<entry key="U"><value> Unclassified</value></entry>
+	   </map>
+	   </property>
+	</bean>
+	<!-- Add by Jing End -->
+	<!-- Add #146 Start -->
+	<bean id="CUSTOMER_TYPE"
+		class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+		init-method="load">
+		<property name="codeListMap">
+			<map>
+				<entry key="CORP">
+					<value>Corporate</value>
+				</entry>
+				<entry key="CONS">
+					<value>Consumer</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<!-- Add #146 End -->
+	<!-- Add #186 Start -->
+	<bean id="LIST_EXPORT_LIMIT"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT RESOURCE_ID, VALUE FROM RESOURCESMAINT WHERE CATEGORY = 'EXPORT_LIMIT' AND IS_DELETED = '0' ORDER BY SEQ ASC</value>
+	   </property>
+	</bean>
+	<!-- Add #186 End -->
+	
+	
+	<bean id="PRODUCT_CODE_LIST"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT TRIM(E.SVC_GRP), TRIM(E.PRODUCT_CODE) FROM M_PRODUCT E WHERE E.IS_DELETED = '0' ORDER BY E.SVC_GRP ASC, E.PRODUCT_CODE ASC</value>
+	   </property>
+	</bean>
+	
+	<bean id="LIST_COMPLANY_TYPE"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT CO_TYPE, CO_TYPE_DESC FROM M_CO_TYPE WHERE IS_DELETED = 0 ORDER BY CO_TYPE_DESC ASC</value>
+	   </property>
+	</bean>
+	<bean id="LIST_REVENUE_YEAR"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+			<value>
+	           	SELECT (TO_CHAR(A.MIN,'YYYY')+ROWNUM-1) year_id, (TO_CHAR(A.MIN,'YYYY')+ROWNUM-1) year_name FROM 
+				(
+				  SELECT 
+				    TO_DATE(MAX(fiscal_end),'YYYYMM') MAX,
+				    TO_DATE(MIN(fiscal_start),'YYYYMM') MIN,
+				    EXTRACT(YEAR FROM(to_date(max(fiscal_end), 'YYYYMM'))) - EXTRACT(YEAR FROM (to_date(min(fiscal_start),'YYYYMM'))) RANGE
+				  FROM T_REV_FISCAL_YEAR
+				)A
+				CONNECT BY ROWNUM &lt;= A.RANGE+1 ORDER BY year_id DESC 
+			</value>
+	   </property>
+	</bean>
+	<bean id="LIST_JOURNAL_NO"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load" scope="prototype">
+        <property name="dataSource" ref="BsysDataSource"/>
+        <property name="sql">
+           <value>
+           	SELECT
+				M.JOURNAL_NO, M.JOURNAL_NO||'-'||M.DESCRIPTION
+			FROM M_JOURNAL_NO M
+			WHERE M.IS_DELETED = 0
+			ORDER BY M.JOURNAL_NO
+           </value>
+	   </property>
+	</bean>
+	
+	<!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 28062017 -->
+	<bean id="LIST_PRINT_OPTION"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT SET_APPLY FROM M_GSET_D WHERE ID_SET = 'BATCH_PRINT_OPTION' AND IS_DELETED = 0</value>
+	   </property>
+	</bean>
+	<!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 28062017 -->
+	
+	<!-- #594: [B1] Customer Maintenance CT 20190604 -->
+	<bean id="GET_LABEL_DESC"
+		class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+       init-method="load"  scope="prototype">
+       <property name="dataSource" ref="BsysDataSource"/>
+       <property name="sql">
+           <value>SELECT SET_VALUE AS "LABEL_DESC" FROM M_GSET_D WHERE ID_SET = 'LABEL_DESC' AND IS_DELETED = 0 AND SET_SEQ=1</value>
+	   </property>
+	</bean>
+	<!-- #594: [B1] Customer Maintenance CT 20190604 -->
+<!-- E_MWF_AR1 Batch START -->
+<!-- 
+   <bean name="E_MWF_AR1_ScheduleTask" class="nttdm.bsys.e_mwf_ar1.batch.E_MWF_AR1_Task">
+   		<property name="queryDAO" ref="queryDAO"/>
+		<property name="updateDAO" ref="updateDAO"/>
+   </bean>
+   
+   <bean name="E_MWF_AR1_Scheduler" class="org.springframework.scheduling.quartz.JobDetailBean">  		
+ 		<property name="jobClass" value="nttdm.bsys.e_mwf_ar1.batch.E_MWF_AR1_Scheluder" />
+     	<property name="jobDataAsMap">
+	    	<map>
+	      		<entry key="myTask" value-ref="E_MWF_AR1_ScheduleTask" />
+	     	</map>
+      	</property>
+   </bean>
+   
+   <bean id="E_MWF_AR1_Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="E_MWF_AR1_Scheduler" />
+		<property name="cronExpression" value="0 0/2 * * * ?" /> 
+   </bean>
+   -->
+<!-- E_MWF_AR1 Batch END --> 
+<!-- 
+   <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<property name="jobDetails">
+	   <list>
+	      <ref bean="schedulerJob" />
+	      <ref bean="E_MWF_AR1_Scheduler" />
+	   </list>
+	</property>
+ 
+	<property name="triggers">
+	    <list>
+		<ref bean="cronTrigger" />
+		<ref bean="E_MWF_AR1_Trigger" />
+	    </list>
+	</property>
+
+	<property name="waitForJobsToCompleteOnShutdown" value="true" />
+	 <property name="applicationContextSchedulerContextKey">
+       <value>applicationContext</value>
+     </property>
+      
+       </bean>
+ -->
+  <!-- DBメッセージリソース用DAO定義 -->
+  <!-- 
+    applicationContext.xmlでDBメッセージリソースの定義がされている場合は、
+    下記のコメントアウトを解除してDBメッセージリソース用DAOの設定を有効にすること。
+   -->
+  <!-- 
+  <bean id="DBMessageResourceDAO" 
+        class="jp.terasoluna.fw.message.DBMessageResourceDAOImpl">
+    <property name="dataSource" ref="BsysDataSource"/>
+    <property name="tableName"      value="MESSAGES"/>
+    <property name="codeColumn"     value="CODE"/>
+    <property name="messageColumn"  value="MESSAGE"/>                        
+    <property name="languageColumn" value="LANGUAGES"/>
+    <property name="countryColumn"  value="COUNTRY"/>
+    <property name="variantColumn"  value="VARIANT"/>                    
+  </bean>
+  -->
+
+<!-- ======================================== コードリスト定義 -->
+  <!-- プロパティコードリスト設定例 -->
+  <!-- 
+  <bean id="CL006_AUTH"
+        class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+        init-method="load">
+    <property name="codeListMap">
+      <map>
+        <entry key="1">
+          <value>オペレータ</value>
+        </entry>
+        <entry key="0">
+          <value>管理者</value>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  -->
+
+  <!-- DBコードリスト設定例 -->
+  <!-- 
+  <bean id="XXXXX"
+        class="jp.terasoluna.fw.web.codelist.DBCodeListLoader"
+        init-method="load">
+  <property name="dataSource" ref="BsysDataSource"/>
+    <property name="sql">
+      <value>SELECT CODE, NAME FROM DBCODELIST ORDER BY CODE</value>
+    </property>
+  </bean>
+  -->  
+
+</beans>

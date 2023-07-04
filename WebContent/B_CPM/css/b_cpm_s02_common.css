@@ -1,0 +1,215 @@
+td .detailGst {
+	text-align: right;
+	color: #AF613A;
+}
+
+tr .subPlanDetailHeader {
+	background-color: #cee7ff;
+}
+
+tr .subPlanDetailResult, .clonePlanDetail {
+	background-color: #f7f6f3;
+}
+
+tr .serviceTable {
+	background-color: #ffffcc;
+}
+
+.blankTable, .subPlanDetail {
+	border: 0px 0px 0px 0px;
+	padding: 0px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.customerPlanHeader {
+	background-color: #8cb0f8;
+}
+
+.customerPlanHeaderItem {
+	font-weight: bold;
+}
+
+.serviceQuantity, .serviceUnitPrice, .serviceAmount {
+	text-align: right;
+}
+
+.proRateBaseNo, .contactTermNo, .subPlanQuantity, .subPlanUnitPrice, .subPlanAmount, .rate,.subDiscount,.subRate {
+	text-align: right;
+}
+
+.subPlanQuantity, .subPlanUnitPrice, .subPlanAmount {
+	text-align: right;
+	width: 80px;
+}
+
+.proRateBaseNo, .contactTermNo, .fixedForex {
+	text-align: right;
+	width: 70px;
+}
+
+.serviceDateStart, .serviceDateEnd, .minimumServiceFrom, .minimumServiceTo {
+	width: 80px;
+}
+
+.billAcountCode {
+	color: #a04c51;
+}
+
+.lineDesc {
+	color: #a04c51;
+	font-style:italic;
+}
+
+.bottomButtons button{
+	margin: 5px 10px 5px 0;
+}
+.gst{
+	color:#AF613A;
+}
+.apply{
+	width:5%;
+	vertical-align: top;
+}
+.billingDescription{
+	width:62%;
+}
+
+.quantity{
+	width:9%;
+	text-align:center;
+}
+.unitPrice{
+	width:10%;
+	text-align:center;
+}
+.totalAmount{
+	width:14%;
+	text-align:center;
+}
+textarea{
+	width:99%;
+}
+.lumpSump {
+	color:#2223FF;
+}
+table.customerPlanInformation{
+	width:100%;
+	background-color:#E7EFFF;
+	margin-top:6px;
+	border-collapse:collapse;
+}
+
+table.customerPlanInformation .center{
+	text-align:center;
+}
+
+
+table.customerPlanInformation tr label{
+	width:140px;
+}
+table.customerPlanInformation tr.header{
+	font-size:medium;
+	font-weight:bold;
+	background-color:#8CB0F8;
+}
+table.planHeaderInformation{
+	width:100%;
+	background-color:#EFEBDE;
+	margin:3px 0 0 0;
+	border-bottom:2px solid #D0CDC2
+}
+table.planHeaderInformation td{
+	padding-left:8px;
+}
+table.planHeaderInformation td.header{
+	width:115px;
+}
+div.planHeaderInformation{
+	background-color:#EFEBDE;
+	padding: 5px 8px 10px 8px;
+	width:100%;
+	margin-top:3px;
+}
+div.planHeaderInformation table{
+	margin: 0 0 0 0;
+	width: 100%;
+	float:left;
+}
+div.planHeaderInformation table td.header{
+	width:120px;
+}
+
+div.planHeaderInformation div.planStatus button{
+	width:75px;
+	margin-left:6px;
+}
+
+
+div.tabContent{
+	background-color:#F8F8F8;
+	border:1px solid #C0C0C0;
+	padding:10px 10px 0px 10px;
+	width:100%;
+}
+.tablePageLink{
+	background-color:#FFCCFF;
+	width:100%;
+}
+table.customerInformation{
+	width:100%;
+	margin: 0 0 0 0;
+}
+table.customerInformation td.header{
+	width:16%;
+}
+
+.disableLink{
+	color:gray;
+	text-decoration:underline;
+}
+.shadetabs span{
+display: inline;
+margin: 0;
+}
+.shadetabs span a{
+text-decoration: none;
+position: relative;
+z-index: 1;
+padding: 3px 7px;
+margin-right: 3px;
+border: 1px solid #778;
+color: #2d2b2b;
+background: #C0C0C0 url(shade.gif) top left repeat-x;
+}
+.shadetabs span a:hover{
+text-decoration: none;
+color: #2d2b2b;
+}
+
+.large{
+	width:100px;
+}
+.medium{
+	width:80px;
+}
+.small, .txtQuantity, .txtUnitPrice, .txtTotalAmount{
+	width:60px;
+}
+.left{
+float:left;
+}
+.right{
+float:right;
+}
+.clear{
+clear:both;
+}
+.serviceDiscount {
+	font-weight:bold;
+	font-style:italic;
+	text-align: right;
+}
+.serviceDiscountDetail {
+	text-align: right;
+}

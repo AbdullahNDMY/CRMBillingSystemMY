@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="C_CMN001">
+    <select id="SELECT.C_CMN001.SQL001"
+            parameterClass="nttdm.bsys.c_cmn001.dto.C_CMN001R01Input"
+            resultClass="nttdm.bsys.common.fw.BillingSystemUserValueObject">
+        SELECT 	id_user, 
+        		user_name,
+        		password,
+        		is_deleted,
+   				user_status,
+   				TO_CHAR(last_pwd_change,'dd/MM/yyyy') last_pwd_change
+        FROM 	m_user
+        WHERE 	id_user = #id_user# AND 
+        		password = #password#
+    </select>
+    <select id="SELECT.C_CMN001.SQL002"
+            parameterClass="nttdm.bsys.c_cmn001.dto.C_CMN001R01Input"
+            resultClass="java.util.HashMap">
+        SELECT 	id_user
+        FROM 	m_user
+        WHERE 	id_user = #id_user#
+    </select>
+    <update id="UPDATE.C_CMN001.SQL001"
+          	parameterClass="nttdm.bsys.c_cmn001.dto.C_CMN001R01Input">
+    	UPDATE 	m_user
+    	SET 	user_status = 0
+    	WHERE	id_user = #id_user#
+    </update>
+    <select id="SELECT.C_CMN001.SQL003"
+    		parameterClass="nttdm.bsys.c_cmn001.dto.C_CMN001R01Input"
+    		resultClass="nttdm.bsys.c_cmn001.bean.UserAccess">
+    	SELECT id_user, id_module, id_sub_module, access_type
+		FROM m_user_access
+		WHERE id_user = #id_user#
+		ORDER BY id_module, id_sub_module
+    </select>
+    	<select id="SELECT.C_CMN001.SQL004"
+    		parameterClass="java.util.HashMap"
+			resultClass="java.util.HashMap">
+		SELECT * 
+		FROM m_user_access, m_sub_modules
+		WHERE m_user_access.id_sub_module=m_sub_modules.id_sub_module and path_module like '$path_module$'
+	</select>
+	<select id="SELECT.C_CMN001.SQL005" 
+		parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+	SELECT * 
+		FROM m_user_access, m_sub_modules
+		WHERE m_user_access.id_sub_module=m_sub_modules.id_sub_module 
+    		and path_module like '$path_module$' 
+    		and m_user_access.id_user='$id_user$'
+    		and m_user_access.access_type!=0
+	</select>
+</sqlMap>

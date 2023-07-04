@@ -1,0 +1,52 @@
+.menu {background-color:#ececec; color:#272727; border-bottom:1px solid #d7d7d7; height:23px;width:400px;}
+.menu ul {margin:0px; padding:0px; list-style:none; text-align:left;}
+.menu li {display:inline; line-height:23px;}
+.menu li a {color:#000000; text-decoration:none; padding:2px 2px 2px 2px;  border-left:1px solid #ececec; border-right:1px solid #ececec;}
+.menu li a.tabactive {border-left:1px solid #d7d7d7; border-right:1px solid #d7d7d7; background-color:#CCCCCC; font-weight:bold;  position:relative;}
+#tabcontent1,#tabcontent2,#tabcontent3,#tabcontent4 {border:1px solid #ececec; text-align:left;padding:0px 0px; font-size:12px; margin-bottom:1px;}
+
+
+.hide
+{
+	display:none;	
+}
+.show
+{
+	display:block;	
+}
+
+.textbox_char{		
+
+}
+
+.textbox_num{	
+ 	
+}
+
+.fakeButton {
+	z-index:1;
+	position:absolute;
+	left: 1px;
+	width:80px;
+	height:25px;
+	font-size:12px;
+}
+
+.uploadDiv {
+	overflow: hidden;
+	width: 80px;
+	position: absolute;
+	left: 450px;
+	height: 25px;
+}
+
+input.realFile {
+  position:absolute;
+  left:-65px;
+  width: 150px;
+  height:25px;
+  -moz-opacity:0 ;
+  filter:alpha(opacity: 0);
+  opacity: 0;
+  z-index: 2;
+}

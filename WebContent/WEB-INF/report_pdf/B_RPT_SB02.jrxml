@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_RPT_SB02" pageWidth="595" pageHeight="842" columnWidth="460" leftMargin="72" rightMargin="63" topMargin="57" bottomMargin="36">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="REPORT_BORDER">
+		<box>
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[".\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEW_MAIL" class="java.lang.Object"/>
+	<parameter name="DELETION_MAIL" class="java.lang.Object"/>
+	<parameter name="IMAGE_PATH" class="java.lang.String"/>
+	<parameter name="IS_DISPLAY_NEW" class="java.lang.String"/>
+	<parameter name="IS_DISPLAY_DELETION" class="java.lang.String"/>
+	<parameter name="HEADER_INFO" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band splitType="Stretch">
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="460" height="0"/>
+				<dataSourceExpression><![CDATA[$P{HEADER_INFO}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB02_headerInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="61">
+			<staticText>
+				<reportElement x="0" y="17" width="461" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[メールアカウント　追加　/　削除　完了報告書]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="461" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Notice for New E-Mail account / Deletion of E-mail account]]></text>
+			</staticText>
+		</band>
+		<band>
+			<subreport isUsingCache="true" runToBottom="false">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="460" height="0">
+					<printWhenExpression><![CDATA[$P{IS_DISPLAY_NEW}.equals("Y")]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[$P{NEW_MAIL}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB02_01.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport runToBottom="false">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="460" height="0">
+					<printWhenExpression><![CDATA[$P{IS_DISPLAY_DELETION}.equals("Y")]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[$P{DELETION_MAIL}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB02_02.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="341" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page:  "+$V{PAGE_NUMBER}+" /"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="421" y="0" width="40" height="20"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

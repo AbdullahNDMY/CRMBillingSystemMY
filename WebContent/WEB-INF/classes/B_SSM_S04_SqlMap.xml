@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="B_SSM_S04">
+	<!--************************************ Result maps  ******************************-->
+	<!-- Result map of service info -->
+	<resultMap id="customerServiceInfoResult" class="java.util.HashMap">
+	  	<result property="customerPlanID" column="ID_CUST_PLAN"/>
+	  	<result property="serviceGroupID" column="ID_CUST_PLAN_GRP"/>	  
+	  	<result property="billingInstruction" column="BILL_INSTRUCT"/>	
+	  	<result property="serviceStatus" column="SERVICES_STATUS"/>	
+	  	<result property="serviceName" column="SVC_LEVEL2"/>	
+	  	<result property="planDescription" column="BILL_DESC"/>	
+	  	<result property="startContractPeriod" column="MIN_SVC_START"/>	
+	  	<result property="endContractPeriod" column="MIN_SVC_END"/>	
+	  	<result property="contractTerms" column="CONTRACT_TERM_NO"/>
+	  	<result property="completionDate" column="COMPLETION_DATE"/>
+	</resultMap>
+	
+	
+	<!-- Result map of sub service info -->
+	<resultMap id="customerSubServiceInfoResult" class="java.util.HashMap">
+	  	<result property="serviceGroupID" column="ID_CUST_PLAN_GRP"/>	  
+	  	<result property="planDescription" column="ITEM_DESC"/>	
+	  	<result property="serviceName" column="SVC_LEVEL2"/>	
+	</resultMap>
+	
+	<!--************************************ Select Sql statements  ******************************-->
+	<!-- Function get billing instruction -->
+	<select id="getBillingInstruction" 
+			resultClass="java.lang.String" 
+			parameterClass="java.util.HashMap">
+		SELECT NVL(CASE 
+						WHEN BILL_INSTRUCT='1' THEN '12 (Yearly)'
+						WHEN BILL_INSTRUCT='2' THEN '6 (Bi-Annually)'
+						WHEN BILL_INSTRUCT='3' THEN '3 (Quarterly)'
+						WHEN BILL_INSTRUCT='4' THEN '2 (Bi-Monthly)'
+						WHEN BILL_INSTRUCT='5' THEN '1 (Monthly)'
+						WHEN BILL_INSTRUCT='6' THEN '0 (One Time)'
+			   	   END,
+			       '') BILL_INSTRUCT
+		FROM T_CUST_PLAN_H A
+		WHERE A.ID_CUST_PLAN = #customerPlanID#
+	</select>
+	
+	<select id="getCustomerInfo" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.lang.String">
+		SELECT 
+			ID_CUST,
+			CUST_NAME
+		FROM 
+			M_CUST
+		WHERE 
+			ID_CUST = #idCust#
+	</select>
+	
+	<!-- Function get customer service info -->
+	<select id="getCustomerServiceInfo" 
+			resultMap="customerServiceInfoResult" 
+			parameterClass="java.util.HashMap">
+		SELECT	A.ID_CUST_PLAN, 
+				B.ID_CUST_PLAN_GRP,
+				A.BILL_INSTRUCT,
+				TO_CHAR(B.COMPLETION_DATE, 'dd/mm/yyyy') COMPLETION_DATE, 
+				NVL(
+					CASE
+						WHEN B.SERVICES_STATUS='PS1' THEN 'Draft'
+						WHEN B.SERVICES_STATUS='PS2' THEN 'Pending Approval'
+						WHEN B.SERVICES_STATUS='PS3' THEN 'Active'
+						WHEN B.SERVICES_STATUS='PS5' THEN 'One Time'
+						WHEN B.SERVICES_STATUS='PS6' THEN 'Suspended'
+						WHEN B.SERVICES_STATUS='PS7' THEN 'Terminated'
+						WHEN B.SERVICES_STATUS='PS8' THEN 'Rejected'
+					END, 
+					'') SERVICES_STATUS,
+			    (SELECT SVC_DESC FROM M_SVC WHERE ID_SERVICE = A.SVC_LEVEL2 AND ROWNUM=1) SVC_LEVEL2, 
+			    TO_CHAR(B.BILL_DESC) BILL_DESC, 
+			    TO_CHAR(B.MIN_SVC_START, 'dd/mm/yyyy') MIN_SVC_START, 
+			    TO_CHAR(B.MIN_SVC_END, 'dd/mm/yyyy') MIN_SVC_END, 
+			    (
+			    	B.CONTRACT_TERM_NO || 
+			    	CASE
+			    		WHEN B.CONTRACT_TERM = 'M' THEN ' Month(s)' 			    	
+			    		WHEN B.CONTRACT_TERM = 'Y' THEN ' Year(s)' 
+			    	END
+			    )	CONTRACT_TERM_NO		
+		
+		FROM	T_CUST_PLAN_H A, 
+				T_CUST_PLAN_D B							
+		
+		WHERE
+				A.ID_CUST_PLAN=#customerPlanID# AND	
+				B.ID_CUST_PLAN=A.ID_CUST_PLAN AND
+				(A.IS_DELETED = 0 OR A.IS_DELETED is null) AND
+				(B.IS_DELETED = 0 OR B.IS_DELETED is null)	
+		ORDER BY B.ID_CUST_PLAN_GRP
+	</select>
+	
+	<!-- Function get customer service info -->
+	<select id="getCustomerSubServiceInfo" 
+			resultMap="customerSubServiceInfoResult" 
+			parameterClass="java.util.HashMap">
+		SELECT	C.ID_CUST_PLAN_GRP,
+				TO_CHAR(C.ITEM_DESC) ITEM_DESC,
+				(SELECT SVC_DESC FROM M_SVC WHERE ID_SERVICE = C.SVC_LEVEL2 AND ROWNUM=1) SVC_LEVEL2
+		
+		FROM	T_CUST_PLAN_H A, 
+				T_CUST_PLAN_D B,
+				T_CUST_PLAN_LINK C
+		WHERE 
+			A.ID_CUST_PLAN=#customerPlanID#	
+			AND B.ID_CUST_PLAN=A.ID_CUST_PLAN
+			AND B.ID_CUST_PLAN_GRP=C.ID_CUST_PLAN_GRP
+			AND (A.IS_DELETED = 0 OR A.IS_DELETED is null)
+			AND (B.IS_DELETED = 0 OR B.IS_DELETED is null)
+			AND (C.IS_DELETED = 0 OR C.IS_DELETED is null)
+		order by C.ID_CUST_PLAN_LINK
+	</select>
+	
+	<!-- Function get desc length -->
+	<select id="getDescLength" 
+			resultClass="java.lang.Integer" 
+			parameterClass="java.util.HashMap">
+		SELECT B.SET_VALUE "desLength"
+		FROM M_GSET_D B
+		WHERE B.ID_SET = 'DESC_LENGTH' AND 
+			  B.IS_DELETED = 0
+	</select>
+	
+	<update id="updateCompletionDate" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_D SET 
+			COMPLETION_DATE=#completionDate#,
+			ID_LOGIN=#idUser#,
+			DATE_UPDATED=sysdate,
+			ID_AUDIT=#idAudit#
+		WHERE ID_CUST_PLAN_GRP=#idCustPlanGrp#
+	</update>
+</sqlMap>

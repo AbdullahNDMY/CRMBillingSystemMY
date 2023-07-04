@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_COM">
+	<insert id="INSERT.M_COM.M_COM_BANKINFO" parameterClass="java.util.HashMap">
+		insert into m_com_bankinfo(id_com_bank,id_com,id_bank,com_swift,com_acct_no,
+					com_acct_type,com_acct_name,com_cur,date_created,
+					date_updated,id_login,ID_AUDIT,DISPLAY_ORDER,DEFAULT_ACC,STATUS)
+		values(
+				#idComBank#,
+				#idCompany#,
+				#idbank#,
+				#swiftCode#,
+				#accountNo#,
+				'2',
+				#accountName#,
+				#currency#,
+				sysdate,
+				sysdate,
+				#idLogin#,
+				#idAudit#,
+                #displayOrder#,
+                <isNotEmpty property="isDefault">
+                '1',
+                </isNotEmpty>
+                <isEmpty property="isDefault">
+                '0',
+                </isEmpty>
+                #active#
+				)
+	</insert>
+	<update id="UPDATE.M_COM.M_COM_BANKINFO" parameterClass="java.util.HashMap">
+		update 	m_com_bankinfo
+		set		id_com = #idCompany#,
+				id_bank = #idbank#,
+				com_swift = #swiftCode#,
+				com_acct_no = #accountNo#,
+				com_acct_type = '2',
+				com_acct_name = #accountName#,
+				com_cur=#currency#,				
+				date_updated = sysdate,
+				id_login = #idLogin#,
+				ID_AUDIT = #idAudit#,
+                DISPLAY_ORDER=#displayOrder#,
+                <isNotEmpty property="isDefault">
+                    DEFAULT_ACC='1',
+                </isNotEmpty>
+                <isEmpty property="isDefault">
+                    DEFAULT_ACC='0',
+                </isEmpty>
+                STATUS=#active#
+		where	id_com_bank = #idComBank#
+	</update>
+	<update id="UPDATE.DELETE.M_COM.M_COM_BANKINFO" parameterClass="java.util.HashMap">
+		delete 	m_com_bankinfo
+		where 	id_com = #idCompany#
+		<dynamic prepend="and id_com_bank not in">
+			<iterate property="listCompanyBank" open="(" close=")" conjunction=",">
+			#listCompanyBank[].idCompanyBank#
+			</iterate>
+		</dynamic>
+	</update>
+	<select id="SELECT.M_COM.GET_SEQ_M_COM_BANKINFO" resultClass="java.lang.String">
+		SELECT M_COM_BANKINFO_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	<select id="SELECT.M_COM.GET_BANK_INFO" parameterClass="java.lang.String" resultClass="nttdm.bsys.m_com.dto.Bank">
+		select 	id_bank as "idBank",
+				bank_full_name as "bankFullName",
+				bank_code as "bankCode",
+				bank_name as "bankName",
+				branch_code as "branchCode",
+				branch_name as "branchName",
+				bank_tel_no as "bankTelephoneNo",
+				bank_fax_no as "bankFaxNo"
+		from	m_bank
+		where	is_deleted = 0
+			and id_bank = #idBank#
+	</select>
+	<select id="SELECT.M_COM.GET_LIST_BANK" resultClass="nttdm.bsys.m_com.dto.Bank">
+		select 	id_bank as "idBank",
+				bank_full_name as "bankFullName"
+		from	m_bank
+		where	is_deleted = 0
+		order by upper(bank_full_name)
+	</select>
+	<select id="SELECT.M_COM.GET_LIST_COMPANYBANK" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+        SELECT C.ID_COM_BANK,
+               C.ID_COM,
+               C.ID_BANK,
+               C.COM_SWIFT,
+               C.COM_ACCT_NO,
+               C.COM_ACCT_NAME,
+               C.COM_CUR,
+               C.DISPLAY_ORDER,
+               C.DEFAULT_ACC,
+               C.STATUS,
+               B.BANK_FULL_NAME,
+               B.BANK_CODE,
+               B.BRANCH_CODE
+          FROM M_COM_BANKINFO C LEFT OUTER JOIN M_BANK B
+               ON C.ID_BANK = B.ID_BANK
+         WHERE C.ID_COM = #idCompany#
+         ORDER BY C.DISPLAY_ORDER ASC,C.ID_BANK ASC,C.ID_COM_BANK ASC
+	</select>
+	<select id="SELECT.COM.SQL001" 
+          resultClass="java.util.HashMap">
+	   	Select  ID_COM, COM_NAME, COM_REGNO, COM_GST_REG_NO, COM_TEL_NO, COM_FAX_NO, COM_WEBSITE, AFFILIATE_CODE, 
+       LOGO, PROXSERV_NAME,PORT_NO,PRIMDOMAIN_NO,SECDOMAIN_NO,DOMAIN_NAME,SMTP_SERVER_NAME,POP_SERVER_NAME,WEBMAIL_URL,DEFAULT_DIALUPTELNO ,DEFAULT_ROUTERPW 
+    	From  M_COM	
+  </select>
+  
+  <select id="SELECT.M_COM.GET_COMPANYNAME" parameterClass="java.lang.String" resultClass="java.lang.String">
+	   	Select COM_NAME
+    	From  M_COM	T
+    	WHERE T.ID_COM = #idCompany#
+  </select>
+  
+  
+  <select id="SELECT.COM.SQL002i" 
+          resultClass="java.util.HashMap">
+    Select 
+      D.COM_EMAIL,   D.COM_TEL_NO, D.COM_FAX_NO
+  From  
+    M_COM C , M_COM_CTC D 
+  Where  
+    D.ID_COM = C.ID_COM and D.COM_CTC_TYPE = 'SC'
+  </select>
+  
+  <select id="SELECT.COM.SQL002ii" 
+          resultClass="java.util.HashMap">
+  Select 
+      D.COM_EMAIL,   D.COM_TEL_NO, D.COM_FAX_NO
+  From  
+    M_COM C , M_COM_CTC D 
+  Where  
+    D.ID_COM = C.ID_COM and D.COM_CTC_TYPE = 'TC'
+  </select>
+  
+  
+  <select id="SELECT.COM.SQL002iii" 
+          resultClass="java.util.HashMap">
+    Select 
+      D.COM_EMAIL,   D.COM_TEL_NO, D.COM_FAX_NO
+  From  
+    M_COM C , M_COM_CTC D 
+  Where  
+    D.ID_COM = C.ID_COM and D.COM_CTC_TYPE = 'OC'
+  </select>
+  
+  
+  <select id="SELECT.COM.SQL003i" 
+          resultClass="java.util.HashMap">
+	Select	
+		E.COM_ADR_LINE1,E.COM_ADR_LINE2,E.COM_ADR_LINE3,E.ZIP_CODE,E.COUNTRY
+	From	
+		M_COM	C, M_COM_ADR E
+	Where	
+		E.ID_COM = C.ID_COM and E.COM_ADR_TYPE= 'RA'
+  </select>
+  
+  
+  <select id="SELECT.COM.SQL003ii" 
+          resultClass="java.util.HashMap">
+	Select	
+		E.COM_ADR_LINE1,E.COM_ADR_LINE2,E.COM_ADR_LINE3,E.ZIP_CODE,E.COUNTRY
+	From	
+		M_COM	C, M_COM_ADR E
+	Where	
+		E.ID_COM = C.ID_COM and E.COM_ADR_TYPE= 'CA'
+  </select>
+  
+  <select id="SELECT.COM.SQL004" 
+          resultClass="java.lang.String">
+	   	Select  ID_COM         
+    	From  M_COM	
+  </select>
+  
+  <select id="SELECT.COM.SQL005PHOTO" 
+          resultClass="nttdm.bsys.m_com.bean.M_COMS01Bean">
+	   	Select   
+			LOGO  
+    	From  M_COM	
+  </select>
+  
+  <select id="SELECT.COM.SQL005IDCOM" 
+          resultClass="java.util.HashMap">
+	   	Select   
+			ID_COM  
+    	From  M_COM	
+  </select>
+  
+  <update id="UPDATE.COM.SQL005PHOTO" parameterClass="java.util.HashMap" >
+	   	Select   
+			LOGO  
+    	From  M_COM	
+  </update>
+  
+  
+  
+    <select id="SELECT.COM.SQL006" 
+          resultClass="java.util.HashMap" 
+          parameterClass="java.util.HashMap">
+    Select 
+      COM_EMAIL,   COM_TEL_NO, COM_FAX_NO
+  From  
+    M_COM_CTC 
+  Where  
+    ID_COM=#ID_COM# and COM_CTC_TYPE = #COM_CTC_TYPE# 
+  </select>
+  
+  <select id="SELECT.COM.SQL007" 
+          resultClass="java.util.HashMap" 
+          parameterClass="java.lang.String">
+	select 
+		A.ID_BANK, A.BANK_CODE, A.BRANCH_CODE, B.COM_ACCT_NO,B.COM_ACCT_TYPE,B.COM_ACCT_NAME,B.COM_SWIFT, B.ID_COM_BANK
+	from 
+		M_BANK A INNER JOIN M_COM_BANKINFO B ON A.ID_BANK=B.ID_BANK
+	WHERE 
+		B.ID_COM = #ID_COM# 
+  </select>
+  
+    <select id="SELECT.COM.SQL008" 
+          resultClass="java.util.HashMap" >          
+	select 
+		ID_BANK,BANK_FULL_NAME,BANK_CODE, BRANCH_CODE
+	from 
+		M_BANK 
+  order by ID_BANK ASC
+  </select>
+  
+  <select id="SELECT.COM.MGSET" resultClass="java.lang.String">
+      SELECT
+            SET_VALUE
+      FROM
+            M_GSET_D
+      WHERE
+            ID_SET='ADDR_LINE3_DISP'
+            AND IS_DELETED = '0'
+            AND SET_SEQ = '1'
+  </select>
+
+<update id="UPDATE.COM.SQLEdit001"
+          parameterClass="java.util.HashMap">
+          Update M_COM	
+			SET COM_NAME = #COM_NAME# 
+			,COM_REGNO= #COM_REGNO#
+			,COM_TEL_NO= #COM_TEL_NO#
+			,COM_FAX_NO= #COM_FAX_NO#
+			,COM_WEBSITE= #COM_WEBSITE#
+			,AFFILIATE_CODE= #AFFILIATE_CODE#
+			<isNotEmpty property="LOGO">
+				,LOGO= #LOGO#
+			</isNotEmpty>
+			,PROXSERV_NAME= #PROXSERV_NAME#
+			,PORT_NO= #PORT_NO#
+			,PRIMDOMAIN_NO= #PRIMDOMAIN_NO#
+			,SECDOMAIN_NO= #SECDOMAIN_NO#
+			,DOMAIN_NAME = #DOMAIN_NAME#
+			,SMTP_SERVER_NAME = #SMTP_SERVER_NAME#
+			,POP_SERVER_NAME = #POP_SERVER_NAME#
+			,WEBMAIL_URL = #WEBMAIL_URL#
+			,IS_DELETED= '0'
+			,DATE_CREATED= SYSDATE
+			,DATE_UPDATED= SYSDATE
+			,ID_LOGIN= #ID_LOGIN#
+			,ID_AUDIT=#ID_AUDIT#
+			,DEFAULT_DIALUPTELNO=#DEFAULT_DIALUPTELNO#	
+			,DEFAULT_ROUTERPW=#DEFAULT_ROUTERPW#
+			,COM_GST_REG_NO=#COM_GST_REG_NO#
+		Where	
+			ID_COM = #ID_COM#
+          
+
+  </update>
+  
+ 
+ <update id="UPDATE.COM.SQLEdit002"
+          parameterClass="java.util.HashMap">
+          Update 
+          	M_COM_CTC 	
+		SET 
+				
+				COM_EMAIL= #EMAIL#  
+				,COM_TEL_NO= #TEL_NO#  
+				,COM_FAX_NO= #FAX_NO#
+				,DATE_CREATED=SYSDATE
+				,DATE_UPDATED=SYSDATE
+				,ID_LOGIN= #ID_LOGIN#
+				,ID_AUDIT=#ID_AUDIT#
+		Where	
+			ID_COM = #ID_COM#
+         	and COM_CTC_TYPE =#CONTACT_TYPE#  
+
+  </update>
+  
+  
+  <update id="UPDATE.COM.SQLEdit003"
+          parameterClass="java.util.HashMap">
+        Update 
+          	M_COM_ADR 	
+		SET 
+				
+				COM_ADR_LINE1= #C_ADR_LINE1#
+				,COM_ADR_LINE2=#C_ADR_LINE2#
+				,COM_ADR_LINE3 =#C_ADR_LINE3#
+				,ZIP_CODE =#ZIP_CODE#
+				,COUNTRY = #COUNTRY# 
+				,DATE_CREATED=SYSDATE
+				,DATE_UPDATED=SYSDATE
+				,ID_LOGIN= #ID_LOGIN#
+				,ID_AUDIT=#ID_AUDIT#
+		Where	
+			ID_COM = #ID_COM# 
+			and COM_ADR_TYPE =#COM_ADR_TYPE#  
+  </update>
+  
+    <update id="UPDATE.COM.SQLS01_1UPDATE001"
+          parameterClass="java.util.HashMap">
+          
+  		Update		
+			M_COM_BANKINFO	
+		SET 				
+				ID_BANK = #ID_BANK#
+				,COM_SWIFT= #COM_SWIFT#
+				,COM_ACCT_NO = #COM_ACCT_NO#
+				,COM_ACCT_TYPE=#COM_ACCT_TYPE#
+				,COM_ACCT_NAME=#COM_ACCT_NAME#
+				,DATE_UPDATED = SYSDATE
+				,ID_LOGIN = #ID_LOGIN#
+		Where	
+			ID_COM_BANK = #id_com_bank#	
+			  
+  </update>
+  
+  	<delete id="DELETE_ALL.COM.SQLS001_1DELETEDS01" >
+  		delete 
+		from M_COM_BANKINFO
+  	</delete>
+  
+    <insert id="INSERT.COM.SQLS01_1INSERT001"
+          parameterClass="java.util.HashMap">
+    Insert		
+		Into	M_COM_BANKINFO(ID_COM_BANK,ID_COM,ID_BANK,COM_SWIFT,COM_ACCT_NO,COM_ACCT_TYPE,
+				COM_ACCT_NAME,DATE_CREATED,DATE_UPDATED,ID_LOGIN)			
+		Values(M_COM_BANKINFO_SEQ.NEXTVAL,#ID_COM#,#ID_BANK#,#COM_SWIFT#,
+		#COM_ACCT_NO#,#COM_ACCT_TYPE#,#COM_ACCT_NAME#,SYSDATE,SYSDATE,#ID_LOGIN#)	
+  </insert>
+  	
+	
+  
+
+  <insert id="INSERT.COM.SQLSave001"
+          parameterClass="java.util.HashMap">
+    Insert
+    	Into	M_COM(ID_COM,COM_NAME,COM_REGNO	,COM_TEL_NO	,COM_FAX_NO,COM_WEBSITE,AFFILIATE_CODE,LOGO,
+			PROXSERV_NAME,PORT_NO,PRIMDOMAIN_NO,SECDOMAIN_NO,IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT,DEFAULT_DIALUPTELNO,DEFAULT_ROUTERPW,COM_GST_REG_NO,DOMAIN_NAME,SMTP_SERVER_NAME,POP_SERVER_NAME,WEBMAIL_URL)
+	Values(#ID_COM#,#COM_NAME#,#COM_REGNO#,#COM_TEL_NO#,#COM_FAX_NO#,#COM_WEBSITE#,#AFFILIATE_CODE#,#LOGO#,
+			#PROXSERV_NAME#,#PORT_NO#,#PRIMDOMAIN_NO#,#SECDOMAIN_NO#,#IS_DELETED#,SYSDATE,SYSDATE,#ID_LOGIN#,#ID_AUDIT#,#DEFAULT_DIALUPTELNO#,#DEFAULT_ROUTERPW#,#COM_GST_REG_NO#,#DOMAIN_NAME#,#SMTP_SERVER_NAME#,#POP_SERVER_NAME#,#WEBMAIL_URL#)
+  </insert>
+  
+    <insert id="INSERT.COM.SQLSave002"
+          parameterClass="java.util.HashMap">
+    Insert	
+	Into	M_COM_CTC(ID_COM,COM_CTC_TYPE,COM_EMAIL,COM_TEL_NO,COM_FAX_NO,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+	VALUES(#ID_COM#,#CONTACT_TYPE#,#EMAIL#,#TEL_NO#,#FAX_NO#,SYSDATE,SYSDATE,#ID_LOGIN#,#ID_AUDIT#)
+  </insert>
+  
+  
+    <insert id="INSERT.COM.SQLSave003"
+          parameterClass="java.util.HashMap">
+    Insert	
+	Into	M_COM_ADR(ID_COM,COM_ADR_TYPE,COM_ADR_LINE1,COM_ADR_LINE2,COM_ADR_LINE3,ZIP_CODE,COUNTRY,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+	
+	VALUES(#ID_COM#,#COM_ADR_TYPE#,#C_ADR_LINE1#,#C_ADR_LINE2#,#C_ADR_LINE3#,#ZIP_CODE#,#COUNTRY#,SYSDATE,SYSDATE,#ID_LOGIN#,#ID_AUDIT#)
+  </insert>
+  
+    <delete id="DELETE.COM.SQLDelete001"
+          parameterClass="java.lang.String">
+	Delete	
+	From	M_COM_BANKINFO	
+	Where	ID_COM_BANK = #id_com_bank#	
+
+  </delete>
+  
+
+
+</sqlMap>

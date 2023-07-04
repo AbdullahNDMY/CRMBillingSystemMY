@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SSM/M_SSMS01_01BL" scope="singleton">
+        <property name="businessLogic" ref="M_SSMS01_01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_SSM/M_SSMS01_01SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.m_ssm.blogic.M_SSMS01_01BLogic"
+        id="M_SSMS01_01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="authenticationController" ref="authenticationController"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SSMS01_02BL" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_SSMS01_02SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SSM/M_SSMS01_02BL" scope="singleton">
+        <property name="businessLogic" ref="M_SSMS01_02BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_SSM/M_SSMS01_02SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.m_ssm.blogic.M_SSMS01_02BLogic"
+        id="M_SSMS01_02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+</beans>

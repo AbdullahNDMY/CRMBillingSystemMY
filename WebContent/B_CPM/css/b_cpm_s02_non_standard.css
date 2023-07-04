@@ -1,0 +1,124 @@
+fieldset{
+	width:100%;
+	border:2px solid #E4E4DC; 
+	padding: 15px 0px 5px 0px;
+	position:relative;
+}
+fieldset .service legend{
+	color:#0046D5;
+	font-weight:bold;
+}
+fieldset label.header{
+	width:125px;
+}
+fieldset ul{
+	margin:0 0 0 10px;
+}
+fieldset .removeX{
+	position:absolute;
+	top:15px;
+	right:10px;
+	background-color:#F8F8F8;
+
+}
+fieldset .removeX a{
+	text-decoration:none;
+	color:#C4C4BE;
+	font-weight:bold;
+}
+fieldset .removeX img{
+	border:0;
+}
+fieldset li{
+	margin-bottom:5px;
+}
+.serviceDetail{
+	width:22%;
+	border:1px solid #CEE7FF;
+	padding: 2px 2px 2px 2px;
+	float:right;
+}
+.serviceDetail table{
+	width:100%;
+	border-collapse:collapse;
+}
+.serviceDetail .header{
+	background-color: #CEE7FF;
+	text-align:center;
+}
+.serviceDetail .mode{
+	width:45%;
+}
+.serviceDetail .rate{
+	width:55%;
+}
+
+.serviceDetail select{
+}
+.serviceDetail input{
+	width:60px;
+}
+
+.subPlan{
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin-top:2px;
+	float:left;
+}
+.subPlan .header{
+	background-color: #CEE7FF;
+	text-align:center;
+}
+.subPlan select{
+}
+
+.subPlan .trAdd{
+	width:5.67%;
+}
+
+.subPlan .serviceGroup{
+	width:12.5%;
+}
+
+.subPlan .serviceType{
+	width:20.8%;
+}
+.subPlan .serviceItem{
+	width:33.3%;
+}
+
+.optionService{
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+}
+.optionService .header{
+	background-color: #CEE7FF;
+	text-align:center;
+}
+.optionService .trAdd{
+	width:4.52%;
+}
+
+.optionService .serviceGroup{
+	width:10%;
+}
+
+.optionService .serviceType{
+	width:16.3%;
+}
+.optionService .serviceItem{
+	width:25.85%;
+}
+
+.optionService .mode{
+	width:10.18%;
+}
+.optionService .rate{
+	width:11.22%;
+}
+
+.optionService select{
+}
+.optionService input{
+	width:60px;
+}

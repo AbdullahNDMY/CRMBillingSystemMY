@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<!-- モジュール固有のBean定義 -->
+
+  <!-- 共通定義のインポート -->
+  <import resource="../commonContext.xml" />
+
+<!-- ======================================== アクション・業務ロジック定義 -->
+  <!-- アクション定義 --> 
+	<bean name="/M_CUR/M_CURS01Action" scope="singleton"
+          class="jp.terasoluna.fw.web.struts.actions.DispatchAction">
+    </bean>  
+  	<bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_CUR/M_CURS01SCR" scope="singleton"/>
+  	<bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_CUR/M_CURS02SCR" scope="singleton"/>
+    <!-- Search action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_CUR/M_CURS01BL" scope="singleton">
+        <property name="businessLogic" ref="M_CURS01BLogic"/>
+    </bean>
+     <bean id="M_CURS01BLogic" scope="singleton"
+		class="nttdm.bsys.m_cur.blogic.M_CURS01BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    <!-- Search action -->
+     <!-- Edit action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_CUR/M_CURS02BL" scope="singleton">
+        <property name="businessLogic" ref="M_CURS02BLogic"/>
+    </bean>
+     <bean id="M_CURS02BLogic" scope="singleton"
+		class="nttdm.bsys.m_cur.blogic.M_CURS02BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    <!-- Edit action -->
+    <bean name="/M_CUR/M_CURS02Action" scope="singleton"
+          class="jp.terasoluna.fw.web.struts.actions.DispatchAction">
+    </bean>  
+    <!-- Save action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_CUR/M_CURS02_NBL" scope="singleton">
+        <property name="businessLogic" ref="M_CURS02_NBLogic"/>
+    </bean>
+     <bean id="M_CURS02_NBLogic" scope="singleton"
+		class="nttdm.bsys.m_cur.blogic.M_CURS02_NBlogic">
+            <property name="updateDAO" ref="updateDAO"></property>
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    <!-- Save action -->
+    <!-- Delete action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_CUR/M_CURS02_DBL" scope="singleton">
+        <property name="businessLogic" ref="M_CURS02_DBLogic"/>
+    </bean>
+     <bean id="M_CURS02_DBLogic" scope="singleton"
+		class="nttdm.bsys.m_cur.blogic.M_CURS02_DBlogic">
+            <property name="updateDAO" ref="updateDAO"></property>
+    </bean>
+    <!-- Delete action -->
+    <!-- Edit action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_CUR/M_CURS02_EBL" scope="singleton">
+        <property name="businessLogic" ref="M_CURS02_EBLogic"/>
+    </bean>
+     <bean id="M_CURS02_EBLogic" scope="singleton"
+		class="nttdm.bsys.m_cur.blogic.M_CURS02_EBlogic">
+            <property name="updateDAO" ref="updateDAO"></property>
+    </bean>
+    <!-- Edit action -->
+</beans>

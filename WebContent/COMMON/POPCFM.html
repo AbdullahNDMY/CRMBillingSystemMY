@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<title>POPUP</title>
+   	<link type="text/css" rel="stylesheet" href="./css/popup.css"/>
+   	<script type="text/javascript" src="../javascript/messageBox.js"></script>
+   	<script type="text/javascript" src="./js/popup.js"></script>		
+</head>
+<body onload="javascript:init();" class="popup">
+<table>
+	<tr>
+		<td id="image"><img src="./images/confirm.jpg"/></td>
+		<td id="content">This is custom confirm dialog!<br/>(Error: if you see this message)</td>
+	</tr>
+</table>
+<br>
+<div id="btnGroup" class="btnGroup">
+<input type="button" name="btnYes" value="Yes" class="button" onclick="javascript: doYes();"/>
+<input type="button" name="btnNo" value="No" class="button" onclick="javascript: doNo();"/>
+</div>
+</body>
+</html>

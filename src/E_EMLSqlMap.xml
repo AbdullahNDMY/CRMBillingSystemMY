@@ -1,0 +1,1296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_EML">
+<select id="SELECT.E_EML.SQL001" 
+          parameterClass="nttdm.bsys.e_eml.dto.E_EMLInput"
+          resultClass="nttdm.bsys.e_eml.bean.E_EML01Bean">
+		SELECT TO_CHAR(A.DATE_REQ, 'DD/MM/YYYY') as datereq
+		     , A.id_ref as billDocuNo
+		     , A.bill_acc as billAccNo
+		     , A.bill_type as transType
+		     , A.DELIVERY_EMAIL as email
+		     , A.CUST_NAME as customerName
+		     , A.ID_CUST as idCust
+		     , A.CONTACT_EMAIL as emailTo
+		     , A.CONTACT_EMAIL_CC as emailCc
+		     , B.id_batch as batchId
+		     , B.filename as pdf
+		     , B.ID_DOC as id_doc
+		     , C.id_batch as emailBatchId
+		     , TO_CHAR(C.date_sent, 'dd/MM/yyyy HH24:mi:ss') as sent
+		     , C.NO_EMAIL as noEmail
+		     , CUS.CUST_ACC_NO AS peopleAccNo
+		  FROM T_BIL_H A
+		  <!-- PDF_TABLE -->
+		  LEFT JOIN (
+		              SELECT TDE.ID_BATCH
+		                   , TDE.filename
+		                   , TDE.ID_REF
+		                   , TDE.ID_DOC
+		                FROM t_doc_email TDE
+		               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+		          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+		                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+		            ) B
+		    ON A.ID_REF = B.ID_REF
+		  <!-- EMAIL_TABLE -->
+		  LEFT JOIN (
+		              SELECT teh.ID_BATCH
+		                   , teh.date_sent
+		                   , ted.id_ref
+		                   , TEMP.NO_EMAIL
+							      FROM t_email_h teh
+							     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+							        ON teh.id_email = ted.id_mail
+							      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+							        ON ted.id_ref = TEMP.id_ref
+		            ) C
+		    ON A.ID_REF = C.ID_REF
+		 <!-- Peoplesoft Acc No TABLE -->
+		 INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST    
+		 <!-- Same Customer ID Same Email TABLE -->
+		 INNER JOIN (
+					 	SELECT 
+					           A.ID_CUST
+					         , COUNT(A.ID_REF) ID_COUNT
+					         , A.CONTACT_EMAIL
+							  FROM T_BIL_H A
+							 
+							  LEFT JOIN (
+							              SELECT TDE.ID_BATCH
+							                   , TDE.filename
+							                   , TDE.ID_REF
+							                   , TDE.ID_DOC
+							                FROM t_doc_email TDE
+							               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+							          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+							                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+							            ) B
+							    ON A.ID_REF = B.ID_REF
+							 
+							  LEFT JOIN (
+							              SELECT teh.ID_BATCH
+							                   , teh.date_sent
+							                   , ted.id_ref
+							                   , TEMP.NO_EMAIL
+												      FROM t_email_h teh
+												     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+												        ON teh.id_email = ted.id_mail
+												      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+												        ON ted.id_ref = TEMP.id_ref
+							            ) C
+							    ON A.ID_REF = C.ID_REF
+							
+							 INNER JOIN M_CUST CUS
+							 ON A.ID_CUST = CUS.ID_CUST 
+					     WHERE 1=1
+					     <dynamic prepend="AND">
+							<isNotEmpty prepend="AND" property="billDocuNo">
+								UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="customerName">
+								UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="idCust">
+								UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="billAcountNo">
+								UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="transaction">
+								UPPER(a.bill_type) like UPPER('%$transaction$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="batchId">
+								(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+							</isNotEmpty>
+							
+							<isNotEmpty prepend="AND" property="pdfFilename">
+								B.FILENAME = #pdfFilename#
+							</isNotEmpty>
+				
+							<isNotEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_docuDate">
+									a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							<isNotEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							
+							<isNotEmpty property="deliveryEmail" prepend="AND">
+				            	a.DELIVERY_EMAIL IN
+				            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+				                #deliveryEmail[]#
+				            </iterate>
+				            </isNotEmpty>
+							<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="peopleAccNo[0]" compareValue="1">
+								 CUS.CUST_ACC_NO is NOT NULL
+								</isEqual>
+								<isEqual property="peopleAccNo[0]" compareValue="0">
+								 CUS.CUST_ACC_NO is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="pdfGen[0]" compareValue="1">
+								 b.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="pdfGen[0]" compareValue="0">
+								 b.id_batch is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="emailSend[0]" compareValue="1">
+								 c.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="emailSend[0]" compareValue="0">
+								 c.id_batch is NULL
+								</isEqual>
+							</isEqual>
+						</dynamic>
+					     GROUP BY A.ID_CUST , A.CONTACT_EMAIL ) TMP
+		    ON A.ID_CUST = TMP.ID_CUST
+		   AND NVL(A.CONTACT_EMAIL,'0') = NVL(TMP.CONTACT_EMAIL,'0')
+		 WHERE A.IS_DELETED = '0'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="idCust">
+				UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billAcountNo">
+				UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="transaction">
+				UPPER(a.bill_type) like UPPER('%$transaction$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="pdfFilename">
+				B.FILENAME = #pdfFilename#
+			</isNotEmpty>
+
+			<isNotEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_docuDate">
+					a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			
+			<isNotEmpty property="deliveryEmail" prepend="AND">
+            	a.DELIVERY_EMAIL IN
+            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+                #deliveryEmail[]#
+            </iterate>
+            </isNotEmpty>
+			<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="peopleAccNo[0]" compareValue="1">
+				 CUS.CUST_ACC_NO is NOT NULL
+				</isEqual>
+				<isEqual property="peopleAccNo[0]" compareValue="0">
+				 CUS.CUST_ACC_NO is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="pdfGen[0]" compareValue="1">
+				 b.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="pdfGen[0]" compareValue="0">
+				 b.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="emailSend[0]" compareValue="1">
+				 c.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="emailSend[0]" compareValue="0">
+				 c.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="sameEmailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="sameEmail[0]" compareValue="1">
+				 TMP.ID_COUNT > 1
+				</isEqual>
+				<isEqual property="sameEmail[0]" compareValue="0">
+				 TMP.ID_COUNT = 1
+				</isEqual>
+			</isEqual>
+		</dynamic>
+		ORDER BY A.ID_CUST DESC,A.DATE_REQ DESC,A.ID_REF DESC
+</select>
+<select id="SELECT.E_EML.SQL002" 
+		  parameterClass="nttdm.bsys.e_eml.dto.E_EMLInput"
+          resultClass="java.lang.String">
+    	SELECT COUNT(*)
+		  FROM T_BIL_H A
+		  <!-- PDF_TABLE -->
+		  LEFT JOIN (
+		              SELECT TDE.ID_BATCH
+		                   , TDE.filename
+		                   , TDE.ID_REF
+		                FROM t_doc_email TDE
+		               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+		          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+		                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+		            ) B
+		    ON A.ID_REF = B.ID_REF
+		  <!-- EMAIL_TABLE -->
+		  LEFT JOIN (
+		              SELECT teh.ID_BATCH
+		                   , teh.date_sent
+		                   , ted.id_ref
+		                   , TEMP.NO_EMAIL
+							      FROM t_email_h teh
+							     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+							        ON teh.id_email = ted.id_mail
+							      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+							        ON ted.id_ref = TEMP.id_ref
+		            ) C
+		    ON A.ID_REF = C.ID_REF
+		 <!-- Peoplesoft Acc No TABLE -->
+		 INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST    
+		 <!-- Same Customer ID Same Email TABLE -->
+		 INNER JOIN (
+					 	SELECT 
+					           A.ID_CUST
+					         , COUNT(A.ID_REF) ID_COUNT
+					         , A.CONTACT_EMAIL
+							  FROM T_BIL_H A
+							 
+							  LEFT JOIN (
+							              SELECT TDE.ID_BATCH
+							                   , TDE.filename
+							                   , TDE.ID_REF
+							                   , TDE.ID_DOC
+							                FROM t_doc_email TDE
+							               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+							          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+							                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+							            ) B
+							    ON A.ID_REF = B.ID_REF
+							 
+							  LEFT JOIN (
+							              SELECT teh.ID_BATCH
+							                   , teh.date_sent
+							                   , ted.id_ref
+							                   , TEMP.NO_EMAIL
+												      FROM t_email_h teh
+												     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+												        ON teh.id_email = ted.id_mail
+												      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+												        ON ted.id_ref = TEMP.id_ref
+							            ) C
+							    ON A.ID_REF = C.ID_REF
+							
+							 INNER JOIN M_CUST CUS
+							 ON A.ID_CUST = CUS.ID_CUST 
+					     WHERE 1=1
+					     <dynamic prepend="AND">
+							<isNotEmpty prepend="AND" property="billDocuNo">
+								UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="customerName">
+								UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="idCust">
+								UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="billAcountNo">
+								UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="transaction">
+								UPPER(a.bill_type) like UPPER('%$transaction$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="batchId">
+								(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+							</isNotEmpty>
+							
+							<isNotEmpty prepend="AND" property="pdfFilename">
+								B.FILENAME = #pdfFilename#
+							</isNotEmpty>
+				
+							<isNotEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_docuDate">
+									a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							<isNotEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							
+							<isNotEmpty property="deliveryEmail" prepend="AND">
+				            	a.DELIVERY_EMAIL IN
+				            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+				                #deliveryEmail[]#
+				            </iterate>
+				            </isNotEmpty>
+							<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="peopleAccNo[0]" compareValue="1">
+								 CUS.CUST_ACC_NO is NOT NULL
+								</isEqual>
+								<isEqual property="peopleAccNo[0]" compareValue="0">
+								 CUS.CUST_ACC_NO is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="pdfGen[0]" compareValue="1">
+								 b.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="pdfGen[0]" compareValue="0">
+								 b.id_batch is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="emailSend[0]" compareValue="1">
+								 c.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="emailSend[0]" compareValue="0">
+								 c.id_batch is NULL
+								</isEqual>
+							</isEqual>
+						</dynamic>
+					     GROUP BY A.ID_CUST , A.CONTACT_EMAIL ) TMP
+		    ON A.ID_CUST = TMP.ID_CUST
+		   AND NVL(A.CONTACT_EMAIL,'0') = NVL(TMP.CONTACT_EMAIL,'0')
+		 WHERE A.IS_DELETED = '0'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="idCust">
+				UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billAcountNo">
+				UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="transaction">
+				UPPER(a.bill_type) like UPPER('%$transaction$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="pdfFilename">
+				B.FILENAME = #pdfFilename#
+			</isNotEmpty>
+
+			<isNotEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_docuDate">
+					a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			
+			<isNotEmpty property="deliveryEmail" prepend="AND">
+            	a.DELIVERY_EMAIL IN
+            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+                #deliveryEmail[]#
+            </iterate>
+        	</isNotEmpty>
+        	<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="peopleAccNo[0]" compareValue="1">
+				 CUS.CUST_ACC_NO is NOT NULL
+				</isEqual>
+				<isEqual property="peopleAccNo[0]" compareValue="0">
+				 CUS.CUST_ACC_NO is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="pdfGen[0]" compareValue="1">
+				 b.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="pdfGen[0]" compareValue="0">
+				 b.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="emailSend[0]" compareValue="1">
+				 c.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="emailSend[0]" compareValue="0">
+				 c.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="sameEmailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="sameEmail[0]" compareValue="1">
+				 TMP.ID_COUNT > 1
+				</isEqual>
+				<isEqual property="sameEmail[0]" compareValue="0">
+				 TMP.ID_COUNT = 1
+				</isEqual>
+			</isEqual>
+		</dynamic>
+</select>
+<select id="SELECT.E_EML.SQL003" 
+		  parameterClass="nttdm.bsys.e_eml.dto.E_EML02Input"
+          resultClass="nttdm.bsys.e_eml.bean.E_EML02Bean">
+       SELECT H.ID_BATCH AS batchId,H.ID_EMAIL AS emailId,H.EMAIL_FROM AS emailfrom,H.EMAIL_TO AS emailto,
+	   		  H.EMAIL_CC AS emailcc,H.SUBJECT AS subject,TO_CHAR(H.DATE_SENT, 'dd/MM/yyyy HH24:mi:ss') AS sent,
+	   		  TO_CHAR(H.DATE_SENT2, 'dd/MM/yyyy HH24:mi:ss') AS sent2
+	   FROM T_EMAIL_H H
+       WHERE 1 = 1
+       <dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				H.id_email IN (SELECT DISTINCT D.id_mail FROM T_EMAIL_D D WHERE TRIM(d.id_ref) = TRIM(#billDocuNo#))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				H.ID_BATCH = #batchId#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY H.ID_EMAIL
+</select>
+<select id="SELECT.E_EML.SQL004" 
+		  parameterClass="nttdm.bsys.e_eml.dto.E_EML02Input"
+          resultClass="java.lang.Integer">
+        SELECT COUNT(1)
+		  FROM T_EMAIL_H H
+         WHERE 1 = 1
+       <dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				H.id_email IN (SELECT DISTINCT D.id_mail FROM T_EMAIL_D D WHERE TRIM(d.id_ref) = TRIM(#billDocuNo#))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				H.ID_BATCH = #batchId#
+			</isNotEmpty>
+		</dynamic>
+</select>
+<select id="SELECT.E_EML.SQL005" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT NVL(E.FILENAME,'') AS FILENAME
+	     , NVL(MAX(E.ID_DOC),'') AS ID_DOC
+	  FROM T_DOC_EMAIL E
+	 INNER JOIN T_EMAIL_D D
+		ON D.ID_DOC = E.ID_DOC
+	   AND D.ID_REF = E.ID_REF
+	 WHERE D.ID_MAIL = #id_mail#
+	 group by E.FILENAME
+</select>
+<select id="selectFileName" parameterClass="java.lang.Long" resultClass="java.util.HashMap">
+	SELECT FILENAME, FILELOCATION FROM T_DOC_EMAIL WHERE ID_DOC = #id_doc#
+</select>
+<!-- SMTP_SERVER_INFO -->
+<select id="selectSmtpServerInfo" resultClass="java.util.HashMap">
+	SELECT B.MAIL_SERVER_NAME,B.MAIL_SERVER_PASSWORD,B.MAIL_SERVER_USERNAME,B.MAIL_SERVER_PORTNO
+	FROM M_COM B
+	WHERE B.IS_DELETED = '0'
+	AND B.ID_COM = (SELECT MAX(ID_COM) FROM M_COM WHERE IS_DELETED = '0')
+
+</select>
+<!-- PDFCHECK -->
+<select id="selectPdfInfo" parameterClass="java.lang.String" resultClass="nttdm.bsys.e_eml.dto.E_EMLPdfCheckDto">
+	SELECT ID_DOC AS id_doc,ID_REF AS id_ref,FILENAME AS fileName,
+		   FILELOCATION AS fileLocation,FILEPASS AS filePass
+	FROM T_DOC_EMAIL
+	WHERE TRIM(ID_REF) = TRIM(#id_ref#)
+	ORDER BY ID_DOC DESC
+</select>
+<!-- MAILINFO -->
+<select id="SELECT.E_EML.GET_MAIL_TEMPLATE" parameterClass="java.lang.String" resultClass="nttdm.bsys.e_eml.dto.E_EML_MailTemplateDto">
+	SELECT MMT.ID_CODE AS idCode
+		 , MMT.DESCRIPTION AS description
+		 , MMT.SUBJECT AS subject
+		 , MMT.ATTACTMENT_PASS AS attactmentPass
+		 , MMT.CONTENT AS content
+		 , MMT.ATTACTMENT1 AS attactment1
+		 , MMT.ATTACTMENT2 AS attactment2
+		 , MMT.ATTACTMENT3 AS attactment3
+		 , MMT.ATTACTMENT4 AS attactment4
+		 , MMT.ALWAYS_CC AS alwaysCc
+		 , MMT.FROM_DISPLAY_NAME AS fromDisplayName
+		 , MMT.ZIPFILENAME AS zipFlieName
+	  FROM M_MAIL_TEMPLATE MMT
+	 WHERE MMT.ID_CODE = (SELECT ID_CODE FROM M_MAIL_MODULE WHERE ID_SUB_MODULE = #id_sub_module#)
+</select>
+<select id="SELECT.E_EML.GET_BILL_TYPE" parameterClass="java.lang.String" resultClass="java.lang.String">
+	SELECT TBH.BILL_TYPE
+	  FROM T_BIL_H TBH
+	 WHERE TRIM(TBH.ID_REF) = #id_ref#
+</select>
+
+<select id="SELECT.E_EML.GET_PDF_NUM" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	SELECT COUNT(FILENAME) AS FILE_NUM
+	  FROM T_DOC_EMAIL 
+	 WHERE TRIM(ID_REF) = TRIM(#id_ref#)
+</select>
+
+<select id="SELECT.E_EML.GET_PDF_ZIP_NUM" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+	SELECT COUNT(DISTINCT FILENAME) AS FILE_NUM
+	  FROM T_DOC_EMAIL 
+	 WHERE FILENAME LIKE '%$fileNm$%'
+</select>
+
+<select id="SELECT.E_EML.GET_PDF_LOCATION" resultClass="java.lang.String">
+	SELECT SET_VALUE
+	  FROM M_GSET_D
+	 WHERE ID_SET = 'BATCH_E_EML_P01'
+</select>
+
+<insert id="INSERT.M_EML.T_DOC_EMAIL" parameterClass="java.util.HashMap">
+ 	INSERT INTO T_DOC_EMAIL(
+ 		ID_DOC,
+		ID_REF,
+		ID_BATCH,
+		FILENAME,
+		FILELOCATION,
+		FILEPASS,
+		IS_DELETED,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN
+ 	)VALUES(
+ 		SEQ_T_DOC_EMAIL.NEXTVAL,
+		#id_ref#, 
+		#id_batch#, 
+		#filename#,
+		#filelocation#,
+		#filepass#,
+		'0', 
+		sysdate, 
+		sysdate, 
+		#id_login#)
+ </insert>
+<select id="SELECT.E_EML.GET_ALL_ID_REFS" parameterClass="nttdm.bsys.e_eml.dto.E_EMLInput" resultClass="java.util.HashMap">
+		SELECT rslt.ID_REF
+          	  , rslt.ID_CUST
+		      , rslt.CONTACT_EMAIL
+			  , rslt.DATEREQ
+      		  , rslt.CUST_ACC_NO
+		from
+		(SELECT A.ID_REF
+          	  , A.ID_CUST
+		      , A.CONTACT_EMAIL
+         	  , CASE WHEN TMP.ID_COUNT > 1 THEN '1' ELSE '0' END ISZIPFILE
+			  , TO_CHAR(A.DATE_REQ, 'YYYY-MM-DD') DATEREQ
+      		  , CUS.CUST_ACC_NO
+      		  , A.DELIVERY_EMAIL
+      		  , A.CONTACT_EMAIL_CC
+		FROM T_BIL_H A
+		  <!-- PDF_TABLE -->
+		  LEFT JOIN (
+		              SELECT TDE.ID_BATCH
+		                   , TDE.filename
+		                   , TDE.ID_REF
+		                   , TDE.ID_DOC
+		                FROM t_doc_email TDE
+		               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+		          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+		                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+		            ) B
+		    ON A.ID_REF = B.ID_REF
+		  <!-- EMAIL_TABLE -->
+		  LEFT JOIN (
+		              SELECT teh.ID_BATCH
+		                   , teh.date_sent
+		                   , ted.id_ref
+		                   , TEMP.NO_EMAIL
+							      FROM t_email_h teh
+							     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+							        ON teh.id_email = ted.id_mail
+							      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+							        ON ted.id_ref = TEMP.id_ref
+		            ) C
+		    ON A.ID_REF = C.ID_REF
+		 <!-- Peoplesoft Acc No TABLE -->
+		 INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST    
+		 <!-- Same Customer ID Same Email TABLE -->
+		 INNER JOIN (
+					 	SELECT 
+					           A.ID_CUST
+					         , COUNT(A.ID_REF) ID_COUNT
+					         , A.CONTACT_EMAIL
+							  FROM T_BIL_H A
+							 
+							  LEFT JOIN (
+							              SELECT TDE.ID_BATCH
+							                   , TDE.filename
+							                   , TDE.ID_REF
+							                   , TDE.ID_DOC
+							                FROM t_doc_email TDE
+							               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+							          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+							                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+							            ) B
+							    ON A.ID_REF = B.ID_REF
+							 
+							  LEFT JOIN (
+							              SELECT teh.ID_BATCH
+							                   , teh.date_sent
+							                   , ted.id_ref
+							                   , TEMP.NO_EMAIL
+												      FROM t_email_h teh
+												     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+												        ON teh.id_email = ted.id_mail
+												      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+												        ON ted.id_ref = TEMP.id_ref
+							            ) C
+							    ON A.ID_REF = C.ID_REF
+							
+							 INNER JOIN M_CUST CUS
+							 ON A.ID_CUST = CUS.ID_CUST 
+					     WHERE 1=1
+					     <dynamic prepend="AND">
+							<isNotEmpty prepend="AND" property="billDocuNo">
+								UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="customerName">
+								UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="idCust">
+								UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="billAcountNo">
+								UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="transaction">
+								UPPER(a.bill_type) like UPPER('%$transaction$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="batchId">
+								(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+							</isNotEmpty>
+							
+							<isNotEmpty prepend="AND" property="pdfFilename">
+								B.FILENAME = #pdfFilename#
+							</isNotEmpty>
+				
+							<isNotEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_docuDate">
+									a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							<isNotEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							
+							<isNotEmpty property="deliveryEmail" prepend="AND">
+				            	a.DELIVERY_EMAIL IN
+				            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+				                #deliveryEmail[]#
+				            </iterate>
+				            </isNotEmpty>
+							<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="peopleAccNo[0]" compareValue="1">
+								 CUS.CUST_ACC_NO is NOT NULL
+								</isEqual>
+								<isEqual property="peopleAccNo[0]" compareValue="0">
+								 CUS.CUST_ACC_NO is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="pdfGen[0]" compareValue="1">
+								 b.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="pdfGen[0]" compareValue="0">
+								 b.id_batch is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="emailSend[0]" compareValue="1">
+								 c.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="emailSend[0]" compareValue="0">
+								 c.id_batch is NULL
+								</isEqual>
+							</isEqual>
+						</dynamic>
+					     GROUP BY A.ID_CUST , A.CONTACT_EMAIL ) TMP
+		    ON A.ID_CUST = TMP.ID_CUST
+		   AND NVL(A.CONTACT_EMAIL,'0') = NVL(TMP.CONTACT_EMAIL,'0')
+		 WHERE A.IS_DELETED = '0'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="idCust">
+				UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billAcountNo">
+				UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="transaction">
+				UPPER(a.bill_type) like UPPER('%$transaction$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="pdfFilename">
+				B.FILENAME = #pdfFilename#
+			</isNotEmpty>
+
+			<isNotEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_docuDate">
+					a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty property="deliveryEmail" prepend="AND">
+            	a.DELIVERY_EMAIL IN
+            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+                #deliveryEmail[]#
+            </iterate>
+            </isNotEmpty>
+			<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="peopleAccNo[0]" compareValue="1">
+				 CUS.CUST_ACC_NO is NOT NULL
+				</isEqual>
+				<isEqual property="peopleAccNo[0]" compareValue="0">
+				 CUS.CUST_ACC_NO is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="pdfGen[0]" compareValue="1">
+				 b.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="pdfGen[0]" compareValue="0">
+				 b.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="emailSend[0]" compareValue="1">
+				 c.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="emailSend[0]" compareValue="0">
+				 c.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="sameEmailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="sameEmail[0]" compareValue="1">
+				 TMP.ID_COUNT > 1
+				</isEqual>
+				<isEqual property="sameEmail[0]" compareValue="0">
+				 TMP.ID_COUNT = 1
+				</isEqual>
+			</isEqual>
+		</dynamic>) rslt
+		WHERE rslt.DELIVERY_EMAIL = '1'
+		ORDER BY rslt.ID_CUST ,rslt.CONTACT_EMAIL ,rslt.CONTACT_EMAIL_CC
+</select>
+<!-- SAME_CUST_SAME_EMAIL -->
+<select id="selectSameCusInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.ID_REF 
+			   ,A.ID_CUST 
+			   ,A.CONTACT_EMAIL
+			   ,A.CONTACT_EMAIL_CC
+			   ,A.CONTACT_TYPE
+			   ,CUS.CUST_ACC_NO
+		FROM T_BIL_H A
+		 INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST 
+		 WHERE A.IS_DELETED = '0'
+		<dynamic prepend="AND">
+			<isNotEmpty property="id_ref" prepend="AND">
+            	a.id_ref IN
+            <iterate  property="id_ref" conjunction="," close=")" open="(" >
+                #id_ref[]#
+            </iterate>
+        	</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ID_CUST ,A.CONTACT_EMAIL ,A.CONTACT_EMAIL_CC
+</select>
+<!-- CC -->
+<!-- <select id="selectCC1" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT D.EMAIL_CC
+		FROM M_CUST_CTC D
+		WHERE D.ID_CUST = #id_cust#
+		AND D.CONTACT_TYPE = #contact_type#
+</select> -->
+<select id="selectCC2" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT A.EMAIL
+		FROM M_USER A,T_BIL_H E
+		WHERE A.ID_USER = E.ID_CONSULT
+		AND E.ID_REF = #id_ref#
+</select>
+<select id="GET_ID_EMAIL_T_EMAIL_H" resultClass="java.lang.String">
+    	SELECT SEQ_T_EMAIL_H.NEXTVAL as ID_EMAIL FROM DUAL 
+</select>
+<insert id="insertT_EMAIL_H" parameterClass="java.util.HashMap">
+		INSERT INTO T_EMAIL_H( ID_EMAIL
+			,ID_BATCH
+			,EMAIL_FROM
+			,EMAIL_TO
+			,EMAIL_CC
+			,SUBJECT
+			,DATE_SENT
+			,DATE_SENT2
+			,FUNCTION_ID
+			,MAIL_TEMPLATE
+			,IS_DELETED
+			,DATE_CREATED
+			,DATE_UPDATED
+			,ID_LOGIN
+		)
+		VALUES( SEQ_T_EMAIL_H.NEXTVAL
+				,#id_batch#
+				,#from#
+				,#to#
+				,#cc#
+				,#subject#
+				,to_date(#sentdate#,'yyyy-mm-dd hh24:mi:ss')  
+				,to_date(#sent2date#,'yyyy-mm-dd hh24:mi:ss')
+				,'G-EML-P01'
+				,'EM01'
+				,'0'
+				,sysdate
+				,sysdate
+				,#loginUser#
+		)
+</insert>
+<insert id="insertT_EMAIL_D" parameterClass="java.util.HashMap">
+	INSERT INTO T_EMAIL_D( ID_MAIL_D
+			,ID_MAIL
+			,ID_REF
+			,ID_DOC
+			,IS_DELETED
+			,DATE_CREATED
+			,DATE_UPDATED
+			,ID_LOGIN
+		)
+		VALUES( SEQ_T_EMAIL_D.nextval
+				,SEQ_T_EMAIL_H.CURRVAL
+				,#id_ref#
+				,#id_doc#
+				,'0'
+				,sysdate
+				,sysdate
+				,#loginUser#
+		)
+</insert>
+<select id="selectEmailAllIdRef" parameterClass="nttdm.bsys.e_eml.dto.E_EMLInput" resultClass="java.util.HashMap">
+		SELECT rslt.ID_REF 
+			   ,rslt.ID_CUST 
+			   ,rslt.CONTACT_EMAIL 
+			   ,rslt.CONTACT_TYPE
+			   ,rslt.CUST_ACC_NO
+			   ,rslt.CONTACT_EMAIL_CC
+		from
+		(SELECT A.ID_REF 
+			   ,CUS.ID_CUST 
+			   ,A.CONTACT_EMAIL 
+			   ,A.CONTACT_TYPE
+			   ,CUS.CUST_ACC_NO
+			   ,A.DELIVERY_EMAIL
+			   ,A.CONTACT_EMAIL_CC
+		FROM T_BIL_H A
+		  <!-- PDF_TABLE -->
+		  LEFT JOIN (
+		              SELECT TDE.ID_BATCH
+		                   , TDE.filename
+		                   , TDE.ID_REF
+		                   , TDE.ID_DOC
+		                FROM t_doc_email TDE
+		               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+		          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+		                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+		            ) B
+		    ON A.ID_REF = B.ID_REF
+		  <!-- EMAIL_TABLE -->
+		  LEFT JOIN (
+		              SELECT teh.ID_BATCH
+		                   , teh.date_sent
+		                   , ted.id_ref
+		                   , TEMP.NO_EMAIL
+							      FROM t_email_h teh
+							     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+							        ON teh.id_email = ted.id_mail
+							      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+							        ON ted.id_ref = TEMP.id_ref
+		            ) C
+		    ON A.ID_REF = C.ID_REF
+		 <!-- Peoplesoft Acc No TABLE -->
+		 INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST    
+		 <!-- Same Customer ID Same Email TABLE -->
+		 INNER JOIN (
+					 	SELECT 
+					           A.ID_CUST
+					         , COUNT(A.ID_REF) ID_COUNT
+					         , A.CONTACT_EMAIL
+							  FROM T_BIL_H A
+							 
+							  LEFT JOIN (
+							              SELECT TDE.ID_BATCH
+							                   , TDE.filename
+							                   , TDE.ID_REF
+							                   , TDE.ID_DOC
+							                FROM t_doc_email TDE
+							               INNER JOIN (SELECT MAX(ID_BATCH) BATCHID, ID_REF FROM t_doc_email GROUP BY ID_REF) MAX_ID_BATCH
+							          				ON TDE.ID_BATCH = MAX_ID_BATCH.BATCHID
+							                 AND TDE.ID_REF = MAX_ID_BATCH.ID_REF
+							            ) B
+							    ON A.ID_REF = B.ID_REF
+							 
+							  LEFT JOIN (
+							              SELECT teh.ID_BATCH
+							                   , teh.date_sent
+							                   , ted.id_ref
+							                   , TEMP.NO_EMAIL
+												      FROM t_email_h teh
+												     INNER JOIN (select max(id_mail) id_mail,id_ref from T_EMAIL_D group by id_ref) ted
+												        ON teh.id_email = ted.id_mail
+												      LEFT JOIN (SELECT id_ref, COUNT(1) NO_EMAIL FROM T_EMAIL_D GROUP BY id_ref) TEMP
+												        ON ted.id_ref = TEMP.id_ref
+							            ) C
+							    ON A.ID_REF = C.ID_REF
+							
+							 INNER JOIN M_CUST CUS
+							 ON A.ID_CUST = CUS.ID_CUST 
+					     WHERE 1=1
+					     <dynamic prepend="AND">
+							<isNotEmpty prepend="AND" property="billDocuNo">
+								UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="customerName">
+								UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="idCust">
+								UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="billAcountNo">
+								UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="transaction">
+								UPPER(a.bill_type) like UPPER('%$transaction$%')
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="batchId">
+								(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+							</isNotEmpty>
+							
+							<isNotEmpty prepend="AND" property="pdfFilename">
+								B.FILENAME = #pdfFilename#
+							</isNotEmpty>
+				
+							<isNotEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_docuDate">
+									a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_docuDate">
+								<isNotEmpty prepend="AND" property="end_docuDate">
+									a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							<isNotEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+								</isNotEmpty>
+								<isEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+								</isEmpty>
+							</isNotEmpty>
+							<isEmpty property="start_emailDate">
+								<isNotEmpty prepend="AND" property="end_emailDate">
+									TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+								</isNotEmpty>
+							</isEmpty>
+							
+							<isNotEmpty property="deliveryEmail" prepend="AND">
+				            	a.DELIVERY_EMAIL IN
+				            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+				                #deliveryEmail[]#
+				            </iterate>
+				            </isNotEmpty>
+							<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="peopleAccNo[0]" compareValue="1">
+								 CUS.CUST_ACC_NO is NOT NULL
+								</isEqual>
+								<isEqual property="peopleAccNo[0]" compareValue="0">
+								 CUS.CUST_ACC_NO is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="pdfGen[0]" compareValue="1">
+								 b.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="pdfGen[0]" compareValue="0">
+								 b.id_batch is NULL
+								</isEqual>
+							</isEqual>
+							<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+								<isEqual property="emailSend[0]" compareValue="1">
+								 c.id_batch is NOT NULL
+								</isEqual>
+								<isEqual property="emailSend[0]" compareValue="0">
+								 c.id_batch is NULL
+								</isEqual>
+							</isEqual>
+						</dynamic>
+					     GROUP BY A.ID_CUST , A.CONTACT_EMAIL ) TMP
+		    ON A.ID_CUST = TMP.ID_CUST
+		   AND NVL(A.CONTACT_EMAIL,'0') = NVL(TMP.CONTACT_EMAIL,'0')
+		 WHERE A.IS_DELETED = '0'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="billDocuNo">
+				UPPER(a.id_ref) like UPPER('%$billDocuNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				UPPER(A.CUST_NAME) like UPPER('%$customerName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="idCust">
+				UPPER(A.ID_CUST) like UPPER('%$idCust$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billAcountNo">
+				UPPER(a.bill_acc) like UPPER('%$billAcountNo$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="transaction">
+				UPPER(a.bill_type) like UPPER('%$transaction$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="batchId">
+				(UPPER(b.id_batch) like UPPER('%$batchId$%') OR UPPER(C.id_batch) like UPPER('%$batchId$%'))
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="pdfFilename">
+				B.FILENAME = #pdfFilename#
+			</isNotEmpty>
+
+			<isNotEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req BETWEEN TO_DATE(#start_docuDate#,'dd/MM/yyyy') AND TO_DATE(#end_docuDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_docuDate">
+					a.date_req &gt;= TO_DATE(#start_docuDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_docuDate">
+				<isNotEmpty prepend="AND" property="end_docuDate">
+					a.date_req &lt;= TO_DATE(#end_docuDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) BETWEEN TO_DATE(#start_emailDate#,'dd/MM/yyyy') AND TO_DATE(#end_emailDate#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &gt;= TO_DATE(#start_emailDate#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_emailDate">
+				<isNotEmpty prepend="AND" property="end_emailDate">
+					TRUNC(c.date_sent) &lt;= TO_DATE(#end_emailDate# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			
+			<isNotEmpty property="deliveryEmail" prepend="AND">
+            	a.DELIVERY_EMAIL IN
+            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+                #deliveryEmail[]#
+            </iterate>
+            </isNotEmpty>
+			<isEqual property="peopleCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="peopleAccNo[0]" compareValue="1">
+				 CUS.CUST_ACC_NO is NOT NULL
+				</isEqual>
+				<isEqual property="peopleAccNo[0]" compareValue="0">
+				 CUS.CUST_ACC_NO is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="pdfCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="pdfGen[0]" compareValue="1">
+				 b.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="pdfGen[0]" compareValue="0">
+				 b.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="emailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="emailSend[0]" compareValue="1">
+				 c.id_batch is NOT NULL
+				</isEqual>
+				<isEqual property="emailSend[0]" compareValue="0">
+				 c.id_batch is NULL
+				</isEqual>
+			</isEqual>
+			<isEqual property="sameEmailCheckSize" compareValue="1" prepend="AND">
+				<isEqual property="sameEmail[0]" compareValue="1">
+				 TMP.ID_COUNT > 1
+				</isEqual>
+				<isEqual property="sameEmail[0]" compareValue="0">
+				 TMP.ID_COUNT = 1
+				</isEqual>
+			</isEqual>
+		</dynamic>) rslt
+		where rslt.DELIVERY_EMAIL = '1'
+		ORDER BY rslt.ID_CUST ,rslt.CONTACT_EMAIL ,rslt.CONTACT_EMAIL_CC
+</select>
+<select id="selectPdfUserSql" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT A.ID_REF
+      			, A.ID_CUST, A.CONTACT_EMAIL
+      			, CASE WHEN B.ID_COUNT > 1 THEN '1' ELSE '0' END ISZIPFILE
+      			, TO_CHAR(A.DATE_REQ, 'YYYY-MM-DD') DATEREQ
+      			, CUS.CUST_ACC_NO
+		FROM (SELECT TBH.ID_CUST
+           			, TBH.CONTACT_TYPE
+           			, TBH.CONTACT_EMAIL
+           			, TBH.ID_REF
+           			, TBH.DATE_REQ
+        	  FROM T_BIL_H TBH
+		      WHERE TBH.IS_DELETED = '0'
+		    <dynamic prepend="AND">
+	            <isNotEmpty property="id_ref" prepend="AND">
+	            	TBH.ID_REF IN 
+	            <iterate  property="id_ref" conjunction="," close=")" open="(" >
+	                #id_ref[]#
+	            </iterate>
+	        	</isNotEmpty>
+        	</dynamic>
+		       ) A
+		LEFT JOIN (SELECT TBH.ID_CUST
+		                  , COUNT(TBH.ID_REF) ID_COUNT
+		                  , TBH.CONTACT_EMAIL
+		           FROM T_BIL_H TBH
+			       WHERE TBH.IS_DELETED = '0'
+			    <dynamic prepend="AND">
+		            <isNotEmpty property="id_ref" prepend="AND">
+		            	TBH.ID_REF IN 
+		            <iterate  property="id_ref" conjunction="," close=")" open="(" >
+		                #id_ref[]#
+		            </iterate>
+		        	</isNotEmpty>
+	        	</dynamic>
+		   			 GROUP BY TBH.ID_CUST, TBH.CONTACT_EMAIL) B
+		ON NVL(A.CONTACT_EMAIL,'0') = NVL(B.CONTACT_EMAIL,'0')
+		AND A.ID_CUST = B.ID_CUST
+		INNER JOIN M_CUST CUS
+		    ON A.ID_CUST = CUS.ID_CUST 
+		ORDER BY A.ID_CUST, A.CONTACT_EMAIL
+</select>
+<select id="maxFileSize" resultClass="java.lang.Integer">
+		SELECT ATTACHMENT_FILESIZE
+		FROM M_COM
+		WHERE IS_DELETED = '0'
+		AND ID_COM = (SELECT MAX(ID_COM) FROM M_COM WHERE IS_DELETED = '0')
+</select>
+</sqlMap>

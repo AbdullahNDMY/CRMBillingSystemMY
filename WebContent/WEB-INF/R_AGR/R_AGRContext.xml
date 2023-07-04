@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_AGR/R_AGR_R01BL" scope="singleton">
+        <property name="businessLogic" ref="R_AGR_R01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_AGR/R_AGR_R02BL" scope="singleton">
+        <property name="businessLogic" ref="R_AGR_R02BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/R_AGR/R_AGR_S01SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.r_agr.blogic.R_AGR_R01BLogic"
+        id="R_AGR_R01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.r_agr.blogic.R_AGR_R02BLogic"
+        id="R_AGR_R02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/R_AGR/R_AGR_R01DSP" scope="singleton"/> 
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_AGR/R_AGR_R03BL" scope="singleton">
+        <property name="businessLogic" ref="R_AGR_R03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.r_agr.blogic.R_AGR_R03BLogic"
+        id="R_AGR_R03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean> 
+</beans>

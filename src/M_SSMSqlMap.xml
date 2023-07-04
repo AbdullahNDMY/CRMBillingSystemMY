@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	<!-- SqlMap定義 -->
+<sqlMap namespace="M_SSM">
+
+	<select id="selectServiceGroups" resultClass="nttdm.bsys.m_ssm.bean.ServiceGroupBean">
+		SELECT
+		svc_grp,
+		svc_grp_name
+		FROM
+		M_SVG 
+		ORDER BY UPPER(svc_grp_name)
+   
+  </select>
+	<select id="selectsvcdescOfsvc" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		SELECT
+		SVC_DESC 
+		FROM M_SVC 
+		WHERE
+		ID_SERVICE = #idService# 
+	</select>	
+	<select id="checkIdExistedInPlanSVC" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject"
+		resultClass="nttdm.bsys.m_ssm.bean.OutputObject">
+		SELECT
+			COUNT(*) as totalRecord
+		FROM M_PLAN_SVC C
+		WHERE
+		C.SVC_LEVEL3 = #idService#
+		AND C.IS_DELETED = 0
+ 	</select>
+
+	<select id="checkIdExistedInSSM" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject"
+		resultClass="nttdm.bsys.m_ssm.bean.OutputObject">
+		SELECT
+			COUNT(*) as totalRecord
+		FROM M_SSM A
+		WHERE
+		A.ID_SERVICE = #idService#
+		AND A.SVC_GRP = #svcGrp#
+		AND A.INFO_ID = #infoId#
+ 	</select>
+
+	<select id="checkIsDeletedInSSM" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject"
+		resultClass="nttdm.bsys.m_ssm.bean.OutputObject">
+		SELECT
+			IS_DELETED AS isDeleted
+		FROM M_SSM A
+		WHERE
+		A.ID_SERVICE = #idService#
+		AND A.SVC_GRP = #svcGrp#
+		AND A.INFO_ID = #infoId#
+		AND rownum = 1
+ 	</select>
+
+	<select id="selectServicesOfSSM" parameterClass="java.lang.String"
+		resultClass="nttdm.bsys.m_ssm.bean.ServiceObjectBean">
+		SELECT distinct C.SVC_GRP as serviceGroup, C.ID_SERVICE as serviceId, E.SVC_DESC AS serviceDesc
+		FROM M_SSM C
+		INNER JOIN M_SVC E
+		ON ( C.SVC_GRP = E.SVC_GRP
+			AND C.ID_SERVICE = E.ID_SERVICE )
+		WHERE
+		C.SVC_GRP = #svc_grp#
+		AND C.IS_DELETED = 0
+		AND E.IS_DELETED = 0
+		ORDER BY lower(E.SVC_DESC) ASC
+ 	</select>
+
+	<select id="selectServiceBasicInfo" resultClass="java.util.HashMap">
+		select r.VALUE
+		from RESOURCESMAINT r
+		where r.CATEGORY = 'SUBSCRIPTION_INFO'
+		  and r.IS_DELETED = 0
+		order by r.SEQ asc
+ 	</select>
+
+	<select id="selectSSMFromService" parameterClass="nttdm.bsys.m_ssm.bean.ServiceObjectBean"
+		resultClass="nttdm.bsys.m_ssm.bean.ServiceTypeItemBean">		
+		SELECT R.SEQ, nvl(ssm.ID_SERVICE,#serviceId#) idService, R.RESOURCE_ID infoId, 
+			nvl(ssm.ENTRY,0) as entryValue, nvl(ssm.REPORT,0) as reportValue
+		FROM RESOURCESMAINT R,
+    	( select C.ID_SERVICE, C.INFO_ID, C.ENTRY, C.REPORT
+      		from M_SSM C INNER JOIN M_SVC E
+      			ON ( C.SVC_GRP = E.SVC_GRP
+					AND C.ID_SERVICE = E.ID_SERVICE )
+      		WHERE C.SVC_GRP = #serviceGroup#
+      			AND C.IS_DELETED = 0
+      			AND E.IS_DELETED = 0
+      			AND C.ID_SERVICE = #serviceId#
+		) ssm
+    	where R.CATEGORY = 'SUBSCRIPTION_INFO'
+		AND R.RESOURCE_ID = ssm.INFO_ID(+)
+    	AND R.IS_DELETED = 0
+		ORDER BY R.SEQ ASC
+ 	</select>
+
+	<select id="selectServiceType" parameterClass="java.lang.String"
+		resultClass="nttdm.bsys.m_ssm.bean.ServiceTypeBean">
+		SELECT
+		ID_SERVICE idService, SVC_DESC typeName
+		FROM M_SVC E
+		WHERE
+		E.SVC_GRP = #svc_grp# AND E.SVC_CATEGORY = 'TYP' AND E.IS_DELETED = 0
+		ORDER BY lower(E.SVC_DESC) ASC
+	</select>
+
+	<select id="ad" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject"
+		resultClass="nttdm.bsys.m_ssm.bean.ServiceTypeBean">
+		SELECT
+		COUNT(*)
+		FROM M_SSM C
+		WHERE
+		C.ID_SERVICE = #idService#
+	</select>
+
+	<delete id="SQL20" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject">
+		UPDATE
+		M_SSM E
+		SET
+		E.IS_DELETED = 1, DATE_UPDATED = SYSDATE, ID_AUDIT = #idAudit#
+		WHERE
+		E.ID_SERVICE = #idService#
+		AND E.SVC_GRP = #svcGrp#
+	</delete>
+
+	<insert id="SQL31" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject">
+		INSERT INTO
+		M_SSM (SVC_GRP, ID_SERVICE, INFO_ID, ENTRY, REPORT, IS_DELETED,
+		DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+		VALUES (#svcGrp#, #idService#, #infoId#, #entry#, #report#, 0, SYSDATE,
+		SYSDATE, #idLogin#, #idAudit#)
+	</insert>
+
+	<update id="SQL32" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject">
+		UPDATE
+		M_SSM E
+		SET E.ENTRY = #entry#, E.REPORT = #report#, DATE_UPDATED = SYSDATE, ID_LOGIN = #idLogin#, ID_AUDIT = #idAudit#
+		WHERE
+		INFO_ID = #infoId#
+		AND E.ID_SERVICE = #idService#
+		AND E.SVC_GRP = #svcGrp#	
+	</update>
+
+	<update id="SQL33" parameterClass="nttdm.bsys.m_ssm.bean.ParameterObject">
+		UPDATE
+		M_SSM E
+		SET E.ENTRY = #entry#, E.REPORT = #report#, DATE_UPDATED = SYSDATE, ID_LOGIN = #idLogin#, IS_DELETED = '0', ID_AUDIT = #idAudit#
+		WHERE
+		INFO_ID = #infoId#
+		AND E.ID_SERVICE = #idService#
+		AND E.SVC_GRP = #svcGrp#
+	</update>
+	<!--
+		設定例 <select id="selectUsers"
+		resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput"> SELECT
+		ID AS "userId", NAME AS "userName" FROM USERLIST </select> <select
+		id="getUserCount"
+		parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+		resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput"> SELECT
+		COUNT (*) AS userCount FROM USERLIST WHERE ID = #userId# </select>
+
+		<insert id="insertUser"
+		parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput"> INSERT
+		INTO USERLIST ( ID, NAME ) VALUES ( #userId#, #userName# ) </insert>
+
+		<update id="updateUser"
+		parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput"> UPDATE
+		USERLIST SET NAME = #userName# WHERE ID = #userId# </update> <delete
+		id="deleteUser"
+		parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput"> DELETE
+		FROM USERLIST WHERE ID = #userId# </delete>
+	-->
+</sqlMap>

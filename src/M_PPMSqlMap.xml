@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_PPM">
+	<select id="SELECT.M_PPM.S01.SEARCH" parameterClass="nttdm.bsys.m_ppm.dto.M_PPM_S01_02Input" resultClass="nttdm.bsys.m_ppm.bean.StandardPlan">
+		SELECT ROWNUM as "no", A.*
+		FROM (SELECT i.ID_PLAN as "idPlan", i.CUSTOMER_TYPE as "customerType", i.PLAN_NAME as "planName", 
+				i.PLAN_DESC as "description", i.PLAN_DESC as "descriptionLimit", i.BILL_CURRENCY as "currency"
+			FROM M_PLAN_H i 
+			WHERE i.IS_DELETED = '0'
+			<dynamic>		
+				<isNotEmpty prepend="AND" property="txtPlanName">
+					UPPER(i.PLAN_NAME) LIKE UPPER('%$txtPlanName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="txtPlanDescription">				
+				    UPPER(i.PLAN_DESC) LIKE UPPER('%$txtPlanDescription$%')
+				</isNotEmpty>		
+				<isNotEmpty prepend="AND" property="cboCustomerType">				
+				    i.CUSTOMER_TYPE = #cboCustomerType#
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="cboCategory">
+                 i.ID_PLAN IN (SELECT ID_PLAN 
+                                  FROM M_PLAN_D 
+                                  WHERE 
+                                      ID_PLAN = i.ID_PLAN 
+                                      AND IS_DELETED = '0' 
+                                      AND SVC_LEVEL1 = #cboCategory#
+                                      <!-- #180 Start -->
+                                      <isNotEmpty prepend="AND" property="cboService" >
+                                          <!-- SVC_LEVEL2 = #cboService# -->
+	                                       SVC_LEVEL2 IN(
+	                                      	SELECT ID_SERVICE
+											FROM M_SVC
+											WHERE IS_DELETED = 0 
+												AND SVC_CATEGORY = 'TYP'
+												AND SVC_GRP=#cboCategory# 
+												AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+	                                      )                                          
+                                      </isNotEmpty>
+                                      <!-- #180 End -->
+                                      <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                         UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                       </isNotEmpty>
+                                  )
+                </isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboBillCurrency" >	
+					i.BILL_CURRENCY = #cboBillCurrency#
+				</isNotEmpty>		
+
+                 <isNotEmpty prepend="AND" property="cboService">
+                    i.ID_PLAN IN (SELECT ID_PLAN 
+                                  FROM M_PLAN_D 
+                                  WHERE 
+                                      ID_PLAN = i.ID_PLAN 
+                                      AND IS_DELETED = '0' 
+                                      <isNotEmpty prepend="AND" property="cboCategory">
+                                          SVC_LEVEL1 = #cboCategory#
+                                      </isNotEmpty>
+                                      <!-- #180 Start -->
+                                      <isNotEmpty prepend="AND" property="cboService" >
+                                          <!-- SVC_LEVEL2 = #cboService# -->
+	                                      SVC_LEVEL2 IN(
+	                                      	SELECT ID_SERVICE
+											FROM M_SVC
+											WHERE IS_DELETED = 0 
+												AND SVC_CATEGORY = 'TYP'
+												AND SVC_GRP=#cboCategory# 
+												AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+	                                      )
+                                      </isNotEmpty>
+                                      <!-- #180 End -->
+                                      <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                         UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                       </isNotEmpty>
+                                  )
+                </isNotEmpty>
+                 <isNotEmpty prepend="AND" property="txtSubPlanOptionName">
+                    i.ID_PLAN IN (SELECT ID_PLAN 
+                                  FROM M_PLAN_D 
+                                  WHERE 
+                                      ID_PLAN = i.ID_PLAN 
+                                      AND IS_DELETED = '0' 
+                                      <isNotEmpty prepend="AND" property="cboCategory">
+                                          SVC_LEVEL1 = #cboCategory#
+                                      </isNotEmpty>
+                                      <!-- #180 Start -->
+                                      <isNotEmpty prepend="AND" property="cboService" >
+                                          <!-- SVC_LEVEL2 = #cboService# -->
+	                                      SVC_LEVEL2 IN(
+	                                      	SELECT ID_SERVICE
+											FROM M_SVC
+											WHERE IS_DELETED = 0 
+												AND SVC_CATEGORY = 'TYP'
+												AND SVC_GRP=#cboCategory# 
+												AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+	                                      )                                          
+                                      </isNotEmpty>
+                                      <!-- #180 End -->
+                                      <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                          UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                       </isNotEmpty>
+                                  )
+                </isNotEmpty>
+
+                <isNotEmpty prepend="AND" property="cboPlan" >  
+                    i.ID_PLAN IN (SELECT ID_PLAN 
+                                  FROM M_PLAN_D D , M_PLAN_SVC SVC 
+                                  WHERE D.ID_PLAN_GRP = SVC.ID_PLAN_GRP 
+                                  <isNotEmpty prepend="AND" property="cboCategory">
+                                      D.SVC_LEVEL1 = #cboCategory#
+                                  </isNotEmpty>
+                                  <!-- #180 Start -->
+                                  <isNotEmpty prepend="AND" property="cboService" >
+                                      <!-- D.SVC_LEVEL2 = #cboService# -->
+                                      D.SVC_LEVEL2 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                      )                                      
+                                  </isNotEmpty>
+                                  <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                      UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                  </isNotEmpty>
+                                  <!-- AND SVC.SVC_LEVEL3 = #cboPlan# -->
+                                  AND SVC.SVC_LEVEL3 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'ITM'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlan#||'%')
+                                   )
+                                  <isNotEmpty prepend="AND" property="cboPlanDetail" >
+                                      <!-- SVC.SVC_LEVEL4 = #cboPlanDetail# -->
+                                        SVC.SVC_LEVEL4 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'DTL'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlanDetail#||'%')
+                                        )                                      
+                                  </isNotEmpty>
+                                  <!-- #180 End -->
+                                  AND D.IS_DELETED = '0'
+                                  AND SVC.IS_DELETED = '0')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="cboPlanDetail" >  
+                    i.ID_PLAN IN (SELECT ID_PLAN 
+                                  FROM M_PLAN_D D , M_PLAN_SVC SVC 
+                                  WHERE D.ID_PLAN_GRP = SVC.ID_PLAN_GRP 
+                                  <isNotEmpty prepend="AND" property="cboCategory">
+                                      D.SVC_LEVEL1 = #cboCategory#
+                                  </isNotEmpty>
+                                  <!-- #180 Start -->
+                                  <isNotEmpty prepend="AND" property="cboService" >
+                                      <!-- D.SVC_LEVEL2 = #cboService# -->
+                                      D.SVC_LEVEL2 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                      )
+                                  </isNotEmpty>
+                                  <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                      UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                  </isNotEmpty>
+                                  <isNotEmpty prepend="AND" property="cboPlan" >
+                                      <!-- SVC.SVC_LEVEL3 = #cboPlan# -->
+                                        SVC.SVC_LEVEL3 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'ITM'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlan#||'%')
+                                        )
+                                  </isNotEmpty>
+                                  <isNotEmpty prepend="AND" property="cboPlanDetail" >
+                                      <!-- SVC.SVC_LEVEL4 = #cboPlanDetail# -->
+                                        SVC.SVC_LEVEL4 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'DTL'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlanDetail#||'%')
+                                        )                                      
+                                  </isNotEmpty>
+                                  <!-- #180 End -->
+                                  AND D.IS_DELETED = '0'
+                                  AND SVC.IS_DELETED = '0')
+                </isNotEmpty>
+			</dynamic>
+			ORDER BY UPPER(i.PLAN_NAME) ASC ) A
+	</select>
+	<select id="SELECT.M_PPM.S01.SEARCH_COUNT" parameterClass="nttdm.bsys.m_ppm.dto.M_PPM_S01_02Input" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM M_PLAN_H i
+		WHERE i.IS_DELETED = 0
+		<dynamic>		
+			<isNotEmpty prepend="AND" property="txtPlanName">
+				UPPER(i.PLAN_NAME) LIKE UPPER('%$txtPlanName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="txtPlanDescription">				
+			    UPPER(i.PLAN_DESC) LIKE UPPER('%$txtPlanDescription$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cboCustomerType">				
+			    i.CUSTOMER_TYPE = #cboCustomerType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cboCategory">
+                i.ID_PLAN IN (SELECT ID_PLAN 
+                              FROM M_PLAN_D 
+                              WHERE 
+                                  ID_PLAN = i.ID_PLAN 
+                                  AND IS_DELETED = '0' 
+                                  AND SVC_LEVEL1 = #cboCategory#
+                                  <!-- #180 Start -->
+                                  <isNotEmpty prepend="AND" property="cboService" >
+                                      <!-- SVC_LEVEL2 = #cboService# -->
+                                      SVC_LEVEL2 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                      )                                      
+                                  </isNotEmpty>
+                                  <!-- #180 End -->
+                                  <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                     UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                   </isNotEmpty>
+                              )
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cboBillCurrency" >  
+                i.BILL_CURRENCY = #cboBillCurrency#
+            </isNotEmpty>       
+
+             <isNotEmpty prepend="AND" property="cboService">
+                i.ID_PLAN IN (SELECT ID_PLAN 
+                              FROM M_PLAN_D 
+                              WHERE 
+                                  ID_PLAN = i.ID_PLAN 
+                                  AND IS_DELETED = '0' 
+                                  <isNotEmpty prepend="AND" property="cboCategory">
+                                      SVC_LEVEL1 = #cboCategory#
+                                  </isNotEmpty>
+                                  <!-- #180 Start -->
+                                  <isNotEmpty prepend="AND" property="cboService" >
+                                      <!-- SVC_LEVEL2 = #cboService# -->
+                                      SVC_LEVEL2 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                      )                                      
+                                  </isNotEmpty>
+                                  <!-- #180 End -->
+                                  <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                     UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                   </isNotEmpty>
+                              )
+            </isNotEmpty>
+             <isNotEmpty prepend="AND" property="txtSubPlanOptionName">
+                i.ID_PLAN IN (SELECT ID_PLAN 
+                              FROM M_PLAN_D 
+                              WHERE 
+                                  ID_PLAN = i.ID_PLAN 
+                                  AND IS_DELETED = '0' 
+                                  <isNotEmpty prepend="AND" property="cboCategory">
+                                      SVC_LEVEL1 = #cboCategory#
+                                  </isNotEmpty>
+                                  <!-- #180 Start -->
+                                  <isNotEmpty prepend="AND" property="cboService" >
+                                      <!-- SVC_LEVEL2 = #cboService# -->
+                                      SVC_LEVEL2 IN(
+                                      	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                      )                                      
+                                  </isNotEmpty>
+                                  <!-- #180 End -->
+                                  <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                      UPPER(ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                                   </isNotEmpty>
+                              )
+            </isNotEmpty>
+
+            <isNotEmpty prepend="AND" property="cboPlan" >  
+                i.ID_PLAN IN (SELECT ID_PLAN 
+                              FROM M_PLAN_D D , M_PLAN_SVC SVC 
+                              WHERE D.ID_PLAN_GRP = SVC.ID_PLAN_GRP 
+                              <isNotEmpty prepend="AND" property="cboCategory">
+                                  D.SVC_LEVEL1 = #cboCategory#
+                              </isNotEmpty>
+                              <!-- #180 Start -->
+                              <isNotEmpty prepend="AND" property="cboService" >
+                                  <!-- D.SVC_LEVEL2 = #cboService# -->
+                                    D.SVC_LEVEL2 IN(
+                                    	SELECT ID_SERVICE
+										FROM M_SVC
+										WHERE IS_DELETED = 0 
+											AND SVC_CATEGORY = 'TYP'
+											AND SVC_GRP=#cboCategory# 
+											AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                    )                                  
+                              </isNotEmpty>
+                              <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                  UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                              </isNotEmpty>
+                              <!-- AND SVC.SVC_LEVEL3 = #cboPlan# -->
+                               AND SVC.SVC_LEVEL3 IN(
+                                   	SELECT ID_SERVICE
+									FROM M_SVC
+									WHERE IS_DELETED = 0 
+										AND SVC_CATEGORY = 'ITM'
+										AND SVC_GRP=#cboCategory# 
+										AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlan#||'%')
+                                )                              
+                              <isNotEmpty prepend="AND" property="cboPlanDetail" >
+                                  <!-- SVC.SVC_LEVEL4 = #cboPlanDetail# -->
+                                  SVC.SVC_LEVEL4 IN(
+                                	SELECT ID_SERVICE
+									FROM M_SVC
+									WHERE IS_DELETED = 0 
+										AND SVC_CATEGORY = 'DTL'
+										AND SVC_GRP=#cboCategory# 
+										AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlanDetail#||'%')
+                                  )                                  
+                              </isNotEmpty>
+                              <!-- #180 End -->
+                              AND D.IS_DELETED = '0'
+                              AND SVC.IS_DELETED = '0')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cboPlanDetail" >  
+                i.ID_PLAN IN (SELECT ID_PLAN 
+                              FROM M_PLAN_D D , M_PLAN_SVC SVC 
+                              WHERE D.ID_PLAN_GRP = SVC.ID_PLAN_GRP 
+                              <isNotEmpty prepend="AND" property="cboCategory">
+                                  D.SVC_LEVEL1 = #cboCategory#
+                              </isNotEmpty>
+                              <!-- #180 Start -->
+                              <isNotEmpty prepend="AND" property="cboService" >
+                                  <!-- D.SVC_LEVEL2 = #cboService# -->
+                                   D.SVC_LEVEL2 IN(
+                                   	SELECT ID_SERVICE
+									FROM M_SVC
+									WHERE IS_DELETED = 0 
+										AND SVC_CATEGORY = 'TYP'
+										AND SVC_GRP=#cboCategory# 
+										AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                                   )                                  
+                              </isNotEmpty>
+                              <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                                  UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                              </isNotEmpty>
+                              <isNotEmpty prepend="AND" property="cboPlan" >
+                                  <!-- SVC.SVC_LEVEL3 = #cboPlan# -->
+                                  SVC.SVC_LEVEL3 IN(
+                                	SELECT ID_SERVICE
+									FROM M_SVC
+									WHERE IS_DELETED = 0 
+										AND SVC_CATEGORY = 'ITM'
+										AND SVC_GRP=#cboCategory# 
+										AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlan#||'%')
+                                  )                                  
+                              </isNotEmpty>
+                              <isNotEmpty prepend="AND" property="cboPlanDetail" >
+                                  <!-- SVC.SVC_LEVEL4 = #cboPlanDetail# -->
+                                  SVC.SVC_LEVEL4 IN(
+                                	SELECT ID_SERVICE
+									FROM M_SVC
+									WHERE IS_DELETED = 0 
+										AND SVC_CATEGORY = 'DTL'
+										AND SVC_GRP=#cboCategory# 
+										AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlanDetail#||'%')
+                                  )                                  
+                              </isNotEmpty>
+                              <!-- #180 End -->
+                              AND D.IS_DELETED = '0'
+                              AND SVC.IS_DELETED = '0')
+            </isNotEmpty>
+		</dynamic>
+	</select>
+    
+    <select id="SELECT.M_PPM.S03.SEARCH_EXPORT" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.m_ppm.dto.M_PPM_S01_02Input">
+        SELECT ROWNUM AS NO, A.*
+        FROM (
+            SELECT 
+                H.PLAN_NAME AS SERVICE_NAME,
+                H.PLAN_DESC AS SERVICE_DESCRIPTION,
+                H.CUSTOMER_TYPE AS CUSTOMER_TYPE,
+                H.BILL_CURRENCY AS BILLING_CURRENCY,
+                D.ITEM_TYPE AS ITEM_TYPE,
+                D.ITEM_GRP_NAME AS PLAN_OPTION_NAME,
+                (SELECT T.SVC_GRP_NAME FROM M_SVG T where T.SVC_GRP = D.SVC_LEVEL1) AS CATEGORY_NAME ,
+                (SELECT T.SVC_DESC FROM M_SVC T WHERE T.ID_SERVICE=D.SVC_LEVEL2) AS SERVICE,
+                (SELECT T.ACC_CODE FROM M_SVC T WHERE T.ID_SERVICE=D.SVC_LEVEL2) AS REVENUE_CODE,
+                D.RATE_TYPE AS RATE_TYPE,
+                D.RATE_MODE AS RATE_MODE,
+                D.RATE AS RATE,
+                D.APPLY_GST AS GST,
+                '[' || T.TAX_RATE || '%]' || T.DESCRIPTION1 AS TAXRATEDESCRIPTION,
+                (SELECT T.SVC_DESC FROM M_SVC T WHERE T.ID_SERVICE=SVC.SVC_LEVEL3) AS PLAN,
+                (SELECT T.SVC_DESC FROM M_SVC T WHERE T.ID_SERVICE=SVC.SVC_LEVEL4) AS PLAN_DETAIL
+            FROM 
+                M_PLAN_H H LEFT OUTER JOIN M_PLAN_D D ON H.ID_PLAN = D.ID_PLAN
+                LEFT OUTER JOIN M_PLAN_SVC SVC ON D.ID_PLAN_GRP = SVC.ID_PLAN_GRP AND SVC.IS_DELETED='0'
+                LEFT OUTER JOIN M_TAX T ON D.APPLY_GST = T.ID_TAX AND T.IS_DELETED='0'
+            WHERE 
+                H.IS_DELETED='0'
+                AND D.IS_DELETED='0'
+            <dynamic>
+                <isNotEmpty prepend="AND" property="txtPlanName">
+                    UPPER(H.PLAN_NAME) LIKE UPPER('%'||#txtPlanName#||'%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="txtPlanDescription">                
+                    UPPER(H.PLAN_DESC) LIKE UPPER('%'||#txtPlanDescription#||'%')
+                </isNotEmpty>       
+                <isNotEmpty prepend="AND" property="cboCustomerType">               
+                    H.CUSTOMER_TYPE = #cboCustomerType#
+                </isNotEmpty>                 
+                <isNotEmpty prepend="AND" property="cboBillCurrency" >  
+                    H.BILL_CURRENCY = #cboBillCurrency#
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="cboPlan" >  
+                    <!-- SVC.SVC_LEVEL3 = #cboPlan# -->
+                    SVC.SVC_LEVEL3 IN(
+                    	SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'ITM'
+							AND SVC_GRP=#cboCategory# 
+							AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlan#||'%')
+                    )                    
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="cboPlanDetail" >  
+                    <!-- SVC.SVC_LEVEL4 = #cboPlanDetail# -->
+                    SVC.SVC_LEVEL4 IN(
+                       	SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'DTL'
+							AND SVC_GRP=#cboCategory# 
+							AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboPlanDetail#||'%')
+                     )
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="cboCategory">               
+                    D.SVC_LEVEL1 = #cboCategory#
+                </isNotEmpty> 
+                <isNotEmpty prepend="AND" property="txtSubPlanOptionName" >  
+                    UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%'||#txtSubPlanOptionName#||'%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="cboService" >
+                    <!-- D.SVC_LEVEL2 = #cboService# -->
+                    D.SVC_LEVEL2 IN(
+                   		SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'TYP'
+							AND SVC_GRP=#cboCategory# 
+							AND UPPER(SVC_DESC) LIKE UPPER('%'||#cboService#||'%')
+                    )                    
+                </isNotEmpty>       
+            </dynamic>
+            ORDER BY UPPER(H.PLAN_NAME) ASC,D.ITEM_TYPE DESC,D.ID_PLAN_GRP,SVC.ID_PLAN_SVC) A
+    </select>
+    
+	<insert id="INSERT.M_PPM.S02.HEADER" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		<selectKey keyProperty="idPlan" resultClass="java.lang.Integer" type="pre">
+	    	SELECT SEQ_M_PLAN_H.NEXTVAL FROM dual
+	    </selectKey>	
+		INSERT INTO M_PLAN_H (
+			ID_PLAN,
+			PLAN_NAME,
+			PLAN_DESC,
+			CUSTOMER_TYPE,
+			BILL_CURRENCY,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN, 
+			ID_AUDIT)
+		VALUES (
+			#idPlan#,
+			#txtPlanName#,
+			#txtPlanDescription#,
+			#rdbCustomerType#,
+			#cboBillCurrenc#,
+			0,
+			sysdate,
+			sysdate,
+			#idLogin#, 
+			#idAudit#)
+	 </insert>
+	 <insert id="INSERT.M_PPM.S02.DETAIL" parameterClass="nttdm.bsys.m_ppm.dto.PlanService">
+		<selectKey keyProperty="idPlanGrp" resultClass="java.lang.Integer" type="pre">
+	    	SELECT SEQ_M_PLAN_D.NEXTVAL FROM dual
+	    </selectKey>	
+		INSERT INTO M_PLAN_D (
+			ID_PLAN_GRP,
+			ID_PLAN,
+			ITEM_GRP_NAME,
+			SVC_LEVEL1,
+			SVC_LEVEL2,			
+			ITEM_TYPE,
+			RATE,
+			RATE_TYPE,
+			APPLY_GST,
+			RATE_MODE,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN,
+			ID_AUDIT,
+			RATE_TYPE2)
+		VALUES (
+			#idPlanGrp#,
+			#idPlan#,
+			#tbxServiceName#,
+			#cboSvcLevel1#,
+			#cboSvcLevel2#,			
+			#type#,
+			#tbxRate#,
+			#cboRateType#,
+			#tbxGST#,
+			#cboRateMode#,
+			0,
+			sysdate,
+			sysdate,
+			#idLogin#,
+			#idAudit#,
+			#cboRateType2#)
+	 </insert>
+	 <insert id="INSERT.M_PPM.S02.SERVICE" parameterClass="nttdm.bsys.m_ppm.dto.PlanServiceDetail">
+		<selectKey keyProperty="idPlanSvc" resultClass="java.lang.Integer" type="pre">
+	    	SELECT SEQ_M_PLAN_SVC.NEXTVAL FROM dual
+	    </selectKey>
+	    INSERT INTO M_PLAN_SVC (
+	    	ID_PLAN_SVC,
+	    	ID_PLAN_GRP,
+	    	SVC_LEVEL3,
+	    	SVC_LEVEL4,
+	    	ID_SUPPLIER,
+	    	IS_DELETED,
+	    	DATE_CREATED,
+	    	DATE_UPDATED,
+	    	ID_LOGIN,
+	    	ID_AUDIT)
+		VALUES (
+			#idPlanSvc#,
+			#idPlanGrp#,
+			#cboPlan#,
+			#cboPlanDetail#,
+			#cboVendor#,
+			0,
+			sysdate,
+			sysdate,
+			#idLogin#,
+			#idAudit#)
+	 </insert>
+	<update id="UPDATE.M_PPM.S02.HEADER" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		UPDATE M_PLAN_H SET
+			PLAN_NAME = #txtPlanName#,
+			PLAN_DESC = #txtPlanDescription#,
+			CUSTOMER_TYPE = #rdbCustomerType#,
+			BILL_CURRENCY = #cboBillCurrenc#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#, 
+			ID_AUDIT = #idAudit#
+		WHERE ID_PLAN = #idPlan#
+	</update>
+	<update id="UPDATE.M_PPM.S02.DETAIL" parameterClass="nttdm.bsys.m_ppm.dto.PlanService">
+		UPDATE M_PLAN_D SET
+			ITEM_GRP_NAME = #tbxServiceName#,
+			SVC_LEVEL1 = #cboSvcLevel1#,
+			SVC_LEVEL2 = #cboSvcLevel2#,			
+			ITEM_TYPE = #type#,
+			RATE = #tbxRate#,
+			RATE_TYPE = #cboRateType#,
+			APPLY_GST = #tbxGST#,
+			RATE_MODE = #cboRateMode#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#,
+			RATE_TYPE2 = #cboRateType2#
+		WHERE ID_PLAN = #idPlan# AND ID_PLAN_GRP = #idPlanGrp#
+	</update>
+	<update id="DELETE.M_PPM.S02.DETAIL" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		UPDATE M_PLAN_D SET
+			IS_DELETED = 1,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_PLAN = #idPlan#
+		<isNotEmpty property="services">
+			AND ID_PLAN_GRP NOT IN (SELECT ID_PLAN_GRP FROM M_PLAN_D WHERE ID_PLAN_GRP IN
+				<iterate property="services" open="(" close=")" conjunction=",">
+					#services[].idPlanGrp#
+				</iterate>
+			)
+		</isNotEmpty>
+	</update>
+	<update id="DELETE.M_PPM.S02.DETAIL.MAPPING" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		DELETE FROM M_PLAN_BATCH_MAPPING
+		WHERE ID_PLAN_GRP NOT IN (SELECT ID_PLAN_GRP FROM M_PLAN_D WHERE ID_PLAN_GRP IN
+			<iterate property="services" open="(" close=")" conjunction=",">
+				#services[].idPlanGrp#
+			</iterate>
+		)
+		AND ID_PLAN_GRP IN (SELECT ID_PLAN_GRP FROM M_PLAN_D WHERE ID_PLAN = #idPlan#)
+	</update>
+	<update id="UPDATE.M_PPM.S02.SERVICE" parameterClass="nttdm.bsys.m_ppm.dto.PlanServiceDetail">
+		UPDATE M_PLAN_SVC SET
+	    	SVC_LEVEL3 = #cboPlan#,
+	    	SVC_LEVEL4 = #cboPlanDetail#,
+	    	ID_SUPPLIER = #cboVendor#,
+	    	DATE_UPDATED = sysdate,
+	    	ID_LOGIN = #idLogin#,
+	    	ID_AUDIT = #idAudit#
+		WHERE ID_PLAN_GRP = #idPlanGrp# AND ID_PLAN_SVC = #idPlanSvc#
+	</update>
+	<update id="DELETE.M_PPM.S02.SERVICE" parameterClass="nttdm.bsys.m_ppm.dto.PlanService">
+		UPDATE M_PLAN_SVC SET
+			IS_DELETED = 1,
+	    	DATE_UPDATED = sysdate,
+	    	ID_LOGIN = #idLogin#,
+	    	ID_AUDIT = #idAudit#
+		WHERE ID_PLAN_GRP = #idPlanGrp#
+		<isNotEmpty property="details">
+			AND ID_PLAN_SVC NOT IN (SELECT ID_PLAN_SVC FROM M_PLAN_SVC WHERE ID_PLAN_SVC IN
+				<iterate property="details" open="(" close=")" conjunction=",">
+					#details[].idPlanSvc#
+				</iterate>
+			)
+		</isNotEmpty>
+	</update>
+	<update id="DELETE.M_PPM.S02.SERVICE.EMPTY" parameterClass="java.util.Map">
+		UPDATE M_PLAN_SVC SET
+			IS_DELETED = 1,
+	    	DATE_UPDATED = sysdate,
+	    	ID_LOGIN = #idLogin#,
+	    	ID_AUDIT = #idAudit#
+		WHERE ID_PLAN_SVC = #idPlanSvc#
+	</update>
+	<update id="DELETE.M_PPM.S02.HEADER_ALL" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		UPDATE M_PLAN_H SET IS_DELETED = 1, DATE_UPDATED = sysdate, ID_LOGIN = #idLogin#, ID_AUDIT = #idAudit# WHERE ID_PLAN = #idPlan#
+	</update>
+	<update id="DELETE.M_PPM.S02.DETAIL_ALL" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		UPDATE M_PLAN_D SET IS_DELETED = 1, DATE_UPDATED = sysdate, ID_LOGIN = #idLogin#, ID_AUDIT = #idAudit# WHERE ID_PLAN = #idPlan#
+	</update>
+	<update id="DELETE.M_PPM.S02.DETAIL_ALL.MAPPING" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		DELETE FROM M_PLAN_BATCH_MAPPING WHERE ID_PLAN_GRP IN (SELECT ID_PLAN_GRP FROM M_PLAN_D WHERE ID_PLAN = #idPlan#)
+	</update>
+	<update id="DELETE.M_PPM.S02.SERVICE_ALL" parameterClass="nttdm.bsys.m_ppm.dto.Plan">
+		UPDATE M_PLAN_SVC SET IS_DELETED = 1, DATE_UPDATED = sysdate, ID_LOGIN = #idLogin#, ID_AUDIT = #idAudit# 
+		WHERE ID_PLAN_GRP IN (SELECT ID_PLAN_GRP FROM M_PLAN_D WHERE ID_PLAN = #idPlan#)
+	</update>
+	 <select id="SELECT.M_PPM.S02.HEADER" parameterClass="java.lang.Integer" resultClass="nttdm.bsys.m_ppm.dto.Plan">
+	 	SELECT ID_PLAN as "idPlan", PLAN_NAME as "txtPlanName", PLAN_DESC as "txtPlanDescription", 
+	 		CUSTOMER_TYPE as "rdbCustomerType", BILL_CURRENCY as "cboBillCurrenc",
+	 		(SELECT COUNT(*) FROM T_CUST_PLAN_LINK WHERE ID_PLAN = #idPlan# AND IS_DELETED = 0) AS "inUsed"
+	 	FROM M_PLAN_H
+	 	WHERE ID_PLAN = #idPlan#
+	 		AND IS_DELETED = 0
+	 </select>
+	<select id="SELECT.M_PPM.S02.DETAIL" parameterClass="java.lang.Integer"
+		resultClass="nttdm.bsys.m_ppm.dto.PlanService">
+		SELECT D.ID_PLAN_GRP AS "idPlanGrp",
+		D.ID_PLAN AS "idPlan",
+		D.ITEM_TYPE AS "type",
+		D.SVC_LEVEL1 AS "cboSvcLevel1",
+		D.SVC_LEVEL2 AS "cboSvcLevel2",
+		D.RATE AS "tbxRate",
+		D.ITEM_GRP_NAME AS "tbxServiceName",
+		D.RATE_MODE AS "cboRateMode",
+		D.RATE_TYPE AS "cboRateType",
+		D.RATE_TYPE2 AS "cboRateType2",
+		'[' || A.RATETYPE_CODE || ']' || A.RATETYPE_DESC AS "cboRateType2Value",
+		D.APPLY_GST AS "tbxGST",
+		'[' || T.TAX_RATE || '%]' || T.DESCRIPTION1 AS taxRateDescription,
+		(SELECT COUNT(*)
+		FROM T_CUST_PLAN_LINK
+		WHERE ID_PLAN_GRP = D.ID_PLAN_GRP
+		AND IS_DELETED = 0
+		) AS "inUsed",
+		(SELECT COUNT(*)
+		FROM M_PLAN_BATCH_MAPPING M
+		WHERE M.ID_PLAN_GRP = D.ID_PLAN_GRP
+		) AS "inMapping"
+		FROM M_PLAN_D D 
+		LEFT OUTER JOIN M_TAX T 
+		ON D.APPLY_GST = T.ID_TAX AND T.IS_DELETED='0' 
+		LEFT OUTER JOIN M_RATE_TYPE2 A
+		ON A.IS_DELETED = 0 AND A.RATETYPE_CODE=D.RATE_TYPE2
+		WHERE D.ID_PLAN = #idPlan#
+		AND D.IS_DELETED = 0
+		ORDER BY D.ITEM_TYPE DESC,
+		D.ID_PLAN_GRP ASC
+	 </select>
+	 <select id="SELECT.M_PPM.S02.SERVICE" parameterClass="java.lang.Integer" resultClass="nttdm.bsys.m_ppm.dto.PlanServiceDetail">
+	 	SELECT ID_PLAN_SVC as "idPlanSvc", ID_PLAN_GRP as "idPlanGrp", SVC_LEVEL3 as "cboPlan", 
+	 		SVC_LEVEL4 as "cboPlanDetail", ID_SUPPLIER as "cboVendor"
+	 	FROM M_PLAN_SVC
+	 	WHERE ID_PLAN_GRP = #idPlanGrp#
+	 		AND IS_DELETED = 0
+	 </select>
+	<select id="SELECT.M_PPM.S03.SEARCH" parameterClass="nttdm.bsys.m_ppm.dto.M_PPM_S03_02Input" resultClass="nttdm.bsys.m_ppm.bean.StandardPlan">
+		SELECT ROWNUM as "no", A.*
+		FROM (
+			SELECT C.ID_PLAN as "idPlan", D.ID_PLAN_GRP as "idPlanGrp", (SELECT A.SVC_GRP_NAME FROM M_SVG A WHERE A.SVC_GRP = D.SVC_LEVEL1) as "cat",
+				(SELECT B.SVC_DESC FROM M_SVC B WHERE B.ID_SERVICE = D.SVC_LEVEL2 AND B.IS_DELETED = 0) as "bill",
+				C.PLAN_NAME as "planName", D.ITEM_TYPE as "type", D.ITEM_GRP_NAME as "serviceName",
+				D.RATE_TYPE as "rateType", D.RATE_MODE as "rateMode", D.RATE as "rate",
+				(SELECT B.ACC_CODE FROM M_SVC B WHERE B.ID_SERVICE = D.SVC_LEVEL2 AND B.IS_DELETED = 0) as "accountCode",
+				C.PLAN_DESC as "description", C.PLAN_DESC as "descriptionLimit", C.BILL_CURRENCY as "currency"
+			FROM M_PLAN_H C, M_PLAN_D D
+			WHERE C.ID_PLAN = D.ID_PLAN
+				AND C.IS_DELETED = 0
+				AND D.IS_DELETED = 0
+				<dynamic>
+					<isNotEmpty prepend="AND" property="tbxPlanName">
+						UPPER(C.PLAN_NAME) LIKE UPPER('%$tbxPlanName$%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxPlanDescript">
+						UPPER(C.PLAN_DESC) LIKE UPPER('%$tbxPlanDescript$%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxServiceName">
+						UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%$tbxServiceName$%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="cboType">
+						D.ITEM_TYPE = #cboType#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="cboRateMode">
+						D.RATE_MODE = #cboRateMode#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="cboCategory">
+						D.SVC_LEVEL1 = #cboCategory#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="cboService">
+						D.SVC_LEVEL2 = #cboService#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="customerType">
+						C.CUSTOMER_TYPE IN (#customerType#,'BOTH')
+					</isNotEmpty>
+				</dynamic>
+			ORDER BY C.PLAN_NAME ASC) A
+	</select>
+	<select id="SELECT.M_PPM.S03.SEARCH_COUNT" parameterClass="nttdm.bsys.m_ppm.dto.M_PPM_S03_02Input" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM M_PLAN_H C, M_PLAN_D D
+		WHERE C.ID_PLAN = D.ID_PLAN
+			AND C.IS_DELETED = 0
+			AND D.IS_DELETED = 0
+			<dynamic>
+				<isNotEmpty prepend="AND" property="tbxPlanName">
+					UPPER(C.PLAN_NAME) LIKE UPPER('%$tbxPlanName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxPlanDescript">
+					UPPER(C.PLAN_DESC) LIKE UPPER('%$tbxPlanDescript$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxServiceName">
+					UPPER(D.ITEM_GRP_NAME) LIKE UPPER('%$tbxServiceName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboType">
+					D.ITEM_TYPE = #cboType#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboRateMode">
+					D.RATE_MODE = #cboRateMode#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCategory">
+					D.SVC_LEVEL1 = #cboCategory#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboService">
+					D.SVC_LEVEL2 = #cboService#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="customerType">
+					C.CUSTOMER_TYPE IN (#customerType#,'BOTH')
+				</isNotEmpty>
+			</dynamic>
+	</select>
+
+	<select id="SELECT.M_PPM.S02.SVC_LEVEL2" resultClass="nttdm.bsys.m_ppm.bean.Service" parameterClass="java.lang.String">
+	  SELECT
+	      F.ID_SERVICE as "idService", F.SVC_DESC as "svcDesc", F.ACC_CODE as "accCode", F.GST as "gst"
+	  FROM
+	      M_SVC F
+	  WHERE F.SVC_GRP = #idService# AND F.SVC_CATEGORY = 'TYP' AND F.IS_DELETED = '0'
+	  ORDER BY UPPER(F.SVC_DESC) ASC
+	</select>
+  
+	<select id="SELECT.M_PPM.S02.SVC_LEVEL3" resultClass="nttdm.bsys.m_ppm.bean.Service" parameterClass="java.lang.String">
+	  SELECT
+	      F.ID_SERVICE as "idService", F.SVC_DESC as "svcDesc", F.GST as "gst"
+	  FROM
+	      M_SVC F
+	  WHERE F.SVC_GRP = #idService# AND F.SVC_CATEGORY = 'ITM' AND F.IS_DELETED = '0'
+	  ORDER BY UPPER(F.SVC_DESC) ASC
+	</select>
+  
+	<select id="SELECT.M_PPM.S02.SVC_LEVEL4" resultClass="nttdm.bsys.m_ppm.bean.Service" parameterClass="java.lang.String">
+	  SELECT
+	      F.ID_SERVICE as "idService", F.SVC_DESC as "svcDesc", F.GST as "gst"
+	  FROM
+	      M_SVC F
+	  WHERE F.SVC_GRP = #idService# AND F.SVC_CATEGORY = 'DTL' AND F.IS_DELETED = '0'
+	  ORDER BY UPPER(F.SVC_DESC) ASC
+	</select>
+  
+	<select id="SELECT.M_PPM.S02.VENDOR" resultClass="nttdm.bsys.m_ppm.bean.Vendor">
+	  SELECT
+	      N.SUPPLIER_NAME as "name",
+	      N.ID_SUPPLIER as "id"
+	  FROM
+	      M_SUPPLIER_H N
+	  ORDER BY N.SUPPLIER_NAME ASC
+	</select>
+
+	<select id="SELECT.M_PPM.S01.CATEGORY" resultClass="nttdm.bsys.m_ppm.bean.ServiceGroup">
+		SELECT H.SVC_GRP AS "svcGrp",
+			H.SVC_GRP_NAME AS "svcGrpName"  	
+		FROM M_SVG H
+		ORDER BY UPPER(H.SVC_GRP_NAME) ASC 		
+	</select>
+	
+	<select id="SELECT.M_PPM.S02.GET_IS_CHECK_MUL_CHAR" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'MULTI_BYTE_CHK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+	
+     <select id="SELECT.M_PPM.S01.cboService" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+      SELECT B.ID_SERVICE AS "serviceCd",
+        B.SVC_DESC AS "serviceName"    
+      FROM M_SVC B
+      WHERE B.SVC_GRP=#cboCategory# AND B.IS_DELETED=0
+      AND B.SVC_CATEGORY = 'TYP'
+      ORDER BY UPPER(B.SVC_DESC) ASC
+    </select>
+    
+     <select id="SELECT.M_PPM.S01.cboPlan" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+      SELECT B.ID_SERVICE AS "planCd",
+        B.SVC_DESC AS "planName"    
+      FROM M_SVC B
+      WHERE B.SVC_GRP=#cboCategory# AND B.IS_DELETED=0
+      AND B.SVC_CATEGORY = 'ITM'
+      ORDER BY UPPER(B.SVC_DESC) ASC
+    </select>
+
+     <select id="SELECT.M_PPM.S01.cboPlanDetail" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+      SELECT B.ID_SERVICE AS "planDetailCd",
+        B.SVC_DESC AS "planDetailName"    
+      FROM M_SVC B
+      WHERE B.SVC_GRP=#cboCategory# AND B.IS_DELETED=0
+      AND B.SVC_CATEGORY = 'DTL'
+      ORDER BY UPPER(B.SVC_DESC) ASC
+    </select>
+
+	<select id="SELECT.M_PPM.S04.SERVICE" resultClass="nttdm.bsys.m_ppm.bean.Service" parameterClass="java.lang.String">
+	  SELECT B.ID_SERVICE AS "idService",
+      	B.SVC_DESC AS "svcDesc"    
+      FROM M_SVC B
+      WHERE B.SVC_GRP=#cboCategory# AND B.IS_DELETED=0
+      AND B.SVC_CATEGORY = 'TYP'
+      ORDER BY UPPER(B.SVC_DESC) ASC
+	</select>
+	
+	<select id="SELECT.M_PPM.S04.RESULT.TOTALCOUNT" resultClass="java.lang.Integer" parameterClass="nttdm.bsys.m_ppm.dto.M_PPMS04Input">
+	    SELECT  COUNT(*)
+		FROM (
+			SELECT  DISTINCT(C.ID_PLAN) AS idPlan
+		    FROM M_PLAN_H C
+		    LEFT OUTER JOIN M_PLAN_D D ON C.ID_PLAN = D.ID_PLAN 
+		    WHERE 
+		       C.IS_DELETED = 0
+		       AND D.IS_DELETED = 0
+		      <dynamic prepend="AND">
+		        <isNotEmpty prepend="AND" property="cboCategory">
+		          D.SVC_LEVEL1 = #cboCategory#
+		        </isNotEmpty>
+		          <isNotEmpty prepend="AND" property="cboService">
+		          D.SVC_LEVEL2 = #cboService#
+		        </isNotEmpty>
+		          <isNotEmpty prepend="AND" property="tbxServiceName">
+		          UPPER(C.PLAN_NAME) LIKE UPPER('%$tbxServiceName$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="tbxServiceDescr">
+		          UPPER(C.PLAN_DESC) LIKE UPPER('%$tbxServiceDescr$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="lblCustomerType">
+		          C.CUSTOMER_TYPE IN (#lblCustomerType#,'BOTH')
+		        </isNotEmpty>
+		      </dynamic>
+		)
+	</select>
+	
+	<select id="SELECT.M_PPM.S04.RESULT" resultClass="nttdm.bsys.m_ppm.bean.ServiceSearchResult" parameterClass="nttdm.bsys.m_ppm.dto.M_PPMS04Input">
+		SELECT  DISTINCT(C.ID_PLAN) AS idPlan,C.PLAN_NAME AS gdcServiceName,C.PLAN_DESC AS gdcServiceDescr,C.BILL_CURRENCY AS billCurrency
+	    FROM M_PLAN_H C
+	    LEFT OUTER JOIN M_PLAN_D D ON C.ID_PLAN = D.ID_PLAN 
+	    WHERE 
+	       C.IS_DELETED = 0
+	       AND D.IS_DELETED = 0
+	      <dynamic prepend="AND">
+	        <isNotEmpty prepend="AND" property="cboCategory">
+	          D.SVC_LEVEL1 = #cboCategory#
+	        </isNotEmpty>
+	          <isNotEmpty prepend="AND" property="cboService">
+	          D.SVC_LEVEL2 = #cboService#
+	        </isNotEmpty>
+	          <isNotEmpty prepend="AND" property="tbxServiceName">
+	          UPPER(C.PLAN_NAME) LIKE UPPER('%$tbxServiceName$%')
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="tbxServiceDescr">
+	          UPPER(C.PLAN_DESC) LIKE UPPER('%$tbxServiceDescr$%')
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="lblCustomerType">
+	          C.CUSTOMER_TYPE IN (#lblCustomerType#,'BOTH')
+	        </isNotEmpty>
+	      </dynamic>
+	     ORDER BY UPPER(C.PLAN_NAME) ASC
+	</select>
+	<select id="SELECT.M_PPM.S05.TOTAL" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		SELECT  COUNT(*)
+	    FROM    M_PLAN_H C 
+	         	LEFT OUTER JOIN M_PLAN_D D ON C.ID_PLAN = D.ID_PLAN 
+	         	LEFT OUTER JOIN M_SVG A ON A.SVC_GRP = D.SVC_LEVEL1 
+				LEFT OUTER JOIN M_SVC B ON B.ID_SERVICE = D.SVC_LEVEL2
+	    WHERE 
+	       		C.IS_DELETED = 0
+	       		AND D.IS_DELETED = 0
+	   			AND C.ID_PLAN = #idPlan#
+	   			<isNotEmpty property="idPlanGrpNot" prepend="AND">				
+					<iterate prepend="D.ID_PLAN_GRP NOT IN "  open="(" close=")"  conjunction="," property="idPlanGrpNot">
+						#idPlanGrpNot[]#
+					</iterate> 				
+				</isNotEmpty>
+	</select>
+	<select id="SELECT.M_PPM.S05.RESULT" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+		SELECT  C.ID_PLAN AS idPlan,C.PLAN_NAME AS lblServiceName,C.PLAN_DESC AS lblServiceDescr,C.BILL_CURRENCY AS billCurrency,
+				D.ITEM_GRP_NAME AS itemGrpName,D.RATE_TYPE AS rateType,D.RATE_MODE AS rateMode,D.RATE AS rate,
+				(CASE  WHEN D.ITEM_TYPE = 'S' THEN 'Sub Plan'
+				       WHEN D.ITEM_TYPE = 'O' THEN 'Option Service'
+				  ELSE '' END
+				) AS itemType,D.ITEM_TYPE,D.ID_PLAN_GRP as idPlanGrp,'N' AS selected,
+				A.SVC_GRP_NAME AS svcGrpName, B.SVC_DESC AS svcDesc
+	    FROM    M_PLAN_H C 
+	         	LEFT OUTER JOIN M_PLAN_D D ON C.ID_PLAN = D.ID_PLAN 
+	         	LEFT OUTER JOIN M_SVG A ON A.SVC_GRP = D.SVC_LEVEL1 
+				LEFT OUTER JOIN M_SVC B ON B.ID_SERVICE = D.SVC_LEVEL2
+	    WHERE 
+	       		C.IS_DELETED = 0
+	       		AND D.IS_DELETED = 0
+	   			AND C.ID_PLAN = #idPlan#
+	   			<isNotEmpty property="idPlanGrpNot" prepend="AND">				
+					<iterate prepend="D.ID_PLAN_GRP NOT IN "  open="(" close=")"  conjunction="," property="idPlanGrpNot">
+						#idPlanGrpNot[]#
+					</iterate> 				
+				</isNotEmpty>
+	   	ORDER BY UPPER(D.ITEM_GRP_NAME) ASC
+	</select>
+	<select id="SELECT.M_PPM.S02.PPM_OPTION_SVC" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'PPM_OPTION_SVC'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+    </select>
+    <select id="SELECT.M_PPM.S01.GET_SERVICE" resultClass="java.util.HashMap">
+    	SELECT ID_SERVICE, SVC_DESC || ' - ' || ACC_CODE AS SVC_NAME, GST, SVC_GRP
+    	FROM M_SVC
+    	WHERE IS_DELETED = 0 AND SVC_CATEGORY = 'TYP'
+    	ORDER BY UPPER(SVC_NAME)
+    </select>
+    <!-- Add for #151 Start -->
+    <select id="SELECT.M_PPM.S02.RATE_TYPE2" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+    	SELECT AB.RATETYPE_CODE 
+		FROM M_RATE_TYPE2 AB
+		WHERE AB.END_USER=#EU# AND AB.MODE_TYPE=#modeType# AND AB.IS_DELETED=0
+    </select>
+    <select id="SELECT.M_PPM.S02.GET_IS_RATE_TYPE2" resultClass="java.lang.String">
+    	SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='CPM_RATETYPE2_ENABLE'
+    </select>
+    <!-- Add for #151 End -->
+    
+    <!-- #436: [B2-2][REQ003]NewTaxCode Start -->
+    <select id="SELECT.M_PPM.S02.CPM_TAX_WORD" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_TAX_WORD'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+    </select>
+    
+    <select id="SELECT.M_PPM.S02.CPM_TAX_ID_DEFAULT" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_TAX_ID_DEFAULT'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+    </select>
+    <!-- #436: [B2-2][REQ003]NewTaxCode End -->
+    
+</sqlMap>

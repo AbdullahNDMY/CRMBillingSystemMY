@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+	
+   	<!-- Action viewing B_SSM_S02 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+          name="/B_SSM_S02/B_SSM_S02_View_Action" 
+          scope="prototype"/>   
+    
+    <!-- Action editing B_SSM_S02 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+          name="/B_SSM_S02/B_SSM_S02_Edit_Action" 
+          scope="prototype"/> 
+   	
+   	<!-- Action processing business from requests of B_SSM_S02_Page -->	        
+  	<bean class="nttdm.bsys.b_ssm.s02.action.B_SSM_S02_BProcess_Action"
+        name="/B_SSM_S02/B_SSM_S02_Request_Process_Action" 
+        scope="prototype">
+        <property name="businessLogic" 
+        		  ref="B_SSM_S02_Request_Process_Blogic"/>
+   </bean>  
+   
+   <!-- Action processing requests displaying sub info from B_SSM_S02_Page -->	        
+  	<bean class="nttdm.bsys.b_ssm.s02.action.B_SSM_S02_Request_Process_Action"
+          name="/B_SSM_S02/B_SSM_S02_SubInfo_Displaying_Action" 
+          scope="prototype">      
+   </bean> 
+   
+   <!-- Action processing requests displaying sub info from B_SSM_S02_Page -->	        
+  	<bean class="nttdm.bsys.b_ssm.s02.action.B_SSM_S02_Request_Process_Action"
+          name="/B_SSM_S02/B_SSM_S02_SubInfo_Editing_Action" 
+          scope="prototype">      
+   </bean>    
+   
+   <!-- Bean Blogic processing request from B_SSM_S02_Page -->
+   <bean class="nttdm.bsys.b_ssm.s02.blogic.B_SSM_S02_Request_Process_Blogic"
+         id="B_SSM_S02_Request_Process_Blogic" 
+         scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+   </bean>  
+  
+   <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_SSM_S02/B_SSM_S02CheckBL" scope="singleton">
+        <property name="businessLogic" ref="B_SSM_S02CheckBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_ssm.s02.blogic.B_SSM_S02CheckBLogic"
+        id="B_SSM_S02CheckBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_ssm.s02.action.B_SSM_S02_GetDefaultSetting"
+          name="/B_SSM_S02/B_SSM_S02_GetDefaultSetting_Action" 
+          scope="prototype">
+          <property name="queryDAO" ref="queryDAO"/>    
+   </bean>  
+    <bean class="nttdm.bsys.b_ssm.s02.action.B_SSM_S02_checkMailAccountDuplicationAction"
+          name="/B_SSM_S02/B_SSM_S02_checkMailAccountDuplicationAction" 
+          scope="prototype">
+          <property name="queryDAO" ref="queryDAO"/>    
+   </bean>  
+</beans>

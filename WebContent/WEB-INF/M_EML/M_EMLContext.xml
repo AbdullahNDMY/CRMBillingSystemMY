@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <!-- <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_EML/M_EMLS01BL" scope="singleton"/> -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_EML/M_EMLS01Action" scope="prototype"/>
+    <!-- New -->    
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_EML/M_EMLS01New" scope="singleton"/>
+             
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_EML/M_EMLS01BL" scope="singleton">
+        <property name="businessLogic" ref="M_EMLS01InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_eml.blogic.M_EMLS01InitBLogic"
+        id="M_EMLS01InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_EML/M_EMLS01Save" scope="singleton">
+        <property name="businessLogic" ref="M_EMLS01SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_eml.blogic.M_EMLS01SaveBLogic"
+        id="M_EMLS01SaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+     <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_EML/M_EMLS02Save" scope="singleton">
+        <property name="businessLogic" ref="M_EMLS02SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_eml.blogic.M_EMLS02SaveBLogic"
+        id="M_EMLS02SaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_EML/M_EMLS01Edit" scope="singleton">
+        <property name="businessLogic" ref="M_EMLS03InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_eml.blogic.M_EMLS03InitBLogic"
+        id="M_EMLS03InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_EML/M_EML_S02CheckErrorSaveBL" scope="singleton">
+        <property name="businessLogic" ref="M_EML_S02CheckErrorSaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_eml.blogic.M_EML_S02CheckErrorSaveBLogic"
+        id="M_EML_S02CheckErrorSaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- #252 Batch Email Billing Document: generate PDF / email CT 11052017 ST -->
+    <bean class="nttdm.bsys.m_eml.blogic.M_EMLS01TestEmailAction"
+        name="/M_EML/M_EMLS01TestEmail" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- #252 Batch Email Billing Document: generate PDF / email CT 11052017 EN -->
+</beans>

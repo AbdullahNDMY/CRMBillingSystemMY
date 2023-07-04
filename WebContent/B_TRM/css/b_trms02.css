@@ -1,0 +1,77 @@
+
+.InputTextBox{
+	width: 200px;	
+}
+.InputComboBox{
+	width: 160px;
+}
+.TelExtNoTextBox{
+	width:100px;	
+}
+.HiddenTextBox{
+	width: 300px;
+	border: 0px;
+	background-color: #F8F8F8;	
+}
+.HiddenGridTextBox{
+	width: 90px;
+	border: 0px;
+	background-color: #F8F8F8;	
+}
+.debitInfo{
+	margin-top:0.05in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;
+	border: solid 2px #000000;
+	
+}
+.debitInfo table{
+	font-size : 11px;	
+}
+.debitInfo td.header{
+	text-align: center;
+	font-weight: bold;
+	background-color: #EBEADB;
+	height:25px;
+	border: solid 1px #000000;	
+}
+.debitInfo td.colLeft{
+	text-align: left;	
+	border: solid 1px #000000;
+	padding-left: 0.05in;
+}
+.debitInfo td.colCenter{
+	text-align: center;	
+	border: solid 1px #000000;
+}
+.debitInfo td.colRight{
+	text-align: right;	
+	border: solid 1px #000000;
+	padding-right: 0.05in;
+}
+.lineBottom{
+	color: #EFEFEF;
+}
+
+input.realFile
+    {
+  position:absolute;
+      right:7%;
+      -moz-opacity:0;
+      filter:alpha(opacity: 0);
+      opacity: 0;
+      z-index: 2;
+      width:0px;
+      border-width:0px;
+
+}
+input.fakeFile
+    { 
+  z-index:1;
+  width:80px;
+  height:22px;
+    }
+.tdnowap td{
+    font-size: 16px;
+}

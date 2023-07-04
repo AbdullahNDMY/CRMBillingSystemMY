@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/A_USR/A_USR_S01DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/A_USR/A_USR_Gate" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S01_Search" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S01_SearchBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S01_SearchBLogic"
+        id="A_USR_S01_SearchBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S01_InitData" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S01_InitDataBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S01_InitDataBLogic"
+        id="A_USR_S01_InitDataBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/A_USR/A_USR_S02DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S02_InitData" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S02_InitDataBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S02_InitDataBLogic"
+        id="A_USR_S02_InitDataBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_ChangeAccessAjax" scope="prototype">
+        <property name="businessLogic" ref="A_USR_ChangeAccessAjaxBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_ChangeAccessAjaxBLogic"
+        id="A_USR_ChangeAccessAjaxBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S02_Delete" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S02_DeleteBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S02_DeleteBLogic"
+        id="A_USR_S02_DeleteBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S02_Update" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S02_UpdateBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S02_Save" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S02_SaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S02_UpdateBLogic"
+        id="A_USR_S02_UpdateBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S02_SaveBLogic"
+        id="A_USR_S02_SaveBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.action.A_USR_S02_RedirectAction"
+        name="/A_USR/A_USR_S02_Redirect" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR_S02_Photo" scope="prototype">
+        <property name="businessLogic" ref="A_USR_S02_Photo"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S02_PhotoBLogic"
+        id="A_USR_S02_Photo" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR03_Search" scope="prototype">
+        <property name="businessLogic" ref="A_USR03_Search"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S03_SearchBLogic"
+        id="A_USR03_Search" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/A_USR/A_USR03_DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR03_Save" scope="prototype">
+        <property name="businessLogic" ref="A_USR03_Save"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S03_SaveBLogic"
+        id="A_USR03_Save" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR04_Search" scope="prototype">
+        <property name="businessLogic" ref="A_USR04_Search"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S04_SearchBLogic"
+        id="A_USR04_Search" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/A_USR/A_USR04_DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/A_USR/A_USR04_Save" scope="prototype">
+        <property name="businessLogic" ref="A_USR04_Save"/>
+    </bean>
+    <bean class="nttdm.bsys.a_usr.blogic.A_USR_S04_SaveBLogic"
+        id="A_USR04_Save" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

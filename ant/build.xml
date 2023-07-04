@@ -1,0 +1,455 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ======================================================================
+     ブランクプロジェクトをビルドするスクリプト
+     ====================================================================== -->
+<project name="project" default="main" basedir="..">
+	<target name="main" depends="clean,compile,compile-junit,emma,junit,emma-report,checkstyle,findbugs,createJavaDoc,war,deploy">
+	</target>
+	<!-- プロパティの読み込み -->
+	<property file="./ant/build.properties" />
+	<property name="build.dir" location="build"/>
+	<property name="result.dir" location="${build.dir}/result"/>
+	<!-- クラスパスの設定 -->
+	<property name="classpath.lib" value="
+			${lib.dir}/activation-1.1.jar;
+			${lib.dir}/antlr.jar;
+			${lib.dir}/antlr-2.7.6.jar;
+			${lib.dir}/aspectjweaver.jar;
+			${lib.dir}/bsh-core-2.0b4.jar;
+			${lib.dir}/cglib-2.1_3-src.jar;
+			${lib.dir}/cglib-nodep-2.1_3.jar;
+			${lib.dir}/commons-beanutils.jar;
+			${lib.dir}/commons-beanutils-1.7.0.jar;
+			${lib.dir}/commons-collections-3.1.jar;
+			${lib.dir}/commons-collections-3.2.jar;
+			${lib.dir}/commons-dbcp-1.2.2.jar;
+			${lib.dir}/commons-digester.jar;
+			${lib.dir}/commons-digester-1.8.jar;
+			${lib.dir}/commons-fileupload.jar;
+			${lib.dir}/commons-fileupload-1.2.jar;
+			${lib.dir}/commons-io-1.3.2.jar;
+			${lib.dir}/commons-javaflow-20060411.jar;
+			${lib.dir}/commons-jxpath-1.3.jar;
+			${lib.dir}/commons-lang-2.1.jar;
+			${lib.dir}/commons-lang-2.3.jar;
+			${lib.dir}/commons-logging.jar;
+			${lib.dir}/commons-logging-1.1.jar;
+			${lib.dir}/commons-pool-1.3.jar;
+			${lib.dir}/commons-validator.jar;
+			${lib.dir}/commons-validator-1.3.1.jar;
+			${lib.dir}/dom4j-1.6.1.jar;
+			${lib.dir}/groovy-all-1.8.1.jar;
+			${lib.dir}/gson-1.5.jar;
+			${lib.dir}/hamcrest-core-1.1.jar;
+			${lib.dir}/hamcrest-library-1.1.jar;
+			${lib.dir}/ibatis-2.3.0.677.jar;
+			${lib.dir}/iText-2.1.7.jar;
+			${lib.dir}/iText-5.0.1.jar;
+			${lib.dir}/iTextAsian.jar;
+			${lib.dir}/iTextAsianCmaps.jar;
+			${lib.dir}/j2w-ejb-2.0.jar;
+			${lib.dir}/jakarta-oro.jar;
+			${lib.dir}/jakarta-oro-2.0.8.jar;
+			${lib.dir}/jasperreports-3.7.3.jar;
+			${lib.dir}/jasperreports-applet-3.7.3.jar;
+			${lib.dir}/jasperreports-fonts-3.7.3.jar;
+			${lib.dir}/jasperreports-javaflow-3.7.3.jar;
+			${lib.dir}/jdt-compiler-3.1.1.jar;
+			${lib.dir}/jmock-2.5.1.jar;
+			${lib.dir}/jmock-junit3-2.5.1.jar;
+			${lib.dir}/jmock-junit4-2.5.1.jar;
+			${lib.dir}/jmock-legacy-2.5.1.jar;
+			${lib.dir}/jmock-script-2.5.1.jar;
+			${lib.dir}/json_simple-1.1.jar;
+			${lib.dir}/jsptabcontrol-1.0-b3.jar;
+			${lib.dir}/jstl.jar;
+			${lib.dir}/junit-3.8.1.jar;
+			${lib.dir}/log4j-1.2.15.jar;
+			${lib.dir}/mail.jar;
+			${lib.dir}/objenesis-1.0.jar;
+			${lib.dir}/ojdbc14.jar;
+			${lib.dir}/ojdbc14_g.jar;
+			${lib.dir}/orai18n.jar;
+			${lib.dir}/poi-3.6-20091214.jar;
+			${lib.dir}/poi-3.8-beta3-20110606.jar;
+			${lib.dir}/poi-contrib-3.6-20091214.jar;
+			${lib.dir}/poi-examples-3.6-20091214.jar;
+			${lib.dir}/poi-ooxml-3.6-20091214.jar;
+			${lib.dir}/poi-ooxml-schemas-3.6-20091214.jar;
+			${lib.dir}/poi-scratchpad-3.6-20091214.jar;
+			${lib.dir}/quartz-1.7.0.jar;
+			${lib.dir}/spring.jar;
+			${lib.dir}/spring-test.jar;
+			${lib.dir}/spring-webmvc-struts.jar;
+			${lib.dir}/sqljdbc.jar;
+			${lib.dir}/sqljdbc4.jar;
+			${lib.dir}/standard.jar;
+			${lib.dir}/struts.jar;
+			${lib.dir}/terasoluna-thin-server.jar;
+			${lib.dir}/terasoluna-utlib.jar;
+			${lib.dir}/terasoluna-utlib-spring.jar;
+			${lib.dir}/timesnewroman.jar;
+			${lib.dir}/xstream-1.3.1.jar;
+			${lib.dir}/xmlbeans-2.3.0.jar;
+			${webapsvr.lib.dir}/commons-el.jar;
+			${webapsvr.lib.dir}/jasper-compiler.jar;
+			${webapsvr.lib.dir}/jasper-compiler-jdt.jar;
+			${webapsvr.lib.dir}/jasper-runtime.jar;
+			${webapsvr.lib.dir}/jsp-api.jar;
+			${webapsvr.lib.dir}/naming-factory.jar;
+			${webapsvr.lib.dir}/naming-factory-dbcp.jar;
+			${webapsvr.lib.dir}/naming-resources.jar;
+			${webapsvr.lib.dir}/servlet-api.jar;
+			${crypto.lib.dir}/bcmail-jdk16-146.jar;
+			${crypto.lib.dir}/bcpg-jdk16-146.jar;
+			${crypto.lib.dir}/bcprov-jdk16-146.jar;
+			${crypto.lib.dir}/bctest-jdk16-146.jar;
+			${crypto.lib.dir}/bctsp-jdk16-146.jar;"/>
+        <property environment="env"/>
+        
+        <path id="aux.lib">
+			<pathelement location="${lib.dir}/activation-1.1.jar"/>
+			<pathelement location="${lib.dir}/antlr.jar"/>
+			<pathelement location="${lib.dir}/antlr-2.7.6.jar"/>
+			<pathelement location="${lib.dir}/aspectjweaver.jar"/>
+			<pathelement location="${lib.dir}/bsh-core-2.0b4.jar"/>
+			<pathelement location="${lib.dir}/cglib-2.1_3-src.jar"/>
+			<pathelement location="${lib.dir}/cglib-nodep-2.1_3.jar"/>
+			<pathelement location="${lib.dir}/commons-beanutils.jar"/>
+			<pathelement location="${lib.dir}/commons-beanutils-1.7.0.jar"/>
+			<pathelement location="${lib.dir}/commons-collections-3.1.jar"/>
+			<pathelement location="${lib.dir}/commons-collections-3.2.jar"/>
+			<pathelement location="${lib.dir}/commons-dbcp-1.2.2.jar"/>
+			<pathelement location="${lib.dir}/commons-digester.jar"/>
+			<pathelement location="${lib.dir}/commons-digester-1.8.jar"/>
+			<pathelement location="${lib.dir}/commons-fileupload.jar"/>
+			<pathelement location="${lib.dir}/commons-fileupload-1.2.jar"/>
+			<pathelement location="${lib.dir}/commons-io-1.3.2.jar"/>
+			<pathelement location="${lib.dir}/commons-javaflow-20060411.jar"/>
+			<pathelement location="${lib.dir}/commons-jxpath-1.3.jar"/>
+			<pathelement location="${lib.dir}/commons-lang-2.1.jar"/>
+			<pathelement location="${lib.dir}/commons-lang-2.3.jar"/>
+			<pathelement location="${lib.dir}/commons-logging.jar"/>
+			<pathelement location="${lib.dir}/commons-logging-1.1.jar"/>
+			<pathelement location="${lib.dir}/commons-pool-1.3.jar"/>
+			<pathelement location="${lib.dir}/commons-validator.jar"/>
+			<pathelement location="${lib.dir}/commons-validator-1.3.1.jar"/>
+			<pathelement location="${lib.dir}/dom4j-1.6.1.jar;"/>
+			<pathelement location="${lib.dir}/groovy-all-1.8.1.jar"/>
+			<pathelement location="${lib.dir}/gson-1.5.jar"/>
+			<pathelement location="${lib.dir}/hamcrest-core-1.1.jar"/>
+			<pathelement location="${lib.dir}/hamcrest-library-1.1.jar"/>
+			<pathelement location="${lib.dir}/ibatis-2.3.0.677.jar"/>
+			<pathelement location="${lib.dir}/iText-2.1.7.jar"/>
+			<pathelement location="${lib.dir}/iText-5.0.1.jar"/>
+			<pathelement location="${lib.dir}/iTextAsian.jar"/>
+			<pathelement location="${lib.dir}/iTextAsianCmaps.jar"/>
+			<pathelement location="${lib.dir}/j2w-ejb-2.0.jar"/>
+			<pathelement location="${lib.dir}/jakarta-oro.jar"/>
+			<pathelement location="${lib.dir}/jakarta-oro-2.0.8.jar"/>
+			<pathelement location="${lib.dir}/jasperreports-3.7.3.jar"/>
+			<pathelement location="${lib.dir}/jasperreports-applet-3.7.3.jar"/>
+			<pathelement location="${lib.dir}/jasperreports-fonts-3.7.3.jar"/>
+			<pathelement location="${lib.dir}/jasperreports-javaflow-3.7.3.jar"/>
+			<pathelement location="${lib.dir}/jdt-compiler-3.1.1.jar"/>
+			<pathelement location="${lib.dir}/jmock-2.5.1.jar"/>
+			<pathelement location="${lib.dir}/jmock-junit3-2.5.1.jar"/>
+			<pathelement location="${lib.dir}/jmock-junit4-2.5.1.jar"/>
+			<pathelement location="${lib.dir}/jmock-legacy-2.5.1.jar"/>
+			<pathelement location="${lib.dir}/jmock-script-2.5.1.jar"/>
+			<pathelement location="${lib.dir}/json_simple-1.1.jar"/>
+			<pathelement location="${lib.dir}/jsptabcontrol-1.0-b3.jar"/>
+			<pathelement location="${lib.dir}/jstl.jar"/>
+			<pathelement location="${lib.dir}/junit-3.8.1.jar"/>
+			<pathelement location="${lib.dir}/log4j-1.2.15.jar"/>
+			<pathelement location="${lib.dir}/mail.jar"/>
+			<pathelement location="${lib.dir}/objenesis-1.0.jar"/>
+			<pathelement location="${lib.dir}/ojdbc14.jar"/>
+			<pathelement location="${lib.dir}/ojdbc14_g.jar"/>
+			<pathelement location="${lib.dir}/orai18n.jar"/>
+			<pathelement location="${lib.dir}/poi-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/poi-3.8-beta3-20110606.jar"/>
+			<pathelement location="${lib.dir}/poi-contrib-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/poi-examples-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/poi-ooxml-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/poi-ooxml-schemas-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/poi-scratchpad-3.6-20091214.jar"/>
+			<pathelement location="${lib.dir}/quartz-1.7.0.jar"/>
+			<pathelement location="${lib.dir}/spring.jar"/>
+			<pathelement location="${lib.dir}/spring-test.jar"/>
+			<pathelement location="${lib.dir}/spring-webmvc-struts.jar"/>
+			<pathelement location="${lib.dir}/standard.jar"/>
+			<pathelement location="${lib.dir}/struts.jar"/>
+			<pathelement location="${lib.dir}/terasoluna-thin-server.jar"/>
+			<pathelement location="${lib.dir}/terasoluna-utlib.jar"/>
+			<pathelement location="${lib.dir}/terasoluna-utlib-spring.jar"/>
+			<pathelement location="${lib.dir}/timesnewroman.jar"/>
+			<pathelement location="${lib.dir}/xmlbeans-2.3.0.jar"/>
+			<pathelement location="${lib.dir}/xstream-1.3.1.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/commons-el.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/jasper-compiler.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/jasper-compiler-jdt.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/jasper-runtime.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/jsp-api.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/naming-factory.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/naming-factory-dbcp.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/naming-resources.jar"/>
+			<pathelement location="${webapsvr.lib.dir}/servlet-api.jar"/>
+			<pathelement location="${crypto.lib.dir}/bcmail-jdk16-146.jar"/>
+			<pathelement location="${crypto.lib.dir}/bcpg-jdk16-146.jar"/>
+			<pathelement location="${crypto.lib.dir}/bcprov-jdk16-146.jar"/>
+			<pathelement location="${crypto.lib.dir}/bctest-jdk16-146.jar"/>
+			<pathelement location="${crypto.lib.dir}/bctsp-jdk16-146.jar"/>
+		</path>
+	<!-- =================================
+          Warファイル、コンパイルされたクラスファイルの削除を行う。
+       ================================= -->
+	<target name="clean" description="war、クラスファイルの削除">
+		<delete dir="${web.inf.dir}/classes"/>
+		<delete dir="./checkstyle"/>
+		<delete includeEmptyDirs="true" failonerror="false">
+			<fileset dir="${web.inf.dir}/classes" includes="**/*" />
+		</delete>
+		<delete dir="${result.dir}"/>
+		<mkdir dir="${result.dir}"/>
+	</target>
+
+	<!-- =================================
+          コンパイルを行う。
+       ================================= -->
+    <property name="java.class.dir" location="${build.dir}/classes"/>
+	<target name="compile" description="Compile source code">
+		<delete dir="${java.class.dir}"/>
+		<mkdir dir="${java.class.dir}"/>
+		<copy todir="${build.dir}/billingsystem">
+			<fileset dir="${web.home}"/>
+		</copy>
+		<javac destdir="${java.class.dir}" debug="on" failonerror="false" includeAntRuntime="true" encoding="UTF-8" >
+			<compilerarg value="-Xlint:unchecked"/>
+			<compilerarg value="-Xlint:deprecation"/>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${webapsvr.lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<src path="${generated.source.dir}" />
+			<src path="${resource.dir}"/>
+			<src path="${source.dir}" />
+		</javac>
+		<copy todir="${java.class.dir}">
+			<fileset dir="${source.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${java.class.dir}">
+			<fileset dir="${generated.source.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Compile of JUnit Test Code -->
+    <property name="test.class.dir" location="${build.dir}/test"/>
+    <property name="test.src.dir" location="test"/>
+	<target name="compile-junit" description="Compile ofJUnit Test Code">
+		<delete dir="${test.class.dir}"/>
+		<mkdir dir="${test.class.dir}"/>
+		<javac destdir="${test.class.dir}" debug="on" failonerror="false" includeAntRuntime="true" encoding="UTF-8" >
+			<compilerarg value="-Xlint:unchecked"/>
+			<compilerarg value="-Xlint:deprecation"/>
+			<classpath>
+				<pathelement location="${java.class.dir}"/>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${webapsvr.lib.dir}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<src path="${test.src.dir}" />
+		</javac>
+		<copy todir="${test.class.dir}">
+			<fileset dir="${test.src.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Definition of EMMA Task -->
+	<property name="emma.home" location="${env.SDWB_CI_HOME}/jenkins/tools/emma-2.0.5312"/>
+	<path id="emma.lib">
+	 	<pathelement location="${emma.home}/lib/emma_ant.jar"/>
+		<pathelement location="${emma.home}/lib/emma.jar"/>
+	</path>
+	
+	<taskdef resource="emma_ant.properties" classpathref="emma.lib"/>
+	<property name="emma.enable" value="true"/>
+
+	<!-- Merge of EMMA Code into Java Test Code -->
+	<property name="emma.result.dir" location="${result.dir}/emma"/>
+	<property name="convert.class.dir" location="${build.dir}/convert"/>
+	<target name="emma">
+		<delete dir="${emma.result.dir}"/>
+		<delete dir="${convert.class.dir}"/>
+		<mkdir dir="${emma.result.dir}"/>
+		<mkdir dir="${convert.class.dir}"/>
+		<emma enabled="${emma.enable}">
+			<instr instrpath="${java.class.dir}"
+			       destdir="${convert.class.dir}"
+			       metadatafile="${emma.result.dir}/metadata.emma"
+			       merge="yes" mode="fullcopy"/>
+		</emma>
+	</target>
+
+
+	
+	<!-- Execution of Merged JUnit Test -->
+	<property name="junit.result.dir" location="${result.dir}/junit"/>
+	<target name="junit" description="junit">
+		<delete dir="${junit.result.dir}"/>
+		<mkdir dir="${junit.result.dir}"/>
+		<junit printsummary="yes" haltonfailure="no">
+			<jvmarg value="-Demma.coverage.out.file=${emma.result.dir}/coverage.emma"/>
+			<jvmarg value="-Demma.coverage.out.merge=true"/>
+			<jvmarg value="-Demma.verbosity.level=verbose"/>
+			<jvmarg value="-Dcoverage.enabled=true"/>
+			
+			<classpath>
+				<pathelement location="${env.SDWB_CI_HOME}/jenkins/tools/junit4.3.1/junit.jar"/>
+				<pathelement location="${convert.class.dir}/classes"/>
+				<pathelement location="${java.class.dir}"/>
+				<pathelement location="${test.class.dir}"/>
+				<pathelement location="${emma.result.dir}"/>
+				<path refid="emma.lib"/>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${webapsvr.lib.dir}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			
+			<formatter type="xml"/>
+			<batchtest fork="true" todir="${junit.result.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*_Test.java"/>
+				</fileset>
+			</batchtest>
+		</junit>		
+		
+	</target>
+	
+	<!-- Output of EMMA Report -->
+	<target name="emma-report" >
+		<emma enabled="true">
+			<property name="report.html.out.encoding" value="UTF-8"/>
+			<report depth="method">
+				<sourcepath>
+					<path location="${emma.java.class.dir}"/>
+					<path location="${generated.source.dir}"/>
+				</sourcepath>
+				
+				<fileset dir="${emma.result.dir}">
+					<include name="*.emma"/>
+				</fileset>
+				<xml outfile="${emma.result.dir}/coverage.xml" />
+				<html outfile="${emma.result.dir}/emma_report.html"/>
+			</report>
+		</emma>
+	</target>
+
+	<!-- Definition of Checkstyle Task -->
+	<path id="checkstyle.lib">
+		<pathelement location="${env.SDWB_CI_HOME}/jenkins/tools/checkstyle-4.4/checkstyle-all-4.4.jar"/>
+	</path>
+	<taskdef resource="checkstyletask.properties" classpathref="checkstyle.lib"/>
+	
+	<!-- Execution of Checkstyle -->
+	<property name="checkstyle.result.dir" location="${result.dir}/checkstyle"/>
+	<target name="checkstyle" description="Checkstyle">
+		<delete dir="${checkstyle.result.dir}"/>
+		<mkdir dir="${checkstyle.result.dir}"/>
+		<checkstyle config="${env.SDWB_CI_HOME}/jenkins/tools/checkstyle-4.4/TerasolunaCSrule.xml"
+		            failureProperty="checkstyle.failure"
+		            failOnViolation="false">
+			<formatter type="xml" tofile="${checkstyle.result.dir}/checkstyle.xml"/>
+			<fileset dir="${source.dir}" includes="**/*.java"/>
+		</checkstyle>
+	</target>
+
+	<!-- Definition of Findbugs Task -->
+	<path id="findbugs.lib">
+		<pathelement location="${env.SDWB_CI_HOME}/jenkins/tools/findbugs-1.3.6/lib/findbugs-ant.jar"/>
+	</path>
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs.lib"/>
+	
+	<!-- Execution of Findbugs -->
+	<property name="findbugs.result.dir" location="${result.dir}/findbugs"/> 
+	<target name="findbugs" description="Findbugs">
+		<delete dir="${findbugs.result.dir}"/>
+		<mkdir dir="${findbugs.result.dir}"/>
+		<findbugs home="${env.SDWB_CI_HOME}/jenkins/tools/findbugs-1.3.6"
+				output="xml"
+		          outputFile="${findbugs.result.dir}/findbugs.xml"
+		          includefilter="${env.SDWB_CI_HOME}/jenkins/tools/findbugs-1.3.6/TerasolunaFBrule.xml">
+			<class location="${findbugs.java.class.dir}"/>
+			<!--<class location="${resource.dir}"/>-->
+			<!--<class location="${lib.dir}"/>-->
+			<!--<class location="${webapsvr.lib.dir}"/>-->
+			<sourcePath path = "${findbugs.source.dir}"/>
+			<auxClasspath refid ="aux.lib"/>
+		</findbugs>
+	</target>
+
+	<!-- =================================
+          native2asciiにてプロパティファイルのコード変換を行う。
+       ================================= -->
+	<target name="native2ascii" depends="compile" description="プロパティファイルのコード変換">
+		<native2ascii encoding="Windows-31J" src="${source.dir}" dest="${java.class.dir}" includes="*.properties" ext=".properties" />
+		<native2ascii encoding="Windows-31J" src="${generated.source.dir}" dest="${java.class.dir}" includes="*.properties" ext=".properties" />
+	</target>
+
+	<!-- =================================
+          JavaDocの生成を行う。
+       ================================= -->
+	<target name="createJavaDoc" description="JavaDoc生成">
+		<delete dir="./doc/javadoc" />
+		<mkdir dir="./doc/javadoc" />
+		<javadoc classpath="${classpath.lib}" sourcepath="${source.dir}" destdir="./doc/javadoc" doctitle="${context.name}" windowtitle="${context.name}" use="true" splitindex="true" encoding="Windows-31J" private="true" packagenames="**/*">
+		</javadoc>
+		<javadoc classpath="${classpath.lib}" sourcepath="${generated.source.dir}" destdir="./doc/javadoc" doctitle="${context.name}" windowtitle="${context.name}" use="true" splitindex="true" encoding="Windows-31J" private="true" packagenames="**/*">
+		</javadoc>
+	</target>
+	
+	<!-- =================================
+          Creation of Web Application Resources
+       ================================= -->
+	<!-- Creation of Web Application Resources -->
+	<target name="war" depends="native2ascii" description="Create Web Application Resources">
+		<delete file="${build.dir}/${context.name}.war"/>
+		<war destfile="${build.dir}/${context.name}.war"
+		     update="true"
+		     duplicate="preserve"
+		     webxml="${web.inf.dir}/web.xml">
+		     <classes dir="${java.class.dir}"/>
+			 <classes dir="${resource.dir}"/>
+		     <lib file="${web.inf.dir}/lib/*.jar"/>
+		     <fileset dir="${build.dir}/billingsystem"/>
+		</war>
+	</target>
+
+	<!-- =================================
+          プロジェクトのデプロイを行う。
+       ================================= -->
+	<target name="deploy" depends="war" description="Deploy war file to tomcat">
+		<delete file="${deploy.dir}/${context.name}.war" failonerror="false" />
+		<delete dir="${deploy.dir}/${context.name}" failonerror="false" />
+		<copy file="${build.dir}/${context.name}.war" todir="${deploy.dir}" flatten="true" failonerror="false" verbose="true"/> 
+	</target>
+</project>

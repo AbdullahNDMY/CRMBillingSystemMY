@@ -1,0 +1,112 @@
+
+#tabbed_box_1 {
+	
+	width:100%;
+	
+}
+.tabbed_box h4 {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:23px;
+	color:#657077;
+	letter-spacing:-1px;
+	margin-bottom:11px;
+}
+.tabbed_box h4 small {
+	color:#a3a9ac;
+	font-weight:normal;
+	font-size:11px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-transform:uppercase;
+	position:relative;
+	top:-4px;
+	left:6px;
+	letter-spacing:0px;
+}
+.tabbed_area {
+	
+	background-color:white;
+	padding:5px;	
+	padding-bottom: 2px;
+		
+}
+
+ul.tabs {
+	margin:0px; padding:0px;
+	margin-top:3px;
+	margin-bottom:2px;
+}
+ul.tabs li {
+	list-style:none;
+	display:inline;
+}
+ul.tabs li a {
+	background-color:#EAEAEA;
+	color:black;
+	padding:4px 8px 4px 8px;
+	text-decoration:none;
+	font-size:11px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	
+	border:1px solid #464c54;
+	background-image:url(images/tab_off.jpg);
+	background-repeat:repeat-x;	 
+	background-position:bottom;
+}
+ul.tabs li a:hover {
+	background-color:white;
+	border-color:#2f343a;
+}
+ul.tabs li a.active {
+	background-color:#ffffff;
+	color:#282e32;
+	border:1px solid #464c54; 
+	border-bottom: 1px solid #ffffff;
+	background-image:url(images/tab_on.jpg);
+	background-repeat:repeat-x;
+	background-position:top;	
+}
+.contact {
+	background-color:#ffffff;
+	padding:5px;
+	border:1px solid #464c54; 	
+	font-family:Arial, Helvetica, sans-serif;
+	background-image:url(images/contact_bottom.jpg);
+	background-repeat:repeat-x;	 
+	background-position:bottom;	
+}
+#contact_2, #contact_3 { display:none; }
+
+.contact ul {
+	margin:0px;
+	padding:0px 10px 0px 10px;
+}
+.contact ul li {
+	list-style:none;
+	border-bottom:1px solid #d6dde0;
+	padding-top:5px;
+	padding-bottom:5px;
+	font-size:13px;
+}
+.contact ul li:last-child {
+	border-bottom:none;
+}
+.contact ul li a {
+	text-decoration:none;
+	color:#EBEADB;
+}
+.contact ul li a small {
+	color:white;
+	font-size:9px;
+	text-transform:uppercase;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	position:relative;
+	left:4px;
+	top:0px;
+}
+.contact ul li a:hover {
+	color:#a59c83;
+}
+.contact ul li a:hover small {
+	color:#baae8e;
+}

@@ -1,0 +1,24 @@
+
+.FormInputTitle {
+	text-align: right;
+	font-weight: normal;
+	width:160px;
+}
+.FormColonTitle {
+	text-align: left;
+	width:2%;	
+}
+.FormInput {
+	text-align: left;
+}
+
+.FormPWD {
+	background-color:#F8F8F8;
+	height: 21px;
+	width:100%;
+	font-family: "Calibri";
+	vertical-align: middle;
+	border: solid 2px #CECECE;
+	border-left-color: white;
+	border-right-color: white;
+}

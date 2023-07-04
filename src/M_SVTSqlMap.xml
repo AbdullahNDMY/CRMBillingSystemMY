@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_SVT">
+	<select id="SELECT.M_SVT.GET_LIST_PLANSERVICE" parameterClass="nttdm.bsys.m_svt.dto.M_SVT01_SearchInput" resultClass="nttdm.bsys.m_svt.dto.PlanService">
+		SELECT  
+				c.SVC_GRP_NAME as "svcGrpName",
+				A.id_service as "idService",
+				A.svc_grp as "serviceGroup",
+				A.svc_category as "serviceCategory",
+	            case when A.svc_category = 'TYP' 
+	                 then 'Service' 
+	                 when A.svc_category = 'ITM' 
+	                 then 'Plan' 
+	                 when A.svc_category = 'DTL' 
+	                 then 'Plan Details' END as "type",
+				A.svc_desc as "serviceDescription",
+				A.acc_code as "accCode",
+				A.desc_abbr as descAbbr,
+		        A.PRODUCT_CODE as productCode,
+		        A.REFERENCE1 as reference1,
+		        A.REFERENCE2 as reference2,
+		        case when A.svc_category = 'TYP' 
+			                 then case when E.SVC_LEVEL2 is null then 0 else 1 end
+			                 when A.svc_category = 'ITM' 
+			                 then case when F.SVC_LEVEL3  is null then 0 else 1 end
+			                 when A.svc_category = 'DTL' 
+			                 then case when G.SVC_LEVEL4  is null then 0 else 1 end
+		                   END as "isUserX",
+		        case when A.svc_category = 'TYP' 
+			                 then case when H.SVC_LEVEL2   is null then 0 else 1 end
+			                 when A.svc_category = 'ITM' 
+			                 then case when I.SVC_LEVEL3  is null then 0 else 1 end
+			                 when A.svc_category = 'DTL' 
+			                 then case when J.SVC_LEVEL4  is null then 0 else 1 end
+		                   END as "isUserY"
+		FROM M_SVC A,M_SVG C,
+	        (select DISTINCT SVC_LEVEL2 from M_PLAN_D WHERE SVC_LEVEL2 IS NOT NULL and IS_DELETED=0) E ,
+	        (select DISTINCT SVC_LEVEL3 from M_PLAN_SVC WHERE SVC_LEVEL3 IS NOT NULL and IS_DELETED=0) F ,
+	        (select DISTINCT SVC_LEVEL4 from M_PLAN_SVC WHERE SVC_LEVEL4 IS NOT NULL and IS_DELETED=0) G ,
+	        (select DISTINCT SVC_LEVEL2 from T_CUST_PLAN_LINK WHERE SVC_LEVEL2 IS NOT NULL and IS_DELETED=0) H ,
+	        (select DISTINCT SVC_LEVEL3 from T_CUST_PLAN_SVC WHERE SVC_LEVEL3 IS NOT NULL and IS_DELETED=0) I ,
+	        (select DISTINCT SVC_LEVEL4 from T_CUST_PLAN_SVC WHERE SVC_LEVEL4 IS NOT NULL and IS_DELETED=0) J 
+		WHERE A.IS_DELETED = 0 AND  A.SVC_GRP = C.SVC_GRP
+		    AND A.ID_SERVICE=E.SVC_LEVEL2(+) AND A.ID_SERVICE=F.SVC_LEVEL3(+) AND A.ID_SERVICE=G.SVC_LEVEL4(+)
+		    AND A.ID_SERVICE=H.SVC_LEVEL2(+) AND A.ID_SERVICE=I.SVC_LEVEL3(+) AND A.ID_SERVICE=J.SVC_LEVEL4(+)
+		
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="category">
+				A.SVC_GRP = #category#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="abbreviation">
+				UPPER(A.DESC_ABBR) like UPPER('%$abbreviation$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				A.SVC_CATEGORY = #type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accountCode">
+				UPPER(A.ACC_CODE) like UPPER('%$accountCode$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="description">
+				UPPER(A.SVC_DESC) like UPPER('%$description$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productCode">
+				UPPER(A.PRODUCT_CODE) like UPPER('%$productCode$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference1">
+				UPPER(A.REFERENCE1) like UPPER('%$reference1$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference2">
+				UPPER(A.REFERENCE2) like UPPER('%$reference2$%')
+			</isNotEmpty>
+			<isNotEmpty property="idServiceList" prepend="AND">
+                a.ID_SERVICE IN
+	            <iterate  property="idServiceList" conjunction="," close=")" open="(" >
+	                #idServiceList[]#
+	            </iterate>
+            </isNotEmpty>
+		</dynamic>
+		 ORDER BY A.SVC_DESC ASC
+	</select>
+	
+	<select id="SELECT.M_SVT.GET_LIST_COUNT" parameterClass="nttdm.bsys.m_svt.dto.M_SVT01_SearchInput" resultClass="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM M_SVC A,M_SVG C,
+	        (select DISTINCT SVC_LEVEL2 from M_PLAN_D WHERE SVC_LEVEL2 IS NOT NULL and IS_DELETED=0) E ,
+	        (select DISTINCT SVC_LEVEL3 from M_PLAN_SVC WHERE SVC_LEVEL3 IS NOT NULL and IS_DELETED=0) F ,
+	        (select DISTINCT SVC_LEVEL4 from M_PLAN_SVC WHERE SVC_LEVEL4 IS NOT NULL and IS_DELETED=0) G ,
+	        (select DISTINCT SVC_LEVEL2 from T_CUST_PLAN_LINK WHERE SVC_LEVEL2 IS NOT NULL and IS_DELETED=0) H ,
+	        (select DISTINCT SVC_LEVEL3 from T_CUST_PLAN_SVC WHERE SVC_LEVEL3 IS NOT NULL and IS_DELETED=0) I ,
+	        (select DISTINCT SVC_LEVEL4 from T_CUST_PLAN_SVC WHERE SVC_LEVEL4 IS NOT NULL and IS_DELETED=0) J 
+		WHERE A.IS_DELETED = 0 AND  A.SVC_GRP = C.SVC_GRP
+		    AND A.ID_SERVICE=E.SVC_LEVEL2(+) AND A.ID_SERVICE=F.SVC_LEVEL3(+) AND A.ID_SERVICE=G.SVC_LEVEL4(+)
+		    AND A.ID_SERVICE=H.SVC_LEVEL2(+) AND A.ID_SERVICE=I.SVC_LEVEL3(+) AND A.ID_SERVICE=J.SVC_LEVEL4(+)
+		
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="category">
+				A.SVC_GRP = #category#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="abbreviation">
+				UPPER(A.DESC_ABBR) like UPPER('%$abbreviation$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				A.SVC_CATEGORY = #type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accountCode">
+				UPPER(A.ACC_CODE) like UPPER('%$accountCode$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="description">
+				UPPER(A.SVC_DESC) like UPPER('%$description$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="productCode">
+				UPPER(A.PRODUCT_CODE) like UPPER('%$productCode$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference1">
+				UPPER(A.REFERENCE1) like UPPER('%$reference1$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="reference2">
+				UPPER(A.REFERENCE2) like UPPER('%$reference2$%')
+			</isNotEmpty>
+			<isNotEmpty property="idServiceList" prepend="AND">
+                a.ID_SERVICE IN
+	            <iterate  property="idServiceList" conjunction="," close=")" open="(" >
+	                #idServiceList[]#
+	            </iterate>
+            </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<update id="DELETE.M_SVT01.M_SVT01" parameterClass="java.util.HashMap">
+			UPDATE M_SVC 
+			SET IS_DELETED = 1, DATE_UPDATED = sysdate, ID_LOGIN = #id_login#
+			WHERE 
+				ID_SERVICE = #idService#
+	</update>
+	<!-- AddPlan -->
+	<insert id="M_SVTS02_INSERT_M_SVC" parameterClass="java.util.HashMap">
+	<selectKey keyProperty="idService" resultClass="java.lang.Integer" type="pre">
+		SELECT SEQ_M_SVC.NEXTVAL FROM dual
+	</selectKey>
+    	INSERT INTO M_SVC (
+                   ID_SERVICE,
+                   SVC_GRP,
+                   SVC_CATEGORY,
+                   SVC_DESC,
+                   DESC_ABBR,
+                   IS_DELETED,
+                   DATE_CREATED,
+                   DATE_UPDATED,
+                   ID_LOGIN
+                 )
+              values (
+                    #idService#,
+                    #svcGrp#,
+                    'ITM',
+                    #txtPlan#,
+                    #tbxDescAbbrSI#,
+                    0,
+                    SYSDATE,
+                    SYSDATE,
+                    #idLogin#
+                   )
+    </insert>
+    <select id="GET_SVC_ISEXIST" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM M_SVC C
+		WHERE 
+			C.SVC_DESC=#txtPlan# 
+		AND C.SVC_GRP=#svcGrp#
+	</select>
+	<select id="GET_SVC_GRP_NAME" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT SVC_GRP_NAME FROM M_SVG WHERE SVC_GRP=#svcLevel1Val#
+	</select>
+	<!-- newPage -->
+		<select id="SELECT.M_SVT.GET_NEW_IDSERVICE"  resultClass="java.lang.String">
+		SELECT   
+			SEQ_M_SVC.NEXTVAL AS "idService"
+		FROM  dual
+	</select>
+	
+	<insert id="INSERT.M_SVT.M_SVC" parameterClass="nttdm.bsys.m_svt.dto.PlanService">		
+		INSERT INTO M_SVC (ID_SERVICE,SVC_GRP,SVC_CATEGORY,SVC_DESC,ACC_CODE,DESC_ABBR,PRODUCT_CODE,REFERENCE1,REFERENCE2,GST,IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES (
+				#idService#,
+				#serviceGroup#,
+				#serviceCategory#,
+				<isEmpty property="serviceDescription">
+				null,
+				</isEmpty>
+				<isNotEmpty property="serviceDescription">
+				#serviceDescription#,
+				</isNotEmpty>
+				<isEmpty property="accCode">
+				null,
+				</isEmpty>
+				<isNotEmpty property="accCode">
+				#accCode#,
+				</isNotEmpty>
+				<isEmpty property="descAbbr">
+				null,
+				</isEmpty>
+				<isNotEmpty property="descAbbr">
+				#descAbbr#,
+				</isNotEmpty>
+				<isEmpty property="productCode">
+				null,
+				</isEmpty>
+				<isNotEmpty property="productCode">
+				#productCode#,
+				</isNotEmpty>
+				<isEmpty property="reference1">
+				null,
+				</isEmpty>
+				<isNotEmpty property="reference1">
+				#reference1#,
+				</isNotEmpty>
+				<isEmpty property="reference2">
+				null,
+				</isEmpty>
+				<isNotEmpty property="reference2">
+				#reference2#,
+				</isNotEmpty>
+				null,
+				0,
+				SYSDATE,
+				SYSDATE,
+				#idLogin#,
+				#idAudit#
+				)	    
+  	</insert>
+  	<update id="UPDATE.M_SVT.M_SVC" parameterClass="nttdm.bsys.m_svt.dto.PlanService">
+  		UPDATE M_SVC
+  		SET 
+				<isEmpty property="serviceDescription">
+				SVC_DESC = null,
+				</isEmpty>
+				<isNotEmpty property="serviceDescription">
+				SVC_DESC = #serviceDescription#,
+				</isNotEmpty>
+				<isEmpty property="accCode">
+				ACC_CODE = null,
+				</isEmpty>
+				<isNotEmpty property="accCode">
+				ACC_CODE = #accCode#,
+				</isNotEmpty>
+				<isEmpty property="descAbbr">
+				DESC_ABBR = null,
+				</isEmpty>
+				<isNotEmpty property="descAbbr">
+				DESC_ABBR = #descAbbr#,
+				</isNotEmpty>
+				<isEmpty property="productCode">
+				PRODUCT_CODE = null,
+				</isEmpty>
+				<isNotEmpty property="productCode">
+				PRODUCT_CODE = #productCode#,
+				</isNotEmpty>
+				<isEmpty property="reference1">
+				REFERENCE1 = null,
+				</isEmpty>
+				<isNotEmpty property="reference1">
+				REFERENCE1 = #reference1#,
+				</isNotEmpty>
+				<isEmpty property="reference2">
+				REFERENCE2 = null,
+				</isEmpty>
+				<isNotEmpty property="reference2">
+				REFERENCE2 = #reference2#,
+				</isNotEmpty>
+				IS_DELETED = 0,
+				DATE_UPDATED = SYSDATE,
+				ID_LOGIN = #idLogin#,
+				ID_AUDIT = #idAudit#
+  		WHERE ID_SERVICE = #idService#
+  	</update>
+  	<update id="UPDATE.M_SVT.M_SVC_PLAN" parameterClass="nttdm.bsys.m_svt.dto.PlanService">
+  		UPDATE M_SVC
+  		SET 
+				<isEmpty property="serviceDescription">
+				SVC_DESC = null,
+				</isEmpty>
+				<isNotEmpty property="serviceDescription">
+				SVC_DESC = #serviceDescription#,
+				</isNotEmpty>
+				<isEmpty property="descAbbr">
+				DESC_ABBR = null,
+				</isEmpty>
+				<isNotEmpty property="descAbbr">
+				DESC_ABBR = #descAbbr#,
+				</isNotEmpty>
+				IS_DELETED = 0,
+				DATE_UPDATED = SYSDATE,
+				ID_LOGIN = #idLogin#,
+				ID_AUDIT = #idAudit#
+  		WHERE ID_SERVICE = #idService#
+  	</update>
+	<update id="UPDATE.DELETE.M_SVT.M_SVC" parameterClass="java.util.HashMap">
+		UPDATE M_SVC
+		SET IS_DELETED = 1,
+			DATE_UPDATED = SYSDATE,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE SVC_GRP = #serviceGroup# AND IS_DELETED = 0
+		<dynamic prepend=" AND ID_SERVICE NOT IN">
+			<iterate property="listPlanService" open="(" close=")" conjunction=",">
+			#listPlanService[].idService#
+			</iterate>
+		</dynamic>
+	</update>
+	<select id="SELECT.M_SVT.GET_SVC_DELETED" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *
+		FROM M_SVC
+		WHERE SVC_GRP = #serviceGroup# AND IS_DELETED = 0
+		<dynamic prepend=" AND ID_SERVICE NOT IN">
+			<iterate property="listPlanService" open="(" close=")" conjunction=",">
+			#listPlanService[].idService#
+			</iterate>
+		</dynamic>
+	</select>
+	<select id="SELECT.M_SVT.GET_EDIT_IDSERVICE" parameterClass="java.lang.String" resultClass="nttdm.bsys.m_svt.dto.PlanService">
+		SELECT  id_service as "idService",
+				svc_desc as "serviceDescription",
+				desc_abbr as "descAbbr",
+				trim(acc_code) as "accCode",
+				product_code as "productCode",
+				reference1 as "reference1",
+				reference2 as "reference2"
+		FROM M_SVC
+		WHERE id_service = #idService#
+	</select>
+	<select id="SELECT.M_SVT.M_SVC_ISEXIST" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM M_SVC C
+		WHERE 
+			<!-- C.SVC_DESC=#description#  AND -->
+		C.SVC_GRP=#serviceGroup#
+		<isNotEmpty property="idService">
+		AND	C.ID_SERVICE != #idService#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="description">
+			UPPER(C.SVC_DESC) = UPPER('$description$')
+		</isNotEmpty>
+		AND C.IS_DELETED = 0
+		AND C.SVC_CATEGORY = #svcCategory#
+	</select>
+	<!-- Ver3.06 #278 [SIT] Issues found and fix: 1.M-CST, 2.M-SGV, 3.M-SVT CT 13072017 -->
+	<select id="SELECT.M_SVT.M_GSET_D.PROD" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET = 'PRODUCT_CODE_INPUT'
+	</select>
+	<!-- Ver3.06 #278 [SIT] Issues found and fix: 1.M-CST, 2.M-SGV, 3.M-SVT CT 13072017 -->
+</sqlMap>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_SET/SC_E_SET_S01SCR" scope="singleton">
+        <property name="businessLogic" ref="RP_E_SET_S01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_SET/RP_E_SET_S01SubmitBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_SET_S01SubmitBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_SET/SC_E_SET_S02BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_SET_S02BLogic"/>
+    </bean>
+	<bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_SET/SC_E_SET_S02DownloadBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_SET_S02DownloadBLogic"/>
+    </bean>
+	<bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_SET/SC_E_SET_S03BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_SET_S03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_set.blogic.RP_E_SET_S01BLogic"
+        id="RP_E_SET_S01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.e_set.blogic.RP_E_SET_S01SubmitBLogic"
+        id="RP_E_SET_S01SubmitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="nttdm.bsys.e_set.blogic.RP_E_SET_S02BLogic"
+        id="RP_E_SET_S02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+	<bean class="nttdm.bsys.e_set.blogic.RP_E_SET_S02DownloadBLogic"
+        id="RP_E_SET_S02DownloadBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+	<bean class="nttdm.bsys.e_set.blogic.RP_E_SET_S03BLogic"
+        id="RP_E_SET_S03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

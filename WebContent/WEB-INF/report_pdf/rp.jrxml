@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Unnamed" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="36" bottomMargin="36" whenResourceMissingType="Empty">
+	<property name="com.jasperassistant.designer.Grid" value="false"/>
+	<property name="com.jasperassistant.designer.SnapToGrid" value="false"/>
+	<property name="com.jasperassistant.designer.GridWidth" value="12"/>
+	<property name="com.jasperassistant.designer.GridHeight" value="12"/>
+	<property name="ireport.zoom" value="1.2418426461183103"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table" fill="Solid" lineSpacing="Single">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_header" hAlign="Center" vAlign="Middle" fontName="Arial" fontSize="8" isBold="false">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_td_date" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box leftPadding="4">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="1.0" lineColor="#333333"/>
+			<bottomPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="table_td_number" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box leftPadding="3"/>
+	</style>
+	<style name="table_td_entry" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box leftPadding="3"/>
+	</style>
+	<style name="table_td_amount" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box leftPadding="0" rightPadding="5"/>
+	</style>
+	<style name="table_td_po" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box leftPadding="3"/>
+	</style>
+	<style name="table_td_payment" vAlign="Middle">
+		<box leftPadding="3">
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table2_td" vAlign="Middle" fontName="Arial" fontSize="8">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table2_td_center" style="table2_td" hAlign="Center"/>
+	<style name="table2_td_left" style="table2_td" hAlign="Left">
+		<box leftPadding="4"/>
+	</style>
+	<style name="table_td_fix">
+		<box>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="bg_border_left">
+		<box>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="bg_border_right">
+		<box>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="bg_border_bottom">
+		<box>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="NAME" class="java.lang.String"/>
+	<parameter name="stmt_num" class="java.lang.String"/>
+	<parameter name="stmt_date" class="java.lang.String"/>
+	<parameter name="acc_num" class="java.lang.String"/>
+	<parameter name="com_name" class="java.lang.String"/>
+	<parameter name="add_line_com1" class="java.lang.String"/>
+	<parameter name="add_line_com2" class="java.lang.String"/>
+	<parameter name="add_line_com3" class="java.lang.String"/>
+	<parameter name="add_line_com4" class="java.lang.String"/>
+	<parameter name="tel_com" class="java.lang.String"/>
+	<parameter name="fax_com" class="java.lang.String"/>
+	<parameter name="cus_name" class="java.lang.String"/>
+	<parameter name="add_line_cus1" class="java.lang.String"/>
+	<parameter name="add_line_cus2" class="java.lang.String"/>
+	<parameter name="add_line_cus3" class="java.lang.String"/>
+	<parameter name="add_line_cus4" class="java.lang.String"/>
+	<parameter name="count_030" class="java.lang.String"/>
+	<parameter name="count_3160" class="java.lang.String"/>
+	<parameter name="count_6190" class="java.lang.String"/>
+	<parameter name="count_91120" class="java.lang.String"/>
+	<parameter name="sum_030" class="java.lang.String"/>
+	<parameter name="sum_3160" class="java.lang.String"/>
+	<parameter name="sum_6190" class="java.lang.String"/>
+	<parameter name="sum_91120" class="java.lang.String"/>
+	<parameter name="sum_total" class="java.lang.String"/>
+	<parameter name="count_total" class="java.lang.String"/>
+	<parameter name="currency" class="java.lang.String"/>
+	<parameter name="remarks" class="java.lang.String"/>
+	<parameter name="registration_no" class="java.lang.String"/>
+	<parameter name="sum_m120" class="java.lang.String"/>
+	<parameter name="count_m120" class="java.lang.String"/>
+	<parameter name="custinfo" class="java.lang.String"/>
+	<parameter name="cominfo" class="java.lang.String"/>
+	<parameter name="com_website" class="java.lang.String"/>
+	<field name="invoicedate" class="java.lang.String">
+		<fieldDescription><![CDATA[invoicedate]]></fieldDescription>
+	</field>
+	<field name="invoicenumber" class="java.lang.String"/>
+	<field name="entry" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="po" class="java.lang.String"/>
+	<field name="payment" class="java.lang.String"/>
+	<field name="itemactivity" class="java.lang.Double"/>
+	<variable name="variable1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="variable2" class="java.lang.Double" resetType="Group" resetGroup="sum_amount" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<group name="sum_amount">
+		<groupFooter>
+			<band height="29">
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="256" y="8" width="90" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{variable2}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="256" y="3" width="90" height="1"/>
+				</line>
+				<line>
+					<reportElement x="165" y="26" width="181" height="1"/>
+				</line>
+				<line>
+					<reportElement x="165" y="28" width="181" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="165" y="8" width="90" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{currency}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="table_td_date" stretchType="RelativeToTallestObject" x="9" y="0" width="7" height="29"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="table_td_payment" stretchType="RelativeToTallestObject" x="517" y="0" width="14" height="29"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="770">
+			<staticText>
+				<reportElement style="bg_border_left" x="9" y="191" width="21" height="578"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="bg_border_right" x="511" y="191" width="20" height="578"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="bg_border_bottom" x="9" y="749" width="522" height="20"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="90">
+			<staticText>
+				<reportElement x="16" y="15" width="78" height="12"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Statement Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="28" width="78" height="12"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Statement Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="41" width="78" height="12"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Billing Account No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="72" width="21" height="12"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="98" y="15" width="155" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{stmt_num}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement mode="Transparent" x="98" y="28" width="155" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{stmt_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="98" y="41" width="155" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{acc_num}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="93" y="15" width="5" height="12" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="93" y="28" width="5" height="12" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="93" y="41" width="5" height="12" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<image hAlign="Left" vAlign="Bottom">
+				<reportElement x="322" y="3" width="182" height="52"/>
+				<imageExpression class="java.lang.String"><![CDATA["nttcom_min.jpg"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="351" y="56" width="178" height="13"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{com_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="351" y="70" width="178" height="12" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Top" lineSpacing="1_1_2">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{cominfo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="37" y="70" width="240" height="12" isPrintWhenDetailOverflows="true"/>
+				<textElement verticalAlignment="Top" lineSpacing="1_1_2">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{custinfo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="261" y="0" width="90" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Amount Due]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="9" y="0" width="72" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="423" y="0" width="108" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Payment ID (Check #)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="351" y="0" width="72" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Item Activity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="189" y="0" width="72" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Due Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_header" positionType="Float" x="81" y="0" width="108" height="36"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Document No.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="table_td_date" stretchType="RelativeToTallestObject" x="9" y="0" width="72" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{invoicedate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="table_td_number" stretchType="RelativeToTallestObject" x="81" y="0" width="108" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{invoicenumber}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="table_td_entry" stretchType="RelativeToTallestObject" x="189" y="0" width="72" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{entry}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement style="table_td_amount" stretchType="RelativeToTallestObject" x="261" y="0" width="90" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement style="table_td_amount" stretchType="RelativeToTallestObject" x="350" y="0" width="73" height="15"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{itemactivity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="table_td_payment" stretchType="RelativeToTallestObject" x="423" y="0" width="108" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{payment}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="110">
+			<staticText>
+				<reportElement style="table2_td_center" x="110" y="10" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ < 31 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_center" x="168" y="10" width="63" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[31 - 60 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_center" x="291" y="10" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[91-120 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_center" x="231" y="10" width="60" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[61 - 90 Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_center" x="407" y="10" width="99" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_left" x="40" y="28" width="70" height="18"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. of Items]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table2_td_left" x="40" y="46" width="70" height="25"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="75" width="98" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[** Remarks**]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="table2_td_center" x="110" y="28" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_030}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="168" y="28" width="63" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_3160}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="231" y="28" width="60" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_6190}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="291" y="28" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_91120}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="407" y="28" width="99" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="110" y="46" width="58" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_030}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="168" y="46" width="63" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_3160}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="231" y="46" width="60" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_6190}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="291" y="46" width="58" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_91120}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" mode="Transparent" x="407" y="46" width="99" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="table2_td_center" x="40" y="10" width="70" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="51" y="88" width="466" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{remarks}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="table2_td_center" x="349" y="10" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[> 120 Days]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="table2_td_center" x="349" y="28" width="58" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{count_m120}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table2_td_center" x="349" y="46" width="58" height="25"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{sum_m120}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

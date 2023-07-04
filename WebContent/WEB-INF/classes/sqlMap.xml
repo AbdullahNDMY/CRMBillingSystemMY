@@ -1,0 +1,5071 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<!-- G_RPT_P01 -->
+	<!-- Process 3.0 Retrieve Systembase -->
+	<select id="SELECT.G_RPT_P01.001" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D 
+        WHERE ID_SET = 'SYSTEMBASE' 
+        AND SET_SEQ = '1'   
+    </select>
+    <!-- Process 4.0 Retrieve Filename -->
+    <select id="SELECT.G_RPT_P01.002" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT VALUE 
+        FROM RESOURCESMAINT 
+        WHERE RESOURCE_ID = #RESOURCE_ID# 
+        AND CATEGORY = 'RPT'        
+    </select>
+    <select id="SELECT.G_RPT_P01.003" parameterClass="java.lang.String" resultClass="java.lang.String">
+        SELECT VALUE 
+        FROM RESOURCESMAINT 
+        WHERE RESOURCE_ID = #RESOURCE_ID#
+        AND CATEGORY='HDR' AND IS_DELETED='0'
+        order by seq
+    </select>
+    <select id="SELECT.G_RPT_P01.004" resultClass="java.lang.String">
+        SELECT
+              VALUE 
+        FROM
+              RESOURCESMAINT 
+        WHERE
+              CATEGORY='PAYMENT_REF_HEADER' 
+              AND RESOURCE_ID = 'PaymentRef1'
+    </select>
+
+	<!-- G_CIT_P01 -->
+	<!-- Process 1.0 Retrieve Process Status -->
+	<select id="SELECT.G_CIT_P01.001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ID_CIT_EXP_BATCH, STATUS, to_char(date_updated, 'dd/MM/yyyy HH24:MI:SS') as DATE_UPDATED_CHAR
+		FROM T_CIT_EXP_HD
+		WHERE STATUS = '2'
+	</select>
+	<select id="SELECT.G_CIT_P01.lastBatch" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT * FROM (
+            SELECT ID_CIT_EXP_BATCH
+            FROM T_CIT_EXP_HD T
+            ORDER BY T.DATE_CREATED DESC 
+            ) 
+        WHERE ROWNUM &lt;2
+	</select>
+	
+	<!-- Process 3.0 Update Previous Status -->
+	<update id="UPDATE.G_CIT_P01.001" parameterClass="java.util.HashMap">
+  		UPDATE T_CIT_EXP_HD
+		SET STATUS = #status#,
+		  DATE_UPDATED = SYSDATE,
+		  ID_LOGIN = #idLogin#
+		WHERE ID_CIT_EXP_BATCH = #idBatch#
+  	</update>
+  	
+  	<!-- Insert Batch Record Error -->
+	<insert id="INSERT.G_CIT_P01.001" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="idCitExpBatch" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_T_CIT_EXP_HD.nextval FROM dual
+	  	</selectKey>
+		INSERT INTO T_CIT_EXP_HD (
+		       ID_CIT_EXP_BATCH,
+		       FILENAME,
+		       CLOSE_MONTHYEAR,
+		       STATUS,
+		       DATE_UPLOADED,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+		       #idCitExpBatch#,
+		       #fileName#,
+		       #closeMonthyear#,
+		       #status#,
+		       SYSDATE,
+		       SYSDATE,
+		       SYSDATE,
+		       #idLogin#
+		       )
+	</insert>
+  	
+  	<!-- Process 4.0 Insert Error Log 1 -->
+	<insert id="INSERT.G_CIT_P01.002" parameterClass="java.util.HashMap">
+  		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	SYSDATE,
+		       	SYSDATE,
+		       	#idLogin#
+		       )
+	</insert>
+  	
+  	<!-- Process 7.0 Check if file name CITIDATA_MMYY.csv is exist -->
+  	<select id="SELECT.G_CIT_P01.002" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT ID_CIT_EXP_BATCH 
+		FROM T_CIT_EXP_HD
+		WHERE FILENAME = #fileName#
+	</select>
+	
+	<!-- Process 8.0 Update file name as CITIdata_MMYY<ID_GR_EXP_BATCH>.csv -->
+  	<update id="UPDATE.G_CIT_P01.002" parameterClass="java.util.HashMap">
+		UPDATE T_CIT_EXP_HD
+		SET FILENAME = #FILENAME_NEW#,
+			DATE_UPDATED = SYSDATE,
+			ID_LOGIN = #idLogin#
+		WHERE ID_CIT_EXP_BATCH = #BATCH_ID#
+	</update>
+	
+	<!-- Process 10.0 Create batch header record -->
+	<insert id="INSERT.G_CIT_P01.003" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="idCitExpBatch" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_T_CIT_EXP_HD.nextval FROM dual
+	  	</selectKey>
+		INSERT INTO T_CIT_EXP_HD (
+		       ID_CIT_EXP_BATCH,
+		       FILENAME,
+		       CLOSE_MONTHYEAR,
+		       DATE_UPLOADED,
+		       STATUS,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+		       #idCitExpBatch#,
+		       #fileName#,
+		       #closeMonthyear#,
+		       SYSDATE,
+		       #status#,
+		       SYSDATE,
+		       SYSDATE,
+		       #idLogin#
+		       )
+	</insert>
+	
+	<!-- Process 12.0 Retrieve billing account with conditions -->
+	<select id="SELECT.G_CIT_P01.003" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.G_CIT_P01_CITI_Bean">
+		select A.CCARD_NO, to_char(A.CCARD_EXPIRED_DATE, 'mmyy') as CCARD_EXPIRED_STRING, A.ID_CUST, C.ID_BILL_ACCOUNT, C.TOTAL_AMT_DUE,
+		       D.BILL_CURRENCY, D.DATE_REQ, D.ID_REF, to_char(A.CCARD_EXPIRED_DATE,'yyyymm') as CCARD_EXPIRED_DATE
+              ,D.CUST_NAME,TO_CHAR(A.CCARD_EXPIRED_DATE, 'mm/yyyy') AS CCARD_EXPIRED_DATE1
+		from M_CUST_BANKINFO A inner join M_CUST B 
+		on A.ID_CUST = B.ID_CUST inner join T_BAC_H C 
+		on B.ID_CUST = C.ID_CUST inner join T_BIL_H D
+        on C.ID_BILL_ACCOUNT = D.BILL_ACC
+		where 
+		(A.CCARD_TYPE = 'VISA' or A.CCARD_TYPE = 'MAST') 
+		and A.IS_DELETED = '0'
+		and B.IS_DELETED = '0'
+		and C.PAYMENT_METHOD = 'CC'
+		and C.TOTAL_AMT_DUE <![CDATA[ > ]]> 0
+		and C.IS_DELETED = '0'   
+		and D.BILL_TYPE in ('IN' , 'DN')
+	    and to_char(D.DATE_REQ, 'MMYYYY') = #executeMonth#
+	    and D.Is_Manual='0'
+	    and D.IS_DELETED = '0'  
+	    ORDER BY C.ID_BILL_ACCOUNT ASC,D.DATE_REQ DESC           
+	</select>
+	<!-- Process 12.1 RetrieveBillAccGrouping -->
+	<select id="SELECT.G_CIT_P01.RetrieveBillAccGrouping" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.G_CIT_P01_CITI_Bean">
+		select ID_BILL_ACCOUNT, ID_REF, BILL_CURRENCY, TOTAL_AMT_DUE, TO_CHAR(DATE_REQ,'yyyy/MM/dd') AS DATE_REQ
+		from
+			(select A.CCARD_NO, to_char(A.CCARD_EXPIRED_DATE, 'mmyy') as CCARD_EXPIRED_STRING, A.ID_CUST, C.ID_BILL_ACCOUNT, C.TOTAL_AMT_DUE,
+			       D.BILL_CURRENCY, D.DATE_REQ, D.ID_REF, to_char(A.CCARD_EXPIRED_DATE,'yyyymm') as CCARD_EXPIRED_DATE
+			from M_CUST_BANKINFO A inner join M_CUST B 
+			on A.ID_CUST = B.ID_CUST inner join T_BAC_H C 
+			on B.ID_CUST = C.ID_CUST inner join T_BIL_H D
+	        on C.ID_BILL_ACCOUNT = D.BILL_ACC
+			where 
+			(A.CCARD_TYPE = 'VISA' or A.CCARD_TYPE = 'MAST') 
+			and A.IS_DELETED = '0' 
+			and B.IS_DELETED = '0' 
+			and C.PAYMENT_METHOD = 'CC' 
+			and C.TOTAL_AMT_DUE <![CDATA[ > ]]> 0
+			and C.IS_DELETED = '0'   
+			and D.BILL_TYPE in ('IN' , 'DN')
+		    and to_char(D.DATE_REQ, 'MMYYYY') = #executeMonth#
+		    and D.Is_Manual='0'
+		    and D.IS_DELETED = '0'
+		    and C.ID_BILL_ACCOUNT = #ID_BILL_ACCOUNT# 
+		    ORDER BY C.ID_BILL_ACCOUNT ASC,D.DATE_REQ DESC
+		     )  
+	    where 
+	        rownum <![CDATA[ < ]]> 2
+	</select>
+	<!-- Process 12.2 CollectionAmtChecking -->
+	<select id="SELECT.G_CIT_P01.CollectionAmtChecking" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.G_CIT_P01_CITI_Bean">
+		SELECT (SUM(BILL_AMOUNT)-SUM(PAID_AMOUNT)) AS TOTAL_AMT_DUE , BILL_ACC AS ID_BILL_ACCOUNT
+		FROM T_BIL_H 
+		WHERE 
+			BILL_ACC = #ID_BILL_ACCOUNT#
+			AND BILL_TYPE IN ('IN','DN') 
+			AND IS_MANUAL = '1' 
+			AND DATE_REQ >= to_date(#dateReqParam#,'yyyy/mm/dd')
+			AND IS_DELETED = '0'
+			GROUP BY BILL_ACC
+	</select>
+
+	<!-- SQL retrieving IDRef before Process 18.0 -->
+	<select id="SELECT.G_CIT_P01.005" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM (
+		SELECT ID_REF, BILL_CURRENCY FROM T_BIL_H
+		WHERE (BILL_TYPE = 'IN' OR BILL_TYPE = 'DN')
+		AND BILL_ACC = #ID_BILL_ACCOUNT#
+		AND BILL_AMOUNT - PAID_AMOUNT > 0
+		AND IS_DELETED = '0'
+		ORDER BY DATE_REQ DESC)
+		WHERE ROWNUM <![CDATA[ < ]]> 2
+	</select>
+	<!-- Process 18.1 : InsertCashBook -->
+	<insert id="INSERT.G_CIT_P01.004" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_H (
+			RECEIPT_NO,
+			ID_CUST,
+			ID_COM_BANK,
+			PMT_METHOD,
+			DATE_TRANS,
+			CUR_CODE,
+			PMT_STATUS,
+			REFERENCE1,
+			IS_CLOSED,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN,
+			AMT_RECEIVED,
+			BANK_CHARGE,
+			BALANCE_AMT,
+			ID_AUDIT,
+			ID_BILL_ACCOUNT,
+			IS_EXPORT,
+			PAID_PRE_INVOICE,
+			OVER_PAID
+		)
+		VALUES (
+			#RECEIPT_NO#,
+			#ID_CUST#,
+			#ID_COM_BANK#,
+			#PMT_METHOD#,
+			TO_DATE(TO_CHAR(SYSDATE,'yyyy/MM/dd'),'yyyy/MM/dd'),
+			#CUR_CODE#,
+			#PMT_STATUS#,
+			#REFERENCE1#,
+			#IS_CLOSED#,
+			#IS_DELETED#,
+			SYSDATE,
+			SYSDATE,
+			#ID_LOGIN#,
+			#AMT_RECEIVED#,
+			#BANK_CHARGE#,
+			#BALANCE_AMT#,
+			#ID_AUDIT#,
+			#ID_BILL_ACCOUNT#,
+			#IS_EXPORT#,
+			#PAID_PRE_INVOICE#,
+			#OVER_PAID#
+		)
+	</insert>	
+	<!-- Process 18.2 Update TOTAL_AMT_DUE -->
+	<update id="UPDATE.G_CIT_P01.003" parameterClass="java.util.HashMap">
+  		UPDATE T_BAC_H
+		SET TOTAL_AMT_DUE = #TOTAL_AMT_DUE#,
+		  	DATE_UPDATED = SYSDATE,
+		  	ID_LOGIN = #ID_LOGIN#,
+		  	ID_AUDIT = #ID_AUDIT#
+		WHERE ID_BILL_ACCOUNT = #ID_BILL_ACCOUNT# 
+  	</update>
+	
+	<!-- G_GIR_P01 -->
+	<!-- Process 1.0 Retrieve Process Status -->
+	<select id="SELECT.G_GIR_P01.001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ID_GIR_EXP_BATCH, STATUS, to_char(date_updated, 'dd/MM/yyyy HH24:MI:SS') as DATE_UPDATED_CHAR
+		FROM T_GIR_EXP_HD
+		WHERE STATUS = '2'
+	</select>
+	<select id="SELECT.G_GIR_P01.lastBatch" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT * FROM (
+          SELECT ID_GIR_EXP_BATCH
+          FROM T_GIR_EXP_HD T 
+          ORDER BY T.DATE_CREATED DESC 
+        ) 
+        WHERE ROWNUM &lt;2
+	</select>
+	
+	<!-- Process 3.0 Update Previous Status -->
+	<update id="UPDATE.G_GIR_P01.001" parameterClass="java.util.HashMap">
+  		UPDATE T_GIR_EXP_HD
+		SET STATUS = #status#,
+		  DATE_UPDATED = SYSDATE,
+		  ID_LOGIN = #idLogin#
+		WHERE ID_GIR_EXP_BATCH = #idBatch#
+  	</update>
+  	
+	<!-- Insert Batch Record Error -->
+	<insert id="INSERT.G_GIR_P01.001" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="newIdGirExpBatch" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_T_GIR_EXP_HD.nextval FROM dual
+	  	</selectKey>
+		INSERT INTO T_GIR_EXP_HD (
+		       ID_GIR_EXP_BATCH,
+		       FILENAME,
+		       CLOSE_MONTHYEAR,
+		       STATUS,
+		       DATE_UPLOADED,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+		       #newIdGirExpBatch#,
+		       #fileName#,
+		       #closeMonthyear#,
+		       #status#,
+		       SYSDATE,
+		       SYSDATE,
+		       SYSDATE,
+		       #idLogin#
+		       )
+	</insert>
+  	
+  	<!-- Process 4.0 Insert Error Log 1 -->
+	<insert id="INSERT.G_GIR_P01.002" parameterClass="java.util.HashMap">
+  		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	SYSDATE,
+		       	SYSDATE,
+		       	#idLogin#
+		       )
+	</insert>
+  	
+  	<!-- Process 7.0 Check if file name GIRODATA_MMYY.txt is exist -->
+  	<select id="SELECT.G_GIR_P01.002" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT ID_GIR_EXP_BATCH 
+		FROM T_GIR_EXP_HD
+		WHERE FILENAME = #fileName#
+		AND ID_GIR_EXP_BATCH = (select max(ID_GIR_EXP_BATCH) from T_GIR_EXP_HD where FILENAME = #fileName#)
+		
+	</select>
+	
+	<!-- Process 8.0 Update file name as GIROdata_MMYY<ID_GR_EXP_BATCH>.txt -->
+  	<update id="UPDATE.G_GIR_P01.002" parameterClass="java.util.HashMap">
+		UPDATE T_GIR_EXP_HD
+		SET FILENAME = #FILENAME_NEW#,
+			DATE_UPDATED = SYSDATE,
+			ID_LOGIN = #idLogin#
+		WHERE ID_GIR_EXP_BATCH = #BATCH_ID#
+	</update>
+	
+	<!-- Process 10.0 Create batch header record -->
+	<insert id="INSERT.G_GIR_P01.003" parameterClass="java.util.HashMap">
+		<selectKey keyProperty="newIdGirExpBatch" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_T_GIR_EXP_HD.nextval FROM dual
+	  	</selectKey>
+		INSERT INTO T_GIR_EXP_HD (
+		       ID_GIR_EXP_BATCH,
+		       FILENAME,
+		       CLOSE_MONTHYEAR,
+		       DATE_UPLOADED,
+		       STATUS,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+		       #newIdGirExpBatch#,
+		       #fileName#,
+		       #closeMonthyear#,
+		       SYSDATE,
+		       #status#,
+		       SYSDATE,
+		       SYSDATE,
+		       #idLogin#
+		       )
+	</insert>
+	
+	<!-- Process 12.0 Retrieve billing account with conditions -->
+	<select id="SELECT.G_GIR_P01.003" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+		SELECT A.ID_BILL_ACCOUNT, A.ID_CUST, A.TOTAL_AMT_DUE ,B.BILL_CURRENCY, B.DATE_REQ, B.ID_REF
+		FROM T_BAC_H A, T_BIL_H B
+		WHERE 
+		  A.PAYMENT_METHOD = 'GR'
+		  AND A.ID_BILL_ACCOUNT = B.BILL_ACC
+		  AND A.TOTAL_AMT_DUE > 0
+		  AND TO_CHAR(B.DATE_REQ, 'MMYYYY') = #executeMonth#
+		  AND B.BILL_TYPE IN ('IN' , 'DN')
+		  AND B.IS_MANUAL = '0'
+		  AND B.IS_DELETED = '0'
+		  AND A.IS_DELETED = '0'
+		  ORDER BY A.ID_BILL_ACCOUNT ASC,B.DATE_REQ DESC
+		]]> 
+	</select>
+	<!-- Process 12.1 RetrieveBillAccGrouping -->
+	<select id="SELECT.G_GIR_P01.RetrieveBillAccGrouping" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[
+		SELECT ID_BILL_ACCOUNT, ID_REF, BILL_CURRENCY, TOTAL_AMT_DUE, TO_CHAR(DATE_REQ,'yyyy/MM/dd') AS DATE_REQ
+		FROM 
+			(SELECT A.ID_BILL_ACCOUNT, A.ID_CUST, A.TOTAL_AMT_DUE ,B.BILL_CURRENCY, B.DATE_REQ, B.ID_REF
+			FROM T_BAC_H A, T_BIL_H B
+			WHERE 
+			  A.PAYMENT_METHOD = 'GR'
+			  AND A.ID_BILL_ACCOUNT=#ID_BILL_ACCOUNT#
+			  AND A.ID_BILL_ACCOUNT = B.BILL_ACC
+			  AND A.TOTAL_AMT_DUE > 0
+			  AND TO_CHAR(B.DATE_REQ, 'MMYYYY') = #executeMonth#
+			  AND B.BILL_TYPE IN ('IN' , 'DN')
+			  AND B.IS_MANUAL = '0'
+			  AND B.IS_DELETED = '0'
+			  AND A.IS_DELETED = '0'
+			  ORDER BY A.ID_BILL_ACCOUNT ASC,B.DATE_REQ DESC)
+	    WHERE ROWNUM < 2		  
+		]]> 
+	</select>
+	
+	<!-- Process 12.2  CollectionAmtChecking -->
+	<select id="SELECT.G_GIR_P01.CollectionAmtChecking" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.G_GIR_P01_GIRO_Bean">
+		<![CDATA[
+		SELECT (SUM(BILL_AMOUNT)-SUM(PAID_AMOUNT)) AS TOTAL_AMT_DUE , BILL_ACC AS ID_BILL_ACCOUNT
+		FROM T_BIL_H 
+		WHERE 
+			BILL_ACC = #ID_BILL_ACCOUNT#
+			AND BILL_TYPE IN ('IN','DN') 
+			AND IS_MANUAL = '1' 
+			AND DATE_REQ >= TO_DATE(#dateReqParam#,'yyyy/mm/dd')
+			AND IS_DELETED = '0'
+			GROUP BY BILL_ACC
+		]]> 
+	</select>
+	
+	<!-- Process 13.0 Retrieve customers' GIRO details -->
+    <select id="SELECT.G_GIR.P01.004" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.G_GIR_P01_GIRO_Bean">
+		SELECT a.GIRO_ACCT_NO, a.NO_REFERENCE, a.GIRO_ACCT_NAME, b.BIC_CODE
+		FROM M_CUST_BANKINFO a, M_BANK b
+		WHERE a.ID_CUST = #ID_CUST#
+		AND b.ID_BANK = a.ID_GIRO_BANK
+		AND a.IS_DELETED = '0'
+		AND b.IS_DELETED = '0'
+	</select>
+	
+	<!-- SQL retrieving comAccNo in Process 14.0 -->
+	<select id="SELECT.G_GIR.P01.005" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT COM_ACCT_NO FROM M_COM_BANKINFO
+		WHERE ID_COM_BANK = #ID_COM_BANK#
+	</select>
+
+	<!-- SQL retrieving IDRef before Process 16.0 -->
+	<select id="SELECT.G_GIR.P01.006" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM (
+		SELECT ID_REF, BILL_CURRENCY FROM T_BIL_H
+		WHERE (BILL_TYPE = 'IN' OR BILL_TYPE = 'DN')
+		AND BILL_ACC = #ID_BILL_ACCOUNT#
+		AND BILL_AMOUNT - PAID_AMOUNT > 0
+		AND IS_DELETED = '0'
+		ORDER BY DATE_REQ DESC)
+		WHERE ROWNUM <![CDATA[ < ]]> 2
+	</select>
+	<!-- Process 16.1 : InsertCashBook -->
+	<insert id="INSERT.G_GIR_P01.004" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_H (
+			RECEIPT_NO,
+			ID_CUST,
+			ID_COM_BANK,
+			OTHER_PAYER,
+			PMT_METHOD,
+			DATE_TRANS,
+			RECEIPT_REF,
+			CUR_CODE,
+			REMARK,
+			PMT_STATUS,
+			REFERENCE1,
+			REFERENCE2,
+			IS_CLOSED,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN,
+			AMT_RECEIVED,
+			BANK_CHARGE,
+			BALANCE_AMT,
+			ID_BILL_ACCOUNT,
+			IS_EXPORT
+		)
+		VALUES (
+			#RECEIPT_NO#,
+			#ID_CUST#,
+			#ID_COM_BANK#,
+			#OTHER_PAYER#,
+			#PMT_METHOD#,
+			to_date(#DATE_TRANS#,'yyyy/MM/dd'),
+			#RECEIPT_REF#,
+			#CUR_CODE#,
+			#REMARK#,
+			#PMT_STATUS#,
+			#REFERENCE1#,
+			#REFERENCE2#,
+			#IS_CLOSED#,
+			#IS_DELETED#,
+			SYSDATE,
+			SYSDATE,
+			#ID_LOGIN#,
+			#AMT_RECEIVED#,
+			#BANK_CHARGE#,
+			#BALANCE_AMT#,
+			#ID_BILL_ACCOUNT#,
+			#IS_EXPORT#
+		)
+	</insert>	
+	<!-- Process 16.2 Update TOTAL_AMT_DUE -->
+	<update id="UPDATE.G_GIR_P01.003" parameterClass="java.util.HashMap">
+  		UPDATE T_BAC_H
+		SET TOTAL_AMT_DUE = #TOTAL_AMT_DUE#,
+		  	DATE_UPDATED = SYSDATE,
+		  	ID_LOGIN = #ID_LOGIN#
+		WHERE ID_BILL_ACCOUNT = #ID_BILL_ACCOUNT#
+  	</update>
+  	
+	<select id="SELECT.BSYS.SQL001" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	id_set,
+		        set_seq,
+		        set_value,
+		        set_desc
+		FROM	m_gset_d
+		WHERE	is_deleted = 0
+	</select>
+	<select id="SELECT.BSYS.SQL002" 
+			resultClass="nttdm.bsys.common.bean.M_CODEBean">
+		SELECT cur_val,id_code,id_sub_code,type_val,init_val,is_deleted,
+		to_char(date_updated, 'dd/mm/yyyy hh24:mi:ss') as date_updated,
+		to_char(date_created, 'dd/mm/yyyy hh24:mi:ss') as date_created,
+		id_login,reset_no
+        FROM m_code
+      	WHERE TRIM(id_code)=#id_code# AND is_deleted=0 ORDER BY id_sub_code ASC
+	</select>
+	<select id="SELECT.BSYS.SQL003" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+		SELECT b.section_no,b.level_seq,b.id_action,b.action_type,b.pic,b.response_expire,b.condition_primary,
+				b.condition_operator,b.condition_secondary,TO_CHAR(b.date_created,'dd/MM/yyyy') AS date_created2,
+				TO_CHAR(b.date_updated,'dd/MM/yyyy') AS date_updated2,b.id_login AS id_login2,
+				a.id_screen,
+				a.section_group,a.section_no,a.sequence_no,
+				TO_CHAR(a.date_created,'dd/MM/yyyy') AS date_created1,
+				TO_CHAR(a.date_updated,'dd/MM/yyyy') AS date_updated1,a.id_login AS id_login1
+        FROM m_wf_section a, m_wf_action b, t_section c
+      	WHERE TRIM(a.id_screen) = #id_screen# 
+      		AND a.section_no = b.section_no
+      		AND a.section_no = c.section_no
+      		AND TRIM(c.id_ref) = TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL003_1" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+		SELECT distinct b.section_no, 
+				a.id_screen, 
+				a.section_group,a.section_no,a.sequence_no,
+				TO_CHAR(a.date_created,'dd/MM/yyyy') AS date_created1,
+				TO_CHAR(a.date_updated,'dd/MM/yyyy') AS date_updated1,a.id_login AS id_login1
+        FROM m_wf_section a, m_wf_action b, t_section c
+      	WHERE TRIM(a.id_screen) = #id_screen# 
+      		AND a.section_no = b.section_no
+      		AND a.section_no = c.section_no
+      		AND TRIM(c.id_ref) = TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL003_2"  
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+		SELECT DISTINCT a.id_ref, b.section_no,b.level_seq, b.id_action,a.section_group, a.sequence_no, b.action_type, a.id_screen
+		FROM t_wf_section a, t_wf_action b
+		WHERE TRIM(a.id_ref) = TRIM(b.id_ref) AND TRIM(a.id_ref) = TRIM(#id_ref#) 
+		AND a.id_screen=#id_screen# AND a.section_no=#section_no# AND a.section_no=b.section_no
+	</select>
+	<select id="SELECT.BSYS.SQL004" 
+			resultClass="java.lang.String">
+		SELECT seq_t_wf_section.nextval AS id_ref FROM dual		
+	</select>
+	<select id="SELECT.BSYS.SQL005" 
+			resultClass="java.lang.String">
+		SELECT seq_t_wf_action.nextval AS id_ref FROM dual	
+	</select>
+	<!-- get data for G_ALT_P02 -->
+	<select id="SELECT.BSYS.SQL006" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+		SELECT b.section_no,b.level_seq,b.id_action,b.action_type,b.pic,b.response_expire,b.condition_primary,
+				b.condition_operator,b.condition_secondary,TO_CHAR(b.date_created,'dd/MM/yyyy') AS date_created2,
+				TO_CHAR(b.date_updated,'dd/MM/yyyy') AS date_updated2,b.id_login AS id_login2
+        FROM t_wf_action b
+      	WHERE TRIM(b.id_ref)=TRIM(#id_ref#) AND section_no=#section_no# AND level_seq = #level_seq#
+      	<!-- AND level_seq = #level_seq# AND id_action = #id_action# -->
+	</select>
+	<select id="SELECT.BSYS.SQL007" 
+			parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+			resultClass="nttdm.bsys.common.bean.T_SECTIONBean">
+		SELECT 	sectgrp,
+				id_ref,
+				section_no,
+				value,
+				appr_by,
+				date_appr,
+				appr_status,
+				is_revised,
+				remarks,
+				date_created,
+				date_updated,
+				id_login
+        FROM t_section
+      	WHERE TRIM(id_ref)=#id_ref#
+	</select>
+	<!-- get data for G_ALT_P02 -->
+	<!-- get data for G_ALT_P02-2 -->
+	<select id="SELECT.BSYS.SQL008" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+		SELECT DISTINCT g.id_screen,g.section_no,g.id_user,g.id_tfr_user,g.eff_date_from,
+				g.eff_date_to,TO_CHAR(g.date_created,'dd/MM/yyyy') AS date_created3,
+				TO_CHAR(g.date_updated,'dd/MM/yyyy') AS date_updated3,g.id_login AS id_login3,				
+				d.pic,d.action_type, SYSDATE AS sys
+        FROM m_atr_tfr g, t_wf_section c, t_wf_action d
+      	WHERE g.id_screen=c.id_screen AND g.section_no=d.section_no AND g.id_user=d.pic 
+      	AND d.pic = #pic# AND d.section_no=#section_no# AND c.section_no=#section_no#
+	</select>
+	<!-- change SQL for SELECT.BSYS.SQL008 -->
+	<select id="SELECT.BSYS.SQL008_01" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT g.id_screen,g.section_no,g.id_user,g.id_tfr_user,g.eff_date_from,
+				g.eff_date_to,TO_CHAR(g.date_created,'dd/MM/yyyy') AS date_created3,
+				TO_CHAR(g.date_updated,'dd/MM/yyyy') AS date_updated3,g.id_login AS id_login3,				
+				d.pic,d.action_type, SYSDATE AS sys, c.section_group, d.id_action, d.response_expire, h.section_desc
+        FROM t_wf_section c, M_SECTION h, t_wf_action d LEFT OUTER JOIN m_atr_tfr g 
+        	ON g.section_no=d.section_no AND g.id_user=d.pic 
+      	WHERE  TRIM(c.id_ref) = TRIM(#id_ref#) and c.id_ref = d.id_ref
+        	AND g.id_screen=c.id_screen AND c.id_screen = #id_screen# 
+        	AND c.section_no=d.section_no AND c.section_no = #section_no#
+        	AND c.section_no=h.section_no
+        	AND d.pic = #pic#
+	</select>
+	<select id="SELECT.BSYS.SQL008_02" 
+			resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT h.section_desc FROM M_SECTION h WHERE h.section_no = #section_no#
+	</select>
+	<!-- get data for G_ALT_P02-2 -->
+	<!-- get data for G_ALT_P03 -->	
+	<select id="SELECT.BSYS.SQL009" 
+			parameterClass="java.lang.String"
+			resultClass="nttdm.bsys.common.bean.T_QCS_HBean">
+		SELECT id_ref,id_cust,id_conslt,id_quo,req_user,date_req,
+				ctterm,ctterm3_day,deposit,remarks,id_status,is_closed,is_deleted,
+				TO_CHAR(date_created,'dd/MM/yyyy') AS date_created,TO_CHAR(date_updated,'dd/MM/yyyy') AS date_updated,id_login
+        FROM t_qcs_h
+      	WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL009_2" 
+			parameterClass="java.lang.String"
+			resultClass="nttdm.bsys.common.bean.T_QCS_HBean">
+		SELECT id_ref,id_cust,id_conslt,req_user
+        FROM t_bif_h
+      	WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL009_3" 
+			parameterClass="java.util.HashMap"
+			resultClass="nttdm.bsys.common.bean.T_QCS_HBean">
+		SELECT DISTINCT E.ID_APPROVER, E.ID_REF
+		FROM T_WF_ACTION D, T_WF_APPROVAL E
+		WHERE TRIM(E.ID_REF) = TRIM(#id_ref#)
+		AND E.ID_REF = D.ID_REF
+		AND E.ID_APPROVER != #not_send#
+	</select>
+	<select id="SELECT.BSYS.SQL009_1"  
+			resultClass="java.lang.String">
+		SELECT SEQ_M_ALT_H.nextval FROM dual
+	</select>
+	<select id="SELECT.BSYS.SQL053" parameterClass="java.lang.String"
+			resultClass="nttdm.bsys.g_alt.AlertUserDto">
+		SELECT ALERT_USER as alertUser FROM M_BATCH_USER_ALERT WHERE BATCH_ID = #batchID#
+	</select>
+	<!-- get data for G_ALT_P03 -->	
+	<!-- get running number for G_ADT_P01 -->	
+	<select id="SELECT.BSYS.SQL010"
+			resultClass="java.lang.String">
+			SELECT null FROM dual
+		<!-- SELECT MAX(id_audit) FROM m_audit_trail -->
+	</select>
+	<!-- get running number for G_ADT_P01 -->	
+	<!-- get running number for G_PAG_P01 -->
+	<select id="SELECT.BSYS.SQL011"
+			parameterClass="nttdm.bsys.common.bean.T_QCS_HBean"
+			resultClass="java.lang.String">
+		SELECT COUNT(*) FROM t_qcs_h WHERE TRIM(id_ref)=TRIM(#id_ref#) AND (id_conslt = #id_conslt# OR req_user = #req_user# OR id_login = #id_login#)
+	</select>
+	<select id="SELECT.BSYS.SQL012"
+			parameterClass="nttdm.bsys.common.bean.T_QCS_HBean"
+			resultClass="java.lang.String">
+		SELECT COUNT(*) FROM t_bif_h 
+		WHERE TRIM(id_ref) = TRIM(#id_ref#) AND (id_conslt = #id_conslt# OR req_user = #req_user# OR id_login = #id_login#)
+	</select>
+	<select id="SELECT.G_PAG.SQL001"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT section_no,id_wf_approval, id_ref, id_approver, section_group 
+        FROM t_wf_approval 
+        WHERE TRIM(id_ref) = TRIM(#id_ref#) 
+            AND section_no LIKE '%000' 
+            AND id_approver = #id_approver# 
+            AND APPR_STATUS IN ('AS1', 'AS3')
+            AND ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.G_PAG.SQL002"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT f.eff_date_from, f.eff_date_to, SYSDATE AS sys 
+        FROM T_WF_APPROVAL E, M_ATR_TFR F, T_BIF_H H
+        WHERE F.ID_TFR_USER = #id_user#
+            AND F.ID_SCREEN = #id_screen#
+            AND F.SECTION_NO LIKE '%000'
+            AND F.ID_USER = E.ID_APPROVER
+            AND E.APPR_STATUS IN ('AS1', 'AS3')
+            AND E.ID_REF = H.ID_REF
+            AND TRIM(H.id_ref) = TRIM(#id_ref#)
+            AND H.Id_Status = 'DS1'
+    </select>
+    <select id="SELECT.G_PAG.SQL003"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT G.pic
+        FROM T_WF_ACTION G, T_WF_APPROVAL E
+        WHERE TRIM(G.ID_REF) = TRIM(#id_ref#)
+            AND G.PIC = #id_user#
+            AND G.SECTION_NO LIKE '%000'
+            AND G.ACTION_TYPE = 'AO'
+            AND G.ID_REF = E.ID_REF
+            AND E.APPR_STATUS IN ('AS1', 'AS3')
+    </select>
+    <select id="SELECT.G_PAG.SQL004"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT e.section_no
+        FROM T_WF_APPROVAL E
+        WHERE TRIM(E.ID_REF) = TRIM(#id_ref#)
+            AND E.ID_APPROVER = #id_user#
+            AND E.APPR_STATUS IN ('AS1', 'AS3')
+    </select>
+    <select id="SELECT.G_PAG.SQL005"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT f.eff_date_from, f.eff_date_to, sysdate as sys
+        FROM T_WF_APPROVAL E, M_ATR_TFR F
+        WHERE F.ID_TFR_USER = #id_user#
+            AND TRIM(F.ID_SCREEN) = TRIM(#id_screen#)
+            AND TRIM(F.SECTION_NO) = TRIM(E.SECTION_NO)
+            AND F.ID_USER = E.ID_APPROVER
+            AND E.APPR_STATUS IN ('AS1', 'AS3')
+    </select>
+    <select id="SELECT.G_PAG.SQL006"
+            parameterClass="nttdm.bsys.common.bean.WF_TABLEBean"
+            resultClass="nttdm.bsys.common.bean.WF_TABLEBean">
+        SELECT g.section_no
+        FROM T_WF_ACTION G, T_WF_APPROVAL E
+        WHERE TRIM(G.ID_REF) = TRIM(#id_ref#)
+            AND G.ID_REF = E.ID_REF
+            AND G.PIC = #id_user#
+            AND G.SECTION_NO != 'Q000'
+            AND G.SECTION_NO != 'B000'
+            AND G.ACTION_TYPE = 'AO'
+            AND E.APPR_STATUS IN ('AS1', 'AS3')
+    </select>
+	<select id="SELECT.BSYS.SQL016"
+			parameterClass="nttdm.bsys.a_usr.bean.UserAccessBean"
+			resultClass="java.lang.String">
+		SELECT ACCESS_TYPE FROM m_user_access WHERE id_user = #id_user# AND id_sub_module = #id_sub_module#
+	</select>
+	
+	<!-- get running number for G_PAG_P01 -->
+	<update id="UPDATE.BSYS.SQL001"
+	          parameterClass="nttdm.bsys.common.bean.M_CODEBean">
+	    UPDATE m_code 
+		SET cur_val = #cur_val#,init_val = #init_val#,id_login=#id_login#
+		WHERE id_code=#id_code# 
+			AND is_deleted=0 
+			AND id_sub_code = #id_sub_code# 
+	</update> 
+	<insert id="INSERT.BSYS.SQL001"
+          parameterClass="nttdm.bsys.common.bean.WF_TABLEBean">
+	    INSERT INTO t_wf_section (id_ref,
+	        id_screen,
+			section_group,
+			section_no,
+			sequence_no,
+			date_created,
+			date_updated,
+			id_login
+	    )
+	    VALUES (#id_ref#,
+	        #id_screen#,
+			#section_group#,
+			#section_no#,
+			#sequence_no#,
+			TO_DATE(#date_created1#,'dd/MM/yyyy'),
+			TO_DATE(#date_updated1#,'dd/MM/yyyy'),
+			#id_login1#
+	    )
+  	</insert>
+	<insert id="INSERT.BSYS.SQL002"
+          parameterClass="nttdm.bsys.common.bean.WF_TABLEBean">
+	    INSERT INTO t_wf_action (id_ref,
+	        section_no,
+			level_seq,
+			id_action,
+			action_type,
+			pic,
+			response_expire,
+			condition_primary,
+			condition_operator,
+			condition_secondary,
+			date_created,
+			date_updated,
+			id_login
+	    )
+	    VALUES (#id_ref#,
+	        #section_no#,
+			#level_seq#,
+			#id_action#,
+			#action_type#,
+			#pic#,
+			#response_expire#,
+			#condition_primary#,
+			#condition_operator#,
+			#condition_secondary#,
+			TO_DATE(#date_created2#,'dd/MM/yyyy'),
+			TO_DATE(#date_updated2#,'dd/MM/yyyy'),
+			#id_login2#
+	    )
+  	</insert>
+  	
+	<!-- get data for G_ALT_P02-2 -->	
+	<insert id="INSERT.BSYS.SQL003"
+          parameterClass="nttdm.bsys.common.bean.WF_TABLEBean">
+	    INSERT INTO t_wf_approval( 
+			id_ref,
+			section_group,
+			section_no,
+			id_approver,
+			date_appr,
+			appr_status,
+			id_forward_to,
+			is_revised,
+			original_approver,
+			is_forwarded,
+			is_escalated,
+			id_action,
+			ref_id_action,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login
+		)
+		VALUES( 
+			#id_ref#,
+			#section_group#,
+			#section_no#,
+			#id_approver#,
+			null,
+			#appr_status#,
+			null,
+			0,
+			#original_approver#,
+			0,
+			0,
+			#id_action#,
+			#ref_id_action#,
+			0,
+			SYSDATE,
+			SYSDATE,
+			#id_login3#
+		)
+
+  	</insert>
+	<!-- get data for G_ALT_P02-2 -->
+	<!-- get data for G_ALT_P03 -->	
+	<insert id="INSERT.BSYS.SQL004"
+          parameterClass="nttdm.bsys.common.bean.M_ALT_HBean">
+	    INSERT INTO m_alt_h ( 
+	    	id_msg,
+			msg_type,
+			id_ref,
+			id_screen,
+			id_section,
+			status,
+			priority,
+			repeat_mode,
+			start_date,
+			end_date,
+			reminder_date,
+			reminder,
+			to_msg,
+			cc_msg,
+			subject,
+			msg,
+			is_deleted,
+			id_creator,
+			date_created,
+			date_updated,
+			id_login
+	    )
+	    VALUES (  
+	    	#id_msg#,
+			#msg_type#,
+			#id_ref#,
+			#id_screen#,
+			null,
+			#status#,
+			null,
+			#repeat_mode#,
+			null,
+			null,
+			null,
+			null,
+			#to_msg#,
+			NULL,
+			#subject#,
+			#msg#,
+			0,
+			'system',
+			SYSDATE,
+			SYSDATE,
+			#id_login#
+	    )
+  	</insert>
+  	<insert id="INSERT.BSYS.SQL004_1"
+          parameterClass="nttdm.bsys.common.bean.M_ALT_HBean">
+	    INSERT INTO m_alt_d(   
+	    	id_msg,
+			id_user,
+			display_date,
+			is_new,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login
+	    )
+	    VALUES (   
+	    	#id_msg#,
+			#id_user#,
+			SYSDATE,
+			'1',
+			'0',
+			SYSDATE,
+			SYSDATE,
+			#id_login#
+	    )
+  	</insert>
+	<!-- get data for G_ALT_P03 -->
+	<!-- Delete file for G_DOC_P03 -->
+	<update id="UPDATE.BSYS.SQL002"
+	          parameterClass="nttdm.bsys.common.bean.T_WF_DOCBean">
+	    UPDATE t_wf_doc SET is_deleted='1'
+	    WHERE
+	        TRIM(id_ref)=TRIM(#id_ref#) AND
+			section_group = #section_group# AND
+			id_doc = #id_doc#
+	</update>
+	<update id="UPDATE.BSYS.SQL003"
+	          parameterClass="nttdm.bsys.common.bean.T_WF_DOCBean">
+	    UPDATE t_doc SET is_deleted='1'
+	    WHERE 
+			id_doc = #id_doc#
+	</update>
+	<select id="SELECT.BSYS.SQL017" 
+			resultClass="java.lang.String"
+	        parameterClass="java.lang.String">
+		SELECT 	filelocation
+		FROM	t_doc
+		WHERE	TRIM(id_doc) = #id_doc#
+	</select>
+	<!-- Delete file for G_DOC_P03 -->
+	<!-- Change currency for G_CUR_P01 -->	
+	<select id="SELECT.BSYS.SQL018" 
+			resultClass="nttdm.bsys.m_cur.bean.M_CURBean"
+	        parameterClass="java.lang.String">
+		SELECT rate_date,cur_code,rate_to,rate_from,is_deleted,date_created,date_updated,id_login 
+		FROM
+		(	SELECT rate_date,cur_code,rate_to,rate_from,is_deleted,date_created,date_updated,id_login,
+			RANK() OVER (ORDER BY rate_date DESC) rowno 
+			FROM m_currency WHERE is_deleted=0 AND cur_code=#cur_code# 
+		)
+		WHERE rowno = 1
+
+	</select>
+	<!-- Change currency for G_CUR_P01 -->
+	<!-- Select running no from G_CDM_P01 -->
+	<select id="SELECT.BSYS.SQL019" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT RESET_NO 
+		FROM m_code 
+		WHERE id_code=#id_code# AND is_deleted=0 
+		AND type_val ='05' AND RESET_NO &lt;&gt; 0 
+	</select>
+	<select id="SELECT.BSYS.G_CDM_P01_countYYYY" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+		SELECT COUNT(*) 
+		FROM m_code 
+		WHERE id_code=#id_code# AND is_deleted=0 
+		AND type_val in('01','02','03','04','07','08') AND substr(cur_val,1,4)&lt;&gt;TO_CHAR(SYSDATE, 'YYYY')
+	</select>
+	<select id="SELECT.BSYS.G_CDM_P01_countYYYYMM" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+		SELECT COUNT(*)
+		FROM m_code 
+		WHERE id_code=#id_code# AND is_deleted=0 
+		AND type_val in ('03','04','08','09')  AND cur_val &lt;&gt;TO_CHAR(SYSDATE, 'YYYYMM')
+	</select>
+	
+	<insert id="INSERT.BSYS.SQL006"
+          parameterClass="nttdm.bsys.common.bean.M_CODEBean">
+	    INSERT INTO m_code_history(
+		    id_date,
+		    id_code,
+		    id_sub_code,
+		    type_val,
+		    init_val,
+		    cur_val,
+		    is_deleted,
+		    date_created,
+		    date_updated,
+		    id_login,
+		    reset_no) 
+	    VALUES(
+		    TO_CHAR(SYSDATE, 'YYYYMMDDHHmiSS'),
+		    #id_code#,
+		    #id_sub_code#, 
+		    #type_val#, 
+		    #init_val#, 
+		    #cur_val#, 
+		    #is_deleted#,
+		    TO_DATE(#date_created#, 'dd/mm/yyyy hh24:mi:ss'),
+		    TO_DATE(#date_updated#, 'dd/mm/yyyy hh24:mi:ss'),
+		    #id_login#,
+		    #reset_no#)
+  	</insert>
+  	<select id="SELECT.G_CDM_P01.001" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D 
+        WHERE ID_SET = 'SYSTEMBASE' 
+        AND SET_SEQ = '1'   
+    </select>
+	<!-- Select running no from G_CDM_P01 -->
+	
+	<select id="SELECT.BSYS.SQL020" 
+			resultClass="nttdm.bsys.common.bean.T_SECTIONBean"
+	        parameterClass="nttdm.bsys.common.bean.T_SECTIONBean">
+		SELECT id_ref,section_no
+		FROM t_section 
+		WHERE TRIM(id_ref)=TRIM(#id_ref#)  AND section_group = #sectgrp# 
+	</select>
+	<!-- G-DST-P01 -->	
+	<select id="SELECT.BSYS.SQL021" 
+			resultClass="nttdm.bsys.common.bean.T_WF_APPROVAL"
+	        parameterClass="java.lang.String">
+		SELECT appr_status,is_revised FROM t_wf_approval WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+
+	<select id="SELECT.BSYS.SQL021_01" 
+			resultClass="java.util.HashMap"
+	        parameterClass="java.lang.String"
+	        resultSetType="SCROLL_INSENSITIVE">
+		SELECT appr_status,is_revised 
+		FROM t_wf_approval 
+		WHERE TRIM(id_ref)=TRIM(#id_ref#) AND APPR_STATUS IN ('AS1','AS3','AS4')
+	</select>
+
+	<select id="SELECT.BSYS.SQL022" 
+			resultClass="java.lang.String"
+	        parameterClass="java.lang.String">
+		SELECT COUNT(distinct section_no) FROM t_wf_approval WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL023" 
+			resultClass="java.lang.String"
+	        parameterClass="java.lang.String">
+		SELECT COUNT(section_no) FROM t_section WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+	<update id="UPDATE.BSYS.SQL004"
+	          parameterClass="nttdm.bsys.common.bean.T_QCS_HBean">
+	    UPDATE t_qcs_h SET id_status=#id_status#
+	    WHERE 
+			TRIM(id_ref)=TRIM(#id_ref#)
+	</update>
+	<update id="UPDATE.BSYS.SQL005"
+	          parameterClass="nttdm.bsys.common.bean.T_QCS_HBean">
+	    UPDATE t_bif_h SET id_status=#id_status#
+	    WHERE 
+			TRIM(id_ref)=TRIM(#id_ref#)
+	</update>
+	<update id="UPDATE.BSYS.SQL006"
+	          parameterClass="nttdm.bsys.common.bean.T_QCS_HBean">
+	    UPDATE t_qcs_h SET id_quo=#id_quo#
+	    WHERE 
+			TRIM(id_ref)=TRIM(#id_ref#)
+	</update>
+	<update id="UPDATE.BSYS.SQL007"
+	          parameterClass="nttdm.bsys.common.bean.T_QCS_HBean">
+	    UPDATE t_bif_h SET id_quo=#id_quo#
+	    WHERE 
+			TRIM(id_ref)=TRIM(#id_ref#)
+	</update>
+	<!-- G-DST-P01 -->
+	<!-- G-WFM-P01 -->
+	<select id="SELECT.BSYS.SQL024" 
+			resultClass="nttdm.bsys.common.bean.T_WF_APPROVAL"
+	        parameterClass="java.lang.String">
+		SELECT 	id_wf_approval
+				,id_ref
+				,section_group
+				,section_no
+				,id_approver
+				,TO_CHAR(date_appr,'dd/MM/yyyy') AS date_appr
+				,appr_status
+				,id_forward_to
+				,is_revised
+				,original_approver
+				,is_forwarded
+				,is_escalated
+				,id_action
+				,ref_id_action
+				,is_deleted
+				,TO_CHAR(date_created,'dd/MM/yyyy') AS date_created
+				,TO_CHAR(date_updated,'dd/MM/yyyy') AS date_updated
+				,id_login
+ 		FROM t_wf_approval
+		WHERE id_wf_approval = #id_wf_approval#
+	</select>
+	<select id="SELECT.BSYS.SQL025" 
+			resultClass="java.lang.String"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_SECTIONBean">
+		SELECT sequence_no FROM t_wf_section
+		WHERE section_no=#section_no# AND TRIM(id_ref)=TRIM(#id_ref#) AND id_screen=#id_screen#
+	</select>	
+	<select id="SELECT.BSYS.SQL026" 
+			resultClass="java.lang.String"
+	        parameterClass="java.lang.String">
+		SELECT id_status FROM t_qcs_h WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.BSYS.SQL026_01" 
+			resultClass="java.lang.String"
+	        parameterClass="java.lang.String">
+		SELECT id_status FROM t_bif_h WHERE TRIM(id_ref)=TRIM(#id_ref#)
+	</select>	
+	<select id="SELECT.BSYS.SQL027" 
+			resultClass="java.lang.String"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		SELECT COUNT(*) FROM t_wf_approval WHERE appr_status='AS2' 
+		AND TRIM(id_ref)=TRIM(#id_ref#) AND section_group=#section_group# AND section_no=#section_no#
+	</select>	
+	<select id="SELECT.BSYS.SQL028" 
+			resultClass="java.lang.String"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		SELECT COUNT(*) FROM t_wf_approval WHERE TRIM(id_ref)=TRIM(#id_ref#)
+		AND section_group=#section_group# AND section_no=#section_no#
+	</select>	
+	<select id="SELECT.BSYS.SQL029" 
+			resultClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"> 
+		SELECT a.* FROM t_wf_section a, t_section b WHERE a.sequence_no= #sequence_no#
+		AND TRIM(a.id_ref)=TRIM(#id_ref#) AND a.id_screen=#id_screen#
+                AND a.id_ref = b.id_ref AND a.section_group = b.sectgrp
+                AND a.section_no = b.section_no
+	</select>
+	<select id="SELECT.BSYS.SQL029_01" 
+			resultClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"> 
+		SELECT * FROM
+  			(SELECT * FROM t_wf_section
+  				WHERE TRIM(id_ref)=TRIM(#id_ref#) AND id_screen=#id_screen# 
+        			AND sequence_no > (SELECT sequence_no 
+			                            FROM t_wf_section 
+			                            WHERE TRIM(id_ref)=TRIM(#id_ref#) 
+			                            AND id_screen=#id_screen# AND section_no=#section_no#)
+  			ORDER BY sequence_no)
+		WHERE ROWNUM = 1 
+	</select>
+	
+	<select id="SELECT.BSYS.SQL029_02" 
+			resultClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"
+	        parameterClass="nttdm.bsys.common.bean.T_WF_SECTIONBean"
+	        resultSetType="SCROLL_INSENSITIVE"> 
+		SELECT * FROM t_wf_section
+  				WHERE TRIM(id_ref)=TRIM(#id_ref#) AND id_screen=#id_screen# 
+        			AND sequence_no = #sequence_no#
+  		ORDER BY sequence_no
+	</select>
+	
+	<insert id="INSERT.BSYS.SQL007"
+          parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+	    INSERT INTO t_wf_approval( 
+		    id_ref,
+			section_group,
+			section_no,
+			id_approver,
+			date_appr,
+			appr_status,
+			id_forward_to,
+			is_revised,
+			original_approver,
+			is_forwarded,
+			is_escalated,
+			id_action,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login 
+	    )
+	    VALUES( 
+			#id_ref#,
+			#section_group#,
+			#section_no#,
+			#id_approver#,
+			null,
+			#appr_status#,
+			null,
+			0,
+			null,
+			0,
+			0,
+			null,
+			0,
+			SYSDATE,
+			SYSDATE,
+			#id_login#	    
+		)
+  	</insert>
+	<update id="UPDATE.BSYS.SQL008"
+	          parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+	    UPDATE t_wf_approval
+		SET appr_status=#appr_status#,
+		date_appr = SYSDATE
+		WHERE TRIM(id_ref)=TRIM(#id_ref#) AND section_no=#section_no# AND id_approver=#id_approver#
+	</update>
+	<!-- update following original_approver -->
+	<update id="UPDATE.BSYS.SQL009"
+	          parameterClass="java.lang.String">
+	    UPDATE t_wf_approval 
+		SET appr_status='AS7'
+		WHERE original_approver=#original_approver#
+			AND appr_status='AS1'
+	</update>
+	
+	<!-- update follwing ref_id_action -->
+	<update id="UPDATE.BSYS.SQL009_01"
+	          parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+	    UPDATE t_wf_approval 
+		SET appr_status='AS7'
+		WHERE TRIM(ID_REF) = TRIM(#id_ref#)
+			AND section_no = #section_no#
+			AND ref_id_action=#ref_id_action#
+			AND appr_status='AS1'
+	</update>
+	<!-- G-WFM-P01 -->
+	
+	
+	<!-- G_SGP_P01#1.0 -->
+	<insert id="INSERT.BSYS.SQL008" parameterClass="java.util.HashMap">
+		INSERT INTO t_sgp_exp_hd (
+		       filename,
+		       close_monthyear,
+		       date_uploaded,
+		       status,
+		       date_created,
+		       date_updated,
+		       id_login
+		       )
+		VALUES (
+		       	#filename#,
+		       	#closeMonthyear#,
+		       	sysdate,
+		       	#status#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+  
+  <!-- G_SGP_P01#2.0 -->	
+	<select id="SELECT.BSYS.SQL030" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT bh.*,
+		       TO_CHAR(bh.date_req, 'MM/YYYY') date_req_mmyyyy,
+		       TO_CHAR(bh.date_req, 'DD/MM/YYYY') date_req_ddmmyyyy
+		  FROM t_bil_h bh
+		 WHERE TO_CHAR(bh.date_req, 'MM/YYYY') = #dateReq#
+		   AND bh.is_export = #isExport#
+	</select>
+	
+	<!-- G_SGP_P01#3.1 -->
+	<update id="UPDATE.BSYS.SQL010" parameterClass="java.util.HashMap">
+		UPDATE t_sgp_exp_hd
+		   SET status = #status#,
+		       date_updated = #dateUpdated#
+		       id_login = #idLogin#
+	</update>
+	
+	<!-- G_SGP_P01#3.2 -->
+	<insert id="INSERT.BSYS.SQL009" parameterClass="java.util.HashMap">
+		INSERT INTO t_batch_log (
+		       id_batch_type,
+		       id_batch_ref_no,
+		       error_msg,
+		       date_created,
+		       date_updated,
+		       id_login
+		       )
+		VALUES (
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+	
+	
+	<!-- G_SGP_P01#4.1 -->	
+	<select id="SELECT.BSYS.SQL031" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *
+		  FROM m_cust
+		 WHERE id_cust = #idCust#
+	</select>
+	
+	<!-- G_SGP_P01#4.2 -->	
+	<select id="SELECT.BSYS.SQL032" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *
+		  FROM m_cust_adr
+		 WHERE id_cust = #idCust#
+	</select>
+	
+	<!-- G_SGP_P01#4.3 -->	
+	<select id="SELECT.BSYS.SQL033" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT bh.*,
+		       TO_CHAR(bh.date_req, 'MM/YYYY') date_req_mmyyyy,
+		       TO_CHAR(bh.date_req, 'DD/MM/YYYY') date_req_ddmmyyyy
+		  FROM t_bil_h bh
+		 WHERE bh.id_cust = #idCust#
+		   AND rownum &lt; 2
+		   AND bh.is_export = #isExport#
+		 ORDER BY bh.date_req DESC
+	</select>
+	
+	<!-- G_SGP_P01#5.0 -->	
+	<select id="SELECT.BSYS.SQL034" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *
+		  FROM t_bil_d
+		 WHERE TRIM(id_ref) = TRIM(#idRef#)
+	</select>
+	
+	<!-- G_SGP_P01#7.0 -->
+	<update id="UPDATE.BSYS.SQL011" parameterClass="java.util.HashMap">
+		UPDATE t_bil_h
+		   SET is_export = #isExport#,
+		       date_updated = sysdate,
+		       id_login = #idLogin#
+		 WHERE TRIM(id_ref) = TRIM(#idRef#)
+	</update>
+	
+	
+	<!-- G_SGP_P01_r10 -->
+	<select id="G_SGP_P01_1.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT id_sgp_exp_batch, to_char(date_updated, 'dd/MM/yyyy HH24:MI:SS') as DATE_UPDATED_CHAR, DATE_UPDATED
+		FROM t_sgp_exp_hd
+        where STATUS = '2'
+	</select>
+	<select id="G_SGP_P01_lastBatch" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT * FROM (
+            SELECT 
+                ID_SGP_EXP_BATCH 
+            FROM 
+                T_SGP_EXP_HD T 
+            ORDER BY 
+                T.DATE_CREATED DESC
+            )
+        WHERE  ROWNUM &lt;2
+	</select>
+	
+	<update id="G_SGP_P01_3.0" parameterClass="java.util.HashMap">
+		UPDATE t_sgp_exp_hd
+		   SET status = #status#,
+		       date_updated = sysdate,
+		       id_login = #idLogin#
+		 WHERE id_sgp_exp_batch = #idSgpExpBatch# 
+	</update>
+	
+	<insert id="G_SGP_P01_4.0" parameterClass="java.util.HashMap">
+		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+	
+	<insert id="G_SGP_P01_5.0" parameterClass="java.util.HashMap">
+	  <selectKey keyProperty="idSgpExpBatch" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_T_SGP_EXP_HD.nextval FROM dual
+	  </selectKey>
+		INSERT INTO t_sgp_exp_hd (
+		       id_sgp_exp_batch,
+		       filename,
+		       close_monthyear,
+		       date_uploaded,
+		       status,
+		       date_created,
+		       date_updated,
+		       id_login
+		       )
+		VALUES (
+		       #idSgpExpBatch#,
+		       #filename#,
+		       #closeMonthyear#,
+		       sysdate,
+		       #status#,
+		       sysdate,
+		       sysdate,
+		       #idLogin#
+		       )
+	</insert>
+	
+	<select id="G_SGP_P01_11.0" parameterClass="java.lang.String" resultClass="java.lang.String">
+		select 
+		    ch.BILL_INSTRUCT 
+		from 
+			T_CUST_PLAN_H ch
+		where 
+			ch.ID_CUST_PLAN= #idCustPlan#
+	</select>
+	
+	<select id="G_SGP_P01_9.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT id_sgp_exp_batch,
+		       filename
+		  FROM t_sgp_exp_hd
+		 WHERE filename = #filename#
+		   AND id_sgp_exp_batch != #idSgpExpBatch#
+	</select>
+	
+	<select id="G_SGP_P01_7.0" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT id_sgp_exp_batch
+		  FROM t_sgp_exp_hd
+		 WHERE filename = #filename#
+	</select>
+	
+	<update id="G_SGP_P01_10.0" parameterClass="java.util.HashMap">
+		UPDATE t_sgp_exp_hd
+		   SET filename = #filename#,
+		       date_updated = sysdate,
+		       id_login = #idLogin#
+		 WHERE id_sgp_exp_batch = #idSgpExpBatch# 
+	</update>
+	
+	<select id="G_SGP_P01_13.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT bh.*,
+		       TO_CHAR(bh.date_req, 'MM/YYYY') date_req_mmyyyy,
+		       TO_CHAR(bh.date_req, 'DD/MM/YYYY') date_req_ddmmyyyy
+		  FROM t_bil_h bh
+		 WHERE TO_CHAR(bh.date_req, 'MM/YYYY') = #dateReq#
+		   AND bh.is_export = '0'
+		   AND bh.IS_SINGPOST = '1'
+		   AND bh.BILL_TYPE = 'IN'
+		   AND bh.BILL_AMOUNT &gt; 0
+		   AND bh.IS_DELETED = '0'
+	</select>
+	
+	<select id="G_SGP_P01_14.1" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM M_CUST A 
+		WHERE 
+		  A.ID_CUST = #idCust#
+		  AND A.IS_DELETED = '0'
+	</select>
+	
+	<select id="G_SGP_P01_15.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<![CDATA[   
+		SELECT bd.ID_CUST_PLAN, bd.SVC_LEVEL1, bd.ITEM_LEVEL, bd.ITEM_TYPE,
+		    TO_CHAR(bd.BILL_FROM, 'DD/MM/YYYY') AS BILL_FROM, 
+		    TO_CHAR(bd.BILL_TO, 'DD/MM/YYYY') AS BILL_TO, 
+		    bd.ITEM_UPRICE, bd.ITEM_QTY, bd.ITEM_AMT, bd.ITEM_DISC_AMT, bd.ITEM_SUBTOTAL,
+		    to_char(bd.ITEM_DESC) as ITEM_DESC2,
+		    (SELECT RATE_MODE FROM T_CUST_PLAN_LINK a WHERE a.ID_CUST_PLAN_LINK = bd.ID_CUST_PLAN_LINK) AS RATE_MODE, 
+			(SELECT SVC_GRP_NAME FROM M_SVG WHERE SVC_GRP = bd.SVC_LEVEL1) as SVC_GRP_NAME,
+			sf.ID_SUB_INFO
+		 FROM t_bil_d bd,T_SUBSCRIPTION_INFO sf
+		 WHERE 
+		 bd.ID_CUST_PLAN = sf.ID_CUST_PLAN(+) AND
+		 bd.id_ref = #idRef# AND
+		 bd.ITEM_AMT > 0 AND
+		 bd.IS_DELETED = '0'
+		 order by bd.item_id,bd.ITEM_LEVEL asc
+		 ]]>
+	</select>
+	
+	<update id="G_SGP_P01_17.0" parameterClass="java.util.HashMap">
+		<![CDATA[ 
+		UPDATE t_bil_h
+		       SET is_export = 1,
+		       USER_PRINTED = 'Singpost',
+		       NO_PRINTED = NO_PRINTED + 1,
+		       DATE_PRINTED = to_date(to_char(sysdate, 'dd/mm/yyyy'), 'dd/mm/yyyy'),
+		       date_updated = sysdate,
+		       id_login = #idLogin#
+		 WHERE id_ref = #idRef#
+		  ]]>
+	</update>
+	
+	<select id="retrieveFromTBILS" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT PREVIOUS_AMT, 
+		  TO_CHAR(LAST_PAY_DATE, 'DD/MM/YYYY') AS LAST_PAY_DATE, 
+		  LAST_PAY_TYPE, LAST_PAY_AMT,
+		  TO_CHAR(REJECT_DATE, 'DD/MM/YYYY') AS REJECT_DATE , 
+		  REJECT_PAY_TYPE, REJECT_DESC, REJECT_PAY_AMT, 
+		  TOTAL_OUTSTANDING, TOTAL_AMT_DUE
+	    FROM T_BIL_S
+	    WHERE ID_REF = #idRefS#
+	    AND IS_DELETED = '0'
+	</select>
+	
+	<select id="retrieveCashBook" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT a.DATE_UPDATED, a.PMT_METHOD, a.REMARK, a.AMT_RECEIVED
+		FROM T_CSB_H a, T_CSB_D b
+		WHERE b.ID_REF = #idRef#
+		  AND a.RECEIPT_NO = b.RECEIPT_NO
+		  AND a.PMT_STATUS = 'R'
+		  AND a.IS_DELETED = '0'
+		  AND b.IS_DELETED = '0'
+	</select>
+	
+	<select id="getSchedulerSetting" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  SELECT *
+	    FROM T_BATCH_SCH B
+	   WHERE B.ID_BATCH_TYPE = #idBatchType#
+	</select>
+	
+	<!-- G_GIR_P01_E 
+	<select id="G_GIR_P01_E_3.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT FILENAME 
+		FROM T_GIR_EXP_HD
+		WHERE ID_GIR_EXP_BATCH = #idBatch#
+	</select>
+	<update id="G_GIR_P01_E_7.0" parameterClass="java.util.HashMap">
+		UPDATE T_GIR_EXP_HD
+		SET FILENAME = #fileName#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#
+		WHERE ID_GIR_EXP_BATCH = #idBatch#
+	</update>
+	<insert id="G_GIR_P01_E_5.1" parameterClass="java.util.HashMap">
+		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+	<select id="G_GIR_P01_E_10.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT *
+		FROM T_GIR_EXP_TEMP
+		WHERE ID_GIR_EXP_BATCH = #idBatch#
+	</select>
+	-->
+	
+	<!-- Begin G_IPS_P01 -->
+	<select id="G_IPS_P01_1.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ID_IPASS_IMP_BATCH, STATUS, DATE_UPDATED, to_char(date_updated, 'dd/MM/yyyy HH24:mm:ss') as DATE_UPDATED_CHAR
+		FROM T_IPASS_IMP_HD
+		WHERE rownum &lt; 2
+		ORDER BY ID_IPASS_IMP_BATCH DESC
+	</select>
+	<update id="G_IPS_P01_3.0" parameterClass="java.util.HashMap">
+		UPDATE T_IPASS_IMP_HD
+		   SET status = #status#,
+		       date_updated = sysdate,
+		       id_login = #idLogin#
+		 WHERE ID_IPASS_IMP_BATCH = #idBatch# 
+	</update>	
+	<insert id="G_IPS_P01_4.0" parameterClass="java.util.HashMap">
+		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+	<select id="G_IPS_P01_SEQ" resultClass="java.lang.Integer">
+		 SELECT SEQ_T_IPASS_IMP_HD.NEXTVAL 
+		 FROM DUAL 
+	</select>
+	<insert id="G_IPS_P01_5.0" parameterClass="java.util.HashMap">
+		INSERT INTO T_IPASS_IMP_HD (
+		  ID_IPASS_IMP_BATCH,
+		  FILENAME,
+		  CLOSE_MONTHYEAR,
+		  STATUS,
+		  DATE_UPLOADED,
+		  DATE_CREATED,
+		  DATE_UPDATED,
+		  ID_LOGIN
+		) 
+		VALUES(
+		  #idBatch#,
+		  #filename#,
+		  #closeMonthYear#,
+		  #status#,
+		  sysdate,
+		  sysdate,
+		  sysdate,
+		  #idLogin#
+		)
+	</insert>
+	<select id="G_IPS_P01_9.0" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		 SELECT ACCESS_ACCOUNT 
+		 FROM T_SUBSCRIPTION_INFO
+		 WHERE ACCESS_ACCOUNT = #accessAccount#
+	</select>
+	<select id="G_IPS_P01_11.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_IPASS_IMP_HD
+		 WHERE CLOSE_MONTHYEAR = #closeMonthYear#
+		   AND STATUS = #status#
+	</select>
+	<select id="G_IPS_P01_12.1" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		 SELECT r.ACCESS_ACC
+		 FROM T_IPASS_IMP_RAW r JOIN T_IPASS_IMP_HD h ON r.ID_IPASS_IMP_BATCH = h.ID_IPASS_IMP_BATCH
+		 WHERE h.CLOSE_MONTHYEAR = #closeMonthYear#
+	 	   AND h.STATUS = #status#
+		   AND r.TIME_LOCAL = to_date(#timeLocal#, 'dd/mm/yyyy HH24:MI')
+		   AND r.ACCESS_ACC = #accessAcc#
+	</select>
+	<select id="G_IPS_P01_13.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_IPASS_IMP_MONTHLY_SUM
+		 WHERE MONTH_YEAR = #monthYear#
+		   AND IS_INVOICED = #isInvoiced#
+	</select>
+	<delete id="G_IPS_P01_14.0" parameterClass="java.util.HashMap">
+  		DELETE FROM T_IPASS_IMP_RAW WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#
+  	</delete> 
+	<delete id="G_IPS_P01_15.0" parameterClass="java.util.HashMap">
+  		DELETE FROM T_IPASS_IMP_MONTHLY_SUM WHERE MONTH_YEAR = #monthYear#
+  	</delete>
+	<insert id="G_IPS_P01_16.0" parameterClass="java.util.HashMap">
+		INSERT INTO T_IPASS_IMP_RAW (
+		  ID_IPASS_IMP_RAW,
+		  ID_IPASS_IMP_BATCH,
+		  TRANS_ID,
+		  BILL_ACC,
+		  ACCESS_ACC,
+		  CODE_NO,
+		  DESCRIPTION,
+		  TIME_GMT,
+		  TIME_LOCAL,
+		  SESSION_LEN,
+		  BILL_RATE,
+		  NET_BILL_AMT,
+		  ACCESS_TYPE,
+		  SERV_TYPE
+		) VALUES (
+		  SEQ_T_IPASS_IMP_RAW.NEXTVAL,
+		  #idBatch#,
+		  #transId#,
+		  #billAcc#,
+		  #accessAcc#,
+		  #codeNo#,
+		  #description#,
+		  to_date(#timeGmt#, 'dd/mm/yyyy HH24:MI'),
+		  to_date(#timeLocal#, 'dd/mm/yyyy HH24:MI'),
+		  #sessionLen#,
+		  #billRate#,
+		  #netBillAmt#,
+		  #accessType#,
+		  #servType#
+		)
+	</insert>
+	<select id="G_IPS_P01_18.0" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT ID_IPASS_IMP_BATCH, ACCESS_ACC, CODE_NO, SUM(SESSION_LEN) AS SESSION_TOTAL
+		 FROM T_IPASS_IMP_RAW
+		 WHERE ID_IPASS_IMP_BATCH = #idBatch#
+		 GROUP BY ACCESS_ACC, CODE_NO, ID_IPASS_IMP_BATCH
+	</select>
+	<insert id="G_IPS_P01_19.0" parameterClass="java.util.HashMap">
+		INSERT INTO T_IPASS_IMP_MONTHLY_SUM (
+		  ID_IPASS_IMP_BATCH,
+		  ACCESS_ACC,
+		  CODE_NO,
+		  MONTH_YEAR,
+		  SESSION_TOTAL,
+		  IS_INVOICED,
+		  IS_DELETED,
+		  DATE_CREATED,
+		  DATE_UPDATED,
+		  ID_LOGIN
+		) VALUES (
+		  #idBatch#,
+		  #accessAcc#,
+		  #codeNo#,
+		  #monthYear#,
+		  #sessionTotal#,
+		  #isInvoiced#,
+		  '0',
+		  sysdate,
+		  sysdate,
+		  #idLogin#
+		)
+	</insert>
+	<!-- End G_IPS_P01 -->
+	<select id="SELECT.M_GSET_D" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT set_value
+		  FROM m_gset_d
+		 WHERE id_set = #idSet#
+	  <isNotEmpty property="setSeq" prepend="AND">
+		       set_seq = #setSeq#
+		</isNotEmpty>
+	</select>
+	<!-- G_ALT_P06 -->
+	<!-- get $USER_TYPE -->
+	<select id="SELECT.G_ALT_P06.001" parameterClass="nttdm.bsys.g_alt.G_ALT_P06SqlInput" resultClass="java.lang.String">
+		SELECT distinct A.USER_TYPE 
+		FROM M_BATCH_USER_ALERT A 
+		WHERE A.BATCH_ID = #batchId# 
+			AND A.ALERT_USER = #alertUser#
+	</select>
+	<select id="SELECT.G_ALT_P06.002" parameterClass="nttdm.bsys.g_alt.G_ALT_P06SqlInput" resultClass="java.lang.String">
+		SELECT B.ID_USER 
+		FROM M_USER B 
+		WHERE
+		<isEqual property="userType" compareValue="ROLE">
+			B.ID_ROLE = #alertUser#
+		</isEqual>
+		<isEqual property="userType" compareValue="DEPARTMENT">
+			B.ID_DEPT = #alertUser#
+		</isEqual> 
+	</select>
+	<select id="SELECT.G_ALT_P06.003" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT B.EMAIL 
+		FROM M_USER B 
+		WHERE B.ID_USER = #idUser#
+	</select>
+	<insert id="INSERT.G_ALT_P06.004"
+          parameterClass="nttdm.bsys.g_alt.M_ALT_DDto">
+	    INSERT INTO M_ALT_D 
+	    (	
+	    	ID_USER,
+			ID_MSG,
+			DISPLAY_DATE,
+			IS_NEW, 
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+	    )
+	    VALUES (
+	    	#idUser#,
+	        #idMsg#,
+	        sysdate,
+			#isNew#,
+			0,
+			sysdate,
+			sysdate,
+			#idLogin#
+	    )
+  	</insert>
+  	<insert id="INSERT.G_ALT_P06.005"
+          parameterClass="nttdm.bsys.g_alt.M_ALT_HDto">
+	    INSERT INTO M_ALT_H
+	    (	
+	    	ID_MSG,
+	    	MSG_TYPE,
+			STATUS,
+			REPEAT_MODE,
+			TO_MSG,
+			SUBJECT,
+			MSG,
+			START_DATE,
+			END_DATE,
+			IS_DELETED,
+			ID_CREATOR,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+			
+	    )
+	    VALUES (
+	    	#idMsg#,
+	    	#msgType#,
+	        #status#,
+			#repeatMode#,
+	    	#toMsg#,
+	        #subject#,
+			#msg#,
+			null,
+			null,
+			#isDelete#,
+			'system',
+			sysdate,
+			sysdate,
+			#idLogin#
+			
+	    )
+  	</insert>
+	<!-- INSERT ATTACHMENT -->
+    <insert id="INSERT.G_ALT_P06.006" parameterClass="java.util.HashMap">
+        INSERT INTO T_DOC (
+            ID_DOC
+            ,DOC_TYPE
+            ,FILENAME
+            ,FILELOCATION
+            ,IS_DELETED
+            ,DATE_CREATED
+            ,DATE_UPDATED
+            ,ID_LOGIN)
+        VALUES(
+            #ID_DOC#
+            ,#DOC_TYPE#
+            ,#FILENAME#
+            ,#FILELOCATION#
+            ,'0'
+            ,sysdate
+            ,sysdate
+            ,#ID_LOGIN#)
+    </insert>
+    <insert id="INSERT.G_ALT_P06.007" parameterClass="java.util.HashMap">
+        INSERT INTO M_ALT_ATC (
+            ID_MSG
+            ,ID_FILE
+            ,IS_DELETED
+            ,DATE_CREATED
+            ,DATE_UPDATED
+            ,ID_LOGIN)
+        VALUES(
+            #ID_MSG#
+            ,#ID_DOC#
+            ,'0'
+            ,SYSDATE
+            ,SYSDATE
+            ,#ID_LOGIN#)
+    </insert>
+    
+  	<select id="SELECT.G_ALT_P06.006"   resultClass="java.lang.String">
+		SELECT   
+			SEQ_M_ALT_H.NEXTVAL AS "idCustPlan"
+		FROM  dual
+	</select>	
+  	
+  	<select id="SELECT.G_ALT_P06.007" resultClass="java.lang.Long">
+        SELECT NVL(MAX(ID_DOC),0) + 1 FROM T_DOC 
+    </select>
+	<!-- END G_ALT_P06 -->
+	
+	<!-- BEGIN G_GIR_P02 -->
+	<!-- For Process 1.0 -->
+	<select id="SELECT.G_GIR_P02.001" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+  		SELECT ID_GIR_IMP_BATCH, STATUS, DATE_UPDATED, to_char(date_updated, 'dd/MM/yyyy HH24:mm:ss') as DATE_UPDATED_CHAR
+		FROM T_GIR_IMP_HD
+		ORDER BY ID_GIR_IMP_BATCH DESC
+  	</select>  	
+	<!-- For Process 3.0 -->
+	<update id="UPDATE.G_GIR_P02.003" parameterClass="java.util.HashMap">
+  		UPDATE T_GIR_IMP_HD
+		SET STATUS = #status#,
+		  DATE_UPDATED = sysdate,
+		  ID_LOGIN = #idLogin#
+		WHERE ID_GIR_IMP_BATCH = #idGirImpBatch#
+  	</update>
+  	<!-- For Process 4.0 -->
+  	<insert id="INSERT.G_GIR_P02.004" parameterClass="java.util.HashMap">
+  		INSERT INTO T_BATCH_LOG (
+			   ID_BATCH_LOG,
+		       ID_BATCH_TYPE,
+		       ID_BATCH_REF_NO,
+		       ERROR_MSG,
+		       DATE_CREATED,
+		       DATE_UPDATED,
+		       ID_LOGIN
+		       )
+		VALUES (
+				T_SET_BATCH_LOG_SEQ.nextval,
+		       	#idBatchType#,
+		       	#idBatchRefNo#,
+		       	#errorMsg#,
+		       	sysdate,
+		       	sysdate,
+		       	#idLogin#
+		       )
+	</insert>
+	<select id="GET.G_GIR_P02.001" resultClass="java.lang.String">
+		SELECT   
+			SEQ_T_GIR_IMP_HD.NEXTVAL
+		FROM  DUAL
+	</select>
+	<!-- For Process 5.0 -->
+	<insert id="INSERT.G_GIR_P02.005" parameterClass="java.util.HashMap">
+  		INSERT INTO T_GIR_IMP_HD (
+		  ID_GIR_IMP_BATCH,
+		  FILENAME,
+		  STATUS,
+		  DATE_UPLOADED,
+		  DATE_CREATED,
+		  DATE_UPDATED,
+		  ID_LOGIN
+		)
+		VALUES (
+		  #idBatch#,
+		  #fileName#,
+		  #status#,
+		  sysdate,
+		  sysdate,
+		  sysdate,
+		  #idLogin#
+		)
+	</insert>
+	<!-- For Process 9.0 -->
+	<select id="SELECT.G_GIR_P02.009" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+		SELECT i.ID_CUST
+		FROM M_CUST_BANKINFO i LEFT JOIN M_BANK b ON i.ID_GIRO_BANK = b.ID_BANK
+		WHERE b.BANK_CODE = #bankCode#
+		  AND b.BRANCH_CODE = #branchCode#		 
+		  ADN b.BANK_FULL_NAME = #bankFullName#
+		  AND i.GIRO_ACCT_NO = #accNo#
+	</select>
+	<!-- For Process 10.0 -->
+	<select id="SELECT.G_GIR_P02.010" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT h.*, d.*
+		FROM T_CSB_H h, T_CSB_D d
+		WHERE h.RECEIPT_NO = d.RECEIPT_NO
+		  AND h.RECEIPT_NO = '$valueDate$'
+		  AND d.ID_REF = '$reference$'
+	</select>
+	<!-- For Process 11.0 -->
+	<select id="SELECT.G_GIR_P02.011" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT * FROM T_BIL_H
+		WHERE ID_REF = '$reference$'
+		  AND IS_CLOSED = 0
+	</select>
+	<!-- For Process 15.0 -->
+	<insert id="INSERT.G_GIR_P02.015" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_H (
+			RECEIPT_NO,
+			ID_CUST,
+			ID_COM_BANK,
+			OTHER_PAYER,
+			PMT_METHOD,
+			DATE_TRANS,
+			RECEIPT_REF,
+			CUR_CODE,
+			AMT_RECEIVED,
+			REMARK,
+			PMT_STATUS,
+			BALANCE_AMT,
+			REFERENCE1,
+			REFERENCE2,
+			BANK_CHARGE,
+			IS_CLOSED,
+			IS_DELETED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+		)
+		VALUES (
+			#receiptNo#,
+			#custID#,
+			#idComBank#,
+			#otherPayer#,
+			#pmtMethod#,
+			to_date(#dateTrans#, 'yyyy/MM/dd'),
+			#receiptRef#,
+			#curCode#,
+			#amtReceived#,
+			#remark#,
+			#pmtStatus#,
+			#balanceAmt#,
+			#reference1#,
+			#reference2#,
+			#bankCharge#,
+			#isClosed#,
+			#isDeleted#,
+			sysdate,
+			sysdate,
+			#idLogin#
+		)
+	</insert>
+	<!-- For Process 16.0 -->
+	<insert id="INSERT.G_GIR_P02.016" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_D (
+		  ID_REF,
+		  IS_DELETED,
+		  DATE_CREATED,
+		  DATE_UPDATED,
+		  ID_LOGIN,
+		  RECEIPT_NO,
+		  AMT_DUE,
+		  AMT_PAID,
+		  FOREX_LOSS,
+		  FOREX_GAIN
+		)
+		VALUES (
+		  #idRef#,
+		  #isDeleted#,
+		  sysdate,
+		  sysdate,
+		  #idLogin#,
+		  #receiptNo#,
+		  #amtDue#,
+		  #amtPaid#,
+		  #forexLoss#,
+		  #forexGain#
+		)
+	</insert>
+	<!-- For Process 17.0 -->
+	<update id="UPDATE.G_GIR_P02.017" parameterClass="java.util.HashMap">
+	    UPDATE T_BIL_H 
+		SET 
+			PAID_AMOUNT = #paidAmount#, 
+			<isNotEmpty property="isSettle"> 	
+				IS_SETTLED = #isSettle#,
+			</isNotEmpty> 
+			LAST_PAYMENT_DATE = sysdate,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#
+		WHERE ID_REF = #idRef#			
+	</update>
+	<!-- END G_GIR_P02 -->
+	<!-- BEGIN G_IPS_P01 -->
+	
+	<!-- SQL : For Process #1.0 -  GET BATCH_TIME_TIMEOUT -->
+  	<select id="SELECT.BATCH_UTIL.001" resultClass="java.lang.String"   parameterClass="java.lang.String">
+  		SELECT SET_VALUE
+  		FROM M_GSET_D
+  		WHERE ID_SET = #idSet#
+  	</select>
+	<!-- SQL : For Process #1.0 -  GET T_IPASS_IMP_HD -->
+  	<select id="SELECT.BATCH_UTIL.002" resultClass="nttdm.bsys.g_ips.dto.G_IPS_P01Dto"   parameterClass="java.lang.String">
+  		SELECT ID_IPASS_IMP_BATCH as "idIpassImpBatch",
+  			STATUS as "status",
+  			to_date(DATE_UPDATED, "DD/MM/YY") as "updatedDate"
+  		FROM T_IPASS_IMP_HD
+  		WHERE ROWNUM = 1
+  		ORDER BY ID_IPASS_IMP_BATCH desc
+  	</select>
+  	<!-- 
+	<select id="SELECT.BATCH_UTIL.003"
+			resultClass="java.lang.String">
+		SELECT MAX(ID_BATCH_LOG)+1 FROM T_BATCH_LOG
+	</select>
+	-->
+	<select id="SELECT.BATCH_UTIL.003"   resultClass="java.lang.String">
+		SELECT   
+			SEQ_T_BATCH_LOG.NEXTVAL AS "idCustPlan"
+		FROM  dual
+	</select>	
+	
+  	<select id="SELECT.G_IPS_P01.ACCESS_ACCOUNT" resultClass="java.lang.String"   parameterClass="java.lang.String">
+  		SELECT ACCESS_ACCOUNT 
+  		FROM T_SUBSCRIPTION_INFO
+  		WHERE ACCESS_ACCOUNT = #accessAc#
+  	</select>
+  	<select id="SELECT.G_IPS_P01.STORAGE_PATH" resultClass="java.lang.String"   parameterClass="nttdm.bsys.g_ips.dto.G_IPS_P01SqlInput">
+  		SELECT SET_VALUE
+  		FROM M_GSET_D
+  		WHERE ID_SET = #idSet#
+  			AND SET_SEQ = 1
+  	</select>
+	<!-- SQL : For Process #11.0 -  CHECK_REUPLOAD -->
+  	<select id="SELECT.G_IPS_P01.CHECK_REUPLOAD" resultClass="java.lang.Integer"   parameterClass="java.lang.String">
+  		SELECT COUNT(ID_IPASS_IMP_BATCH)
+  		FROM T_IPASS_IMP_HD
+  		WHERE CLOSE_MONTHYEAR = to_date(#closeMonthYear#,'MM/YYYY')
+  			AND STATUS = 0
+  	</select>
+  	<!-- SQL : For Process #13.0 - CHECK_INVOICED -->
+  	<select id="SELECT.G_IPS_P01.CHECK_INVOICED" resultClass="java.lang.Integer"   parameterClass="java.lang.String">
+  		SELECT COUNT(ID_IPASS_IMP_BATCH)
+  		FROM T_IPASS_IMP_RAW
+  		WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#
+  			AND IS_INVOICED = 1
+  	</select>
+  	<!-- SQL : For Process #16.0 -->
+	<select id="SELECT.G_IPS_P01.MAX_RAW_RECORD"
+			resultClass="java.lang.String">
+		SELECT MAX(ID_IPASS_IMP_RAW)+1 FROM T_IPASS_IMP_RAW
+	</select>
+	<!-- SQL : For Process #18.0  -->
+  	<select id="SELECT.G_IPS_P01.SESSION_USAGE" resultClass="nttdm.bsys.g_ips.dto.G_IPS_P01Dto"   parameterClass="java.lang.String">
+  		SELECT ACCESS_ACC as "accessAcc" , 
+  			CODE_NO as "codeNo", 
+  			ID_IPASS_IMP_BATCH as "idIpassImpBatch",
+  			SUM(SESSION_LEN) as "sessionTotal"
+  		FROM T_IPASS_IMP_RAW
+  		WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#
+  		GROUP BY ACCESS_ACC, CODE_NO
+  	</select>	
+
+  	<update id="UPDATE.BATCH_UTIL.001" parameterClass="nttdm.bsys.g_ips.dto.G_IPS_P01SqlInput">
+  		UPDATE T_IPASS_IMP_HD
+ 		SET
+ 			STATUS = #status#,
+ 			DATE_UPDATED = sysdate,
+ 			ID_LOGIN = #idLogin#
+  		WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#  		
+  	</update>
+	 
+	<!-- SQL : For Process #4.0 - INSERT_T_BATCH_LOG -->
+  	<insert id="INSERT.BATCH_UTIL.001"
+          parameterClass="nttdm.bsys.g_ips.dto.G_IPS_P01SqlInput">
+	    INSERT INTO T_BATCH_LOG
+	    (	
+	    	ID_BATCH_LOG,
+	    	ID_BATCH_TYPE,
+			ID_BATCH_REF_NO,
+			ERROR_MSG,			
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+			
+	    )
+	    VALUES (
+	    	#idBatchLog#,
+	    	#idBatchType#,
+	        #idBatchRefNo#,
+			#errMsg#,			
+	    	sysdate,
+	        sysdate,
+			#idLogin#
+	    )
+  	</insert>		
+  	 
+  	<!-- SQL : For Process #5.0 SELECT_MAX_ID_IPASS_IMP_BATCH -->
+  	<!-- 
+  	<select id="SELECT.G_IPS_P01.001" resultClass="java.lang.String">
+  		SELECT max(ID_IPASS_IMP_BATCH) + 1 
+  		FROM T_IPASS_IMP_HD
+  	</select>
+  	-->
+	<select id="SELECT.G_IPS_P01.001"   resultClass="java.lang.String">
+		SELECT   
+			SEQ_T_IPASS_IMP_HD.NEXTVAL AS "idCustPlan"
+		FROM  dual
+	</select>	
+  	
+	<!-- SQL : For Process #5.0 - INSERT_T_GIR_IMP_HD -->
+  	<insert id="INSERT.G_IPS_P01.001"
+          parameterClass="nttdm.bsys.g_ips.dto.G_IPS_P01SqlInput">
+	    INSERT INTO T_IPASS_IMP_HD
+	    (	
+	    	ID_IPASS_IMP_BATCH,
+	    	FILENAME,
+	    	CLOSE_MONTHYEAR,
+			STATUS,
+			DATE_UPLOADED,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+			
+	    )
+	    VALUES (
+	    	#idIpassImpBatch#,
+	    	#fileName#,
+	    	to_date(#closeMonthYear#, 'MM/YYYY"),
+	        #status#,
+			sysdate,
+	    	sysdate,
+	        sysdate,
+			#idLogin#
+			
+	    )
+  	</insert>	
+  	<!-- SQL : For Process #16.0 - T_IPASS_IMP_RAW-->
+  	<insert id="INSERT.G_IPS_P01.RAW_RECORD"
+          parameterClass="nttdm.bsys.g_ips.dto.G_IPS_P01SqlInput">
+	    INSERT INTO T_IPASS_IMP_RAW
+	    (	
+	    	ID_IPASS_IMP_RAW,
+	    	ID_IPASS_IMP_BATCH,
+	    	TRANS_ID,
+			BILL_ACC,
+			ACCESS_ACC,
+			CODE_NO,
+			DESC,
+			TIME_GMT,
+			TIME_LOCAL,						
+			SESSION_LEN,
+			BILL_RATE,
+			NET_BILL_AMT,						
+			ACCESS_TYPE,
+			SERV_TYPE,
+			DATE_CREATED,
+			DATE_UPDATED,
+			ID_LOGIN
+	    )
+	    VALUES (
+	    	#idIpassImpRaw#,
+	    	#idIpassImpBatch#,
+	    	#transId#,
+	        #billAcc#,
+			#accessAc#,
+	    	#codeNo#,
+	    	#desc#,
+	    	#timeGmt#,
+	        #timeLocal#,
+			#sessionLen#,
+	    	#billRate#,
+	    	#netBillAtm#,
+	    	#accessType#,
+	        #servType#,
+	    	sysdate,
+	        sysdate,
+			#idLogin#
+			
+	    )
+  	</insert>
+  	  	
+  	<!-- SQL : For Process #14.0  -->
+  	<delete id="DELETE.G_IPS_P01.REMOVE_RAW_RECORD" parameterClass="java.lang.String">
+  		DELETE FROM T_IPASS_IMP_RAW 
+  		WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#
+  	</delete>  	 
+  	<!-- SQL : For Process #15.0 -->
+  	<delete id="DELETE.G_IPS_P01.REMOVE_USAGE_SUMMARY" parameterClass="java.lang.String">
+  		DELETE FROM T_IPASS_IMP_MONTHLY_SUM 
+  		WHERE ID_IPASS_IMP_BATCH = #idIpassImpBatch#
+  	</delete>  	 
+  	
+	 <!-- END G_IPS_P01-->
+	 
+	 <!-- START B_OBT 2010/08/25 -->
+	 <!-- update status of WF when click re-obtain approval -->
+	 <update id="UPDATE.BSYS.SQL012" parameterClass="java.util.HashMap">
+		UPDATE T_WF_APPROVAL
+		   SET 	APPR_STATUS = #APPR_STATUS#,
+		   		DATE_APPR = NULL 
+		 WHERE 	TRIM(id_ref) = TRIM(#ID_REF#) 
+		 	AND	SECTION_NO = #SECTION_NO#
+		 	AND	APPR_STATUS = #APPR_STATUS_CONDITION#
+		 	AND	IS_REVISED = #IS_REVISED#
+		 	AND	IS_DELETED = #IS_DELETED#
+	</update>
+	<select id="SELECT.BSYS.SQL035" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	SELECT ID_APPROVER
+	FROM	(	SELECT ID_APPROVER, ROWNUM NUM
+				FROM T_WF_APPROVAL
+				WHERE TRIM(id_ref) = TRIM(#ID_REF#)
+				ORDER BY ID_WF_APPROVAL DESC)			
+	WHERE NUM = #NUM#
+	</select>
+	
+	<!-- for gsetp01 -->
+    <select id="SELECT.BSYS.G_SETP01.SQL001" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH" 
+        resultClass="java.util.HashMap">
+        SELECT * FROM (
+            SELECT STATUS AS LAST_STATUS,ID_BATCH,TO_CHAR(DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS HIEUTIME
+            FROM T_SET_BATCH 
+            WHERE BATCH_TYPE='$BATCH_TYPE$' 
+                AND DATE_CREATED = (SELECT MAX(DATE_CREATED) FROM T_SET_BATCH WHERE BATCH_TYPE='$BATCH_TYPE$')
+        ) 
+        WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.BSYS.G_SETP01.lastBatch" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH" 
+        resultClass="java.util.HashMap">
+         SELECT * FROM ( 
+             SELECT T.ID_BATCH
+             FROM T_SET_BATCH T
+             WHERE BATCH_TYPE='$BATCH_TYPE$' 
+             ORDER BY T.DATE_CREATED DESC 
+             )
+         WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.BSYS.G_SETP01.SQL002" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH"
+        resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET='BATCH_TIME_INTERVAL'
+    </select>
+    <select id="SELECT.BSYS.G_SETP01.SQL003" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH" 
+        resultClass="java.lang.String">
+        SELECT MAX(ID_BATCH)AS NEW_BATCH FROM T_SET_BATCH WHERE BATCH_TYPE='$BATCH_TYPE$'
+    </select>
+   <insert id="INSERT.BSYS.G.SETP01.SQL001" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH"> 
+	   insert into t_set_batch (id_batch, batch_type, status, filename, date_created, date_updated, id_login, MONTHYEAR)
+		values(T_SET_BATCH_SEQ.nextval,'$BATCH_TYPE$','$STATUS$','$FILENAME$',sysdate,sysdate,'$ID_LOGIN$', #monthyear#)
+   </insert>
+   
+   <parameterMap class="java.util.Map" id="paramT_SET_BATH">
+       <parameter property="ID_BATCH"/>
+       <parameter property="message" typeHandler="jp.terasoluna.fw.orm.ibatis.support.ClobReaderTypeHandler"/>
+       <parameter property="ID_LOGIN"/>
+   </parameterMap>
+   <insert id="INSERT.BSYS.G.SETP01.SQL002" parameterMap="paramT_SET_BATH">
+    	insert into t_set_batch_log (id_batch_log, id_batch, message, date_created, date_updated, id_login)
+		values(t_set_batch_log_seq.nextval,?,?,sysdate,sysdate,?)
+   </insert>
+   
+   <update id="UPDATE.BSYS.G.SETP01.SQL001" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH">
+   update t_set_batch 
+	set batch_type='$BATCH_TYPE$', status='$STATUS$', filename='$FILENAME$', date_updated=sysdate, id_login='$ID_LOGIN$'
+	where id_batch='$ID_BATCH$'   
+   </update>
+   <update id="UPDATE.BSYS.G.SETP01.SQL0045" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH">
+     UPDATE
+        M_BATCH_MAINTENANCE M 
+     SET 
+        M.RUN_STATUS = #STATUS#,
+        M.DATE_UPDATED = SYSDATE,
+        M.ID_LOGIN = #ID_LOGIN#
+     WHERE
+        M.BATCH_ID=#BATCH_TYPE#
+   </update>
+	<!-- end for gsetp01 -->
+    <!-- start for G_SET_P03 -->
+    <select id="SELECT.BSYS.G_SETP03.BATCH_TIME_INTERVAL" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET='BATCH_TIME_INTERVAL'
+    </select>
+    <select id="SELECT.BSYS.G_SETP03.getRunStatus" parameterClass="string" resultClass="string">
+        SELECT 
+            T.RUN_STATUS 
+        FROM 
+            T_BATCH_SCH T
+        WHERE 
+            T.ID_BATCH_TYPE=#batch_type#
+    </select>
+    <select id="SELECT.BSYS.G_SETP03.getStatusAndDate" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+        SELECT TT.* 
+        FROM (
+                SELECT 
+                   $batchIdName$ AS BATCH_ID,T.STATUS,TO_CHAR(T.DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS DATE_CREATED
+                FROM 
+                    $tableName$ T
+                WHERE 
+                    T.STATUS='2'    
+                ORDER BY T.DATE_CREATED DESC 
+              ) TT
+        WHERE
+            ROWNUM &lt;2
+    </select>
+    <!-- end for G_SET_P03 -->
+	<!-- FOR E_exp_F01 -->	
+	<select id="SELECT.BSYS.E_EXP_F01HV.SQL001" resultClass="java.util.HashMap">
+		SELECT F.ID_SET,F.SET_VALUE
+		FROM M_GSET_D F
+		WHERE F.ID_SET IN ('BATCH_E_EXP_F01','BIL_DEBTER_ACC','DEF_CURRENCY','BIL_ADVANCE_ACC','REV_AMT_CAL')
+		AND F.SET_SEQ = 1
+        AND F.IS_DELETED = '0'
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F01HV.SQL002" resultClass="java.util.HashMap">
+		SELECT TO_CHAR(F.SET_SEQ) AS SET_SEQ,F.SET_VALUE
+		FROM M_GSET_D F
+		WHERE F.ID_SET = 'EXP_F01_CONFIG'
+        AND F.IS_DELETED = '0'
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F01.SQL002" resultClass="nttdm.bsys.common.bean.E_EXP_F01_SQL1_Bean" parameterClass="java.lang.String">
+		SELECT A.CUST_ACC_NO, A.AFFILIATE_CODE, A.CO_CATEGORY, A.CO_SUB_CATEGORY,
+		       B.ID_REF, B.ID_CUST, B.BILL_TYPE, TO_CHAR(B.DATE_REQ, 'YYYY/MM/DD') AS DATE_REQ ,TO_CHAR(B.DUE_DATE, 'YYYY/MM/DD') AS DUE_DATE , B.ID_CONSULT, B.CUST_PO, 
+		       B.BILL_CURRENCY, B.EXPORT_CUR, B.BILL_AMOUNT, B.IS_DISPLAY_EXP_AMT, B.EXPORT_AMOUNT, B.CUR_RATE, 
+		       D.PPLSOFT_ACC_ID,D.PPLSOFT_DEPT_ID
+		FROM M_CUST A INNER JOIN T_BIL_H B ON A.ID_CUST=B.ID_CUST 
+		LEFT OUTER JOIN M_USER D ON D.ID_USER = B.ID_CONSULT 
+		WHERE TO_CHAR(DATE_REQ, 'YYYYMM') =  #esetrundate#
+		AND B.IS_DELETED='0'
+		ORDER BY A.CUST_ACC_NO, B.ID_REF
+	</select>
+	<!-- #239 - Missing One Cent wcbeh@20170406 -->
+	<select id="SELECT.BSYS.E_EXP_F01.ITEM_TOTAL_AMT" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT
+		    R4.ID_REF,
+		    R4.APPLY_GST,
+		    R4.PRODUCT_CODE, 
+		    SUM(R4.ITEM_SUBTOTAL) AS ItemAmt1A, SUM(ROUND(R4.ITEM_SUBTOTAL,2)) AS ItemAmt2A,
+		    (ROUND(SUM(R4.ITEM_SUBTOTAL),2)-SUM(ROUND(R4.ITEM_SUBTOTAL,2))) AS DiffItemAmtA,
+		    SUM(R4.ITEM_GST) AS GstAmt1A, ROUND(SUM(R4.ITEM_GST),2) AS GstAmt2A,
+		    ROUND(SUM(R4.ITEM_GST),2)-ROUND(SUM(R4.ITEM_GST),2) AS DiffGstAmtA,
+		    (SUM(ROUND(R4.ITEM_SUBTOTAL,2))+ROUND(SUM(R4.ITEM_GST),2)) AS TotalDetailAmtA, 
+		    SUM(R4.ITEM_SUBTOTAL+R4.ITEM_GST) AS HeaderAmt1A,
+		    ROUND(SUM(R4.ITEM_SUBTOTAL+R4.ITEM_GST),2) AS HeaderAmt2A,
+		    (SUM(ROUND(R4.ITEM_SUBTOTAL,2))+ROUND(SUM(R4.ITEM_GST),2))-ROUND(SUM(R4.ITEM_SUBTOTAL+R4.ITEM_GST),2) AS DiffHDAmtA,  
+		    SUM(R4.ITEM_EXPORT_AMT) AS ItemAmt1B, SUM(ROUND(R4.ITEM_EXPORT_AMT,2)) AS ItemAmt2B,
+		    (ROUND(SUM(R4.ITEM_EXPORT_AMT),2)-SUM(ROUND(R4.ITEM_EXPORT_AMT,2))) AS DiffItemAmtB,
+		    SUM(R4.ITEM_EXPORT_GST) AS GstAmt1B, ROUND(SUM(R4.ITEM_EXPORT_GST),2) AS GstAmt2B,
+		    ROUND(SUM(R4.ITEM_EXPORT_GST),2)-ROUND(SUM(R4.ITEM_EXPORT_GST),2) AS DiffGstAmtB,
+		    (SUM(ROUND(R4.ITEM_EXPORT_AMT,2))+ROUND(SUM(R4.ITEM_EXPORT_GST),2)) AS TotalDetailAmtB, 
+		    SUM(R4.ITEM_EXPORT_AMT+R4.ITEM_EXPORT_GST) AS HeaderAmt1B,
+		    ROUND(SUM(R4.ITEM_EXPORT_AMT+R4.ITEM_EXPORT_GST),2) AS HeaderAmt2B,
+		    (SUM(ROUND(R4.ITEM_EXPORT_AMT,2))+ROUND(SUM(R4.ITEM_EXPORT_GST),2))-ROUND(SUM(R4.ITEM_EXPORT_AMT+R4.ITEM_EXPORT_GST),2) AS DiffHDAmtB
+		 FROM (
+		        SELECT
+		          B.ID_REF,
+		          B.APPLY_GST,
+		          SUBSTR(G.PRODUCT_CODE,0,3) AS PRODUCT_CODE,
+		          B.ITEM_LEVEL,
+		          B.ITEM_ID,
+		          B.ITEM_SUBTOTAL,
+		          B.ITEM_GST,
+		          B.ITEM_EXPORT_AMT,
+		          B.ITEM_EXPORT_GST 
+		        FROM T_BIL_D B, M_SVC G
+		        WHERE G.ID_SERVICE=B.SVC_LEVEL2 
+		        AND B.ID_REF=#idRef#
+		        AND B.ITEM_LEVEL=1
+		        AND B.IS_DELETED=0
+		        ORDER BY B.ID_REF, APPLY_GST, G.PRODUCT_CODE
+		      )R4
+		GROUP BY R4.ID_REF, R4.APPLY_GST, R4.PRODUCT_CODE
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F01.SQL003" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.E_EXP_F01_SQL2_Bean" >
+		SELECT C.ID_REF, C.ITEM_EXPORT_AMT, C.ITEM_AMT, C.BILL_FROM, C.BILL_TO, C.JOB_NO, C.SVC_LEVEL1, C.SVC_LEVEL2,C.ID_CUST_PLAN_LINK,
+		       E.ORIGIN_CODE, E.ACC_CODE, C.APPLY_GST, C.TAX_CODE, C.ITEM_GST, C.ITEM_EXPORT_GST, C.ITEM_SUBTOTAL, K.ACC_CODE AS ACC_CODE1,
+		       <!-- Modfiy #146 Start -->
+		       <!--TRIM(G.ACC_CODE) AS PRODUCT_CODE -->
+		       TRIM(G.PRODUCT_CODE) AS PRODUCT_CODE
+		       <!-- Modfiy #146 End -->
+		FROM T_BIL_D C
+		INNER JOIN M_SVC G ON G.ID_SERVICE = C.SVC_LEVEL2
+		INNER JOIN M_SVG E ON E.SVC_GRP = C.SVC_LEVEL1
+		LEFT JOIN M_TAX K ON K.ID_TAX = C.APPLY_GST
+		WHERE C.ID_REF='$ID_REF$'
+				AND C.ITEM_LEVEL = 1
+				AND C.ITEM_SUBTOTAL &lt;&gt; 0
+		ORDER BY C.ITEM_ID
+	</select>
+	<!-- ADD #146 E-EXP-F01_NTTS_CORP Start -->
+	<select id="SELECT.BSYS.E_EXP_F01_NTTS_CORP.SQL001" resultClass="nttdm.bsys.common.bean.E_EXP_F01_SQL1_Bean" parameterClass="java.lang.String">
+		SELECT A.CUST_ACC_NO, A.AFFILIATE_CODE, A.CO_CATEGORY, A.CO_SUB_CATEGORY,
+		       B.ID_REF, B.ID_CUST, B.BILL_TYPE, TO_CHAR(B.DATE_REQ, 'YYYY/MM/DD') AS DATE_REQ ,TO_CHAR(B.DUE_DATE, 'YYYY/MM/DD') AS DUE_DATE , B.ID_CONSULT, B.CUST_PO, 
+		       B.BILL_CURRENCY, B.EXPORT_CUR, B.BILL_AMOUNT, B.IS_DISPLAY_EXP_AMT, B.EXPORT_AMOUNT, B.CUR_RATE, 
+		       D.PPLSOFT_ACC_ID,D.PPLSOFT_DEPT_ID,A.OTHERS_REF_NO
+		FROM M_CUST A INNER JOIN T_BIL_H B ON A.ID_CUST=B.ID_CUST 
+		LEFT OUTER JOIN M_USER D ON D.ID_USER = B.ID_CONSULT 
+		WHERE A.CUSTOMER_TYPE = 'CORP' 
+		AND TO_CHAR(DATE_REQ, 'YYYYMM') =  #esetrundate#
+		AND B.IS_DELETED='0'
+		ORDER BY A.CUST_ACC_NO, B.ID_REF
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F01_NTTS_CORP.SQL002" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.E_EXP_F01_SQL2_Bean" >
+		SELECT C.ID_REF, C.ITEM_EXPORT_AMT, C.ITEM_AMT, C.BILL_FROM, C.BILL_TO, C.JOB_NO, C.SVC_LEVEL1, C.SVC_LEVEL2,C.ID_CUST_PLAN_LINK,
+		       E.ORIGIN_CODE, C.APPLY_GST, C.TAX_CODE, C.ITEM_GST, C.ITEM_EXPORT_GST, C.ITEM_SUBTOTAL, C.CUST_PO, K.ACC_CODE AS ACC_CODE1,
+		       TRIM(G.PRODUCT_CODE) AS PRODUCT_CODE, G.ACC_CODE, G.REFERENCE1, G.REFERENCE2
+		FROM T_BIL_D C
+		INNER JOIN M_SVC G ON G.ID_SERVICE = C.SVC_LEVEL2
+		INNER JOIN M_SVG E ON E.SVC_GRP = C.SVC_LEVEL1
+		LEFT JOIN M_TAX K ON K.ID_TAX = C.APPLY_GST
+		WHERE C.ID_REF='$ID_REF$'
+				AND C.ITEM_LEVEL = 1
+				AND C.ITEM_AMT &lt;&gt; 0
+		ORDER BY C.ITEM_ID
+	</select>
+	<!-- ADD #146 E-EXP-F01_NTTS_CORP End -->
+	<!-- ADD #146 E-EXP-F01_NTTS_CONS Start -->
+	<select id="SELECT.BSYS.E_EXP_F01_NTTS_CONS.SQL001" resultClass="nttdm.bsys.common.bean.E_EXP_F01_CONS_Bean" parameterClass="java.lang.String">
+		SELECT A.CUST_ACC_NO, A.AFFILIATE_CODE, A.CO_CATEGORY, A.CO_SUB_CATEGORY, A.OTHERS_REF_NO,
+		       B.ID_REF, B.ID_CUST, B.BILL_TYPE, TO_CHAR(B.DATE_REQ, 'YYYY/MM/DD') AS DATE_REQ ,TO_CHAR(B.DUE_DATE, 'YYYY/MM/DD') AS DUE_DATE , B.ID_CONSULT, B.CUST_PO, 
+		       B.BILL_CURRENCY, B.BILL_AMOUNT, B.EXPORT_AMOUNT, B.CUR_RATE, B.EXPORT_CUR, B.IS_DISPLAY_EXP_AMT,
+		       C.ITEM_AMT, C.ITEM_EXPORT_AMT, C.BILL_FROM, C.BILL_TO, C.JOB_NO, C.SVC_LEVEL1, C.SVC_LEVEL2, 
+		       C.ID_CUST_PLAN_LINK, C.APPLY_GST, C.TAX_CODE, C.ITEM_GST, C.ITEM_EXPORT_GST, C.ITEM_SUBTOTAL, C.CUST_PO AS CUST_PO2,
+		       E.ORIGIN_CODE, G.PRODUCT_CODE, G.ACC_CODE, G.REFERENCE1, G.REFERENCE2, K.ACC_CODE AS ACC_CODE1
+		FROM M_CUST A INNER JOIN T_BIL_H B ON A.ID_CUST=B.ID_CUST 
+		INNER JOIN T_BIL_D C ON B.ID_REF = C.ID_REF
+		INNER JOIN M_SVC G ON G.ID_SERVICE = C.SVC_LEVEL2
+		INNER JOIN M_SVG E ON E.SVC_GRP = C.SVC_LEVEL1
+		LEFT JOIN M_TAX K ON K.ID_TAX = C.APPLY_GST
+		WHERE A.CUSTOMER_TYPE = 'CONS'
+		AND TO_CHAR(DATE_REQ, 'YYYYMM') =  #esetrundate#
+		AND B.IS_DELETED = '0'
+		AND C.ITEM_LEVEL = 1
+		AND C.ITEM_AMT &lt;&gt; 0
+		AND C.IS_DELETED = '0'
+		AND B.BILL_TYPE IN ('IN', 'DN')
+		ORDER BY A.CUST_ACC_NO, B.ID_REF, C.ITEM_ID
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F01_NTTS_CONS.SQL002" resultClass="nttdm.bsys.common.bean.E_EXP_F01_CONS_Bean" parameterClass="java.lang.String">
+		SELECT A.CUST_ACC_NO, A.AFFILIATE_CODE, A.CO_CATEGORY, A.CO_SUB_CATEGORY, A.OTHERS_REF_NO,
+		       B.ID_REF, B.ID_CUST, B.BILL_TYPE, TO_CHAR(B.DATE_REQ, 'YYYY/MM/DD') AS DATE_REQ ,TO_CHAR(B.DUE_DATE, 'YYYY/MM/DD') AS DUE_DATE , B.ID_CONSULT, B.CUST_PO, 
+		       B.BILL_CURRENCY, B.BILL_AMOUNT, B.EXPORT_AMOUNT, B.CUR_RATE, B.EXPORT_CUR, B.IS_DISPLAY_EXP_AMT,
+		       C.ITEM_AMT, C.ITEM_EXPORT_AMT, C.BILL_FROM, C.BILL_TO, C.JOB_NO, C.SVC_LEVEL1, C.SVC_LEVEL2, 
+		       C.ID_CUST_PLAN_LINK, C.APPLY_GST, C.TAX_CODE, C.ITEM_GST, C.ITEM_EXPORT_GST, C.ITEM_SUBTOTAL, C.CUST_PO AS CUST_PO2,
+		       E.ORIGIN_CODE, G.PRODUCT_CODE, G.ACC_CODE, G.REFERENCE1, G.REFERENCE2, K.ACC_CODE AS ACC_CODE1
+		FROM M_CUST A INNER JOIN T_BIL_H B ON A.ID_CUST=B.ID_CUST 
+		INNER JOIN T_BIL_D C ON B.ID_REF = C.ID_REF
+		INNER JOIN M_SVC G ON G.ID_SERVICE = C.SVC_LEVEL2
+		INNER JOIN M_SVG E ON E.SVC_GRP = C.SVC_LEVEL1
+		LEFT JOIN M_TAX K ON K.ID_TAX = C.APPLY_GST
+		WHERE A.CUSTOMER_TYPE = 'CONS'
+		AND TO_CHAR(DATE_REQ, 'YYYYMM') =  #esetrundate#
+		AND B.IS_DELETED = '0'
+		AND C.ITEM_LEVEL = 1
+		AND C.ITEM_AMT &lt;&gt; 0
+		AND C.IS_DELETED = '0'
+		AND B.BILL_TYPE = 'CN'
+		ORDER BY A.CUST_ACC_NO, B.ID_REF, C.ITEM_ID
+	</select>
+	<!-- ADD #146 E-EXP-F01_NTTS_CONS End -->
+	
+	<select id="SELECT.BSYS.GET_RATE_TYPE2" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT RATE_TYPE2 FROM T_CUST_PLAN_LINK WHERE ID_CUST_PLAN_LINK =#id_cust_plan_link#
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.getOffset" resultClass="java.lang.String" >
+		SELECT SET_VALUE
+		FROM M_GSET_D
+		WHERE 
+			ID_SET = 'CB_AUTO_OFFSET'
+			AND SET_SEQ = 1
+	</select>
+	
+    <select id="SELECT.BSYS.E_EXP_F01.getSVC_LEVEL2" parameterClass="java.lang.String" resultClass="java.lang.String">
+        SELECT MSVC.DESC_ABBR FROM T_CUST_PLAN_LINK TSVC
+        LEFT JOIN M_SVC MSVC ON TSVC.SVC_LEVEL2 = MSVC.ID_SERVICE AND MSVC.IS_DELETED = '0'
+        WHERE TSVC.ID_CUST_PLAN_LINK = #id_cust_plan_link#
+    </select>
+    
+	<select id="SELECT.BSYS.E_EXP_F01.getSVC_LEVEL3" parameterClass="java.lang.String" resultClass="java.lang.String">
+	    SELECT MSVC.DESC_ABBR FROM T_CUST_PLAN_SVC TSVC
+        LEFT JOIN M_SVC MSVC ON TSVC.SVC_LEVEL3 = MSVC.ID_SERVICE AND MSVC.IS_DELETED='0'
+        WHERE TSVC.ID_CUST_PLAN_LINK = #id_cust_plan_link# ORDER BY TSVC.ID_CUST_PLAN_SVC
+	</select>
+	
+	<!-- end FOR E_exp_F01 -->
+	
+	<!-- For E_EXP_F02 -->
+    <select id="SELECT.BSYS.E_EXP_F02.CHB.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+      SELECT
+	      B.RECEIPT_NO,
+	      B.ID_CUST,
+	      B.ID_COM_BANK,
+	      B.OTHER_PAYER,
+	      B.PMT_METHOD,
+	      to_char(B.DATE_TRANS,'YYYY-MM-DD') as DATE_TRANS,
+	      B.RECEIPT_REF,
+	      B.CUR_CODE,
+	      B.REMARK,
+	      B.PMT_STATUS,
+	      B.REFERENCE1,
+	      B.REFERENCE2,
+	      B.AMT_RECEIVED,
+	      B.BANK_CHARGE,
+	      B.BALANCE_AMT,
+	      B.ID_BILL_ACCOUNT,
+	      B.REJECT_DATE,
+	      B.REJECT_DESC,
+	      B.PAID_PRE_INVOICE,
+	      B.OVER_PAID,
+	      NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID
+      FROM T_CSB_H B LEFT OUTER JOIN T_CSB_D C ON B.RECEIPT_NO = C.RECEIPT_NO AND C.IS_DELETED='0' 
+      WHERE B.BALANCE_AMT &lt;&gt; 0
+          AND TO_CHAR(B.DATE_TRANS, 'YYYYMMDD') &lt;= TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMMDD')
+          AND B.IS_DELETED='0'
+          AND B.PMT_STATUS='N'
+          <isNotEmpty property="idcust" prepend="AND">
+            	TRIM(B.ID_CUST) = TRIM(#idcust#)
+          </isNotEmpty>
+          <isNotEmpty property="idbillaccount" prepend="AND">
+            	B.ID_BILL_ACCOUNT = #idbillaccount#
+          </isNotEmpty>
+      GROUP BY 
+          B.RECEIPT_NO,
+          B.ID_CUST,
+          B.ID_COM_BANK,
+          B.OTHER_PAYER,
+          B.PMT_METHOD,
+          B.DATE_TRANS,
+          B.RECEIPT_REF,
+          B.CUR_CODE,
+          B.REMARK,
+          B.PMT_STATUS,
+          B.REFERENCE1,
+          B.REFERENCE2,
+          B.AMT_RECEIVED,
+          B.BANK_CHARGE,
+          B.BALANCE_AMT,
+          B.ID_BILL_ACCOUNT,
+          B.REJECT_DATE,
+          B.REJECT_DESC,
+          B.PAID_PRE_INVOICE,
+          B.OVER_PAID
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.CHB.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+       SELECT
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            to_char(B.DATE_TRANS,'YYYY-MM-DD') as DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID,
+            NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID
+        FROM T_CSB_D C, T_CSB_H B 
+        WHERE B.BALANCE_AMT = 0
+            AND TO_CHAR(B.DATE_TRANS, 'YYYYMMDD') &lt; (
+                SELECT TO_CHAR(A.DATE_REQ, 'YYYYMMDD') 
+                FROM T_BIL_H A 
+                WHERE A.ID_REF=C.ID_REF 
+                    AND TO_CHAR(A.DATE_REQ, 'YYYYMM') = TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMM')
+                    AND A.IS_DELETED='0'
+                )
+            AND B.IS_DELETED='0'
+            AND B.PMT_STATUS='N'
+            AND B.RECEIPT_NO = C.RECEIPT_NO 
+            AND C.IS_DELETED='0'
+            <isNotEmpty property="idcust" prepend="AND">
+            	TRIM(B.ID_CUST) = TRIM(#idcust#) 
+            </isNotEmpty>
+            <isNotEmpty property="idbillaccount" prepend="AND">
+				B.ID_BILL_ACCOUNT = #idbillaccount#
+		    </isNotEmpty>
+        GROUP BY 
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            B.DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.CHB.SQL003" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            to_char(B.DATE_TRANS,'YYYY-MM-DD') as DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID,
+            NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID
+        FROM T_CSB_H B LEFT OUTER JOIN T_CSB_D C ON B.RECEIPT_NO = C.RECEIPT_NO AND C.IS_DELETED='0'  
+        WHERE B.BALANCE_AMT = 0
+            AND TO_CHAR(B.DATE_TRANS, 'YYYYMM') = TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMM')
+            AND B.IS_DELETED='0'
+            AND B.PMT_STATUS = 'N'
+            <isNotEmpty property="idcust" prepend="AND">
+            	TRIM(B.ID_CUST) = TRIM(#idcust#)
+            </isNotEmpty>
+            <isNotEmpty property="idbillaccount" prepend="AND">
+            	B.ID_BILL_ACCOUNT = #idbillaccount#
+            </isNotEmpty>
+        GROUP BY 
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            B.DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.CHB.SQL004" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            TO_CHAR(B.DATE_TRANS,'YYYY-MM-DD') AS DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID,
+            NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID
+        FROM T_CSB_H B LEFT OUTER JOIN T_CSB_D C ON B.RECEIPT_NO = C.RECEIPT_NO AND C.IS_DELETED='0'  
+        WHERE 
+            TO_CHAR(B.DATE_TRANS, 'YYYYMM') = TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMM')
+            AND B.IS_DELETED='0'
+            AND B.PMT_STATUS = 'F'
+            <isNotEmpty property="idcust" prepend="AND">
+                TRIM(B.ID_CUST) = TRIM(#idcust#)
+            </isNotEmpty>
+            <isNotEmpty property="idbillaccount" prepend="AND">
+                B.ID_BILL_ACCOUNT = #idbillaccount#
+            </isNotEmpty>
+        GROUP BY 
+            B.RECEIPT_NO,
+            B.ID_CUST,
+            B.ID_COM_BANK,
+            B.OTHER_PAYER,
+            B.PMT_METHOD,
+            B.DATE_TRANS,
+            B.RECEIPT_REF,
+            B.CUR_CODE,
+            B.REMARK,
+            B.PMT_STATUS,
+            B.REFERENCE1,
+            B.REFERENCE2,
+            B.AMT_RECEIVED,
+            B.BANK_CHARGE,
+            B.BALANCE_AMT,
+            B.ID_BILL_ACCOUNT,
+            B.REJECT_DATE,
+            B.REJECT_DESC,
+            B.PAID_PRE_INVOICE,
+            B.OVER_PAID
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.getIdRefByReceiptno"  parameterClass="java.lang.String" resultClass="java.lang.String">
+        SELECT TRIM(T.ID_REF) AS ID_REF FROM T_CSB_D T WHERE T.RECEIPT_NO=#receiptNo#
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.CHKBILLDOC.SQL001"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        select id_ref, bill_type, bill_currency,is_manual, bill_acc, to_char(date_req,'YYYY-MM-DD') as date_req, TO_CHAR(ADD_MONTHS(date_req,1)-1, 'dd-Mon-yyyy') as entry_type, 
+            pay_method, id_cust, adr_type, contact_type, To_Char(id_bif) as ID_BIF, id_qcs, quo_ref,To_Char(cust_po) as CUST_PO,  
+            gst_amount, bill_amount, paid_amount, last_payment_date,  export_cur, cur_rate 
+        from T_bil_h a  
+        where a.date_req &lt;= TO_DATE(#statementdate#,'DDMMYYYY') 
+            and a.is_settled='0'
+            and a.is_deleted='0' 
+            <isNotEmpty property="idcust" prepend="AND">
+             	TRIM(A.ID_CUST) = TRIM(#idcust#)
+            </isNotEmpty>
+            <isNotEmpty property="idbillaccount" prepend="AND">
+             	A.BILL_ACC = #idbillaccount#
+            </isNotEmpty>
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.OFFSET.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    SELECT DISTINCT H.ID_CUST,H.ID_BILL_ACCOUNT 
+	    FROM T_BAC_H H, M_CUST G
+		WHERE 
+			H.ID_CUST = G.ID_CUST 
+			AND G.IS_DELETED = 0 
+		    <isNotEmpty property="idcust" prepend="AND">
+	              H.ID_CUST = #idcust#	
+	        </isNotEmpty>
+	        <isNotEmpty property="idbillaccount" prepend="AND">
+	              H.ID_BILL_ACCOUNT = #idbillaccount#
+	        </isNotEmpty>
+		ORDER BY H.ID_CUST ASC,H.ID_BILL_ACCOUNT ASC
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.OFFSET.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    SELECT DISTINCT H.ID_CUST
+	    FROM T_BAC_H H, M_CUST G
+		WHERE
+			H.ID_CUST = G.ID_CUST 
+			AND G.IS_DELETED = 0
+		ORDER BY ID_CUST ASC
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.OFFSET.SQL003" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	    SELECT E.ID_STMT 
+	    FROM T_AR_STMT_H E 
+		WHERE  
+		TO_CHAR(E.STMT_DATE,'YYYYMM') = TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMM')
+	    <isNotEmpty property="idcust" prepend="AND">
+              E.ID_CUST = #idcust#	
+        </isNotEmpty>
+        <isNotEmpty property="idbillaccount" prepend="AND">
+              TRIM(E.CUST_ACC_NO) = TRIM(#idbillaccount#)
+        </isNotEmpty>
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.OFFSET.SQL004" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    SELECT E.ID_STMT,E.ID_CUST,E.CUST_ACC_NO
+	    FROM T_AR_STMT_H E 
+		WHERE  
+		<isNotEmpty property="idStmts" prepend="">
+				E.ID_STMT IN
+				<iterate property="idStmts" open="("
+					close=")" conjunction="," >
+					#idStmts[]#
+				</iterate>
+	     </isNotEmpty>
+    </select>
+    <delete id="DELETE.BSYS.E_EXP_F02.OFFSET.SQL001" parameterClass="java.lang.String">
+	    DELETE FROM T_AR_STMT_D WHERE ID_STMT = #idStmt#
+    </delete>
+    <update id="UPDATE.BSYS.E_EXP_F02.SUBINSERT.SQL001" parameterClass="java.util.HashMap">
+	    UPDATE T_AR_STMT_H
+		SET 
+			STMT_CURRENCY = #stmt_currency#,
+			CUST_NAME = #custName#,
+			ADDRESS1 = #address1#,
+			ADDRESS2 = #address2#,
+			ADDRESS3 = #address3#,
+			ADDRESS4 = #address4#,
+			ZIP_CODE = #zipcode#,
+			COUNTRY = #country#,
+			TEL_NO = #telNo#,
+			FAX_NO = #faxNo#,
+			CONTACT_NAME = #contactName#,
+			CONTACT_EMAIL = #email#,
+			SALUTATION = #salutation#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #id_login#,
+			STMT_DATE = TO_DATE(#stmt_date#,'DDMMYYYY')
+		WHERE 
+			ID_STMT = #id_stmt#
+    </update>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.LOOPRESULT1.SQL002" parameterClass="java.util.HashMap" resultClass="java.math.BigDecimal">
+        SELECT NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID 
+        FROM T_CSB_D C, T_CSB_H B 
+        WHERE B.RECEIPT_NO = C.RECEIPT_NO
+            AND C.ID_REF = #ID_REF#
+            AND B.PMT_STATUS = 'N'
+            AND C.IS_DELETED='0' 
+            AND TO_CHAR(B.DATE_TRANS, 'YYYYMM') &lt; TO_CHAR(TO_DATE('$STMT_DATE$','DDMMYYYY'), 'YYYYMM')
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.LOOPRESULT1.SQL001" parameterClass="java.util.HashMap" resultClass="java.math.BigDecimal">
+		SELECT NVL(SUM(D.AMT_PAID), 0) AS AMT_PAID 
+		FROM T_TRM_D D INNER JOIN T_BIL_H A ON A.ID_REF=D.CREDIT_REF
+		WHERE 
+		D.CREDIT_REF=#idRef# AND
+		TO_CHAR(A.Date_Req, 'YYYYMM') = TO_CHAR(TO_DATE(#stmtDate#,'DDMMYYYY'), 'YYYYMM') AND
+		A.IS_DELETED='0' 
+		AND D.IS_DELETED='0'
+    </select>
+    <select id="SELECT.BSYS.E_EXP_F02.LOOPRESULT1.SQL003" parameterClass="java.util.HashMap" resultClass="java.math.BigDecimal">
+		SELECT NVL(SUM(D.AMT_PAID), 0) AS AMT_PAID 
+		FROM T_TRM_D D INNER JOIN T_BIL_H A ON A.ID_REF=D.CREDIT_REF
+		WHERE 
+		D.CREDIT_REF=#idRef# AND
+		TO_CHAR(A.Date_Req, 'YYYYMM') &lt; TO_CHAR(TO_DATE(#stmtDate#,'DDMMYYYY'), 'YYYYMM') AND
+		A.IS_DELETED='0'
+		AND D.IS_DELETED='0'
+    </select>
+    
+    <delete id="DELETE.BSYS.E_EXP_F02.SQL001" parameterClass="java.util.HashMap">
+		DELETE FROM T_AR_STMT_D WHERE ID_STMT IN
+		(
+			SELECT ID_STMT FROM T_AR_STMT_H WHERE 
+			TO_CHAR(STMT_DATE,'yyyymm') = #date_str#
+		)
+	</delete>
+	
+	<delete id="DELETE.BSYS.E_EXP_F02.SQL002" parameterClass="java.util.HashMap">
+		DELETE FROM T_AR_STMT_H WHERE 
+			TO_CHAR(STMT_DATE,'yyyymm') = #date_str#
+	</delete>
+    
+    <select id="SELECT.BSYS.E_EXP_F02_A2_B" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        select id_ref, bill_type, bill_currency,is_manual, bill_acc, date_req, pay_method, id_cust, adr_type, contact_type,To_Char(id_bif) as ID_BIF, id_qcs, quo_ref,To_Char(cust_po) as CUST_PO,  gst_amount, bill_amount, paid_amount, last_payment_date,  export_cur, cur_rate 
+        from T_bil_h A  
+        where a.date_req &lt;= TO_DATE('$date_str$','DDMMYYYY') and a.is_settled='1' 
+        and a.last_payment_date = TO_DATE('$date_str$','DDMMYYYY')  
+        and a.is_deleted='0' and A.id_cust in (select ID_CUST from M_CUST where PRINT_STATEMENT='1' and IS_DELETED='0')
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.CHKNOOUTSTANDING.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        select A.id_ref, bill_type, bill_currency,is_manual, bill_acc, to_char(date_req,'YYYY-MM-DD') as date_req, TO_CHAR(ADD_MONTHS(date_req,1)-1, 'DD-Mon-YYYY') as entry_type,
+            pay_method, A.id_cust, adr_type, contact_type,To_Char(id_bif) as ID_BIF, id_qcs, quo_ref,To_Char(cust_po) as CUST_PO,  
+            gst_amount, bill_amount, paid_amount, last_payment_date,  export_cur, cur_rate 
+        FROM T_BIL_H A ,T_CSB_D C,T_CSB_H B
+        WHERE 
+            TO_CHAR(B.DATE_TRANS, 'YYYYMM') = TO_CHAR(TO_DATE(#statementdate#,'DDMMYYYY'), 'YYYYMM')
+            AND C.RECEIPT_NO = B.RECEIPT_NO
+            AND A.ID_REF=C.ID_REF
+            AND A.IS_SETTLED='1' 
+            AND A.IS_DELETED='0' 
+            <isNotEmpty property="idcust" prepend="AND">
+            	TRIM(A.ID_CUST) = TRIM(#idcust#)
+            </isNotEmpty>
+            <isNotEmpty property="idbillaccount" prepend="AND">
+            	A.BILL_ACC = #idbillaccount#
+            </isNotEmpty>
+    </select>
+    
+    <select id="SELECT.BSYS.E_EXP_F02.CHKNOOUTSTANDING.SUM_SQL001" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT NVL(SUM(C.AMT_PAID), 0) AS AMT_PAID 
+        FROM T_CSB_D C, T_CSB_H B 
+        WHERE TRIM(B.RECEIPT_NO)= TRIM(C.RECEIPT_NO) 
+            AND C.ID_REF = '$ID_REF$'  
+            AND C.IS_DELETED='0'
+            AND B.REJECT_DATE IS NULL
+            AND TO_CHAR(B.DATE_TRANS, 'YYYYMM') &lt; TO_CHAR(TO_DATE('$STMT_DATE$','DDMMYYYY'), 'YYYYMM')
+    </select>
+  
+    <select id="SELECT.BSYS.E_EXP_F02.CHKNOOUTSTANDING.SUM_SQL002" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT NVL(SUM(D.AMT_PAID), 0) AS AMT_PAID 
+        FROM T_TRM_D D, T_BIL_H A
+        WHERE D.DEBIT_REF='$ID_REF$' 
+            AND D.CREDIT_REF=A.ID_REF 
+            AND A.DATE_REQ &lt;= TO_DATE('$STMT_DATE$','DDMMYYYY') 
+            AND A.IS_DELETED='0' 
+            AND D.IS_DELETED='0'
+    </select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SQL002" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	 select cust_acc_no
+	 from M_Cust
+ 	 where id_cust='$id_cust$'
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02_subinsert.T_BAC_H" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT H.CUST_ADR_TYPE,H.CONTACT_TYPE FROM T_BAC_H H WHERE TRIM(H.ID_BILL_ACCOUNT)=TRIM(#acc_no#)
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F02_subinsert.custInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT G.CUSTOMER_TYPE,G.HOME_TEL_NO,G.HOME_FAX_NO,G.CUST_NAME,G.SALUTATION,G.CO_FAX_NO,G.CO_TEL_NO,
+		N.COUNTRY,N.ZIP_CODE,N.ADR_LINE1,N.ADR_LINE2,N.ADR_LINE3,O.CONTACT_NAME,O.EMAIL
+		FROM M_CUST G 
+		LEFT JOIN  M_CUST_CTC O ON O.ID_CUST = G.ID_CUST  AND O.CONTACT_TYPE = #contact_type# 
+		LEFT JOIN M_CUST_ADR N ON N.ID_CUST = G.ID_CUST AND N.ADR_TYPE = #adr_type#
+		WHERE G.ID_CUST=#id_cust# 
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02_Sub.SQL003" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select id_stmt,STMT_TOTAL
+ 		from t_ar_stmt_h
+		where 
+		id_cust='$id_cust$' 
+		and TO_CHAR(stmt_date, 'YYYYMM') = TO_CHAR(TO_DATE(#stmt_date#,'DDMMYYYY'), 'YYYYMM')
+		and (TRIM(cust_acc_no) = TRIM(#cust_acc_no#) or cust_acc_no is null)
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02_SubINSERT.SQL004" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 select * from t_ar_stmt_d where id_stmt='$id_stmt$'and id_ref='$id_ref$'
+	</select>
+	<delete id="DELETE.BSYS.E_EXP_F02_SUBINSERT.STMT_D" parameterClass="java.util.HashMap">
+		 select * from t_ar_stmt_d where id_stmt='$id_stmt$'and id_ref='$id_ref$'
+	</delete>
+	
+	<select id="SELECT.BSYS.E_EXP_F02_SubInsert.SQL005" resultClass="java.lang.String">
+		select max(id_stmt) as id_stmt from t_ar_stmt_h
+	</select> 
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCN.SQL001" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT NVL(SUM(D.AMT_PAID), 0) AS AMT_PAID 
+		FROM T_BIL_H A, T_TRM_D D
+        WHERE D.CREDIT_REF='$ID_REF$' 
+            AND D.DEBIT_REF=A.ID_REF 
+            AND A.DATE_REQ &lt;=TO_DATE('$STMT_DATE$','DDMMYYYY') 
+            AND A.IS_DELETED='0' 
+            AND D.IS_DELETED='0'  
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select * from t_csb_h b 
+		where 
+			b.date_trans &lt;= TO_DATE('$stmt_date$','DDMMYYYY') 
+			and b.balance_amt &lt;&gt; 0  
+			and b.is_deleted='0'
+			and (b.ID_CUST is NULL or b.ID_CUST in (select ID_CUST from M_CUST where PRINT_STATEMENT='1' and IS_DELETED='0'))
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.COMPANYHEADERINFO_ADD" resultClass="java.util.HashMap">
+		select i.com_name,i.COM_WEBSITE COM_WEBSITE,i.COM_REGNO, i.COM_GST_REG_NO, j.com_adr_line1, j.com_adr_line2, j.com_adr_line3, concat(j.zip_code, concat(' ', j.country)) as com_adr_line4 
+		from m_com i, m_com_adr j
+		where  i.id_com in (select max(id_com) from m_com) and i.id_com= j.id_com  and j.com_adr_type='CA'
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.COMPANYHEADERINFO_TEL"  resultClass="java.util.HashMap">
+		select com_tel_no, com_fax_no
+		from m_com 
+		where id_com in (select max(id_com) from m_com)
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.CUSHEADERINFO" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select g.cust_name, h.adr_line1, h.adr_line2, h.adr_line3, concat(h.zip_code, concat(' ', h.country)) as adr_line4
+		from m_cust G, m_cust_adr H
+		where g.id_cust='$id_cust$' and h.id_cust= g.id_cust and h.adr_type='BA'
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.HEADER.SQL001" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select distinct e.id_stmt, e.stmt_date, e.cust_acc_no, e.id_cust,e.stmt_currency,to_char(e.stmt_date,'dd-Mon-yyyy') as stmt_date_print,
+			   e.STMT_TOTAL,e.CUST_NAME,e.ADDRESS1,e.ADDRESS2,e.ADDRESS3,e.ADDRESS4,e.SALUTATION,e.ZIP_CODE,e.COUNTRY,e.TEL_NO,e.FAX_NO,e.CONTACT_NAME,e.CONTACT_EMAIL
+		from T_AR_STMT_H e,T_AR_STMT_D f
+		where 
+			e.ID_STMT = f.ID_STMT
+			<isNotEmpty property="idStmts" prepend="AND">
+				e.ID_STMT IN
+				<iterate property="idStmts" open="("
+					close=")" conjunction="," >
+					#idStmts[]#
+				</iterate>
+		    </isNotEmpty>
+		order by e.ID_CUST,e.STMT_DATE,e.STMT_CURRENCY
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.HEADER.SQL001" resultClass="java.util.HashMap">
+		select  e.*
+		from T_AR_STMT_H e
+		where 
+			e.stmt_date = TO_DATE(#stmt_date#,'DDMMYYYY')
+	</select>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.HEADER.SQL002" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select distinct e.id_stmt, e.stmt_date, e.cust_acc_no, e.id_cust,e.stmt_currency,to_char(e.stmt_date,'dd-Mon-yyyy') as stmt_date_print,
+			   e.STMT_TOTAL,e.CUST_NAME,e.ADDRESS1,e.ADDRESS2,e.ADDRESS3,e.ADDRESS4,e.SALUTATION,e.ZIP_CODE,e.COUNTRY,e.TEL_NO,e.FAX_NO,e.CONTACT_NAME,e.CONTACT_EMAIL
+		from T_AR_STMT_H e,T_AR_STMT_D f
+		where 
+			e.ID_STMT = f.ID_STMT
+			<isNotEmpty property="idStmts" prepend="AND">
+				e.ID_STMT IN
+				<iterate property="idStmts" open="("
+					close=")" conjunction="," >
+					#idStmts[]#
+				</iterate>
+		    </isNotEmpty>
+		order by e.CUST_ACC_NO,e.STMT_DATE,e.STMT_CURRENCY
+	</select>
+    
+    <update id="UPDATE.BSYS.E_EXP_F02_F_subupdate.stmtTotal" parameterClass="java.util.HashMap">
+		UPDATE T_AR_STMT_H
+		SET STMT_TOTAL = #stmtTotal#
+		WHERE 
+			ID_STMT = #idStmt#
+	</update>
+	
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.DETAIL.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select DOC_TYPE,to_char(doc_date,'dd-Mon-yyyy') as doc_date, item_activity, id_ref, entry_type, amount, to_char(cust_po) as po, payment_info,doc_date as doc_date2
+		from t_ar_stmt_d 
+		where id_stmt='$id_stmt$'
+		 order by doc_date2 asc
+	</select>
+		
+	<insert id="INSERT.BSYS.E_EXP_F02_F_SubINSERT.SQL001" parameterClass="java.util.HashMap">	
+        insert into t_ar_stmt_d (
+	        id_stmt, 
+	        id_ref, 
+	        entry_type, 
+	        amount, 
+	        cust_po, 
+	        payment_info, 
+	        doc_date, 
+	        item_activity,
+	        date_created, 
+	        date_updated, 
+	        id_login,
+	        DOC_TYPE)
+        values(
+            '$id_stmt$',
+            '$id_ref$',
+            '$entry_type$',
+            '$amount$', 
+            '$cust_po$', 
+            '$payment_info$', 
+            to_date('$doc_date$','YYYY-MM-DD'),
+            '$item_act$',
+            sysdate,
+            sysdate,
+            '$id_login$',
+            #docType#)
+	</insert>
+
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.FILEPATH" resultClass="java.lang.String">
+        select set_value
+    	from m_gset_d
+    	where id_set='BATCH_G_RPT_AR01' AND set_seq='1'
+	</select>
+
+	<insert id="INSERT.BSYS.E_EXP_F02_F_SubINSERT.SQL002" parameterClass="java.util.HashMap">
+		insert into T_AR_Stmt_h (
+				id_stmt, 
+				id_cust, 
+				stmt_date, 
+				stmt_currency, 
+				cust_acc_no, 
+				date_created, 
+				date_updated, 
+				id_login,
+				CUST_NAME,
+				ADDRESS1,
+				ADDRESS2,
+				ADDRESS3,
+				ADDRESS4,
+				ZIP_CODE,
+				COUNTRY,
+				TEL_NO,
+				FAX_NO,
+				CONTACT_NAME,
+				CONTACT_EMAIL,
+				SALUTATION,
+				STMT_TOTAL) 
+		values(
+				#id_stmt#,
+				'$id_cust$',
+				TO_DATE('$stmt_date$','DDMMYYYY'),
+				'$stmt_currency$',
+				'$cust_acc_num$', 
+				sysdate,sysdate,
+				'$id_login$',
+				#custName#,
+				#address1#,
+				#address2#,
+				#address3#,
+				#address4#,
+				#zipCode#,
+				#country#,
+				#telNo#,
+				#faxNo#,
+				#contactName#,
+				#email#,
+				#salutation#,
+				#statementTotal#)
+	</insert>
+	<!-- End for E_EXP_F02 -->
+	
+	 <!-- END B_OBT 2010/08/25 -->
+	<select id="SELECT.BSYS.SQL036" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE"
+	>
+	SELECT A.ALERT_USER, B.NO_OF_MONTH 
+	FROM M_BATCH_USER_ALERT A, M_BATCH_MAINTENANCE B
+	WHERE	A.BATCH_ID = B.BATCH_ID
+		AND A.BATCH_ID = #BATCH_ID#
+	</select>
+	<select id="SELECT.BSYS.SQL037" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE"
+	>
+	SELECT e.transaction_type,e.id_cust_plan, e.id_cust, TO_CHAR(e.svc_end,'DD/MM/YYYY') svc_end, a.cust_name
+	FROM 
+	  (SELECT D.id_cust_plan,H.transaction_type, H.id_cust, D.svc_end
+	    FROM T_CUST_PLAN_D D,T_CUST_PLAN_H H
+	    WHERE D.is_deleted = '0'
+	    AND D.Id_Cust_Plan = h.id_cust_plan
+	    AND TO_CHAR(D.svc_end, 'YYYYMM') = TO_CHAR(ADD_MONTHS(sysdate,#NO_OF_MONTH#), 'YYYYMM')
+	  ) e
+	  LEFT OUTER JOIN m_cust a ON a.id_cust = e.id_cust
+	</select >
+	<select id="SELECT.BSYS.SQL037_01" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE"
+	>
+    SELECT E.CCARD_NO, E.ID_CUST, TO_CHAR(E.CCARD_EXPIRED_DATE,'MM/YYYY') CCARD_EXPIRED_DATE, 
+           E.CCARD_ACCT_NO, E.CCARD_TYPE, E.CCARD_HOLDER_NAME, A.CUST_NAME, A.EMAIL,A.CUSTOMER_TYPE,A.TEL_NO,
+           B.TOTAL_AMT_DUE,B.ID_REF
+    FROM 
+        (
+            SELECT CCARD_NO, ID_CUST, CCARD_EXPIRED_DATE, CCARD_ACCT_NO, CCARD_TYPE,CCARD_HOLDER_NAME
+            FROM M_CUST_BANKINFO
+            WHERE TO_CHAR(ccard_expired_date, 'YYYYMM') &gt;= TO_CHAR(sysdate, 'YYYYMM')
+                AND TO_CHAR(ccard_expired_date, 'YYYYMM') &lt;= TO_CHAR(ADD_MONTHS(sysdate,#NO_OF_MONTH#), 'YYYYMM')
+        ) E
+    LEFT OUTER JOIN
+        (
+            SELECT ID_CUST, CUST_NAME, CUSTOMER_TYPE, CO_EMAIL AS EMAIL, HOME_TEL_NO AS TEL_NO
+            FROM M_CUST WHERE CUSTOMER_TYPE='CONS'
+            UNION
+            SELECT ID_CUST, CUST_NAME, CUSTOMER_TYPE, CO_EMAIL AS EMAIL, CO_TEL_NO AS TEL_NO
+            FROM M_CUST WHERE CUSTOMER_TYPE='CORP'
+        ) A ON A.ID_CUST = E.ID_CUST
+    LEFT OUTER JOIN
+        (
+            SELECT BAC.TOTAL_AMT_DUE,BAC.ID_BILL_ACCOUNT,BAC.ID_CUST,MAX(BIL.ID_REF) ID_REF
+            FROM T_BAC_H BAC 
+            LEFT OUTER JOIN T_BIL_H BIL ON BAC.ID_BILL_ACCOUNT=BIL.BILL_ACC AND BIL.BILL_TYPE='IN' AND BIL.IS_DELETED='0'
+            WHERE BAC.IS_DELETED='0'
+            GROUP BY BAC.TOTAL_AMT_DUE,BAC.ID_BILL_ACCOUNT,BAC.ID_CUST
+        ) B ON TRIM(B.ID_BILL_ACCOUNT) = TRIM(E.CCARD_ACCT_NO) AND E.ID_CUST = B.ID_CUST
+    ORDER BY ID_CUST ASC
+	</select >
+	    <select id="SELECT.BSYS.SQL037_02" 
+            parameterClass="java.util.HashMap" 
+            resultClass="java.util.HashMap"
+            resultSetType="SCROLL_INSENSITIVE"
+    >
+    SELECT E.CCARD_NO, E.ID_CUST, TO_CHAR(E.CCARD_EXPIRED_DATE,'MM/YYYY') CCARD_EXPIRED_DATE, 
+            E.CCARD_ACCT_NO, E.CCARD_TYPE, E.CCARD_HOLDER_NAME, A.CUST_NAME, A.EMAIL, A.CUSTOMER_TYPE, A.TEL_NO,
+            B.TOTAL_AMT_DUE,B.ID_REF
+    FROM 
+        (
+            SELECT CCARD_NO, ID_CUST, CCARD_EXPIRED_DATE, CCARD_ACCT_NO, CCARD_TYPE, CCARD_HOLDER_NAME
+            FROM M_CUST_BANKINFO
+            WHERE TO_CHAR(CCARD_EXPIRED_DATE, 'YYYYMM') &lt; TO_CHAR(SYSDATE, 'YYYYMM')
+        ) E
+    LEFT OUTER JOIN
+        (
+            SELECT ID_CUST, CUST_NAME, CUSTOMER_TYPE, CO_EMAIL AS EMAIL, HOME_TEL_NO AS TEL_NO
+            FROM M_CUST WHERE CUSTOMER_TYPE='CONS'
+            UNION
+            SELECT ID_CUST, CUST_NAME, CUSTOMER_TYPE, CO_EMAIL AS EMAIL, CO_TEL_NO AS TEL_NO
+            FROM M_CUST WHERE CUSTOMER_TYPE='CORP'
+        ) A ON A.ID_CUST = E.ID_CUST
+    LEFT OUTER JOIN
+        (
+            SELECT BAC.TOTAL_AMT_DUE,BAC.ID_BILL_ACCOUNT,BAC.ID_CUST,MAX(BIL.ID_REF) ID_REF
+            FROM T_BAC_H BAC 
+            LEFT OUTER JOIN T_BIL_H BIL ON BAC.ID_BILL_ACCOUNT=BIL.BILL_ACC AND BIL.BILL_TYPE='IN' AND BIL.IS_DELETED='0'
+            WHERE BAC.IS_DELETED='0'
+            GROUP BY BAC.TOTAL_AMT_DUE,BAC.ID_BILL_ACCOUNT,BAC.ID_CUST
+        ) B ON TRIM(B.ID_BILL_ACCOUNT) = TRIM(E.CCARD_ACCT_NO) AND E.ID_CUST = B.ID_CUST
+    ORDER BY ID_CUST ASC
+    </select >
+	<!-- E-MWF-RA1 START -->
+	<select id="SELECT.BSYS.SQL038" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+	<!-- Get expire date -->
+	SELECT a.id_wf_approval, a.id_ref, a.section_no, a.section_group, 
+	      a.original_approver, c.id_screen, a.id_action, a.ref_id_action,
+	      a.appr_status, b.id_status, d.level_seq,
+	      a.date_created + d.response_expire expire_date, a.id_login, a.date_created, d.response_expire
+		FROM T_WF_APPROVAL a, T_WF_ACTION d, T_WF_SECTION c, 
+	    (
+	      SELECT id_ref, id_status, date_created 
+	      FROM T_QCS_H
+	      WHERE id_status = 'DS2'
+	          AND is_closed = '0' AND is_deleted = '0'
+	      UNION ALL
+	      SELECT id_ref, id_status, date_created
+	      FROM T_BIF_H
+	      WHERE id_status in ('DS2','DS1')
+	          AND is_closed = '0' AND is_deleted = '0'
+	    ) b
+		WHERE a.id_ref = d.id_ref AND a.section_no = d.section_no
+	  		AND d.id_ref = c.id_ref AND d.section_no = c.section_no
+	  		AND a.id_ref = b.id_ref AND a.appr_status = 'AS1'
+	  		AND a.is_escalated = '0' AND a.id_action = d.id_action
+	  		AND a.is_deleted = '0'
+	  		AND TO_CHAR(a.date_created + NVL(d.response_expire,0), 'YYYYMMDD') &lt; TO_CHAR(sysdate,'YYYYMMDD')
+	</select>
+	<select id="SELECT.BSYS.SQL039"
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap">
+	<!-- Get next level_seq -->
+	SELECT *
+	FROM (SELECT a.level_seq 
+			FROM T_WF_ACTION a, (SELECT c.id_ref, c.section_no, d.level_seq
+                                 FROM T_WF_APPROVAL c, T_WF_ACTION d
+                                 WHERE c.id_ref = d.id_ref AND c.section_no = d.section_no
+                                 	AND c.id_action = d.id_action
+                                 	AND id_wf_approval = #id_wf_approval# AND c.is_deleted = '0') b
+			WHERE a.id_ref = b.id_ref AND a.section_no = b.section_no
+                        AND a.level_seq > b.level_seq
+			ORDER BY a.level_seq)
+	WHERE ROWNUM = 1
+	</select>
+	<select id="SELECT.BSYS.SQL039_01"
+			parameterClass="java.util.HashMap" 
+			resultClass="java.lang.String">
+	<!-- Get next level_seq -->
+	SELECT *
+	FROM (SELECT level_seq 
+			FROM T_WF_ACTION 
+			WHERE TRIM(id_ref) = TRIM(#id_ref#) AND section_no = #section_no#
+                        AND level_seq > #level_seq#
+			ORDER BY level_seq)
+	WHERE ROWNUM = 1
+	</select>
+	<update id="UPDATE.BSYS.SQL013" parameterClass="java.util.HashMap">
+		UPDATE T_WF_APPROVAL
+		SET is_escalated = #is_escalated#
+		WHERE id_wf_approval = #id_wf_approval# AND is_deleted = '0'
+	</update>
+	<!-- E-MWF-RA1 END -->
+	<!-- G-SET-P02 START -->
+		<select id="SELECT.BSYS.G_SET_P02.SQL001" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.lang.String">
+		
+			<!-- Get daily_time -->
+			Select A.SET_VALUE from M_GSET_D A where A.ID_SET = 'BATCH_RUNTIME'
+		</select>
+		<select id="SELECT.BSYS.G_SET_P02.SQL002" 
+			parameterClass="java.util.HashMap" 
+			resultClass="nttdm.bsys.common.bean.M_BATCH"
+			resultSetType="SCROLL_INSENSITIVE">
+			<!-- Get batch setting -->
+			Select B.FREQUENCY_MODE,B.BATCH_ID,B.ALERT_MODE,B.DAY_OF_MONTH,B.TIME_HOUR,B.TIME_MINUTE, 
+			NVL(B.STATEMENT_MONTH, '0') AS STATEMENT_MONTH
+			FROM M_BATCH_MAINTENANCE B
+		</select>
+		<select id="SELECT.BSYS.G_SET_P02.SQL003" 
+			parameterClass="java.util.HashMap" 
+			resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+			<!-- Get batch setting -->
+			Select C.ID_BATCH_TYPE, C.EXEC_DAY, C.EXEC_HOUR, C.EXEC_MINUTE, C.GIRO_DEDUCT_DAY , C.ID_COM_BANK from T_BATCH_SCH C where C.IS_ACTIVE=1
+		</select>
+		
+	<!-- G-SET-P02 END -->
+	<!-- G-BIL-P01 START -->
+	<!-- SQL: Retrieve data from M_GSET_D by ID_SET -->
+	<select id="SELECT.BSYS.SQL060" resultClass="java.lang.String">
+	    SELECT
+	          G.SET_VALUE
+	    FROM 
+	          M_GSET_D G
+	    WHERE 
+	          G.ID_SET = 'TEL_FAX_CONTACT'
+	          AND G.SET_SEQ = 1
+	          AND G.IS_DELETED = '0'
+	</select>
+	<select id="SELECT.BSYS.SQL040" parameterClass="java.lang.String" resultClass="java.lang.String">
+	SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET LIKE #ID_SET# 
+	</select>
+	<!-- SQL:  Retrieve View_G_BIL_TEMP_R by IdBillAccount or Batch -->
+	<select id="SELECT.BSYS.SQL041" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT * FROM V_G_BIL_TEMP_R
+	WHERE (BILL_TO IS NULL OR to_char(BILL_TO,'YYYYMMDD') &lt; #LAST_DAY#) 
+	<dynamic prepend="AND">
+		<isNotEmpty property="ID_BILL_ACCOUNT">
+			TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+		</isNotEmpty>
+	</dynamic>
+    ORDER BY ID_BILL_ACCOUNT ASC, ID_CUST_PLAN ASC, ID_CUST_PLAN_GRP ASC
+	</select>
+    <!-- SQL:  Retrieve Customer Information -->
+	<select id="SELECT.BSYS.SQL042" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    SELECT DISTINCT T.*, O.CONTACT_TYPE, O.CONTACT_NAME, O.EMAIL,
+    	   O.TEL_NO AS M_CUST_CTC_TEL_NO,
+		   O.FAX_NO AS M_CUST_CTC_FAX_NO,
+		   O.EMAIL_CC AS EMAIL_CC
+    FROM(
+        SELECT DISTINCT M.ID_CUST, M.CUST_NAME, M.CO_EMAIL, M.CUSTOMER_TYPE, M.CO_TEL_NO, M.CO_FAX_NO,
+            M.HOME_TEL_NO, M.HOME_FAX_NO, M.SALUTATION, N.COUNTRY, N.ZIP_CODE, N.ADR_LINE1,
+            N.ADR_LINE2, N.ADR_LINE3, N.ADR_TYPE
+        FROM M_CUST M LEFT JOIN M_CUST_ADR N ON M.ID_CUST = N.ID_CUST AND
+            N.ADR_TYPE = #CUST_ADR_TYPE# WHERE M.ID_CUST = #ID_CUST#
+        ) T
+    LEFT JOIN M_CUST_CTC O ON t.ID_CUST = o.ID_CUST AND O.CONTACT_TYPE = #CONTACT_TYPE#
+    </select>
+    <!-- SQL:  Retrieve Plan and Batch Mapping Information number by customer services -->
+    <select id="SELECT.BSYS.SQL045" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+    SELECT COUNT(*) FROM V_G_BIL_TEMP_U U
+    WHERE U.BATCH_ID = 'CC' AND U.ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP#
+    </select>
+	<!-- SQL:  Retrieve BatchImportClearCall -->
+	<select id="SELECT.BSYS.SQL047" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT * FROM T_CLC_IMP_MONTHLY_SUM
+	WHERE ID_CLC_CUST = (SELECT ID_SUB_INFO FROM T_SUBSCRIPTION_INFO  where ID_CUST_PLAN = #ID_CUST_PLAN# AND rownum &lt;  2)
+	AND MONTH_YEAR = #MONTH_YEAR#
+	</select>
+	<!-- SQL:  Retrieve Customer Services (T_CUST_PLAN_LINK) -->
+	<select id="SELECT.BSYS.SQL050" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap" resultSetType="SCROLL_INSENSITIVE">
+		SELECT T.ID_CUST_PLAN_LINK, T.ID_CUST_PLAN_GRP, T.ITEM_TYPE, T.ITEM_DESC as
+		ITEM_DESC,T.CUST_PO,T.LOCATION,
+		T.QUANTITY, T.UNIT_PRICE, T.TOTAL_AMOUNT, T.JOB_NO, T.ID_PLAN , T.PLAN_NAME, T.PLAN_DESC,
+		T.ID_PLAN_GRP, T.ITEM_GRP_NAME,
+		T.SVC_LEVEL1, T.SVC_LEVEL2, T.RATE_TYPE, T.RATE_MODE, T.RATE, T.APPLY_GST, T.IS_DELETED, T.IS_DISPLAY_JOBNO,T.DISC_TYPE,T.DISC_AMOUNT,
+		M.TAX_CODE,M.TAX_RATE
+		FROM T_CUST_PLAN_LINK T
+		LEFT JOIN M_TAX M
+    	ON M.ID_TAX= TRIM(T.APPLY_GST)
+		WHERE T.ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP# AND T.IS_DELETED = 0
+		ORDER BY T.ITEM_TYPE DESC, T.ID_CUST_PLAN_LINK ASC
+	</select>
+	<!-- SQL:  Retrieve Plan and Batch Mapping Information by customer services -->
+	<select id="SELECT.BSYS.SQL051"	
+	parameterClass="java.util.HashMap" 
+	resultClass="java.util.HashMap"
+	resultSetType="SCROLL_INSENSITIVE">
+	SELECT * FROM V_G_BIL_TEMP_U U
+    WHERE U.BATCH_ID = 'CC' AND U.ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP# AND ID_PLAN_GRP = #ID_PLAN_GRP#
+	</select>
+	<!-- SQL:  Retrieve Invoice Summary by Billing Account -->
+	<select id="SELECT.BSYS.SQL052" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT A.ID_REF, A.TOTAL_AMT_DUE, B.BILL_ACC, B.ID_CUST
+	FROM T_BIL_S A, T_BIL_H B
+	WHERE TRIM(B.ID_REF) = TRIM(A.ID_REF) AND TRIM(B.BILL_ACC) = TRIM(#BILL_ACC#)
+	ORDER BY A.ID_REF ASC
+	</select>
+	<!-- SQL:  Retrieve Last Payment -->
+	<select id="SELECT.BSYS.SQL049" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT RECEIPT_NO, ID_CUST, ID_BILL_ACCOUNT, PMT_METHOD, DATE_TRANS, 
+	AMT_RECEIVED, PMT_STATUS, REJECT_DATE, REJECT_DESC, PAID_PRE_INVOICE, 
+	OVER_PAID, IS_EXPORT
+	FROM T_CSB_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	AND PMT_STATUS = 'N' AND IS_EXPORT = '0' AND PAID_PRE_INVOICE = '0' AND IS_DELETED = '0'
+	ORDER BY DATE_TRANS ASC
+	</select>
+	<!-- SQL:  Retrieve Previous Over Paid Payment -->
+	<select id="SELECT.BSYS.SQL054" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT RECEIPT_NO, ID_CUST, ID_BILL_ACCOUNT, PMT_METHOD, DATE_TRANS, 
+	AMT_RECEIVED, PMT_STATUS, REJECT_DATE, REJECT_DESC, PAID_PRE_INVOICE, 
+	OVER_PAID, IS_EXPORT
+	FROM T_CSB_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	AND PMT_STATUS = 'N' AND IS_EXPORT = '1' AND OVER_PAID = '1' AND IS_DELETED = '0'
+	ORDER BY DATE_TRANS ASC
+	</select>
+	<!-- SQL:  Retrieve Rejected Payment -->
+	<select id="SELECT.BSYS.SQL055" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT RECEIPT_NO, ID_CUST, ID_BILL_ACCOUNT, PMT_METHOD, DATE_TRANS, 
+	AMT_RECEIVED, PMT_STATUS, REJECT_DATE, REJECT_DESC, PAID_PRE_INVOICE, 
+	OVER_PAID, IS_EXPORT
+	FROM T_CSB_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	AND PMT_STATUS = 'R' AND IS_EXPORT = '0' AND IS_DELETED = '0'
+	ORDER BY REJECT_DATE ASC
+	</select>
+	<!-- SQL:  Retrieve Paid Previous Invoice Payment -->
+	<select id="SELECT.BSYS.SQL056" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT RECEIPT_NO, ID_CUST, ID_BILL_ACCOUNT, PMT_METHOD, DATE_TRANS, 
+	AMT_RECEIVED, PMT_STATUS, REJECT_DATE, REJECT_DESC, PAID_PRE_INVOICE, 
+	OVER_PAID, IS_EXPORT, REFERENCE1
+	FROM T_CSB_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	AND PMT_STATUS = 'N' AND IS_EXPORT = '0' AND PAID_PRE_INVOICE = '1' AND IS_DELETED = '0'
+	ORDER BY DATE_TRANS ASC
+	</select>
+	<!-- SQL:  Retrieve Revision Billing Document -->
+	<select id="SELECT.BSYS.SQL057" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT ID_REF, BILL_TYPE, BILL_ACC, DATE_REQ, ID_CUST, BILL_AMOUNT
+	FROM T_BIL_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(BILL_ACC) = TRIM(#BILL_ACC#)
+	AND BILL_TYPE IN('CN', 'DN') AND IS_EXPORT = '0' AND IS_DELETED = '0'
+	ORDER BY DATE_REQ ASC
+	</select>
+	<!-- SQL: Retrieve Billing Account Total Amount Due -->
+	<select id="SELECT.BSYS.SQL058" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT ID_BILL_ACCOUNT, ID_CUST, TOTAL_AMT_DUE
+	FROM T_BAC_H
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	AND IS_DELETED = '0'
+	</select>
+	<!-- SQL: Insert Billing Document Header -->
+	<insert id="INSERT.BSYS.SQL010" parameterClass="java.util.HashMap">
+	INSERT INTO T_BIL_H
+	(
+	ID_REF,
+	BILL_TYPE,
+	IS_MANUAL,
+	BILL_ACC,
+	DATE_REQ,
+	PAY_METHOD,
+	ID_CUST,
+	ADR_TYPE,
+	CONTACT_TYPE,
+	ID_BIF,
+	ID_QCS,
+	QUO_REF,
+	CUST_PO,
+	ID_CONSULT,
+	TERM,
+	BILL_CURRENCY,
+	GST_PERCENT,
+	GST_AMOUNT,
+	BILL_AMOUNT,
+	PAID_AMOUNT,
+	IS_SETTLED,
+	IS_SINGPOST,
+	IS_EXPORT,
+	IS_DISPLAY_EXP_AMT,
+	EXPORT_CUR,
+	CUR_RATE,
+	EXPORT_AMOUNT,
+	FIXED_FOREX,
+	NO_PRINTED,
+	IS_CLOSED,
+	ADDRESS1,
+	ADDRESS2,
+	ADDRESS3,
+	ADDRESS4,
+	TEL_NO,
+	FAX_NO,
+	ZIP_CODE,
+	COUNTRY,
+	CONTACT_NAME,
+	CONTACT_EMAIL,
+	CUST_NAME,
+	SALUTATION,
+	IS_DELETED,
+	PREPARED_BY,
+	DATE_CREATED,
+	DATE_UPDATED,
+	ID_LOGIN
+	<isNotNull property="ID_AUDIT">
+	,ID_AUDIT
+	</isNotNull>
+	,GSTAPPLYFLAG
+	,TERM_DAY
+	,DUE_DATE
+	,DELIVERY
+	,DELIVERY_EMAIL
+	,CONTACT_EMAIL_CC
+	) 
+	VALUES
+	(
+	#ID_REF#,
+	#BILL_TYPE#,
+	#IS_MANUAL#,
+	#BILL_ACC#,
+	TO_DATE(#DATE_REQ#, 'YYYYMMDD'),
+	#PAY_METHOD#,
+	#ID_CUST#,
+	#ADR_TYPE#,
+	#CONTACT_TYPE#,
+	#ID_BIF#,
+	#ID_QCS#,
+	#QUO_REF#,
+	#CUST_PO#,
+	#ID_CONSLT#,
+	#TERM#,
+	#BILL_CURRENCY#,
+	#GST_PERCENT#,
+	#GST_AMOUNT#,
+	#BILL_AMOUNT#,
+	#PAID_AMOUNT#,
+	#IS_SETTLED#,
+	#IS_SINGPOST#,
+	#IS_EXPORT#,
+	#IS_DISPLAY_EXP_AMT#,
+	#EXPORT_CUR#,
+	#CUR_RATE#,
+	#EXPORT_AMOUNT#,
+	#FIXED_FOREX#,
+	#NO_PRINTED#,
+	#IS_CLOSED#,
+	#ADDRESS1#,
+	#ADDRESS2#,
+	#ADDRESS3#,
+	#ADDRESS4#,
+	#TEL_NO#,
+	#FAX_NO#,
+	#ZIP_CODE#,
+	#COUNTRY#,
+	#CONTACT_NAME#,
+	#CONTACT_EMAIL#,
+	#CUST_NAME#,
+	#SALUTATION#,
+	#IS_DELETED#,
+	#PREPARED_BY#,
+	sysdate,
+	sysdate,
+	#ID_LOGIN#	
+	<isNotNull property="ID_AUDIT">
+	,#ID_AUDIT#
+	</isNotNull>
+	,#GSTAPPLYFLAG#
+	,#TERM_DAY#
+	,TO_DATE(#DUE_DATE#, 'YYYYMMDD')
+	,#DELIVERY#
+	,#DELIVERY_EMAIL#
+	,#CONTACT_EMAIL_CC#
+	)
+	</insert>
+	<!-- SQL: Insert Billing Document Details -->
+	<insert id="INSERT.BSYS.SQL011" parameterClass="java.util.HashMap">
+	INSERT INTO T_BIL_D
+	(
+	ID_REF,
+	ITEM_ID,
+	ITEM_LEVEL,
+	ITEM_NO,
+	ITEM_DESC,
+	ITEM_QTY,
+	ITEM_UPRICE,
+	ITEM_AMT,
+	ITEM_GST,
+	ITEM_EXPORT_AMT,
+	APPLY_GST,
+	IS_DISPLAY,
+	ID_CUST_PLAN,
+	ID_CUST_PLAN_GRP,
+	ID_CUST_PLAN_LINK,
+	SVC_LEVEL1,
+	SVC_LEVEL2,
+	BILL_FROM,
+	BILL_TO,
+	JOB_NO,
+	CUST_PO,
+	IS_DELETED,
+	DATE_CREATED,
+	DATE_UPDATED,
+	ID_LOGIN
+	<isNotNull property="ID_AUDIT">
+	,ID_AUDIT
+	</isNotNull>
+	,ITEM_TYPE
+	,ITEM_CAT
+    ,IS_DISPLAY_MIN_SVC
+    ,MIN_SVC_FROM
+    ,MIN_SVC_TO
+    ,IS_DISPLAY_JOBNO
+    ,ITEM_DISC_AMT
+    ,ITEM_SUBTOTAL
+    ,DISPLAY_DISC
+    ,TAX_RATE
+    ,TAX_CODE
+    ,ITEM_EXPORT_GST
+    <!-- #203 Start -->
+    ,LOCATION
+    <!-- #203 End -->
+    <!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 20190603 -->
+    <isNotNull property="TAX_EXEMPTED_AMT">
+    ,TAX_EXEMPTED_AMT
+    </isNotNull>
+    <!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 20190603 -->
+	)
+	VALUES
+	(
+	#ID_REF#,
+	#ITEM_ID#,
+	#ITEM_LEVEL#,
+	null,
+	#ITEM_DESC#,
+	#ITEM_QTY#,
+	#ITEM_UPRICE#,
+	#ITEM_AMOUNT#,
+	#ITEM_GST#,
+	#ITEM_EXPORT_AMT#,
+	#APPLY_GST#,
+	#IS_DISPLAY#,
+	#ID_CUST_PLAN#,
+	#ID_CUST_PLAN_GRP#,
+	#ID_CUST_PLAN_LINK#,
+	#SVC_LEVEL1#,
+	#SVC_LEVEL2#,
+	#BILL_FROM#,
+	#BILL_TO#,
+	#JOB_NO#,
+	#CUST_PO#,
+	#IS_DELETED#,
+	sysdate,
+	sysdate,
+	#ID_LOGIN#
+	<isNotNull property="ID_AUDIT">
+	,#ID_AUDIT#
+	</isNotNull>
+	,#ITEM_TYPE#
+    ,#ITEM_CAT#
+    ,#IS_DISPLAY_MIN_SVC#
+    ,#MIN_SVC_FROM#
+    ,#MIN_SVC_TO#
+    ,#IS_DISPLAY_JOBNO#
+    ,#ITEM_DISC_AMT#
+    ,#ITEM_SUBTOTAL#
+    ,#DISPLAY_DISC#
+    ,#TAX_RATE#
+    ,#TAX_CODE#
+    ,#ITEM_EXPORT_GST#
+    <!-- #203 Start -->
+    ,#LOCATION#
+    <!-- #203 End -->
+    <!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 20190603 -->
+    <isNotNull property="TAX_EXEMPTED_AMT">
+    ,#TAX_EXEMPTED_AMT#
+    </isNotNull>
+    <!-- #270 B-BTH-S01 Billing Document Batch Print add print option CT 20190603 -->
+	)
+	</insert>
+	<!-- SQL: Insert Invoice Summary -->
+	<insert id="INSERT.BSYS.SQL012" parameterClass="java.util.HashMap">
+	INSERT INTO T_BIL_S
+	(
+	ID_REF,
+	PREVIOUS_AMT,
+	LAST_PAY_TYPE,
+	LAST_PAY_DATE,
+	LAST_PAY_AMT,
+	REJECT_PAY_TYPE,
+	REJECT_DESC,
+	REJECT_DATE,
+	REJECT_PAY_AMT,
+	TOTAL_OUTSTANDING,
+	TOTAL_AMT_DUE,
+	IS_DELETED,
+	DATE_CREATED,
+	DATE_UPDATED,
+	ID_LOGIN
+	<isNotNull property="ID_AUDIT">
+	,ID_AUDIT
+    </isNotNull>
+	)
+	VALUES
+	(
+	#ID_REF#,
+	#PREVIOUS_AMT#,
+	#LAST_PAY_TYPE#,
+	<isNotNull property="LAST_PAY_DATE">
+	TO_DATE(#LAST_PAY_DATE#,'DD/MM/YYYY'),
+	</isNotNull>
+	<isNull property="LAST_PAY_DATE">
+	null,
+	</isNull>
+	#LAST_PAY_AMT#,
+	#REJECT_PAY_TYPE#,
+	#REJECT_DESC#,
+	<isNotNull property="REJECT_DATE">
+	TO_DATE(#REJECT_DATE#,'DD/MM/YYYY'),
+	</isNotNull>
+	<isNull property="REJECT_DATE">
+	null,
+	</isNull>
+	#REJECT_PAY_AMT#,
+	#TOTAL_OUTSTANDING#,
+	#TOTAL_AMT_DUE#,
+	#IS_DELETED#,
+	sysdate,
+	sysdate,
+	#ID_LOGIN#
+	<isNotNull property="ID_AUDIT">
+	,#ID_AUDIT#
+	</isNotNull>
+	)
+	</insert>
+	<!-- SQL: Update Billing Account Details - Last Billing Period -->
+	<update id="UPDATE.BSYS.SQL014" parameterClass="java.util.HashMap">
+	UPDATE T_BAC_D
+	SET IS_RECURRING = #IS_RECURRING#,
+		BILL_FROM = #BILL_FROM#,
+		BILL_TO	= #BILL_TO#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#
+		<isNotNull property="ID_AUDIT">
+		,ID_AUDIT = #ID_AUDIT#
+		</isNotNull>
+	WHERE ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP# 
+	    AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	</update>
+	<!-- SQL: Update Customer Billing Status -->
+	<update id="UPDATE.BSYS.SQL015" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_D
+	SET BILLING_STATUS = #BILLING_STATUS#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#
+		<isNotNull property="ID_AUDIT">
+		,ID_AUDIT = #ID_AUDIT#
+		</isNotNull>
+	WHERE ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP#
+	</update>
+	<!-- SQL: Update Clear Call Status -->
+	<update id="UPDATE.BSYS.SQL016" parameterClass="java.util.HashMap">
+	UPDATE T_CLC_IMP_MONTHLY_SUM
+	SET IS_INVOICED = #IS_INVOICED#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#
+		<isNotNull property="ID_AUDIT">
+		,ID_AUDIT = #ID_AUDIT#
+		</isNotNull>
+	WHERE ID_CLC_CUST = (SELECT ID_SUB_INFO FROM T_SUBSCRIPTION_INFO  where ID_CUST_PLAN = #ID_CUST_PLAN# AND rownum &lt;  2)
+	AND TO_DATE('01/' || MONTH_YEAR, 'DD/MM/YYYY') = TO_DATE(#BILLING_MONTH# || '01', 'YYYYMMDD')
+	</update>
+	<!-- SQL: Update Customer Plan Status -->
+	<update id="UPDATE.BSYS.SQL017" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_H
+	SET PLAN_STATUS = #PLAN_STATUS#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#
+		<isNotNull property="ID_AUDIT">
+		,ID_AUDIT = #ID_AUDIT#
+		</isNotNull>
+	WHERE ID_CUST_PLAN = #ID_CUST_PLAN#
+	</update>
+	<!-- SQL: Update Billing Account Header - Total Amout Due -->
+	<update id="UPDATE.BSYS.SQL018" parameterClass="java.util.HashMap">
+	UPDATE T_BAC_H
+	SET TOTAL_AMT_DUE = TOTAL_AMT_DUE + TO_NUMBER(#BACBillAmount#),
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#
+		<isNotNull property="ID_AUDIT">
+		,ID_AUDIT = #ID_AUDIT#
+		</isNotNull>
+	WHERE TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+		AND TRIM(ID_CUST) = TRIM(#ID_CUST#)
+	</update>
+	<!-- SQL: Update Billing Account Details - Recurring status -->
+	<update id="UPDATE.BSYS.SQL019" parameterClass="nttdm.bsys.common.bean.G_BIL_P01Bean">
+	UPDATE T_BAC_D
+	SET IS_RECURRING = #isRecurring#,
+		DATE_UPDATED = sysdate,
+		<isNotNull property="idAudit">
+			ID_AUDIT = #idAudit#,
+		</isNotNull>
+		ID_LOGIN = #idLogin#
+	WHERE ID_CUST_PLAN_GRP = #idCustPlanGrp# AND TRIM(ID_BILL_ACCOUNT) = TRIM(#idBillingAccount#)
+	</update>
+	<!-- SQL: Update Cash Book IS_EXPORT -->
+	<update id="UPDATE.BSYS.SQL020" parameterClass="java.util.HashMap">
+	Update T_CSB_H
+	SET IS_EXPORT = 1, DATE_UPDATED = sysdate,
+		<isNotNull property="idAudit">
+			ID_AUDIT = #ID_AUDIT#,
+		</isNotNull>
+		ID_LOGIN = #ID_LOGIN#
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(ID_BILL_ACCOUNT) = TRIM(#ID_BILL_ACCOUNT#)
+	    AND IS_EXPORT = '0' AND IS_DELETED = '0'
+	</update>
+	<!-- SQL: Update DN/CN IS_EXPORT -->
+	<update id="UPDATE.BSYS.SQL021" parameterClass="java.util.HashMap">
+	Update T_BIL_H
+	SET IS_EXPORT = 1, DATE_UPDATED = sysdate,
+		<isNotNull property="idAudit">
+			ID_AUDIT = #ID_AUDIT#,
+		</isNotNull>
+		ID_LOGIN = #ID_LOGIN#
+	WHERE TRIM(ID_CUST) = TRIM(#ID_CUST#) AND TRIM(BILL_ACC) = TRIM(#BILL_ACC#)
+	    AND BILL_TYPE IN('CN', 'DN') AND IS_EXPORT = '0' AND IS_DELETED = '0'
+	</update>
+    <!-- SQL: Update T_CUST_PLAN_D.BILLING_STATUS -->
+    <update id="UPDATE.BSYS.SQL022" parameterClass="nttdm.bsys.common.bean.G_BIL_P01Bean">
+    UPDATE T_CUST_PLAN_D
+    SET BILLING_STATUS = #billingStatus#,
+        DATE_UPDATED = sysdate,
+        <isNotNull property="idAudit">
+            ID_AUDIT = #idAudit#,
+        </isNotNull>
+        ID_LOGIN = #idLogin#
+    WHERE ID_CUST_PLAN_GRP = #idCustPlanGrp#
+    </update>
+    <select id="SELECT.BSYS.SQL059" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	SELECT
+	      ID_BILL_ACCOUNT,
+	      MULTI_BILL_PERIOD
+	FROM
+		  T_BAC_H
+	WHERE
+		  ID_BILL_ACCOUNT = #ID_BILL_ACCOUNT#
+		  AND IS_DELETED = '0'
+	</select>
+	<!-- G-BIL-P01 END -->
+	<!-- G-CPM-P01 START-->
+	<select id="SELECT.BSYS.G_CMP01.SQL001" 
+			parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input"
+			resultClass="nttdm.bsys.common.util.dto.T_CUST_PLAN_H">
+		SELECT 	id_bill_account as idBillAccount
+        FROM t_cust_plan_h
+      	WHERE id_cust_plan=#id_cust_plan#
+	</select>
+	<select id="SELECT.BSYS.G_CMP01.SQL003" 
+			parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input"
+			resultClass="java.util.HashMap">
+		SELECT
+		      M.ID_PLAN_GRP
+        FROM 
+              T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+              INNER JOIN M_PLAN_BATCH_MAPPING M
+              ON C.ID_PLAN_GRP = M.ID_PLAN_GRP AND M.BATCH_ID = 'RD'
+        WHERE B.ID_CUST_PLAN_GRP = #id_cust_plan_grp#
+              AND B.IS_DELETED = '0'
+              AND B.SERVICES_STATUS = 'PS3'
+	</select>
+	<select id="SELECT.BSYS.G_CMP01.SQL002" 
+			parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input"
+			resultClass="java.util.HashMap">
+		SELECT
+		      ID_PLAN_GRP
+        FROM 
+              T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+        WHERE 
+              B.ID_CUST_PLAN = #id_cust_plan#
+              AND B.ID_CUST_PLAN_GRP &lt;&gt; #id_cust_plan_grp#
+              AND B.IS_DELETED = '0'
+              AND B.SERVICES_STATUS = 'PS3'
+              AND C.ID_PLAN_GRP IN
+              (
+                  SELECT 
+			            ID_PLAN_GRP
+		          FROM 
+			            M_PLAN_BATCH_MAPPING
+			      WHERE
+			            BATCH_ID = 'RD'
+              )
+	</select>
+	<insert id="INSERT.BSYS.G_CMP01.SQL002" parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input">
+	    INSERT INTO t_bac_h (id_bill_account,
+			id_cust,
+			payment_method,
+			bill_currency,
+			is_display_exp_amt,
+			export_currency,
+			cust_adr_type,
+			contact_type,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login,
+			fixed_forex,
+			id_audit
+	    )
+	    VALUES (#id_bill_account#,
+			#id_cust#,
+			<isEmpty property="payment_method">
+			null,
+			</isEmpty>
+			<isNotEmpty property="payment_method">
+			#payment_method#,
+			</isNotEmpty>
+			#bill_currency#,
+			<isEmpty property="is_display_exp_amt">
+			null,
+			</isEmpty>
+			<isNotEmpty property="is_display_exp_amt">
+			#is_display_exp_amt#,
+			</isNotEmpty>
+			<isEmpty property="export_currency">
+			null,
+			</isEmpty>
+			<isNotEmpty property="export_currency">
+			#export_currency#,
+			</isNotEmpty>	
+			#cust_adr_type#,
+			#contact_type#,
+			0,
+			sysdate,
+			sysdate,
+			#id_login#,
+			<isEmpty property="fixed_forex">
+			null,
+			</isEmpty>
+			<isNotEmpty property="fixed_forex">
+			#fixed_forex#,
+			</isNotEmpty>
+			<isEmpty property="id_audit">
+			null
+			</isEmpty>
+			<isNotEmpty property="id_audit">
+			#id_audit#
+			</isNotEmpty>	)
+  	</insert>	
+	<insert id="INSERT.BSYS.G_CMP01.SQL003"
+          parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input">
+	    INSERT INTO t_bac_d (
+	        id_cust_plan,
+	        id_cust_plan_grp,
+			id_bill_account,
+			is_first_bill,
+			id_qcs,
+			id_quo,
+			cust_po,
+			ac_manager,
+			term,
+			term_day,
+			bill_from,
+			bill_to,
+			is_recurring,
+			date_created,
+			date_updated,
+			id_login,
+			id_bif,
+			id_audit
+	    )
+	    VALUES (
+	        #id_cust_plan#,
+	        #id_cust_plan_grp#,
+			#id_bill_account#,
+			1,
+			<isEmpty property="id_qcs">
+			null,
+			</isEmpty>
+			<isNotEmpty property="id_qcs">
+			#id_qcs#,
+			</isNotEmpty>
+			<isEmpty property="id_quo">
+			null,
+			</isEmpty>
+			<isNotEmpty property="id_quo">
+			#id_quo#,
+			</isNotEmpty>
+			<isEmpty property="cust_po">
+			null,
+			</isEmpty>
+			<isNotEmpty property="cust_po">
+			#cust_po#,
+			</isNotEmpty>
+			<isEmpty property="ac_manager">
+			null,
+			</isEmpty>
+			<isNotEmpty property="ac_manager">
+			#ac_manager#,
+			</isNotEmpty>
+			<isEmpty property="term">
+			null,
+			</isEmpty>
+			<isNotEmpty property="term">
+			#term#,
+			</isNotEmpty>
+			<isEmpty property="termDay">
+			null,
+			</isEmpty>
+			<isNotEmpty property="termDay">
+			#termDay#,
+			</isNotEmpty>				
+			null,			
+			null,
+			1,
+			sysdate,
+			sysdate,
+			#id_login#,
+			<isEmpty property="id_bif">
+			null,
+			</isEmpty>
+			<isNotEmpty property="id_bif">
+			#id_bif#,
+			</isNotEmpty>
+			<isEmpty property="id_audit">
+			null
+			</isEmpty>
+			<isNotEmpty property="id_audit">
+			#id_audit#
+			</isNotEmpty>
+	    )
+  	</insert>	
+	<update id="UPDATE.BSYS.G_CMP01.SQL004"
+	          parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input">
+	    UPDATE t_cust_plan_d 
+		SET 
+		    services_status='PS3',
+            billing_status='BS1',
+		    date_updated=sysdate,
+		    <isNotEmpty property="id_audit">
+	    		id_audit = #id_audit#,
+	    	</isNotEmpty>
+			id_login=#id_login# 
+		 WHERE ID_CUST_PLAN_GRP = #id_cust_plan_grp#
+		 AND services_status IN ('PS1', 'PS2')
+	</update>	
+	<select id="SELECT.BSYS.G_CMP01.SQL005" 
+			parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input"
+			resultClass="nttdm.bsys.common.util.dto.M_CUST_CTC">
+		SELECT 	
+			contact_type
+        FROM m_cust_ctc
+      	WHERE id_cust=#id_cust# 
+      		and CONTACT_TYPE = 'BC' 
+      		and CONTACT_NAME IS NOT NULL
+	</select>
+	<update id="UPDATE.BSYS.G_CMP01.SQL010"
+	          parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input">
+	    UPDATE
+	          T_BAC_H
+	    SET
+	          CONTACT_TYPE = #contact_type#,
+	          CUST_ADR_TYPE = #cust_adr_type#,
+	          IS_DISPLAY_EXP_AMT = #is_display_exp_amt#,
+	          MULTI_BILL_PERIOD = #multi_bill_period#,
+	          DATE_UPDATED = sysdate,
+	          DELIVERY = #delicery#,
+	          DELIVERY_EMAIL = #deliceryEmail#,
+	          id_login=#id_login#
+	          <isNotEmpty property="id_audit">
+	    		,id_audit = #id_audit#
+	    	</isNotEmpty>
+	    WHERE
+	    	ID_BILL_ACCOUNT = #id_bill_account#
+	</update>
+	<update id="UPDATE.BSYS.G_CMP01.SQL006"
+	          parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input">
+	    UPDATE t_cust_plan_h 
+		SET 
+      		plan_status='PS3',
+			<isEmpty property="approve_type">
+			approve_type=null,
+			</isEmpty>
+			<isNotEmpty property="approve_type">
+			approve_type=#approve_type#,
+			</isNotEmpty>
+			id_bill_account=#id_bill_account#,
+			date_updated=sysdate,
+			<isNotEmpty property="id_audit">
+	    		id_audit = #id_audit#,
+	    	</isNotEmpty>
+			id_login=#id_login#
+		WHERE id_cust_plan=#id_cust_plan# 
+	</update>	
+	<select id="SELECT.BSYS.G_CMP01.SQL007" parameterClass="nttdm.bsys.common.util.dto.G_CPM_P01Input" 
+		resultClass="java.util.HashMap">
+		SELECT
+		      A.PAYMENT_METHOD,
+		      A.EXPORT_CURRENCY,
+		      A.FIXED_FOREX,
+		      A.ID_BILL_ACCOUNT,
+		      E.ID_CUST,
+		      E.BILL_CUR,
+		      E.ID_QCS,
+		      E.ID_QUO,
+		      E.CUST_PO,
+		      E.ID_CONSLT,
+		      E.JOB_NO,
+		      E.CTTERM3_DAY,
+		      E.TERM_DAY,
+		      E.CONTACT_TYPE,
+		      E.ADR_TYPE,
+		      E.IS_DISPLAY_EXP_AMT,
+		      E.MULTI_BILL_PERIOD,
+		      F.ID_CUST_PLAN,
+		      E.DELIVERY,
+		      E.DELIVERY_EMAIL
+		FROM T_BIF_H E, T_BIF_D F, T_CUST_PLAN_H A
+		WHERE E.ID_REF = F.ID_REF
+			AND F.ID_CUST_PLAN = A.ID_CUST_PLAN
+			AND E.ID_REF = #id_bif#
+			AND A.ID_CUST_PLAN = #id_cust_plan#
+	</select>	
+	
+	<select id="SELECT.BSYS.G_CMP01.SQL008" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_CUST_PLAN = #id_cust_plan#
+			AND IS_DELETED = '0'
+	</select>
+	
+	<select id="SELECT.BSYS.G_CMP01.SQL009" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE 
+			ID_PLAN_GRP IN 
+			(
+				SELECT 
+					ID_PLAN_GRP
+				FROM 
+					T_CUST_PLAN_LINK
+				WHERE 
+					ID_CUST_PLAN_GRP = #id_cust_plan_grp#
+					AND IS_DELETED = '0'
+			)
+			AND BATCH_ID = 'RD'
+	</select>
+	
+<!-- G-CPM-P01 END-->	
+<!-- G-CPM-P03 START-->
+<select id="SELECT.BSYS.G_CPM_P03.SQL001" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	select  ID_CUST, PLAN_TYPE, ID_BILL_ACCOUNT, BILL_ACC_ALL, SVC_LEVEL1, SVC_LEVEL2, PAYMENT_METHOD, BILL_CURRENCY, EXPORT_CURRENCY, FIXED_FOREX,ID_LOGIN 
+	from t_cust_plan_h
+	where 
+	id_cust_plan = #id_cust_plan#
+</select>
+<select id="SELECT.BSYS.G_CPM_P03.SQL002" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	select  PRO_RATE_BASE, PRO_RATE_BASE_NO, TO_CHAR(BILL_DESC) AS BILL_DESC,ID_LOGIN 
+	from t_cust_plan_d
+	where 
+	id_cust_plan_grp = #id_cust_plan_grp#
+</select>
+<select id="SELECT.BSYS.G_CPM_P03.SQL003" parameterClass="java.lang.String" resultClass="nttdm.bsys.common.bean.T_CUST_PLAN_LINK">
+	select ID_CUST_PLAN_LINK,ITEM_TYPE, ITEM_DESC, QUANTITY, JOB_NO, ID_PLAN, PLAN_NAME, PLAN_DESC, ID_PLAN_GRP, ITEM_GRP_NAME, SVC_LEVEL1, SVC_LEVEL2, RATE_TYPE, RATE_MODE, RATE,UNIT_PRICE,TOTAL_AMOUNT,ID_LOGIN 
+	from t_cust_plan_link
+	where 
+	id_cust_plan_grp = #id_cust_plan_grp#
+	and is_deleted = '0'
+</select>
+<select id="SELECT.BSYS.G_CPM_P03.SQL004" parameterClass="java.lang.String" resultClass="nttdm.bsys.common.bean.T_CUST_PLAN_SVC">
+	select SVC_LEVEL3, SVC_LEVEL4, ID_SUPPLIER,ID_LOGIN 
+	from t_cust_plan_svc
+	where 
+	id_cust_plan_link = #id_cust_plan_link#
+	and is_deleted = '0'
+</select>
+	<insert id="INSERT.BSYS.G_CPM_P03.SQL001" parameterClass="java.util.HashMap" >
+      <selectKey keyProperty="idCustPlan" resultClass="java.lang.String" type="pre">
+        select seq_t_cust_plan_h.nextval from dual
+      </selectKey>
+        insert into t_cust_plan_h (
+        id_cust_plan,
+        id_cust,
+        plan_type,
+        id_bill_account,
+        bill_acc_all,
+        svc_level1,
+        svc_level2,
+        payment_method,
+        bill_currency,
+        export_currency,
+        fixed_forex,
+        plan_status,
+        transaction_type,
+        reference_plan,
+        bill_instruct,
+        is_display_exp_amt,
+        is_deleted,
+        date_created,
+        date_updated,
+        id_login
+               )
+        values (
+        #idCustPlan#,
+        #ID_CUST#,
+        #PLAN_TYPE#,
+        #ID_BILL_ACCOUNT#,
+        #BILL_ACC_ALL#,
+        #SVC_LEVEL1#,
+        #SVC_LEVEL2#,
+        #PAYMENT_METHOD#,
+        #BILL_CURRENCY#,
+        #EXPORT_CURRENCY#,
+        #FIXED_FOREX#,
+        'PS1',
+        'CN',
+        #REFERENCE_PLAN#,
+        '6',
+        '0',
+        '0',
+        sysdate,
+        sysdate,
+        #ID_LOGIN#
+        )
+    </insert>
+    <insert id="INSERT.BSYS.G_CPM_P03.SQL002" parameterClass="java.util.HashMap">
+      <selectKey keyProperty="idCustPlanGrp" resultClass="java.lang.String" type="pre">
+        select seq_t_cust_plan_d.nextval from dual
+      </selectKey>
+        insert into t_cust_plan_d (
+        id_cust_plan_grp,
+        id_cust_plan,
+        services_status,
+        svc_start,
+        svc_end,
+        auto_renew,
+        min_svc_period,
+        contract_term,
+        is_lump_sum,
+        pro_rate_base,
+        pro_rate_base_no,
+        bill_desc,
+        is_deleted,
+        date_created,
+        date_updated,
+        id_login
+               )
+        values (
+        #idCustPlanGrp#,
+        #ID_CUST_PLAN#,
+        'PS1',
+        TO_DATE(#SVC_START#,'yyyy-MM-dd'),
+        TO_DATE(#SVC_END#,'yyyy-MM-dd'),
+        '0',
+        '0',
+        'M',
+        '0',
+        #PRO_RATE_BASE#,
+        #PRO_RATE_BASE_NO#,
+        #BILL_DESC#,
+        '0',
+        sysdate,
+        sysdate,
+        #ID_LOGIN#
+        )
+    </insert>
+    
+    <insert id="INSERT.BSYS.G_CPM_P03.SQL003" parameterClass="nttdm.bsys.common.bean.T_CUST_PLAN_LINK">
+      <selectKey keyProperty="idCustPlanLink" resultClass="java.lang.String" type="pre">
+        select seq_t_cust_plan_link.nextval from dual
+      </selectKey>
+        insert into t_cust_plan_link 
+        (
+        id_cust_plan_link,
+        id_cust_plan_grp,
+        unit_price,
+        total_amount,
+        item_desc,
+        quantity,
+        job_no,
+        id_plan,
+        plan_name,
+        plan_desc,
+        id_plan_grp,
+        item_grp_name,
+        svc_level1,
+        svc_level2,
+        rate_type,
+        rate_mode,
+        rate,
+        apply_gst,
+        is_deleted,
+        date_created,
+        date_updated,
+        id_login,
+        item_type
+        )
+        values 
+        (
+        #idCustPlanLink#,
+        #id_cust_plan_grp#,
+        #unit_price#,
+        #total_amount#,
+        #item_desc#,
+        #quantity#,
+        #job_no#,
+        #id_plan#,
+        #plan_name#,
+        #plan_desc#,
+        #id_plan_grp#,
+        #item_grp_name#,
+        #svc_level1#,
+        #svc_level2#,
+        #rate_type#,
+        #rate_mode#,
+        #rate#,
+        '0',
+        '0',
+        sysdate,
+        sysdate,
+        #id_login#,
+        #item_type#
+        )
+    </insert>
+    
+    <insert id="INSERT.BSYS.G_CPM_P03.SQL004" parameterClass="nttdm.bsys.common.bean.T_CUST_PLAN_SVC">
+      <selectKey keyProperty="idCustPlanSvc" resultClass="java.lang.String" type="pre">
+        select seq_t_cust_plan_svc.nextval from dual
+      </selectKey>
+        insert into t_cust_plan_svc 
+        (
+        id_cust_plan_svc,
+        id_cust_plan_link,
+        svc_level3,
+        svc_level4,
+        id_supplier,
+        is_deleted,
+        date_created,
+        date_updated,
+        id_login
+        )
+        values 
+        (
+        #idCustPlanSvc#,
+        #id_cust_plan_link#,
+        #svc_level3#,
+        #svc_level4#,
+        #id_supplier#,
+        '0',
+        sysdate,
+        sysdate,
+        #id_login#
+        )
+    </insert>
+<!-- G-CPM-P03 END-->
+<!-- G-CPM-P04 START-->
+<select id="SELECT.BSYS.G_CPM_P04.SQL001" parameterClass="java.lang.String" resultClass="java.lang.String">
+	select services_status 
+	from t_cust_plan_d
+	where 
+	id_cust_plan = #id_cust_plan#
+	and is_deleted = '0'
+</select>
+<update id="UPDATE.BSYS.G_CPM_P04.SQL001" parameterClass="java.util.HashMap">
+	    update t_cust_plan_h 
+		set
+			plan_status = #planStatus#, date_updated = sysdate 
+			<isNotNull property="idAudit">
+            ,id_audit = #idAudit#
+            </isNotNull>
+		where
+			id_cust_plan = #idCustPlan#
+	</update>
+	<select id="SELECT.BSYS.G_CPM_P04.SQL002" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+        SELECT
+              PLAN_STATUS
+        FROM
+              T_CUST_PLAN_H
+        WHERE
+              ID_CUST_PLAN = #idCustPlan#
+              AND IS_DELETED = '0'
+	</select>
+	<update id="UPDATE.BSYS.G_CPM_P04.SQL002" parameterClass="java.util.HashMap">
+	    UPDATE
+	          M_AUDIT_TRAIL_H
+	    SET
+	          STATUS = #status#
+	    WHERE
+	          ID_AUDIT = #idAudit#
+	</update>
+	<update id="UPDATE.BSYS.G_CPM_P04.SQL003" parameterClass="java.util.HashMap">
+	    UPDATE
+	          M_AUDIT_TRAIL_D
+	    SET
+	          NEW_DATA = #newData#
+	    WHERE
+	          ID_AUDIT = #idAudit#
+	          AND TABLE_NAME = #tableName#
+	          AND AT_FIELD = #atField#
+	</update>
+<!-- G-CPM-P04 END-->
+	<select id="SELECT.BSYS.USER.SQL001" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT USER_NAME FROM M_USER WHERE TRIM(ID_USER) = TRIM(#idUser#)
+	</select>		
+	<select id="SELECT.BSYS.UTILS.SQL001" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT U.USER_NAME FROM M_USER U, T_BIF_H B WHERE U.ID_USER = B.REQ_USER AND TRIM(B.ID_REF) = TRIM(#idRef#)
+	</select>
+	<select id="SELECT.BSYS.UTILS.SQL002" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT SECTION_DESC FROM M_SECTION WHERE TRIM(SECTION_NO) = TRIM(#section_no#)
+	</select>
+	<select id="SELECT.BSYS.UTILS.SQL003" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT APPR_COMMENT 
+		FROM T_WF_APPROVAL 
+		WHERE TRIM(ID_REF) = TRIM(#idRef#) 
+			AND TRIM(SECTION_NO) = TRIM(#section_no#) 
+			AND ROWNUM = 1
+	</select>
+	<insert id="INSERT.BSYS.UTILS.SQL001" parameterClass="nttdm.bsys.common.bean.AuditTrailHeaderBean">
+	  <selectKey keyProperty="idAudit" resultClass="java.lang.Integer" type="pre">
+	    SELECT SEQ_M_AUDIT_TRAIL_H.nextval FROM dual
+	  </selectKey>
+		INSERT INTO M_AUDIT_TRAIL_H (
+			ID_AUDIT, ID_USER, ID_MODULE, ID_SUB_MODULE, REFERENCE, STATUS, 
+			ACTION, DATE_CREATED
+		       )
+		VALUES (
+		       #idAudit#, #idUser#, #idModule#, #idSubModule#, #reference#, #status#,
+		       #action#, sysdate
+		       )
+	</insert>
+	<update id="UPDATE.BSYS.UTILS.SQL001" parameterClass="nttdm.bsys.common.bean.AuditTrailHeaderBean">
+	    UPDATE M_AUDIT_TRAIL_H 
+		SET 
+			DATE_CREATED = sysdate
+			<isNotNull property="idUser">
+			,ID_USER = #idUser#
+			</isNotNull>
+			<isNotNull property="idModule">
+			,ID_MODULE = #idModule#
+			</isNotNull>
+			<isNotNull property="idSubModule">
+			,ID_SUB_MODULE = #idSubModule#
+			</isNotNull>
+			<isNotNull property="reference">
+			,REFERENCE = #reference#
+			</isNotNull>
+			<isNotNull property="status">
+			,STATUS = #status#
+			</isNotNull>
+			<isNotNull property="action">
+			,ACTION = #action#
+			</isNotNull>
+		WHERE ID_AUDIT = #idAudit# 
+	</update>	
+	<select id="SELECT.BSYS.UTILS.SQL004" parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM M_AUDIT_TRAIL_D
+		WHERE ID_AUDIT = #idAudit#
+	</select>
+	<select id="SELECT.BSYS.UTILS.SQL005" parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
+		SELECT SET_VALUE
+		FROM M_GSET_D
+		WHERE ID_SET LIKE 'DESC_LENGTH' AND SET_SEQ = 1
+	</select>
+	<delete id="DELETE.BSYS.UTILS.SQL001" parameterClass="java.lang.Integer">
+		DELETE FROM M_AUDIT_TRAIL_H WHERE ID_AUDIT = #idAudit#
+	</delete>
+	<!-- G-CSB-P01 START-->
+	<select id="SELECT.BSYS.G_CSB_P01.SQL001" resultClass="java.lang.String">
+		select set_value
+		from m_gset_d
+		where 
+			id_set = 'CB_AUTO_OFFSET'
+			and set_seq = 1
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P01.SQL002" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.T_CSB_H">
+		select a.receipt_no, a.balance_amt, a.id_bill_account
+		from t_csb_h a, m_cust b
+		where 
+			a.balance_amt &lt;&gt; 0
+			and a.is_deleted = '0'
+		    and a.PMT_STATUS = 'N'
+            and a.id_cust = b.id_cust
+            <dynamic prepend="AND">
+                <isNotEmpty property="customerType">
+                    DECODE(b.customer_type,'CONS','0','CORP','1') = #customerType#
+                </isNotEmpty>
+            </dynamic>
+		order by 
+		    ID_BILL_ACCOUNT,
+		    TO_CHAR(DATE_TRANS,'yyyyMMdd'),
+		    RECEIPT_NO
+	</select>	
+	<select id="SELECT.BSYS.G_CSB_P01.SQL003"  parameterClass="java.util.HashMap" resultClass="nttdm.bsys.common.bean.T_CSB_H">
+		select a.receipt_no, a.id_cust, a.cur_code, a.balance_amt
+		from t_csb_h a, m_cust b
+		where 
+			a.balance_amt &lt;&gt; 0
+			and a.is_deleted = '0'
+			and a.PMT_STATUS = 'N'
+            and a.id_cust = b.id_cust
+            <dynamic prepend="AND">
+                <isNotEmpty property="customerType">
+                    DECODE(b.customer_type,'CONS','0','CORP','1') = #customerType#
+                </isNotEmpty>
+            </dynamic>
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P01.SQL004" parameterClass="nttdm.bsys.common.bean.T_BIL_H" resultClass="nttdm.bsys.common.bean.T_BIL_H">
+		select id_ref idRef, bill_amount billAmount, paid_amount paidAmount
+		from t_bil_h
+		where 
+		bill_acc = #billAcc#
+		and bill_amount - paid_amount &gt; 0
+		and BILL_TYPE &lt;&gt; 'CN'
+		and is_deleted = '0'
+		order by bill_acc asc,TO_CHAR(date_req,'yyyyMMdd') asc, ID_REF asc
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P01.SQL005" parameterClass="nttdm.bsys.common.bean.T_BIL_H" resultClass="nttdm.bsys.common.bean.T_BIL_H">
+		select id_ref idRef, bill_amount billAmount, paid_amount paidAmount
+		from t_bil_h
+		where 
+		id_cust = #idCust#
+		and bill_currency = #billCurrency#
+		and bill_amount - paid_amount &gt; 0
+		and BILL_TYPE &lt;&gt; 'CN'
+		and is_deleted = '0'
+		order by date_req asc, ID_REF asc
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P01.SQL006" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT C.RECEIPT_NO,C.ID_REF,C.IS_DELETED FROM T_CSB_D C WHERE 
+		C.RECEIPT_NO = #receiptNo#
+		AND C.ID_REF = #idRef#
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P01.SQL007" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		      A.ID_BILL_ACCOUNT,
+		      A.RECEIPT_NO,
+		      TO_CHAR(A.DATE_TRANS,'dd/MM/yyyy') AS DATE_TRANS,
+		      TO_CHAR(A.DATE_TRANS,'yyyyMMdd') AS DATE_TRANS_ORDER,
+		      A.AMT_RECEIVED,
+		      A.REFERENCE1,
+		      B.ID_REF,
+		      B.AMT_PAID,
+		      B.AMT_DUE,
+		      C.BILL_CURRENCY,
+		      C.BILL_AMOUNT,
+              D.ID_CUST,
+              D.CUST_NAME,
+              D.CUSTOMER_TYPE
+		FROM
+		     T_CSB_H A, T_CSB_D B, T_BIL_H C, M_CUST D
+		WHERE
+		     A.RECEIPT_NO = B.RECEIPT_NO
+		     AND B.ID_REF = C.ID_REF
+		     AND A.IS_DELETED = '0'
+		     AND B.IS_DELETED = '0'
+             AND A.ID_CUST = D.ID_CUST
+		     AND A.RECEIPT_NO IN
+		     <iterate  property="receiptNos" conjunction="," close=")" open="(" >
+				#receiptNos[]#
+			</iterate>
+		ORDER BY
+		     A.ID_BILL_ACCOUNT,
+		     DATE_TRANS_ORDER,
+		     A.RECEIPT_NO,
+		     B.ID_REF
+	</select>
+	<insert id="INSERT.BSYS.G_CSB_P01.SQL001" parameterClass="nttdm.bsys.common.bean.T_CSB_D">
+	insert into t_csb_d
+	(
+	id_ref,
+	receipt_no,
+	amt_due,
+	amt_paid,
+	forex_loss,
+	forex_gain,
+	is_deleted,
+	date_created,
+	date_updated,
+	id_login
+	)
+	values
+	(
+	#idRef#,
+	#receiptNo#,
+	#amtDue#,
+	#amtPaid#,
+	'0',
+	'0',
+	'0',
+	sysdate,
+	sysdate,
+	#idLogin#
+	)
+	</insert>
+		<insert id="INSERT.BSYS.G_CSB_P01.SQL002" parameterClass="nttdm.bsys.common.bean.T_CSB_D">
+	insert into t_csb_d
+	(
+	id_ref,
+	receipt_no,
+	amt_due,
+	amt_paid,
+	forex_loss,
+	forex_gain,
+	is_deleted,
+	date_created,
+	date_updated,
+	id_login
+	)
+	values
+	(
+	#idRef#,
+	#receiptNo#,
+	#amtDue#,
+	#amtDue#,
+	'0',
+	'0',
+	'0',
+	sysdate,
+	sysdate,
+	#idLogin#
+	)
+	</insert>
+	<update id="UPDATE.BSYS.G_CSB_P01.SQL001" parameterClass="java.util.HashMap">
+	update t_csb_d
+	set
+		amt_paid = amt_paid + #balance_amt#,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where
+		id_ref = #id_ref#
+		and receipt_no = #receipt_no#
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P01.SQL002" parameterClass="java.util.HashMap">
+	update t_csb_d
+	set
+		amt_paid = amt_paid + #amt_due# ,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where
+		id_ref = #id_ref#
+		and receipt_no = #receipt_no#
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P01.SQL003" parameterClass="java.util.HashMap">
+	update t_bil_h
+	set
+		paid_amount = paid_amount + #balance_amt#,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where
+		id_ref = #id_ref#
+		</update>
+		<update id="UPDATE.BSYS.G_CSB_P01.SQL004" parameterClass="java.util.HashMap">
+	update t_bil_h
+	set
+		paid_amount = paid_amount + #amt_due#, 
+		is_settled = 1,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where 
+		id_ref = #id_ref#
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P01.SQL005" parameterClass="java.util.HashMap">
+	update t_bil_h
+	set
+		last_payment_date = sysdate,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where 
+		(last_payment_date &lt; (select date_trans from t_csb_h where receipt_no = #receipt_no#)
+		or last_payment_date = null)
+		and id_ref in (select id_ref from t_csb_d) 
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P01.SQL006" parameterClass="java.util.HashMap">
+	update t_csb_h
+	set
+		balance_amt = #balance_amt#,
+		date_updated = sysdate,
+		id_login = #id_login#
+	where 
+		receipt_no = #receipt_no#
+	</update>
+	<!-- G-CSB-P01 END-->
+	<!-- G_CSB_P02 START -->
+	<select id="SELECT.BSYS.G_CSB_P02.SQL001" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT A.RECEIPT_NO, A.ID_CUST, A.CUR_CODE, A.BALANCE_AMT,A.ID_BILL_ACCOUNT FROM T_CSB_H A WHERE
+		A.BALANCE_AMT &gt; 0
+		AND TRIM(A.RECEIPT_NO) = TRIM(#receiptNo#)
+		AND A.IS_DELETED = '0'
+		AND A.PMT_STATUS = 'N'
+		ORDER BY A.DATE_TRANS ASC
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P02.SQL002" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT B.ID_REF, B.BILL_AMOUNT, B.PAID_AMOUNT,(B.BILL_AMOUNT - B.PAID_AMOUNT) AS AMT_DUE FROM T_BIL_H B WHERE
+		TRIM(B.BILL_ACC) = TRIM(#idBillAccount#)
+		AND (B.BILL_AMOUNT - B.PAID_AMOUNT) &gt; 0
+		AND B.BILL_TYPE &lt;&gt; 'CN'
+		AND B.IS_DELETED = '0'
+		ORDER BY B.DATE_REQ ASC, B.ID_REF ASC
+	</select>
+	<select id="SELECT.BSYS.G_CSB_P02.SQL003" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT C.RECEIPT_NO,C.ID_REF, C.IS_DELETED FROM T_CSB_D C WHERE 
+		TRIM(C.RECEIPT_NO) = #receiptNo#
+		AND TRIM(C.ID_REF) = #idRef#
+	</select>
+    <update id="UPDATE.BSYS.G_CSB_P02.SQL004_1" parameterClass="java.util.HashMap">
+        UPDATE T_CSB_D
+        SET 
+            AMT_PAID     = #amtPaid#,
+            AMT_DUE      = #amtDue#,
+            IS_DELETED   = #IS_DELETED#,
+            DATE_UPDATED = sysdate,
+            ID_LOGIN     = #idLogin#
+        WHERE
+        TRIM(RECEIPT_NO) = #receiptNo#
+        AND TRIM(ID_REF) = #idRef#
+    </update>
+	<update id="UPDATE.BSYS.G_CSB_P02.SQL004" parameterClass="java.util.HashMap">
+	    UPDATE T_CSB_D
+		SET 
+			AMT_PAID     = AMT_PAID+#amtPaid#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN     = #idLogin#
+		WHERE
+		TRIM(RECEIPT_NO) = #receiptNo#
+		AND TRIM(ID_REF) = #idRef#
+	</update>
+	<insert id="INSERT.BSYS.G_CSB_P02.SQL005" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_D
+       		(RECEIPT_NO, ID_REF, AMT_DUE, AMT_PAID, FOREX_LOSS, FOREX_GAIN, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+		VALUES
+  			(#receiptNo#,#idRef#,#amtDue#,#amtPaid#,#forexLoss#,#forexGain#,#isDeleted#,sysdate,sysdate,#idLogin#)
+	</insert>
+	<update id="UPDATE.BSYS.G_CSB_P02.SQL006" parameterClass="java.util.HashMap">
+	    UPDATE T_BIL_H
+		SET 
+			PAID_AMOUNT  = PAID_AMOUNT+ #amtPaid#,
+			IS_SETTLED   = '1',
+			DATE_UPDATED = sysdate,
+			ID_LOGIN     = #idLogin#
+		WHERE
+		TRIM(ID_REF) = #idRef#
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P02.SQL007" parameterClass="java.util.HashMap">
+	    UPDATE T_BIL_H
+		SET 
+			PAID_AMOUNT = PAID_AMOUNT+ #amtPaid#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN     = #idLogin#
+		WHERE
+		TRIM(ID_REF) = #idRef#
+	</update>
+	<update id="UPDATE.BSYS.G_CSB_P02.SQL008" parameterClass="java.util.HashMap">
+	    UPDATE T_CSB_H
+		SET 
+			BALANCE_AMT = #balanceAmt#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN     = #idLogin#
+		WHERE
+		TRIM(RECEIPT_NO) = #receiptNo#
+	</update>
+	<!-- G_CSB_P02 END -->
+	<!-- G_CSB_P03 start -->
+	<select id="SELECT.BSYS.G_CSB_P03.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			B.BILL_AMOUNT, B.PAID_AMOUNT,(B.BILL_AMOUNT - B.PAID_AMOUNT) AS AMT_DUE 
+		FROM 
+			T_BIL_H B 
+		WHERE
+			TRIM(B.ID_REF) = TRIM(#idRef#)
+			AND TRIM(B.BILL_ACC) = TRIM(#idBillAccount#)
+			AND (B.BILL_AMOUNT - B.PAID_AMOUNT) &gt; 0
+			AND B.IS_DELETED = '0'
+	</select>
+	<!-- G_CSB_P03 END -->
+	<!-- For bug No. 303  ADD -->
+	<insert id="INSERT.BSYS.G_CPM_P03.SQL303" parameterClass="java.util.HashMap">
+	    INSERT INTO T_SUBSCRIPTION_INFO(ID_CUST_PLAN, ID_SUB_INFO, IS_DELETED, 
+    	DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES(#idCustPlan#, #idSubInfo#, 0, sysdate, sysdate, #idLogin#)
+    </insert>
+    <!-- G_BAC_P01 Start -->
+    <select id="SELECT.G_BAC.GETBILLACCOUNT"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    	SELECT C.ID_CUST, C.ID_BILL_ACCOUNT, C.PAYMENT_METHOD, C.BILL_CURRENCY, C.TOTAL_AMT_DUE
+		FROM T_BAC_H C
+		WHERE
+			C.IS_DELETED='0'
+			<isNotEmpty property="id_bill_account" prepend="AND">
+			C.ID_BILL_ACCOUNT=#id_bill_account#
+			</isNotEmpty>
+    </select>
+    <select id="SELECT.G_BAC.GETAMOUNT.SQL001" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(C.BILL_AMOUNT),0)
+		FROM T_BIL_H C
+		WHERE 
+			C.BILL_ACC=#id_bill_account#
+			AND C.BILL_TYPE IN ('IN','DN')
+			AND C.IS_DELETED='0'
+	</select>
+	<select id="SELECT.G_BAC.GETAMOUNT.SQL002" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(C.BILL_AMOUNT),0)
+		FROM T_BIL_H C
+		WHERE 
+			C.BILL_ACC=#id_bill_account#
+			AND C.BILL_TYPE = 'CN'
+			AND C.IS_DELETED='0'
+	</select>
+	<select id="SELECT.G_BAC.GETAMOUNT.SQL003" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(G.AMT_RECEIVED),0)
+		FROM T_CSB_H G
+		WHERE
+			G.ID_BILL_ACCOUNT=#id_bill_account#
+			AND G.PMT_STATUS = 'N'
+			AND G.IS_DELETED = '0'
+	</select>
+	<update id="UPDATE.G_BAC.TOTALDUE" parameterClass="java.util.HashMap">
+		UPDATE T_BAC_H T
+		SET
+		  T.TOTAL_AMT_DUE = #actual_amount#,
+		  T.ID_LOGIN=#id_login#,
+		  T.DATE_UPDATED = sysdate
+		  <isNotEmpty property="auditId" prepend="">
+		  	,T.ID_AUDIT = #auditId#
+		  </isNotEmpty>
+		WHERE
+		  T.ID_BILL_ACCOUNT = #id_bill_account#  
+	</update>
+	<!-- G_BAC_P01 END -->
+    <!-- start for all RUN_STATUS update-->
+    <update id="UPDATE.G.T_BATCH_SCH.RUN_STATUS" parameterClass="java.util.Map">
+        UPDATE 
+            T_BATCH_SCH T 
+        SET 
+            T.RUN_STATUS = #RUN_STATUS#,
+            T.DATE_UPDATED = SYSDATE,
+            T.ID_LOGIN=#idLogin#
+        WHERE
+            T.ID_BATCH_TYPE=#idBatchType#
+    </update>   
+    <!-- end for all RUN_STATUS update-->
+    <select id="SELECT.COMMON.POPCUR.CURRENCY" resultClass="java.util.HashMap">
+        SELECT
+              t1.*
+        FROM 
+             (
+              SELECT
+                    t.*, rownum rn
+              FROM 
+                    (
+                     SELECT
+                            CUR_CODE,
+                            RATE_TO,
+                            RATE_FROM
+                     FROM
+                            M_CURRENCY
+                     WHERE
+                            TO_CHAR(RATE_DATE, 'yyyy/mm') = #date#
+                            AND IS_DELETED = '0'
+                     ORDER BY
+                            DATE_CREATED
+                    ) t
+             ) t1,
+             (
+              SELECT 
+                    max(rownum) maxrn
+              FROM 
+                   (
+                    SELECT
+                          CUR_CODE,
+                          TO_CHAR(RATE_DATE, 'yyyy/mm') RATE_DATE
+                    FROM 
+                          M_CURRENCY
+                    WHERE 
+                          TO_CHAR(RATE_DATE, 'yyyy/mm') = #date#
+                          AND IS_DELETED = '0'
+                    ORDER BY
+                          DATE_CREATED
+                   ) t
+                 GROUP BY
+                          CUR_CODE, RATE_DATE
+             ) t2
+          WHERE
+               t2.maxrn = t1.rn
+    </select>
+    <select id="SELECT.G_CSB_P01_CHECK.M_BATCH_MAINTENANCE_INFO" resultClass="java.util.HashMap">
+        SELECT
+              BATCH_ID
+        FROM
+              M_BATCH_MAINTENANCE
+        WHERE
+              BATCH_ID = 'CB'
+              AND RUN_STATUS = 'Y'
+              AND IS_DELETED = '0'
+    </select>
+    <select id="SELECT.G_CSB_P01_CHECK.T_SET_BATCH_INFO" resultClass="java.util.HashMap">
+        SELECT 
+              * 
+        FROM
+              (
+               SELECT
+                     STATUS AS LAST_STATUS,
+                     ID_BATCH,
+                     TO_CHAR(DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS HIEUTIME
+               FROM
+                    T_SET_BATCH 
+               WHERE
+                    BATCH_TYPE= 'CB'
+               ORDER BY
+                    DATE_CREATED DESC
+              )
+        WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.G_CSB_P01_CHECK.BATCH_TIME_INTERVAL" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET='BATCH_TIME_INTERVAL'
+    </select>
+    <select id="SELECT.E_ESET_S01_CHECK.T_BATCH_SCH_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+        SELECT
+              ID_BATCH_TYPE
+        FROM
+              T_BATCH_SCH
+        WHERE
+              ID_BATCH_TYPE = #idBatchType#
+              AND RUN_STATUS = 'Y'
+              AND IS_DELETED = '0'
+    </select>
+    <select id="SELECT.E_ESET_S01_CHECK.T_SGP_IMP_HD" resultClass="java.util.HashMap">
+        SELECT 
+              * 
+        FROM
+              (
+               SELECT
+                     STATUS AS LAST_STATUS,
+                     ID_SGP_IMP_BATCH AS ID_BATCH,
+                     TO_CHAR(DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS HIEUTIME
+               FROM
+                    T_SGP_IMP_HD
+               ORDER BY
+                    DATE_CREATED DESC
+              )
+        WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.E_ESET_S01_CHECK.T_CIT_EXP_HD" resultClass="java.util.HashMap">
+        SELECT 
+              *
+        FROM
+              (
+               SELECT
+                     STATUS AS LAST_STATUS,
+                     ID_CIT_EXP_BATCH AS ID_BATCH,
+                     TO_CHAR(DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS HIEUTIME
+               FROM
+                    T_CIT_EXP_HD
+               ORDER BY
+                    DATE_CREATED DESC
+              )
+        WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.E_ESET_S01_CHECK.T_GIR_EXP_HD" resultClass="java.util.HashMap">
+        SELECT 
+              *
+        FROM
+              (
+               SELECT
+                     STATUS AS LAST_STATUS,
+                     ID_GIR_EXP_BATCH AS ID_BATCH,
+                     TO_CHAR(DATE_CREATED,'YYYY-MM-DD HH24:MI:SS') AS HIEUTIME
+               FROM
+                    T_GIR_EXP_HD
+               ORDER BY
+                    DATE_CREATED DESC
+              )
+        WHERE ROWNUM &lt; 2
+    </select>
+    <select id="SELECT.E_ESET_S01_CHECK.BATCH_TIME_INTERVAL" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET='BATCH_TIME_INTERVAL'
+    </select>
+    <select id="SELECT.BSYS.G_CMP01.GET_TERM" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT TERM
+			 , TERM_DAY
+		  FROM T_BAC_D 
+		 WHERE ID_CUST_PLAN_GRP = (SELECT MAX(ID_CUST_PLAN_GRP) FROM T_BAC_D WHERE ID_BILL_ACCOUNT = #id_bill_account#)
+	</select>
+	<!-- Add 152 Start-->
+    <select id="GET_TERAMDAY" resultClass="java.lang.String">
+    	SELECT SET_VALUE
+		FROM M_GSET_D
+		WHERE ID_SET='INVOICE_DUE_PERIOD'
+		AND IS_DELETED='0'
+    </select>
+    <!-- Add 152 End-->
+    <!-- Add 148 Cust_Po Start-->
+    <select id="GET_CUST_PO" resultClass="java.lang.String">
+    	 SELECT 
+		    CUST_PO
+		 FROM 
+		    T_CUST_PLAN_LINK
+		 WHERE  
+		    ID_CUST_PLAN_LINK = (SELECT MAX(ID_CUST_PLAN_LINK) FROM T_CUST_PLAN_LINK WHERE ID_CUST_PLAN_GRP = #idCustPlanGrp#)
+    </select>
+   <!-- Add 148 Cust_Po End-->
+</sqlMap>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <!--
+    <formset>
+
+      <form name="/isValid">
+        <field property="codeArray" indexedListProperty="codeArray"
+            depends="prohibitedArray">
+          <arg key="##INDEX" resource="false" position="0"/>
+          <arg key="testValidate.codeArray" position="1"/>
+          <arg key="${var:chars}" resource="false" position="2"/>
+          <var>
+            <var-name>chars</var-name>
+            <var-value>!"#</var-value>
+          </var>
+        </field>
+      </form>
+    </formset>
+ -->
+    <formset>
+        <form name="/M_GBSS01_02BL">
+            <field depends="validwhen,numericString" property="tbxValueDASHBD1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Dashboard" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispDASHBD1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueUSRMNT1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="User Maintenance" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispUSRMNT1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValuePWDCH1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Password Change Period" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispPWDCH1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueLOGINAT1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Login Attempts Number" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispLOGINAT1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueLOGINAT2">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Login Attempts Time" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispLOGINAT2!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueRESULTROW1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Row Result Display" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispRESULTROW1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueFILESIZEUPLOAD1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Limit For File Size Upload" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispFILESIZEUPLOAD1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueSERVICEROW1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Service Row" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispSERVICEROW1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueDESC_LENGTH1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Display Description Length" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispDESC_LENGTH1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen" property="tbxValueBIL_DEBTER_ACC1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Debtor Account" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBIL_DEBTER_ACC1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen" property="tbxValueBIL_ADVANCE_DEBTER_ACC1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Advance Debtor Account" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBIL_ADVANCE_DEBTER_ACC1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueGST1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Government Service Tax" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispGST1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="validwhen,numericString" property="tbxValueINVOICE_DUE_PERIOD1">
+            	<msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg key="Invoice Due Period" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispINVOICE_DUE_PERIOD1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="numericString" property="tbxValueNOPRINTDOC1">
+                <arg key="Number of Time to Print Billing Document" position="0" resource="false"/>
+            </field>
+            <field depends="directoryExist" property="tbxValueFILELOC1">
+                <arg key="File Location - Location for upload file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispFILELOC1!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_RPT_AR011">
+                <arg key="File Location - Location for Statement of Accounts file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_RPT_AR011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_E_EXP_F011">
+                <arg key="File Location - Location for PeopleSoft file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_E_EXP_F011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_CSB_P01">
+                <arg key="File Location - Location for auto offset cashbook result file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_CSB_P01!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <!-- BATCH_E_EML_P01 -->
+            <field depends="directoryExist" property="tbxValueBATCH_E_EML_P01">
+                <arg key="File Location - Location for Email Billing Document PDF"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_E_EML_P01!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <!-- BATCH_R_REV_P01 -->
+            <field depends="directoryExist" property="tbxValueBATCH_R_REV_P01">
+                <arg key="File Location - Location for Revenue Report"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_R_REV_P01!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_GIR_P021">
+                <arg key="Bacth Import - Location for SMBC Giro Collection Data file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_GIR_P021!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_SGP_P021">
+                <arg key="Bacth Import - Location for SingPost Collection Data file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_SGP_P021!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_IPS_P011">
+                <arg key="Bacth Import - Location for IPASS file" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_IPS_P011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_CLC_P011">
+                <arg key="Bacth Import - Location for CLEAR Call file" position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_CLC_P011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_CIT_P011">
+                <arg key="Batch Export - Location for Citibank Credit Data file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_CIT_P011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_GIR_P011">
+                <arg key="Batch Export - Location for SMBC GIRO Invoice Data file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_GIR_P011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+            <field depends="directoryExist" property="tbxValueBATCH_G_SGP_P011">
+                <arg key="Batch Export - Location for SingPost Collection Data file"
+                    position="0" resource="false"/>
+                <var>
+                	<var-name>test</var-name>
+                	<var-value>((dispBATCH_G_SGP_P011!="1") or (*this*!=null))</var-value>
+                </var>
+            </field>
+        </form>
+    	<form name="/M_GBS_S02_01BL">
+            <field depends="required" property="columnType">
+                <arg key="Coulmn Name" position="0" resource="false"/>
+            </field>
+          </form>
+          <form name="/M_GBS_S02_02BL">
+            <field depends="required" property="columnType">
+                <arg key="Coulmn Name" position="0" resource="false"/>
+            </field>
+          </form>
+    </formset>
+</form-validation>

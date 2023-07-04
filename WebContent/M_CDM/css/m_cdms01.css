@@ -1,0 +1,18 @@
+.lineBottom{
+	color: #EFEFEF;
+	width: 100%;
+}
+.hidden{
+	position:absolute;
+	left:-10000px;
+	top:auto;
+	overflow:hidden;
+}
+.unhide{
+	display: inline;
+}
+.scrollbar{
+	overflow-x:scroll;
+	width: 100%;
+	height: 110%;
+}

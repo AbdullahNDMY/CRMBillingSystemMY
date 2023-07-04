@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperTemplate PUBLIC "-//JasperReports//DTD Template//EN" "http://jasperreports.sourceforge.net/dtds/jaspertemplate.dtd">
+
+<jasperTemplate>
+	<style name="default_font" vAlign="Middle" isBlankWhenNull="true" fontName="Times New Roman" fontSize="10" isBold="false" isItalic="false" isUnderline="false"/>
+	<style name="border_full" style="default_font" isBlankWhenNull="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_top_bottom" style="default_font" isBlankWhenNull="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_left_right" style="default_font" isBlankWhenNull="true">
+		<box>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_left_top_right" style="default_font" isBlankWhenNull="true">
+		<box>
+			<topPen lineWidth="0.75" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_left_bottom_right" style="default_font" isBlankWhenNull="true">
+		<box>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_top_right_bottom" style="default_font" isBlankWhenNull="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_top_left_bottom" style="default_font" isBlankWhenNull="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_full_s" style="default_font" isBlankWhenNull="true">
+		<box>
+			<pen lineWidth="0.75" lineColor="#000000"/>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="default_header" vAlign="Middle" isBlankWhenNull="true" fontName="Times New Roman" fontSize="11" isBold="true" isItalic="false" isUnderline="false"/>
+</jasperTemplate>

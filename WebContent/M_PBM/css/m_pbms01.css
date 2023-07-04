@@ -1,0 +1,88 @@
+@CHARSET "Shift_JIS";
+
+.lineSeperator{
+	height: 0.1cm;	
+}
+.searchCriteria{
+	height: 60px;
+	width:100%;
+	text-align: left; 	
+	border-bottom:solid 2px #CECECE;
+	border-top:solid 2px #CECECE;	
+    background-color: #F8F8F8;
+}
+
+.generalInfo{
+	height: 20px;
+	width:100%;
+	text-align: left; 	
+	border-bottom:solid 2px #CECECE;
+	border-top:solid 2px #CECECE;	
+    background-color: #F8F8F8;
+    font-weight: bold;
+}
+
+
+.rowHeader{
+	background-color: teal;	
+}
+
+.col0{
+	text-align: left;
+}
+.col1{
+	text-align: left;
+}
+.col2{	
+	text-align: left;
+}
+.col3{
+	text-align: left;
+}
+.col4{
+	text-align: left;
+}
+.col5{
+	text-align: left;
+}
+.col6{
+	text-align: right;
+	padding-right: 20px !important;
+}
+.txtUsageBase{
+	text-align: right;
+	width: 1.5cm;	
+}
+.cboCol{	
+	width: 75px;	
+}
+
+.hide
+{
+	display:none;	
+}
+.show
+{
+	display:inherit;
+}  
+.searchResult{
+	font-size: 12pt;	
+	border-collapse: collapse;
+	border-color:rgb(183,232,240);
+  	border-left: 1px solid;
+	border-right: 1px solid;
+	border-top: 1px solid;
+	width:100%;
+	
+}
+.searchResult tr.header{
+	background-color: rgb(183,232,240);	
+	border-color:rgb(183,232,240);
+	padding: 1px;			
+}
+
+.searchResult tr td{	
+	border-color:rgb(183,232,240);
+	padding: 1px;			
+	border-bottom: 1px solid;
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+<!-- ======================================== iBATIS定義 -->
+     <!-- 
+     WTPを利用してTomcatを起動する場合、<ContextRoot>/META-INF/context.xmlに
+     データソースの接続情報を設定する。
+     またTomcatでJDBC接続を行う場合、各種JDBCドライバのjarにクラスパスを通すこと。
+  -->
+    <bean id="BsysRadiusDataSource"
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName">
+      <!-- Tomcatの例  -->
+      <value>java:comp/env/jdbc/BsysRadiusDataSource</value>
+      <!-- Tomcat以外のAPサーバの例 -->
+      <!-- 
+      <value>jdbc/BsysDataSource</value>
+      -->
+    </property>
+ 
+  </bean>
+  <!-- SqlMap定義 -->
+  <bean id="RadiusSqlMapClient"
+        class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+    <property name="configLocation" value="WEB-INF/RadiusSqlMapConfig.xml">
+    </property>
+    <property name="dataSource">
+      <ref bean="BsysRadiusDataSource"/>
+    </property>
+  </bean>
+
+   <!-- 照会系のDAO定義 -->
+  <bean id="radiusQueryDAO" 
+        class="jp.terasoluna.fw.dao.ibatis.QueryDAOiBatisImpl">
+    <property name="sqlMapClient"><ref local="RadiusSqlMapClient"/></property>
+  </bean>
+  
+  <!-- 更新系のDAO定義 -->
+  <bean id="radiusUpdateDAO"
+        class="jp.terasoluna.fw.dao.ibatis.UpdateDAOiBatisImpl">
+    <property name="sqlMapClient"><ref local="RadiusSqlMapClient"/></property>
+  </bean>
+  
+  <bean id="radiusUpdateDAONuked"
+		class="nttdm.bsys.common.dao.UpdateDAOiBatisNukedImpl">
+		<property name="sqlMapClient">
+			<ref local="RadiusSqlMapClient" />
+		</property>
+	</bean>
+</beans> 	

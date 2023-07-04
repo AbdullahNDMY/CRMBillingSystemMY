@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>jsptabcontrol</short-name>
+  <display-name>JSP Tab Control Taglib</display-name>
+  <description>JSP Tab Control 1.0 core library</description>
+
+  <tag>
+    <name>tabControl</name>
+    <tag-class>net.sourceforge.jsptabcontrol.taglib.TabControlTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+    	<![CDATA[
+    	This taglib generate tab control HTML. eg : 
+    	<div>
+    		<!-- tab control header -->
+    		<ul>
+    			... for each tabPage (see tabPage taglib), generate tab page header like this : 
+    			<!-- tab page header -->
+    			<li>
+      				<a href="#" onclick="new TabToggle(this,1, 0,'MY_TABCONTROL','MY_TABPAGE1'); return false;"  >
+        				Tab page 1
+      				</a>
+    			</li>
+    			...
+    		</ul>
+    		<!-- tab control body -->
+    		<div>
+    		... for each tabPage (see tabPage taglib), generate tab page body like this : 
+    			<!-- tab page body -->
+    			<div>
+      				...
+    			</div>
+    		...
+    		</div>
+    	</div>
+    	]]>
+    </description>
+	<attribute>
+	    <name>name</name>
+	    <required>true</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute> 
+	<attribute>
+	    <name>width</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	   
+	<attribute>
+	    <name>height</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	
+	<attribute>
+	    <name>tabControlHeaderClass</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>
+	<attribute>
+	    <name>tabControlBodyClass</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>		   
+	<attribute>
+	    <name>bundleKey</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>
+	<attribute>
+	    <name>localeKey</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>		
+  </tag>
+
+  <tag>
+    <name>tabPage</name>
+    <tag-class>net.sourceforge.jsptabcontrol.taglib.TabPageTag</tag-class>
+	<body-content>JSP</body-content>
+    <description>
+	    <![CDATA[
+    	This taglib generate tab page header and body into tab control HTML.
+    	
+    		* HTML Tab page header generated into tab control header : 
+    		
+    			<li>
+      				<a href="#" onclick="new TabToggle(this,1, 0,'MY_TABCONTROL','MY_TABPAGE1'); return false;"  >
+        				Tab page 1
+      				</a>
+    			</li>
+    			
+    		* HTML Tab page body generated into tab control body : 
+    	
+    			<!-- tab page body -->
+    			<div>
+      				...
+    			</div>
+    		]]>
+    </description>	
+	<attribute>
+	    <name>name</name>
+	    <required>true</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>
+	<attribute>
+	    <name>width</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	
+	<attribute>
+	    <name>title</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	
+	<attribute>
+	    <name>titleKey</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	
+	<attribute>
+	    <name>href</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>	
+	<attribute>
+	    <name>tabPageHeaderClass</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>
+	<attribute>
+	    <name>tabPageBodyClass</name>
+	    <required>false</required>
+	    <rtexprvalue>false</rtexprvalue>
+	</attribute>		
+  </tag>
+  <tag>
+    <name>javascriptStateConfig</name>
+    <tag-class>net.sourceforge.jsptabcontrol.taglib.JavascriptStateConfigTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+     <![CDATA[
+    	This taglib generate Javascript for States which is configurate into jsptabcontol-config.xml.
+		]]>
+    </description>
+  </tag>
+</taglib>

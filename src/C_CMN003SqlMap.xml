@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="C_CMN003">
+	<select id="SELECT.C_CMN003.SQL001" resultClass="nttdm.bsys.c_cmn003.bean.C_CMN003FormBean">
+		SELECT	DISTINCT a.id_module,a.mod_name,a.mod_desc,a.date_created,a.date_updated,
+				a.id_login,a.order_seq,a.is_display		
+		FROM	m_modules a, m_user_access b				
+		WHERE 	is_display	=	1 AND 
+                a.id_module = b.id_module and b.id_user=#id_user# ORDER BY order_seq ASC
+	</select>
+	<select id="SELECT.C_CMN003.SQL002" resultClass="nttdm.bsys.c_cmn003.bean.SubModule">
+		SELECT	a.id_sub_module,a.id_module,a.sub_mod_name,a.sub_mod_desc,a.date_created,
+				a.date_updated,a.id_login,a.order_seq,a.is_display, a.path_module, b.access_type
+		FROM	m_sub_modules a	, m_user_access b			
+		WHERE 	is_display	=	1 AND 
+                a.id_sub_module = b.id_sub_module and b.id_user=#id_user#
+                AND b.access_type in (1, 2)
+                ORDER BY order_seq ASC
+                
+	</select>
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+</sqlMap>

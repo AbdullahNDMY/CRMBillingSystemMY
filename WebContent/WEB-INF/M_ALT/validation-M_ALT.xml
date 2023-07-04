@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+	<!-- 入力値検証定義 -->
+<form-validation>
+	<formset>
+		<form name="/M_ALTR02BLogic">
+			
+			<field property="start_date" depends="multiField">
+				<msg key="errors.ERR1SC013" name="multiField" />
+				<arg key="screen.m_alts01.startdate" position="0" />
+				<arg key="screen.m_alts01.enddate" position="1" />
+				<var>
+					<var-name>fields</var-name>
+					<var-value>end_date</var-value>
+				</var>
+				<var>
+					<var-name>multiFieldValidator</var-name>
+					<var-value>
+						nttdm.bsys.m_alt.bean.DateValidator
+            </var-value>
+				</var>
+			</field>
+			<field property="subject" depends="required">
+				<arg key="screen.m_alts01.subject" position="0" />
+			</field>
+			<field property="to_msg" depends="multiField">
+				<msg key="errors.ERR1SC005" name="multiField" />
+				<arg key="screen.m_alts01.to" position="0" />
+				<arg key="screen.m_alts01.cc" position="1" />
+				<var>
+					<var-name>fields</var-name>
+					<var-value>cc_msg</var-value>
+				</var>
+				<var>
+					<var-name>multiFieldValidator</var-name>
+					<var-value>
+						nttdm.bsys.m_alt.bean.ToCCValidator
+            </var-value>
+				</var>
+			</field>
+		</form>
+	</formset>
+</form-validation>

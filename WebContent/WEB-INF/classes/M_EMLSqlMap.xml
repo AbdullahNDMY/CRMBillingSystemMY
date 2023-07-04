@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_EML">
+	<!-- #252 Batch Email Billing Document: generate PDF / email CT 11052017 ST-->
+	<select id="SELECT.M_EML.SQL001" resultClass="java.util.HashMap">
+		SELECT
+		ID_COM,MAIL_SERVER_NAME,MAIL_SERVER_PORTNO,MAIL_SERVER_USERNAME,MAIL_SERVER_PASSWORD
+		,ATTACHMENT_FILESIZE,MAIL_SERVER_SSLTLS 
+		FROM M_COM
+		WHERE IS_DELETED = '0'
+		AND ID_COM = (SELECT MAX(ID_COM) FROM M_COM WHERE IS_DELETED = '0')
+	</select>
+	<!-- #252 Batch Email Billing Document: generate PDF / email CT 11052017 en-->
+	<select id="SELECT.M_EML.SQL002" resultClass="nttdm.bsys.m_eml.bean.MailModule">
+		SELECT ROWNUM AS "row_num", t1.*
+		FROM(SELECT a.ID_MODULE AS module,a.ID_SUB_MODULE AS subModule,a.ID_CODE AS
+		temCode
+		FROM M_MAIL_MODULE a,M_MODULES b,M_SUB_MODULES c
+		WHERE a.IS_DELETED = '0'
+		AND b.ID_MODULE=a.ID_MODULE
+		AND c.ID_SUB_MODULE=a.ID_SUB_MODULE
+		ORDER BY a.ID_SUB_MODULE) t1
+  </select>
+	<select id="SELECT.M_EML.SQL003" resultClass="nttdm.bsys.m_eml.bean.MailTemplate">
+		SELECT ROWNUM AS "row_num", t1.*
+		FROM(SELECT ID_CODE AS code,DESCRIPTION AS description,SUBJECT AS
+		subject,ALWAYS_CC AS alwaysCc
+		FROM M_MAIL_TEMPLATE
+		WHERE IS_DELETED = '0'
+		ORDER BY ID_CODE) t1
+  </select>
+	<select id="SELECT.M_EML.SQL004" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		SELECT COUNT(*)
+		FROM M_MAIL_TEMPLATE
+		WHERE IS_DELETED = '0'
+		AND ID_CODE = #code#
+  </select>
+	<select id="SELECT.M_EML.SQL005" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		SELECT ID_CODE,DESCRIPTION,FROM_DISPLAY_NAME,SUBJECT,ATTACTMENT_PASS,CONTENT,
+		ATTACTMENT1,ATTACTMENT2,ATTACTMENT3,ATTACTMENT4,ALWAYS_CC,ZIPFILENAME,REMARK
+		FROM M_MAIL_TEMPLATE
+		WHERE IS_DELETED = '0'
+		AND ID_CODE = #code#
+  </select>
+	<update id="UPDATE.M_EML.SQL001" parameterClass="nttdm.bsys.m_eml.dto.M_EMLInput">
+		UPDATE M_COM
+		SET
+		MAIL_SERVER_NAME=#serverName#,
+		MAIL_SERVER_PORTNO=#portNumber#,
+		MAIL_SERVER_USERNAME=#userName#,
+		MAIL_SERVER_PASSWORD=#password#,
+		DATE_UPDATED=sysdate,
+		MAIL_SERVER_ssltls=#ssltls#,
+		ID_LOGIN=#id_login#,
+		ATTACHMENT_FILESIZE=#attachmentFileSize#
+		<!-- ID_AUDIT=#id_audit# -->
+		WHERE ID_COM = #id_com#
+	</update>
+	<update id="UPDATE.M_EML.SQL002" parameterClass="nttdm.bsys.m_eml.bean.MailModule">
+		UPDATE M_MAIL_MODULE
+		SET
+		ID_CODE=#temCode#,
+		DATE_UPDATED=sysdate,
+		ID_LOGIN=#id_login#<!-- , ID_AUDIT=#id_audit# -->
+		WHERE ID_SUB_MODULE = #subModule#
+	</update>
+	<update id="UPDATE.M_EML.SQL003" parameterClass="nttdm.bsys.m_eml.dto.M_EML02Input">
+		UPDATE M_MAIL_TEMPLATE
+		SET
+		DESCRIPTION=#description#,
+		FROM_DISPLAY_NAME=#display_name#,
+		SUBJECT=#subject#,
+		ATTACTMENT_PASS=#attachpass#,
+		CONTENT=#content#,
+		ATTACTMENT1=#attactmen1#,
+		ATTACTMENT2=#attactmen2#,
+		ATTACTMENT3=#attactmen3#,
+		ATTACTMENT4=#attactmen4#,
+		ALWAYS_CC=#alwaysCc#,
+		DATE_UPDATED=sysdate,
+		ID_LOGIN=#id_login#,
+		ZIPFILENAME=#zipFilename#,
+		REMARK=#remark#
+		WHERE ID_CODE=#code#
+  </update>
+	<insert id="INSERT.M_EML.SQL001" parameterClass="nttdm.bsys.m_eml.dto.M_EML02Input">
+		INSERT INTO
+		M_MAIL_TEMPLATE(
+		ID_CODE,
+		DESCRIPTION,
+		FROM_DISPLAY_NAME,
+		SUBJECT,
+		ATTACTMENT_PASS,
+		CONTENT,
+		IS_DELETED,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN,
+		ID_AUDIT,
+		ATTACTMENT1,
+		ATTACTMENT2,
+		ATTACTMENT3,
+		ATTACTMENT4,
+		ALWAYS_CC,
+		ZIPFILENAME,
+		REMARK
+		)
+		VALUES(
+		#code#,
+		#description#,
+		#display_name#,
+		#subject#,
+		#attachpass#,
+		#content#,
+		'0',
+		sysdate,
+		sysdate,
+		#id_login#,
+		#id_audit#,
+		#attactmen1#,
+		#attactmen2#,
+		#attactmen3#,
+		#attactmen4#,
+		#alwaysCc#,
+		#zipFilename#,
+		#remark#)
+	</insert>
+</sqlMap>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_DIM">
+     <select id="getBankAccount" resultClass="org.apache.struts.util.LabelValueBean"
+            resultSetType="SCROLL_INSENSITIVE">
+        SELECT H.ID_COM_BANK as value, CONCAT(I.BANK_FULL_NAME, CONCAT('-',H.COM_ACCT_NO)) as label
+        FROM M_BANK I, M_COM_BANKINFO H
+        WHERE  I.ID_BANK = H.ID_BANK AND I.IS_DELETED = '0'
+           AND H.STATUS = '1' AND H.DEFAULT_ACC = '1'
+           ORDER BY I.BANK_FULL_NAME ASC, H.COM_ACCT_NO ASC
+    </select>
+    <select id="getHistories" resultClass="java.util.HashMap">
+         SELECT 
+            ID_SGP_IMP_BATCH,
+            FILENAME,
+            CLOSE_MONTHYEAR,
+            STATUS,
+            TO_CHAR(DATE_UPLOADED, 'dd/MM/yyyy HH24:mi:ss') AS DATE_UPDATED_FMT,
+            (SELECT count(*) FROM T_BATCH_LOG WHERE ID_BATCH_TYPE = 'G_SGP_P02' AND ID_BATCH_REF_NO = ID_SGP_IMP_BATCH) as ERROR_COUNT
+         FROM T_SGP_IMP_HD
+         ORDER BY ID_SGP_IMP_BATCH DESC
+    </select>
+    <select id="getTotalHistories" resultClass="java.lang.Integer">
+         SELECT COUNT(*) 
+         FROM T_SGP_IMP_HD
+         ORDER BY DATE_UPLOADED DESC
+    </select>
+    <select id="getLogByHistory" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+         SELECT ID_BATCH_LOG, ERROR_MSG, TO_CHAR(DATE_UPDATED, 'dd/MM/yyyy HH24:mi:ss') AS  DATE_UPDATED_FMT
+         FROM T_BATCH_LOG
+         WHERE ID_BATCH_TYPE = #idBatchType#
+         AND ID_BATCH_REF_NO = #idClcImpBatch#
+         ORDER BY ID_BATCH_LOG ASC
+    </select>
+    <select id="retrieveProcessStatus" resultClass="java.util.HashMap">
+         SELECT t.*, to_char(t.date_updated, 'dd/MM/yyyy HH24:MI:ss') as DATE_UPDATED_CHAR 
+         FROM T_SGP_IMP_HD t
+         WHERE t.STATUS = '2'
+    </select>
+    
+    <select id="retrieveProcessLastBatch" resultClass="java.util.HashMap">
+         SELECT * FROM (
+             SELECT T.ID_SGP_IMP_BATCH
+             FROM T_SGP_IMP_HD T
+             ORDER BY T.DATE_CREATED DESC )
+         WHERE ROWNUM &lt; 2
+    </select>
+    
+    <select id="checkDuplicateEntry" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+         SELECT *
+         FROM T_CSB_H a
+         WHERE a.RECEIPT_REF = '$receiptRef$'
+         AND TRIM(a.REFERENCE1) = TRIM('$invoiceNo$')
+    </select>
+    <select id="validateIDRef" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+         SELECT BILL_ACC, ID_CUST, BILL_CURRENCY, PAID_AMOUNT
+         FROM T_BIL_H
+         WHERE 
+         	TRIM(ID_REF) = TRIM(#invoiceNo#) AND
+         	TRIM(BILL_ACC) = TRIM(#billAcc#) AND
+         	IS_DELETED = '0'
+    </select>
+    <select id="retrieveIDRef" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    select A.ID_REF FROM (
+         SELECT ID_REF
+         FROM T_BIL_H
+         WHERE 
+           (BILL_TYPE = 'IN' OR BILL_TYPE = 'DN')
+           AND TRIM(BILL_ACC) = TRIM(#billAcc#)
+           AND BILL_AMOUNT - PAID_AMOUNT &gt; 0 
+           AND IS_CLOSED = '0'
+           AND IS_DELETED = '0'
+           ORDER BY DATE_REQ desc
+       ) A
+       WHERE ROWNUM &lt; 2
+     </select>
+    <select id="getTotalAmtDue" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+         SELECT TOTAL_AMT_DUE
+         FROM T_BAC_H
+         WHERE 
+               TRIM(ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+           AND IS_DELETED = '0'
+    </select>
+    <select id="getSEQ_T_BATCH_LOG" resultClass="java.lang.Integer">
+         SELECT T_SET_BATCH_LOG_SEQ.NEXTVAL 
+         FROM DUAL 
+    </select>
+    <select id="getKeySEQ_T_SGP_IMP_HD" resultClass="java.lang.Integer">
+         SELECT SEQ_T_SGP_IMP_HD.NEXTVAL 
+         FROM DUAL 
+    </select>
+    <update id="updatePrevStatus" parameterClass="java.util.HashMap">
+        UPDATE T_SGP_IMP_HD 
+        SET STATUS = #status#, DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#
+        WHERE ID_SGP_IMP_BATCH = #idSgpImpBatch#
+    </update>
+    <update id="updateHD" parameterClass="java.util.HashMap">
+        UPDATE T_SGP_IMP_HD 
+        SET 
+             HEADER_ID     = #headerId#
+            ,HEADER_FILLER = #headerFiller#
+            ,FILE_PROC_DATE= #fileProcDate#
+            ,FOOTER_ID     = #footerId#
+            ,FOOTER_FILLER = #footerFiller#
+            ,TOTALREC      = #totalrec#
+            ,TOTALAMT      = #totalamt#
+            ,DATE_UPDATED  = sysdate
+            ,ID_LOGIN      = #idLogin#
+        WHERE ID_SGP_IMP_BATCH = #idSgpImpBatch#
+    </update>
+    <update id="updateTotal_Amt_Due" parameterClass="java.util.HashMap">
+        UPDATE T_BAC_H SET TOTAL_AMT_DUE = TOTAL_AMT_DUE - #totalAmtDue#, DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#
+        <isNotNull property="auditId">
+        ,ID_AUDIT = #auditId#
+        </isNotNull>
+        WHERE TRIM(ID_BILL_ACCOUNT)= TRIM(#idBillAccount#)
+    </update>
+    <insert id="insertErrorLog1" parameterClass="java.util.HashMap">
+        INSERT INTO T_BATCH_LOG
+               (ID_BATCH_LOG, ID_BATCH_TYPE, ID_BATCH_REF_NO, ERROR_MSG, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES (#idBatchLog#, #idBatchType#, #idBatchRefNo#, #errorMsg#, sysdate, sysdate, #idLogin#)
+    </insert>
+    <insert id="createBatchHeader" parameterClass="java.util.HashMap">
+        INSERT INTO T_SGP_IMP_HD
+               (ID_SGP_IMP_BATCH, FILENAME, CLOSE_MONTHYEAR, STATUS, DATE_UPLOADED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES (#idSgpImpHd#, #filename#, #closeMonthYear#, #status#, sysdate, sysdate, sysdate, #idLogin#)
+    </insert>
+    <insert id="CreateBatchRecordError" parameterClass="java.util.HashMap">
+        INSERT INTO T_SGP_IMP_HD
+               (ID_SGP_IMP_BATCH, FILENAME, CLOSE_MONTHYEAR, STATUS, DATE_UPLOADED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES (#idSgpImpHd#, #filename#, #closeMonthYear#, #status#, sysdate, sysdate, sysdate, #idLogin#)
+    </insert>
+    <insert id="insertDT" parameterClass="java.util.HashMap">
+        INSERT INTO T_SGP_IMP_DT
+          ( ID_SGP_IMP_BATCH, SEQ_NO, DETAIL_ID, BUSINESS_DATE, ACCOUNT_NO, INVOICE_NO, SC_NO, 
+            UGID, TSN, AMOUNT, AMT1, MOP1, AMT2, MOP2, AMT3, MOP3, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+        VALUES (#idSgpImpBatch#, #seqNo#, #detailId#, #businessDate#, #accountNo#, #invoiceNo#, 
+                #scNo#, #ugid#, #tsn#, #amount#, #amt1#, #mop1#, #amt2#, #mop2#, #amt3#, #mop3#, sysdate, sysdate, #idLogin#)
+    </insert>
+    <insert id="insertCashBook" parameterClass="java.util.HashMap">
+        INSERT INTO T_CSB_H
+               (RECEIPT_NO, ID_CUST, ID_COM_BANK, ID_BILL_ACCOUNT, PMT_METHOD, DATE_TRANS, 
+               RECEIPT_REF, CUR_CODE, AMT_RECEIVED, REMARK, PMT_STATUS, BALANCE_AMT, 
+               REFERENCE1, REFERENCE2, BANK_CHARGE, PAID_PRE_INVOICE, OVER_PAID , IS_CLOSED, IS_DELETED, DATE_CREATED,
+               DATE_UPDATED, ID_LOGIN
+                <isNotNull property="auditId">
+                ,ID_AUDIT
+                </isNotNull>
+               )
+        VALUES (#receiptNo#, #idCust#, #idComBank#, #idBillAccount#, #pmtMethod#, to_date(#dateTrans#, 'yyyy/MM/dd'), 
+                #receiptRef#, #curCode#, #amtReceived#, #remark#, #pmtStatus#, #balanceAmt#, 
+                #reference1#, #reference2#, #bankCharge#, #paidPreInvoice#, #overPaid#, #isClosed#, #isDeleted#, sysdate, 
+                sysdate, #idLogin#
+                <isNotNull property="auditId">
+                ,#auditId#
+                </isNotNull>
+                )
+    </insert>
+</sqlMap>

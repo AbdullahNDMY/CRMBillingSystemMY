@@ -1,0 +1,8 @@
+@CHARSET "ISO-8859-1";
+.resultInfo TD.header {
+	text-align: left !important;
+}
+.resultInfo td {
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+}

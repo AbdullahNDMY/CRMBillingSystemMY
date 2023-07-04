@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN001/C_CMN001S06SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN001/C_CMN001S01SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.c_cmn001.blogic.C_CMN001R01BLogic"
+        id="C_CMN001R01BSBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.c_cmn001.blogic.CMN001R01BLogic"
+        name="/C_CMN001/C_CMN001R01BLogic" scope="singleton">
+        <property name="businessLogic" ref="C_CMN001R01BSBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.c_cmn001.blogic.C_CMN001LogoffBLogic"
+        name="/C_CMN001/C_CMN001S02SCR" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN001/C_CMN001S03SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN001/C_CMN001S04SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN001/C_CMN001S05SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/C_CMN001/C_CMN001R02BLogic" scope="singleton">
+        <property name="businessLogic" ref="C_CMN001R02BSBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.c_cmn001.blogic.C_CMN001R02BLogic"
+        id="C_CMN001R02BSBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+</beans>

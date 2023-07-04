@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<!-- BEGIN B_RPT_SB_COMMON -->
+	<!-- Function getting customer info -->
+	<select id="B_RPT.getCustomerInformation" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.util.HashMap">
+		SELECT A.CUST_NAME "CUSTOMER_NAME", 
+			   C.CONTACT_NAME "CUSTOMER_CONTACT_NAME",
+			   A.CO_TEL_NO "CUSTOMER_CO_TEL_NO", 
+			   A.CO_FAX_NO "CUSTOMER_CO_FAX_NO",  
+			   A.HOME_TEL_NO "CUSTOMER_HOME_TEL_NO", 
+			   A.HOME_FAX_NO "CUSTOMER_FAX_TEL_NO", 
+               A.CO_REGNO "CUSTOMER_REG_NO", 
+               A.CUSTOMER_TYPE CUSTOMER_TYPE,
+			   B.ADR_LINE1 "CUSTOMER_ADDRESS1", 
+			   B.ADR_LINE2 "CUSTOMER_ADDRESS2", 
+			   B.ADR_LINE3 "CUSTOMER_ADDRESS3",  
+			   B.ZIP_CODE "CUSTOMER_ZIPCODE", 
+			   (B.ZIP_CODE || ' ' || B.COUNTRY) CUSTOMER_ADDRESS4, 
+			   NVL(
+		            ( 
+		              SELECT RC.VALUE 
+		              FROM RESOURCESMAINT RC
+		              WHERE B.COUNTRY=RC.RESOURCE_ID AND
+            	  			CATEGORY='COUNTRY'              
+		            ),
+		            '') "CUSTOMER_COUNTRY_NAME"	,
+		       m_user.USER_NAME
+		FROM 
+		M_CUST A left join M_CUST_ADR B 
+		  ON A.ID_CUST = B.ID_CUST AND B.ADR_TYPE = #addType# AND A.Is_Deleted='0' 
+		  LEFT JOIN M_CUST_CTC C 
+		  ON C.ID_CUST = A.ID_CUST AND C.CONTACT_TYPE = 'PC' AND A.Is_Deleted='0'
+		  LEFT JOIN M_USER m_user
+		  ON m_user.ID_USER = A.ACC_MGR_PRIM  and m_user.IS_DELETED = 0
+		WHERE A.ID_CUST = #customerID#	
+	</select>
+	
+	<select id="B_RPT.getUserInfo" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.lang.String">
+			SELECT ID_USER,USER_NAME FROM M_USER WHERE ID_USER=#isUser#
+	</select>
+	
+	<!-- Function getting company info -->
+	<select id="B_RPT.getCompanyInformation" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.util.HashMap">
+		SELECT  COM_NAME "COMPANY_NAME",
+	       		COM_ADR_LINE1 "COMPANY_ADDRESS1",
+	       		COM_ADR_LINE2 "COMPANY_ADDRESS2",
+	       		COM_ADR_LINE3 "COMPANY_ADDRESS3",
+	       		COM_TEL_NO "COMPANY_TEL_NO",
+	        	COM_FAX_NO "COMPANY_FAX_NO",
+	         	COM_REGNO "COMPANY_REG_NO",
+	         	COM_GST_REG_NO "COMPANY_GST_REG_NO",
+	        	ZIP_CODE "COMPANY_POSTAL_CODE", 
+	        	G.COM_WEBSITE "COM_WEBSITE",
+	        	NVL(
+		            ( 
+		              SELECT RC.VALUE 
+		              FROM RESOURCESMAINT RC
+		              WHERE COUNTRY=RC.RESOURCE_ID AND
+            	  			CATEGORY='COUNTRY'              
+		            ),
+		            '') "COMPANY_COUNTRY_NAME"
+	         
+		FROM M_COM G, 
+			 M_COM_ADR G_A
+	 	WHERE					
+	            G.ID_COM = (SELECT MAX(ID_COM) FROM M_COM) AND
+	            G.ID_COM = G_A.ID_COM AND
+	            G_A.COM_ADR_TYPE = 'CA'
+    </select>
+    
+    <!-- Function getting report template -->
+	<select id="B_RPT.getReportTemplate" 
+			resultClass="java.lang.String" 
+			parameterClass="java.util.HashMap">
+		SELECT	a.VALUE	"templatePath"
+		FROM	RESOURCESMAINT A
+		WHERE
+				A.RESOURCE_ID = #reportCode# || 
+				(
+					SELECT b.SET_VALUE FROM M_GSET_D b 
+					WHERE b.ID_SET = 'SYSTEMBASE' AND 
+						  b.SET_SEQ = 1 
+				) AND	
+				A.CATEGORY = 'RPT'
+    </select>
+	<!-- END B_RPT_COMMON -->
+	
+	<!-- BEGIN B_RPT_SB01 -->
+	<select id="B_RPT_SB01.getCustInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT M.*, A.*
+		FROM M_CUST M LEFT JOIN M_CUST_ADR A
+		ON M.ID_CUST = A.ID_CUST AND A.ADR_TYPE = #addType# AND M.IS_DELETED = 0
+		WHERE M.ID_CUST = #idCust# 
+	</select>
+	<select id="B_RPT_SB01.getPlanInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT TO_CHAR(A.DATE_CREATED, 'dd/MM/yyyy') AS DATE_CREATED_STR,
+			  TO_CHAR(B.SVC_START, 'dd/MM/yyyy') AS SVC_START_STR,
+			  TO_CHAR(B.BILL_DESC) BILL_DESC
+		FROM T_CUST_PLAN_H A, T_CUST_PLAN_D B
+		WHERE A.ID_CUST = #idCust#
+		AND A.ID_CUST_PLAN = #idCustPlan#
+		AND A.ID_CUST_PLAN = B.ID_CUST_PLAN
+		AND B.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+		AND A.IS_DELETED = 0
+		AND B.IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getComInfo" resultClass="java.util.HashMap">
+		SELECT G.* FROM M_COM G WHERE G.ID_COM IN (SELECT MAX(ID_COM) FROM M_COM)
+	</select>
+	<select id="B_RPT_SB01.getComCtcInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT L.* FROM M_COM_CTC L WHERE L.ID_COM IN (SELECT MAX(ID_COM) FROM M_COM_CTC) AND COM_CTC_TYPE = #comType#
+	</select>
+	<select id="B_RPT_SB01.getSSM" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+		SELECT DISTINCT(M.INFO_ID)
+		FROM M_SSM M, (SELECT L.SVC_LEVEL1, L.SVC_LEVEL2
+			  FROM T_CUST_PLAN_H H, T_CUST_PLAN_D D, T_CUST_PLAN_LINK L
+			  WHERE H.ID_CUST_PLAN = (SELECT ID_CUST_PLAN FROM T_SUBSCRIPTION_INFO WHERE ID_SUB_INFO = #idSubInfo#)
+			  AND H.ID_CUST_PLAN = D.ID_CUST_PLAN
+			  AND D.ID_CUST_PLAN_GRP = L.ID_CUST_PLAN_GRP
+			  AND L.IS_DELETED = 0
+			  <dynamic>
+			  	<isNotNull property="idCustPlanGrp" prepend="AND">
+			  		D.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+			  	</isNotNull>
+			  </dynamic>
+			 ) L
+		WHERE M.REPORT = 1
+		AND M.SVC_GRP = L.SVC_LEVEL1
+		AND M.ID_SERVICE = L.SVC_LEVEL2
+		AND M.IS_DELETED = 0
+		ORDER BY M.INFO_ID ASC
+	</select>
+	<select id="B_RPT_SB01.selectServiceBasicInfo" resultClass="java.lang.String">
+		select r.resource_id
+		from RESOURCESMAINT r
+		where r.CATEGORY = 'SUBSCRIPTION_INFO'
+		  and r.IS_DELETED = 0
+		order by r.SEQ asc
+ 	</select>
+	<select id="B_RPT_SB01.getSubscriptionInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT C.id_cust_plan, C.access_account, 
+			   C.access_pw, C.access_tel, 
+			   C.ssid, C.wep_key, C.router_pw, 
+			   C.router_no, C.router_type, C.modem_no, 
+			   C.mac_id, C.adsl_del_no, C.circuit_id, 
+			   C.carrier, C.date_created, C.date_updated, 
+			   C.id_login, C.is_deleted, C.id_audit, 
+			   C.id_sub_info, to_char(C.memo) memo, 
+			   (SELECT N.SUPPLIER_NAME FROM M_SUPPLIER_H N WHERE N.ID_SUPPLIER = C.CARRIER) AS CARRIER_NAME
+		FROM T_SUBSCRIPTION_INFO C
+		WHERE C.ID_SUB_INFO = #idSubInfo#
+			AND C.IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getOperationAddress" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT * 
+		FROM T_INST_ADR
+		WHERE ID_SUB_INFO = #idSubInfo#
+			AND IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getFTPInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT * 
+		FROM T_FTP_INT
+		WHERE ID_SUB_INFO = #idSubInfo#
+			AND IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getMailAddress" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT D.id_mail, D.id_sub_info, 
+			   D.domain_name, D.pop_server_name, 
+			   D.smtp_server_name, D.auto_mail_acc, 
+			   D.auto_mailbox_qty, D.auto_virus_scan, 
+			   D.auto_anti_spam, D.auto_junk_mgt, 
+			   D.opt_mail_acc, D.opt_base_qty, 
+			   D.opt_addt_option, D.opt_mailbox_qty, 
+			   D.opt_virus_scan, D.opt_anti_spam, 
+			   D.opt_junk_mgt, D.is_deleted, D.date_created, 
+			   D.date_update, D.id_login, D.id_audit, to_char(D.memo) memo,
+               D.webmail_url
+		FROM T_MAIL_ADDRESS D
+		WHERE D.ID_SUB_INFO = #idSubInfo#
+			AND D.IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getMailAccount" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT R.* 
+		FROM T_MAIL_ADDRESS D, T_MAIL_ACCOUNT R
+		WHERE D.ID_SUB_INFO = #idSubInfo#
+    		AND D.ID_MAIL = R.ID_MAIL
+    		AND D.IS_DELETED = 0
+    		AND R.IS_DELETED = 0
+    	ORDER BY to_char(R.DATE_CREATED,'yyyymmdd'),upper(R.MAIL_ACCOUNT)
+	</select>
+	<select id="B_RPT_SB01.getRackPower" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT t.rack_no,t.max_power,ML.EQUIP_LOCATION,t.EQUIP_SUITE FROM 
+	    (SELECT d.rack_no,d.max_power,d.equip_location,d.equip_suite
+	        FROM T_RACK_POWER_H H, T_RACK_POWER_D D
+	        WHERE H.ID_RACK_H = D.ID_RACK_H
+	          AND H.ID_SUB_INFO = #idSubInfo#
+	          AND H.IS_DELETED = 0
+	          AND D.IS_DELETED = 0 order by d.ID_RACK_D) T 
+       left join M_EQUIP_LOCATION ML on t.equip_location = ML.ID_EQUIP_LOCATION AND ML.Is_Deleted=0
+	</select>
+	<select id="B_RPT_SB01.getItContact" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT H.id_contact, H.id_sub_info, 
+			   H.is_deleted, H.date_created, 
+			   H.date_update, H.id_login, H.id_audit, to_char(H.memo) memo,
+			D.*
+		FROM T_IT_CONTACT_H H, T_IT_CONTACT_D D
+		WHERE H.ID_CONTACT = D.ID_CONTACT
+			AND H.ID_SUB_INFO = #idSubInfo#
+			AND H.IS_DELETED = 0
+			AND D.IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getTeamwork" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT E.id_teamwork, E.id_sub_info, 
+			   E.url, E.admin_id, E.admin_pw, 
+			   E.email_domain_adr, E.server_pop3, 
+			   E.server_imap, E.server_smtp, 
+			   E.account_name, E.account_pw, 
+			   E.is_deleted, E.date_created, 
+			   E.date_update, E.id_login, E.id_audit, to_char(E.memo) memo
+		FROM T_TEAMWORK E
+		WHERE E.ID_SUB_INFO = #idSubInfo#
+			AND E.IS_DELETED = 0
+	</select>
+	<select id="B_RPT_SB01.getCompanyInfo" resultClass="java.util.HashMap">
+		SELECT A.COM_NAME, B.COM_ADR_LINE1, B.COM_ADR_LINE2, B.COM_ADR_LINE3,
+		  B.ZIP_CODE, B.COUNTRY, A.COM_TEL_NO, A.COM_FAX_NO, A.COM_REGNO, A.COM_WEBSITE,A.COM_GST_REG_NO
+		FROM M_COM A, M_COM_ADR B
+		WHERE A.ID_COM = B.ID_COM
+			AND B.COM_ADR_TYPE = 'CA'
+			AND A.IS_DELETED = 0
+	</select>
+	<!-- END B_RPT_SB01 -->
+	
+	<!-- BEGIN B_RPT_SB02 -->
+	
+	<!-- END B_RPT_SB02 -->
+	
+	<!-- BEGIN B_RPT_SB03 -->
+	<select id="B_RPT_SB03.getUserName" parameterClass="java.lang.String" resultClass="java.lang.String">
+	    SELECT  T.USER_NAME
+		FROM M_USER T 
+		WHERE
+			T.ID_USER=#loginId# AND
+			T.IS_DELETED='0'
+	</select>
+	<!-- END B_RPT_SB03 -->
+	
+	<!--/////////////////////////// BEGIN B_RPT_SB04 ///////////////////////-->
+	<!-- Function getting service info -->
+	<select id="B_RPT_SB04.getServiceInfo" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.util.HashMap">
+		SELECT  
+				TO_CHAR(D.COMPLETION_DATE,'DD/MM/YYYY') "SERVICE_COMMISSION_DATE",
+				TO_CHAR(D.BILL_DESC) "SERVICE_NAME",
+                (
+	                CASE
+	                  WHEN IS_LUMP_SUM = 1 THEN TO_CHAR(D.BILL_DESC)
+	                  WHEN IS_LUMP_SUM = 0 THEN TO_CHAR(D.BILL_DESC)
+	                END
+                ) "PRODUCT_SERVICE_DESCRIPTION"
+	         
+		FROM T_CUST_PLAN_H H, 
+			 T_CUST_PLAN_D D
+	 	WHERE					
+	            H.ID_CUST_PLAN = D.ID_CUST_PLAN AND
+                D.ID_CUST_PLAN_GRP = #idCustPlanGrp# AND
+	            D.ID_CUST_PLAN = #customerPlanID# AND
+	            H.IS_DELETED='0' AND
+	            D.IS_DELETED='0'
+    </select>
+    
+    <select id="B_RPT_SB04.getArrayInfo" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+    	SELECT	distinct(to_char(O.INFO_ID)) INFO_ID
+		FROM	T_CUST_PLAN_H K, 
+		        T_CUST_PLAN_D L,
+		        T_CUST_PLAN_LINK M,
+		        M_SSM O,
+		        M_SVC P
+		WHERE				
+		      <dynamic>						
+				<isNotEmpty property="idCustPlan">
+					K.ID_CUST_PLAN = #idCustPlan# AND	
+				</isNotEmpty>
+				<isNotEmpty property="idCustPlanGrp">
+					L.ID_CUST_PLAN_GRP = #idCustPlanGrp# AND	
+				</isNotEmpty>						
+			  </dynamic>
+		      L.ID_CUST_PLAN_GRP = M.ID_CUST_PLAN_GRP AND	
+		      L.ID_CUST_PLAN = K.ID_CUST_PLAN AND
+		      M.IS_DELETED = 0 AND
+		      O.ID_SERVICE = M.SVC_LEVEL2 AND
+		      O.SVC_GRP = M.SVC_LEVEL1 AND
+		      O.ENTRY = 1 AND
+		      O.IS_DELETED = 0 AND
+		      P.ID_SERVICE = M.SVC_LEVEL2
+		 ORDER BY O.INFO_ID
+	</select>
+    
+    <!-- Function getting rack equipment location info -->
+	<select id="B_RPT_SB04.getRackEquipmentLocationInfo" 
+			resultClass="java.util.HashMap" 
+			parameterClass="java.util.HashMap">
+	    SELECT RACK_NO "rackNo",
+	    	   MAX_POWER "maxPower",
+	    	  NVL(
+			    	   TO_CHAR
+			    	   (
+				    	   	(
+					    	   	SELECT EQUIP_LOCATION 
+					    	   	FROM M_EQUIP_LOCATION MN 
+					    	   	WHERE MN.ID_EQUIP_LOCATION = TD.EQUIP_LOCATION
+				    	   	)
+			    	   ),
+			    	   ' '
+	    	     ) "equipmentLocation",
+	    	  EQUIP_SUITE "equipmentSuite" 
+		FROM T_RACK_POWER_H TH,
+		     T_RACK_POWER_D TD
+		WHERE TH.ID_RACK_H = TD.ID_RACK_H AND
+		      TH.ID_SUB_INFO = #subscriptionID# AND
+		      TH.IS_DELETED = 0 AND
+		      TD.IS_DELETED = 0
+		order by TD.ID_RACK_D
+      </select>
+      
+	<!--////////////////////////// END B_RPT_SB04 //////////////////////////-->
+</sqlMap>

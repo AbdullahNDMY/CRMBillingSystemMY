@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+   <bean id="customerTypeCodeList"
+         class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+         init-method="load">
+	  <property name="codeListMap">
+	    <map>	     
+	      <entry key="CORP">
+	        <value>Corporate</value>
+	      </entry>
+	      <entry key="CONS">
+	        <value>Consumer</value>
+	      </entry>
+	    </map>
+	  </property>
+	</bean>
+	
+	<bean id="billingInstructionCodeList"
+          class="jp.terasoluna.fw.web.codelist.MappedCodeListLoader"
+          init-method="load">
+	  <property name="codeListMap">
+	    <map>	     
+	      <entry key="1">
+	        <value>12 (Yearly)</value>
+	      </entry>
+	      <entry key="2">
+	        <value>6 (Bi-Annually)</value>
+	      </entry>
+	      <entry key="3">
+	        <value>3 (Quarterly)</value>
+	      </entry>
+	      <entry key="4">
+	        <value>2 (Bi-Monthly)</value>
+	      </entry>
+	      <entry key="5">
+	        <value>1 (Monthly)</value>
+	      </entry>
+	      <entry key="6">
+	        <value>0 (One Time)</value>
+	      </entry>
+	    </map>
+	  </property>
+	</bean>
+  
+</beans>

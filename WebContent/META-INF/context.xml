@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+  <Resource
+     name="jdbc/BsysDataSource"
+     type="javax.sql.DataSource"
+     driverClassName="oracle.jdbc.OracleDriver"
+     password="password"
+     maxIdle="20"
+     maxWait="5000"
+     username="BSYSCRM"
+     url="jdbc:oracle:thin:@localhost:1521:bsysdb"
+     maxActive="100"
+     removeAbandoned="true"
+     removeAbandonedTimeout="300"
+     logAbandoned="true"/>
+  <Resource
+     name="jdbc/BsysRadiusDataSource"
+     type="javax.sql.DataSource"
+     driverClassName="oracle.jdbc.OracleDriver"
+     password="password"
+     maxIdle="20"
+     maxWait="5000"
+     username="BSYSCRM"
+     url="jdbc:oracle:thin:@localhost:1521:bsysdb"
+     maxActive="100"
+     removeAbandoned="true"
+     removeAbandonedTimeout="300"
+     logAbandoned="true"/>   
+</Context>

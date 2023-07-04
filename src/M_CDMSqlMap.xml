@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_CDM">
+
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+  <select id="SELECT.M_CDM.SQL001" 
+  	parameterClass="java.lang.String"
+  	resultClass="nttdm.bsys.m_cdm.bean.MCodeBean">
+	SELECT id_code, 
+		id_sub_code,
+		type_val,
+		cur_val as value,
+		0 as status,
+		RESET_NO as reset_no
+	FROM m_code
+	WHERE is_deleted=0
+	  AND id_code=#id_code#
+	ORDER BY id_sub_code asc  
+  </select>
+  <select id="SELECT.M_CDM.SQL002"
+  	parameterClass="java.lang.String"  
+  	resultClass="java.lang.String"
+  	resultSetType="SCROLL_INSENSITIVE">
+	SELECT  
+	(SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=1) || 
+	(SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=2) ||
+	(SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=3) ||          
+	(SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=4) ||
+	(SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=5) ||
+	 (SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=6) ||
+      (SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=7) ||
+       (SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=8) ||
+	 (SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=9) ||
+	 (SELECT DECODE(type_val,'01',TO_CHAR(sysdate,'YY')
+		                      ,'02',TO_CHAR(sysdate,'YYYY')
+		                      ,'03',TO_CHAR(sysdate,'YYYYMMDD')
+		                      ,'04',TO_CHAR(sysdate,'YYMMDD')
+		                      ,'07',(substr(TO_CHAR(sysdate,'YYYY'),1,1)||substr(TO_CHAR(sysdate,'YYYY'),3,2))
+		                      ,'08',TO_CHAR(sysdate,'YYMM')
+		                      ,'09',TO_CHAR(sysdate,'MM')
+		                      ,cur_val
+		                      ) as code_value
+		FROM m_code
+		WHERE is_deleted=0
+		  AND id_code=#id_code#
+		  AND id_sub_code=10) as code_value
+	FROM DUAL      
+  </select>
+  <select id="SELECT.M_CDM.SQL003"
+  	parameterClass="nttdm.bsys.m_cdm.bean.MCodeBean"  
+  	resultClass="java.lang.Integer">
+	SELECT NVL(MAX(is_deleted),2) as flag
+	FROM m_code  
+	WHERE id_code=#id_code#
+	AND id_sub_code=#id_sub_code# 	
+  </select>
+  <insert id="INSERT.M_CDM.SQL001"
+  	parameterClass="nttdm.bsys.m_cdm.bean.MCodeBean">
+	INSERT INTO m_code(id_code,reset_no,id_sub_code,type_val,init_val,cur_val,is_deleted,date_created,date_updated,id_login,id_audit)
+	VALUES(#id_code#,#reset_no#,#id_sub_code#,#type_val#,DECODE(#type_val#,
+												'05',#cur_val#,
+												'06',#cur_val#,TO_CHAR(SYSDATE,'YYYYMM')),
+			DECODE(#type_val#,'05',#cur_val#,
+							  '06',#cur_val#,
+							   TO_CHAR(SYSDATE,'YYYYMM')),0,SYSDATE,SYSDATE,#id_login#,#id_audit#)  
+  </insert>
+  <update id="UPDATE.M_CDM.SQL001"
+  	parameterClass="nttdm.bsys.m_cdm.bean.MCodeBean">
+	UPDATE m_code
+	SET type_val=#type_val#,  
+		init_val=DECODE(#type_val#,
+				'05',#cur_val#,
+				'06',#cur_val#,TO_CHAR(SYSDATE,'YYYYMM')),
+	    cur_val=DECODE(#type_val#,'05',#cur_val#,
+							  '06',#cur_val#,
+							   TO_CHAR(SYSDATE,'YYYYMM')),    
+	    date_updated=SYSDATE,
+	    id_login=#id_login#,
+	    id_audit=#id_audit#,
+	    reset_no=#reset_no#
+	WHERE id_code=#id_code#
+	AND id_sub_code=#id_sub_code#
+  </update>
+  <update id="UPDATE.M_CDM.SQL002"
+  	parameterClass="nttdm.bsys.m_cdm.bean.MCodeBean">
+	UPDATE m_code
+	SET type_val=#type_val#,  
+		init_val=DECODE(#type_val#,
+				'05',#cur_val#,
+				'06',#cur_val#,TO_CHAR(SYSDATE,'YYYYMM')),
+	    cur_val=DECODE(#type_val#,'05',#cur_val#,
+							  '06',#cur_val#,
+							   TO_CHAR(SYSDATE,'YYYYMM')),    
+	    is_deleted=0,
+	    date_created=SYSDATE,
+	    date_updated=SYSDATE,
+	    id_login=#id_login#,
+	    id_audit=#id_audit#,
+	    reset_no=#reset_no#
+	WHERE id_code=#id_code#
+	AND id_sub_code=#id_sub_code#
+  </update>
+  <update id="UPDATE.M_CDM.SQL003"
+  parameterClass="nttdm.bsys.m_cdm.bean.MCodeBean">
+  	UPDATE m_code
+  	SET is_deleted=1,
+  		id_login=#id_login#,
+  		id_audit=#id_audit#
+  	WHERE id_code=#id_code#
+	AND id_sub_code=#id_sub_code#
+  </update>
+</sqlMap>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+
+
+<formset>
+    <!-- validate mandatory fields -->
+      <form name="/C_CMN001R01BLogic">
+        <field property="id_user"
+            depends="required">                 
+           <msg key="errors.ERR1SC005" name="required" />  
+           <arg key="User" position="0" resource="false" name="required"/>
+          
+        </field> 
+        
+        <field property="password"
+            depends="required">                 
+           <msg key="errors.ERR1SC005" name="required" />  
+           <arg key="Password" position="0" resource="false" name="required"/>
+         
+        </field> 
+        </form>
+        </formset>
+
+</form-validation>

@@ -1,0 +1,1449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="BIF">
+<select id="SELECT.B_BIF.SQL001" 
+          resultClass="nttdm.bsys.bif.bean.B_BIFBean"
+          resultSetType="SCROLL_INSENSITIVE"
+          parameterClass="nttdm.bsys.bif.dto.B_BIFInput">
+SELECT ROWNUM AS "row_num", t1.*
+FROM (
+    SELECT	DISTINCT c.cust_name, d.user_name, TO_CHAR(a.date_req, 'DD/MM/YYYY') date_req, a.id_ref, 
+    		a.bif_type, a.id_status, a.date_req date_req1, a.REQ_USER prepared_by 
+	FROM t_bif_h a, m_cust c, m_user d,T_BIF_D f,
+  		(SELECT	t.ID_CUST_PLAN, p.ID_CUST_PLAN_GRP, l.ID_CUST_PLAN_LINK, l.JOB_NO		
+		FROM	T_BIF_D t, T_CUST_PLAN_D p, T_CUST_PLAN_LINK l		
+		WHERE	t.ID_CUST_PLAN = p.ID_CUST_PLAN
+		AND p.ID_CUST_PLAN_GRP = l.ID_CUST_PLAN_GRP	) g, 
+		(SELECT	j.ID_CUST_PLAN, k.ID_SUB_INFO		
+		FROM	T_BIF_D j, T_SUBSCRIPTION_INFO k		
+		WHERE	j.ID_CUST_PLAN = k.ID_CUST_PLAN		) h,
+    	(SELECT	a.ID_CUST_PLAN, b.ID_CUST_PLAN_GRP, c.ID_CUST_PLAN_LINK, c.JOB_NO, d.ID_BILL_ACCOUNT		
+      	FROM	T_BIF_D a, T_CUST_PLAN_D b, T_CUST_PLAN_LINK c, T_CUST_PLAN_H d		
+      	WHERE	a.ID_CUST_PLAN = b.ID_CUST_PLAN
+      	AND b.ID_CUST_PLAN_GRP = c.ID_CUST_PLAN_GRP
+      	AND a.ID_CUST_PLAN = d.ID_CUST_PLAN) b
+	WHERE
+		a.ID_CUST = c.ID_CUST and 
+		a.ID_CONSLT = d.ID_USER and
+		f.ID_REF = a.ID_REF and
+		f.ID_CUST_PLAN = g.ID_CUST_PLAN and
+		f.ID_CUST_PLAN = h.ID_CUST_PLAN and
+    	f.ID_CUST_PLAN = b.ID_CUST_PLAN
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cust_name">
+				UPPER(c.cust_name) like UPPER('%$cust_name$%')
+			</isNotEmpty> 
+			<isNotEmpty prepend="AND" property="user_name">
+				UPPER(d.user_name) like UPPER('%$user_name$%')
+			</isNotEmpty> 
+			<isNotEmpty prepend="AND" property="id_ref">
+				UPPER(a.id_ref) like UPPER('%$id_ref$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="bif_type">
+				a.bif_type	=	#bif_type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				a.id_status	=	#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="job_no">
+				UPPER(g.JOB_NO) like UPPER('%$job_no$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="prepared_by">
+				UPPER(a.REQ_USER) like UPPER('%$prepared_by$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billing_account">
+				UPPER(b.ID_BILL_ACCOUNT) like UPPER('%$billing_account$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="subscription_id">
+				UPPER(h.ID_SUB_INFO) like UPPER('%$subscription_id$%')
+			</isNotEmpty>
+			<isNotEmpty property="start_date">
+				<isNotEmpty prepend="AND" property="end_date">
+					date_req BETWEEN TO_DATE(#start_date#,'dd/MM/yyyy') AND TO_DATE(#end_date#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_date">
+					date_req &gt;= TO_DATE(#start_date#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_date">
+				<isNotEmpty prepend="AND" property="end_date">
+					date_req &lt;= TO_DATE(#end_date# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+		</dynamic>
+		ORDER BY a.date_req DESC, a.ID_REF DESC
+		) t1
+</select>
+<select id="SELECT.B_BIF.SQL002" 
+          resultClass="java.lang.String">
+    SELECT COUNT(*)
+	FROM (
+    SELECT	DISTINCT c.cust_name, d.user_name, TO_CHAR(a.date_req, 'DD/MM/YYYY') date_req, a.id_ref, 
+    		a.bif_type, a.id_status, a.date_req date_req1, a.REQ_USER prepared_by 
+	FROM t_bif_h a, m_cust c, m_user d,T_BIF_D f,
+  		(SELECT	t.ID_CUST_PLAN, p.ID_CUST_PLAN_GRP, l.ID_CUST_PLAN_LINK, l.JOB_NO		
+		FROM	T_BIF_D t, T_CUST_PLAN_D p, T_CUST_PLAN_LINK l		
+		WHERE	t.ID_CUST_PLAN = p.ID_CUST_PLAN
+		AND p.ID_CUST_PLAN_GRP = l.ID_CUST_PLAN_GRP	) g, 
+		(SELECT	j.ID_CUST_PLAN, k.ID_SUB_INFO		
+		FROM	T_BIF_D j, T_SUBSCRIPTION_INFO k		
+		WHERE	j.ID_CUST_PLAN = k.ID_CUST_PLAN		) h,
+    	(SELECT	a.ID_CUST_PLAN, b.ID_CUST_PLAN_GRP, c.ID_CUST_PLAN_LINK, c.JOB_NO, d.ID_BILL_ACCOUNT		
+      	FROM	T_BIF_D a, T_CUST_PLAN_D b, T_CUST_PLAN_LINK c, T_CUST_PLAN_H d		
+      	WHERE	a.ID_CUST_PLAN = b.ID_CUST_PLAN
+      	AND b.ID_CUST_PLAN_GRP = c.ID_CUST_PLAN_GRP
+      	AND a.ID_CUST_PLAN = d.ID_CUST_PLAN) b
+	WHERE
+		a.ID_CUST = c.ID_CUST and 
+		a.ID_CONSLT = d.ID_USER and
+		f.ID_REF = a.ID_REF and
+		f.ID_CUST_PLAN = g.ID_CUST_PLAN and
+		f.ID_CUST_PLAN = h.ID_CUST_PLAN and
+    	f.ID_CUST_PLAN = b.ID_CUST_PLAN
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cust_name">
+				UPPER(c.cust_name) like UPPER('%$cust_name$%')
+			</isNotEmpty> 
+			<isNotEmpty prepend="AND" property="user_name">
+				UPPER(d.user_name) like UPPER('%$user_name$%')
+			</isNotEmpty> 
+			<isNotEmpty prepend="AND" property="id_ref">
+				UPPER(a.id_ref) like UPPER('%$id_ref$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="bif_type">
+				a.bif_type	=	#bif_type#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				a.id_status	=	#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="job_no">
+				UPPER(g.JOB_NO) like UPPER('%$job_no$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="prepared_by">
+				UPPER(a.REQ_USER) like UPPER('%$prepared_by$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billing_account">
+				UPPER(b.ID_BILL_ACCOUNT) like UPPER('%$billing_account$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="subscription_id">
+				UPPER(h.ID_SUB_INFO) like UPPER('%$subscription_id$%')
+			</isNotEmpty>
+			<isNotEmpty property="start_date">
+				<isNotEmpty prepend="AND" property="end_date">
+					date_req BETWEEN TO_DATE(#start_date#,'dd/MM/yyyy') AND TO_DATE(#end_date#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="end_date">
+					date_req &gt;= TO_DATE(#start_date#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="start_date">
+				<isNotEmpty prepend="AND" property="end_date">
+					date_req &lt;= TO_DATE(#end_date# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+		</dynamic>
+		ORDER BY a.date_req DESC, a.ID_REF DESC ) t
+</select>
+<select id="SELECT.ID_BILL_ACCOUNT" 
+	parameterClass="java.util.HashMap"
+    resultClass="java.util.HashMap">
+	SELECT	DISTINCT  a.ID_REF,d.ID_BILL_ACCOUNT
+	FROM t_bif_h a,T_BIF_D f,T_CUST_PLAN_H d
+	WHERE
+		f.ID_REF = a.ID_REF and
+    	f.ID_CUST_PLAN = d.ID_CUST_PLAN
+      	<dynamic prepend="AND">
+      	<isNotEmpty prepend="AND" property="id_ref">
+      	a.ID_REF in
+      	<iterate  property="id_ref" open="(" close=")" conjunction=",">
+      	   #id_ref[]# 
+      	</iterate>
+      	</isNotEmpty>
+         </dynamic>
+    ORDER BY a.ID_REF,d.ID_BILL_ACCOUNT
+</select>
+<select id="SELECT.B_BIF.SQL003" 
+	parameterClass="java.util.HashMap"
+    resultClass="java.lang.String">
+	SELECT SEQUENCE_NO 
+	FROM T_WF_SECTION
+	WHERE ID_SCREEN = #ID_SCREEN#
+	AND SECTION_NO = #SECTION_NO#
+</select>
+<select id="SELECT.B_BIF.SQL004" 
+	parameterClass="java.lang.String"
+    resultClass="java.lang.String">
+     SELECT
+	 	   T.ID_APPROVER_NAME
+	 FROM
+	 	 (
+	 	 	 SELECT
+				   WF.ID_WF_APPROVAL,
+				   U.USER_NAME AS ID_APPROVER_NAME
+			 FROM
+			       T_WF_APPROVAL WF LEFT JOIN M_USER U ON WF.ID_APPROVER = U.ID_USER
+			 WHERE
+			       WF.ID_REF = #idRef#
+			       AND APPR_STATUS = 'AS1' 
+			       AND WF.IS_DELETED = '0'
+			 ORDER BY
+			       WF.ID_WF_APPROVAL
+	 	 ) T
+	 WHERE
+	     ROWNUM = 1
+</select>
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+
+<!-- S02_01 -->
+	<update id="UPDATE.B_BIF.S02.SQL001" parameterClass="java.util.HashMap">
+		UPDATE T_BIF_H
+		SET BIL_OPBY = #BIL_OPBY#,
+			DATE_BIFRCV = TO_DATE(#DATE_BIFRCV#,'DD/MM/YYYY'),
+			BIL_REFNO = #BIL_REFNO#,
+			DATE_PRINTED = TO_DATE(#DATE_PRINTED#,'DD/MM/YYYY'),
+			DATE_SIGNED = TO_DATE(#DATE_SIGNED#,'DD/MM/YYYY'),
+			BIL_IDC = #BIL_IDC#,
+			BIL_GIN = #BIL_GIN#,
+			BIL_SI = #BIL_SI#,
+			BIL_COR = #BIL_COR#,
+			BIL_OTH = #BIL_OTH#,
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE ID_REF = #ID_REF#
+	</update>
+	<update id="UPDATE.B_BIF.S02.SQL002" parameterClass="java.util.HashMap">
+		UPDATE M_CUST
+		SET CUST_ACC_NO = #CUST_ACC_NO#,
+			DATE_UPDATED = sysdate, 
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE ID_CUST = #ID_CUST#
+	</update>
+  <select id="SELECT.B_BIF.S02_01.SQL001" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT
+        F.*        
+    FROM
+        M_CUST F
+    WHERE F.ID_CUST = #idCust#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL009" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT
+        P.*        
+    FROM
+        M_CUST_ADR P
+    WHERE P.ID_CUST = #idCust#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL002" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT
+        O.ID_REF, O.ID_QUO
+    FROM
+        T_QCS_H O INNER JOIN M_CUST C ON O.ID_CUST = C.ID_CUST
+    WHERE 
+    	O.ID_CUST = #idCust#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL003" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT
+        O.ID_QUO     
+    FROM
+        T_QCS_H O INNER JOIN M_CUST C ON O.ID_CUST = C.ID_CUST  
+    WHERE 
+    	O.ID_CUST = #idCust#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL004" resultClass="java.util.HashMap">
+    SELECT
+        C.USER_NAME,
+        C.ID_USER     
+    FROM
+        M_USER C
+    WHERE C.IS_DELETED = '0'
+    AND C.USER_STATUS ='1'
+    ORDER BY C.USER_NAME ASC
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL010" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT        
+        B.ID_JOBNO     
+    FROM
+        M_JOB_LIST B INNER JOIN M_CUST C ON B.ID_CUST = C.ID_CUST 
+    WHERE B.IS_DELETED = '0' AND B.ID_CUST = #idCust# ORDER BY ID_JOBNO DESC
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL011" 
+  parameterClass="java.lang.Object" 
+  resultClass="java.util.HashMap"
+  resultSetType="SCROLL_INSENSITIVE">
+    SELECT
+        '['||Q.CONTACT_TYPE||']'||Q.CONTACT_NAME AS CONTACT_NAME,
+        Q.CONTACT_TYPE,
+        Q.CONTACT_NAME as CONTACT_NAME_VALUE,
+        Q.TEL_NO,
+        Q.FAX_NO,
+        Q.EMAIL,
+        Q.EMAIL_CC,
+        case Q.CONTACT_TYPE when 'BC' then 1 when 'BC2' then 2 when 'BC3' then 3  
+        when 'BC4' then 4 when 'PC' then 5 when 'TC' then 6 else 7 end as SEQ
+    FROM
+        M_CUST_CTC Q
+     WHERE 
+    	Q.ID_CUST = #idCust#
+    ORDER BY SEQ
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL012" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT        
+        T.PLAN_NAME,T.BILL_CURRENCY, W.*, TO_CHAR(W.BILL_DESC) BILL_DESC_DISPLAY
+    FROM
+        M_PLAN_H T INNER JOIN T_CUST_PLAN_D W ON T.ID_PLAN = W.ID_PLAN   
+    WHERE INSTR(#idCustPlan#,':' || W.ID_CUST_PLAN || ':') > 0 AND W.IS_DISPLAY_DESC = '1'
+  </select>
+  
+  <!-- get all plan list order by lump sum -->
+  <select id="SELECT.B_BIF.S02_01.SQL012_01" parameterClass="java.lang.String" resultClass="nttdm.bsys.bif.bean.CustomerPlanServiceBean">
+    SELECT
+          A.BILL_INSTRUCT AS billInstruction,
+          A.BILL_CURRENCY AS billCurrency,
+          A.EXPORT_CURRENCY AS exportCurrency,
+          A.FIXED_FOREX AS fixedForex,
+          B.ID_CUST_PLAN AS idCustPlan,
+          B.ID_CUST_PLAN_GRP AS idCustPlanGrp,
+          B.IS_LUMP_SUM AS isLumpSum,
+          B.MIN_SVC_PERIOD AS isDisplayMinSvc,
+          B.AUTO_RENEW AS autoRenew,
+	      TO_CHAR(B.SVC_START,'dd/mm/yyyy') AS svcStart,
+	      TO_CHAR(B.SVC_END,'dd/mm/yyyy') AS svcEnd,
+          B.BILL_DESC AS itemDesc,
+          TO_CHAR(B.MIN_SVC_START,'dd/mm/yyyy') AS minSvcStart,
+          TO_CHAR(B.MIN_SVC_END,'dd/mm/yyyy') AS minSvcEnd,
+          B.CONTRACT_TERM AS contractTerm,
+          B.CONTRACT_TERM_NO AS contractTermNo,
+          B.DISC_LUMP_SUM AS discLumpSum
+    FROM
+          T_CUST_PLAN_H A INNER JOIN T_CUST_PLAN_D B 
+            ON A.ID_CUST_PLAN = B.ID_CUST_PLAN AND B.IS_DELETED='0'
+    WHERE
+          INSTR(#idCustPlan#,':' || A.ID_CUST_PLAN || ':') > 0
+    ORDER BY 
+          B.ID_CUST_PLAN ASC, B.ID_CUST_PLAN_GRP ASC
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL013" parameterClass="java.lang.String" resultClass="nttdm.bsys.bif.bean.CustomerPlanSubPlanBean">
+     SELECT
+           B.IS_LUMP_SUM AS isLumpSum,
+           C.ID_CUST_PLAN_LINK AS idCustPlanLink,
+           C.QUANTITY AS itemQty,
+           C.UNIT_PRICE AS itemUprice,
+           C.TOTAL_AMOUNT AS itemAmt,
+		   D.TAX_CODE AS itemGst,
+           C.ITEM_DESC AS itemDesc,
+           C.JOB_NO AS jobNo,
+           C.IS_DISPLAY_JOBNO AS isDisplayJobNo,
+           C.APPLY_GST AS applyGst,
+		   C.DISC_AMOUNT AS discAmount,
+	       B.DISC_LUMP_SUM AS discLumpSum,
+	       D.TAX_RATE AS taxRate
+	 FROM 
+	       T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C 
+	       ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+		   LEFT OUTER JOIN M_TAX D 
+	       ON D.ID_TAX=C.APPLY_GST AND D.IS_DELETED=0
+     WHERE
+           B.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+     ORDER BY
+           C.ID_CUST_PLAN_LINK ASC
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL014" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT        
+        T.PLAN_NAME, T.PLAN_DESC,T.BILL_CURRENCY, W.SVC_START, W.SVC_END, W.BILL_INSTRUCT,W.AUTO_RENEW,W.EXPORT_CURRENCY,W.FIXED_FOREX, W.IS_DISPLAY_DESC, X.*, TO_CHAR(X.ITM_DESC) ITM_DESC_DISPLAY, U.APPLY_GST, U.RATE_MODE
+    FROM
+        M_PLAN_H T INNER JOIN T_CUST_PLAN_D W ON T.ID_PLAN = W.ID_PLAN INNER JOIN T_CUST_PLAN_LINK X ON W.ID_CUST_PLAN = X.ID_CUST_PLAN INNER JOIN 
+        M_PLAN_D U ON U.ID_PLAN_GRP = X.ID_PLAN_GRP
+    WHERE INSTR(#idCustPlan#,':' || W.ID_CUST_PLAN || ':') > 0  AND U.ITEM_TYPE = 'O' AND X.IS_APPLY = '1'
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL017" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT        
+        T.PLAN_NAME,T.BILL_CURRENCY, W.*, TO_CHAR(W.BILL_DESC) BILL_DESC_DISPLAY
+    FROM
+        M_PLAN_H T INNER JOIN T_CUST_PLAN_D W ON T.ID_PLAN = W.ID_PLAN   
+    WHERE W.ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE TRIM(ID_REF) = TRIM(#ID_REF#)) AND W.IS_DISPLAY_DESC = '1'
+  </select>
+  
+  <!-- get all plan list order by lump sum -->
+  <select id="SELECT.B_BIF.S02_01.SQL017_01" parameterClass="java.lang.String" resultClass="nttdm.bsys.bif.bean.CustomerPlanServiceBean">
+    SELECT
+          A.BILL_INSTRUCT AS billInstruction,
+          A.BILL_CURRENCY AS billCurrency,
+          A.EXPORT_CURRENCY AS exportCurrency,
+          A.FIXED_FOREX AS fixedForex,
+          B.ID_CUST_PLAN AS idCustPlan,
+          B.ID_CUST_PLAN_GRP AS idCustPlanGrp,
+          B.IS_LUMP_SUM AS isLumpSum,
+          B.MIN_SVC_PERIOD AS isDisplayMinSvc,
+          B.AUTO_RENEW AS autoRenew,
+	      TO_CHAR(B.SVC_START,'dd/mm/yyyy') AS svcStart,
+	      TO_CHAR(B.SVC_END,'dd/mm/yyyy') AS svcEnd,
+          B.BILL_DESC AS itemDesc,
+          TO_CHAR(B.MIN_SVC_START,'dd/mm/yyyy') AS minSvcStart,
+          TO_CHAR(B.MIN_SVC_END,'dd/mm/yyyy') AS minSvcEnd,
+          B.CONTRACT_TERM AS contractTerm,
+          B.CONTRACT_TERM_NO AS contractTermNo,
+          B.DISC_LUMP_SUM AS discLumpSum
+    FROM
+          T_CUST_PLAN_H A INNER JOIN T_CUST_PLAN_D B 
+            ON A.ID_CUST_PLAN = B.ID_CUST_PLAN AND B.IS_DELETED='0'
+    WHERE
+          A.ID_CUST_PLAN IN 
+          (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #ID_REF#)
+    ORDER BY 
+          B.ID_CUST_PLAN ASC, B.ID_CUST_PLAN_GRP ASC
+  </select>
+  
+
+  
+  <select id="SELECT.B_BIF.S02_01.SQL018" parameterClass="java.lang.String"
+	resultClass="nttdm.bsys.bif.bean.CustomerPlanSubPlanBean">
+	SELECT B.IS_LUMP_SUM AS isLumpSum,
+	C.ID_CUST_PLAN_LINK AS idCustPlanLink,
+	C.QUANTITY AS itemQty,
+	C.UNIT_PRICE AS itemUprice,
+	C.TOTAL_AMOUNT AS itemAmt,
+	D.TAX_CODE AS itemGst,
+	C.ITEM_DESC AS itemDesc,
+	C.JOB_NO AS jobNo,
+	C.IS_DISPLAY_JOBNO AS isDisplayJobNo,
+	C.APPLY_GST AS applyGst,
+	C.DISC_AMOUNT AS discAmount,
+	B.DISC_LUMP_SUM AS discLumpSum,
+	D.TAX_RATE AS taxRate
+	FROM T_CUST_PLAN_D B
+	INNER JOIN T_CUST_PLAN_LINK C
+	ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP
+	AND C.IS_DELETED='0'
+	LEFT OUTER JOIN M_TAX D 
+	ON D.ID_TAX=C.APPLY_GST AND D.IS_DELETED=0
+	WHERE B.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	ORDER BY C.ID_CUST_PLAN_LINK ASC
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL019" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    SELECT        
+        T.PLAN_NAME, T.PLAN_DESC,T.BILL_CURRENCY, W.SVC_START, W.SVC_END, W.BILL_INSTRUCT,W.AUTO_RENEW,W.EXPORT_CURRENCY,W.FIXED_FOREX, TO_CHAR(X.ITM_DESC) ITM_DESC_DISPLAY, W.IS_DISPLAY_DESC, X.*, U.APPLY_GST, U.RATE_MODE
+    FROM
+        M_PLAN_H T INNER JOIN T_CUST_PLAN_D W ON T.ID_PLAN = W.ID_PLAN INNER JOIN T_CUST_PLAN_LINK X ON W.ID_CUST_PLAN = X.ID_CUST_PLAN INNER JOIN 
+        M_PLAN_D U ON U.ID_PLAN_GRP = X.ID_PLAN_GRP
+    WHERE W.ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE TRIM(ID_REF) = TRIM(#ID_REF#))  AND U.ITEM_TYPE = 'O' AND X.IS_APPLY = '1'
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL005" resultClass="java.util.HashMap">
+    SELECT
+        R.CUR_CODE     
+    FROM
+        M_CURRENCY R
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL006" resultClass="java.util.HashMap" parameterClass="java.lang.Object">
+    SELECT
+        T.SVC_TYPE     
+    FROM
+        M_SVC_TYPE T
+    WHERE T.SVC_GRP = #svcGroup#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL007" resultClass="java.util.HashMap" parameterClass="java.lang.Object">
+    SELECT
+        U.SVC_ITEM     
+    FROM
+        M_SVC_ITEM U
+    WHERE U.SVC_GRP = #svcGroup#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL008" resultClass="java.util.HashMap">
+    SELECT
+        N.SUPPLIER_NAME,
+        N.ID_SUPPLIER    
+    FROM
+        M_SUPPLIER_H N
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL015" resultClass="java.lang.Object">
+    SELECT
+          AA.SET_VALUE       
+    FROM
+          M_GSET_D AA
+    WHERE
+          AA.ID_SET = 'GST'
+          AND AA.SET_SEQ = 1
+          AND AA.IS_DELETED = '0'
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_01.SQL016" resultClass="java.lang.Object" parameterClass="java.lang.Object">
+    SELECT
+        R.RATE_TO       
+    FROM
+        M_CURRENCY R
+    WHERE R.CUR_CODE = #exportCurrency# AND R.RATE_DATE = (SELECT MAX(RATE_DATE) FROM M_CURRENCY WHERE CUR_CODE = #exportCurrency#)
+  </select>
+  <select id="SELECT.B_BIF.S02_01.SQL020" resultClass="java.util.HashMap" parameterClass="java.lang.Object">
+    SELECT DISTINCT B.ID_BILL_ACCOUNT
+	FROM T_BIF_D A, T_BAC_D B
+	WHERE A.ID_CUST_PLAN = B.ID_CUST_PLAN
+		AND TRIM(A.ID_REF) = TRIM(#idRef#)
+	ORDER BY B.ID_BILL_ACCOUNT
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_02.SQL001" resultClass="java.lang.String">
+		SELECT MAX(ID_REF) + 1 FROM T_BIF_H
+  </select>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL001" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_BIF_H (ID_REF,ID_CUST,ID_CONSLT,
+		    ID_QCS,ID_QUO,BIF_TYPE,ADR_TYPE,
+		    ADDRESS1, ADDRESS2, ADDRESS3, ADDRESS4,
+		    TEL_NO, FAX_NO,
+		    CONTACT_NAME,CUST_PO,JOB_NO,CUST_MODE,
+		    CTTERM,CTTERM3_DAY,DELIVERY,
+		    REMARKS,BILL_CUR,EXPORT_CUR,CONV_RATE,
+		    REQ_USER,DATE_REQ,USER_COMMENT,ID_STATUS,
+		    IS_CLOSED,IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN, ID_AUDIT,
+		    CONTACT_TYPE,CUST_NAME,ZIP_CODE,COUNTRY, OBTAIN_VERIFICATION,IS_DISPLAY_EXP_AMT,
+		    MULTI_BILL_PERIOD,TERM_DAY,DELIVERY_EMAIL,CONTACT_EMAIL,CONTACT_EMAIL_CC)
+		VALUES (#idRef#,#idCust#,#idConslt#,
+			#idQcs#,#idQuo#,#bifType#,#adrType#,
+			#addr1#, #addr2#, #addr3#, #addr4#,
+			#tel#, #fax#,
+			#contactName#,#custPo#,#jobNo#,#mode#,
+			#ctterm#,#ctterm3_day#,#delivery#,
+			#remarks#,#billCur#,#exportCur#,#convRate#,
+			#reqUser#,#dateReq#,#userComment#,'DS0','0',
+			'0',sysdate,sysdate,#idLogin#,#idAudit#,
+			#contactType#,#custName#,#zipCode#,#countryCd#, '0',#isExpAmt#,
+			#checkMultipleInOneInvoice#,#term_day#,#checkDeliveryEmail#,
+			#emailTo#,#emailCc#)	    
+  </insert>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL002" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_BIF_D (ID_REF,ID_CUST_PLAN,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES (#idRef#,#idCustPlan#,sysdate,sysdate,#idLogin#,#idAudit#)	    
+  </insert>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL003" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_SECTION (SECTION_GROUP,ID_REF,SECTION_NO,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES ('BIF-IDN',#idRef#,'B000',sysdate,sysdate,#idLogin#,#idAudit#)	    
+  </insert>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL004" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_SECTION (SECTION_GROUP,ID_REF,SECTION_NO,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES ('BOP-IDN',#idRef#,'B011',sysdate,sysdate,#idLogin#,#idAudit#)	    
+  </insert>
+  
+  <update id="UPDATE.B_BIF.S02_02.SQL005" parameterClass="java.util.HashMap">		
+		UPDATE T_CUST_PLAN_D SET						
+			SERVICES_STATUS = 'PS2',
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_CUST_PLAN = #idCustPlan# 	    
+  </update>
+  
+  <update id="UPDATE.B_BIF.S02_02.SQL006" parameterClass="java.util.HashMap">		
+		UPDATE T_CUST_PLAN_H SET						
+			PLAN_STATUS = 'PS2',
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_CUST_PLAN = #idCustPlan#
+  </update>
+  
+  <update id="UPDATE.B_BIF.S02_02.SQL007" parameterClass="java.util.HashMap">		
+		UPDATE T_BAC_H SET
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_BILL_ACCOUNT = (SELECT ID_BILL_ACCOUNT FROM T_CUST_PLAN_H WHERE ID_CUST_PLAN = #idCustPlan#)
+  </update>
+  
+  <select id="SELECT.B_BIF.S02_03.SQL001" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+    SELECT
+        A.*, B.USER_NAME CONSLT_NAME, C.CUST_ACC_NO,
+        (SELECT USER_NAME FROM M_USER WHERE A.REQ_USER = ID_USER) as REQ_USER_NAME,
+        (SELECT USER_NAME FROM M_USER WHERE A.BIL_OPBY = ID_USER) as BIL_OPBY_NAME,
+        (SELECT USER_NAME FROM M_USER WHERE A.VERIFY_BY = ID_USER) as VERIFY_BY_USER_NAME
+    FROM
+        T_BIF_H A, M_USER B, M_CUST C
+    WHERE 	A.ID_CONSLT = B.ID_USER
+    	AND A.ID_CUST = C.ID_CUST
+    	AND TRIM(A.ID_REF) = TRIM(#idRef#)
+  </select>
+  
+  <select id="SELECT.B_BIF.EMAILDETAILS" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+  	SELECT D.EMAIL AS EMAIL_TO, D.EMAIL_CC AS EMAIL_CC
+      FROM M_CUST_CTC D,T_BIF_H A
+      WHERE D.CONTACT_TYPE=A.CONTACT_TYPE
+      		AND A.ID_CUST = D.ID_CUST
+            AND TRIM(A.ID_REF) = TRIM(#idRef#)
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_03.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    SELECT
+        P.*        
+    FROM
+        M_CUST_ADR P
+    WHERE P.ID_CUST = #idCust# AND P.ADR_TYPE = #adrType#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_03.SQL003" resultClass="java.lang.Object" parameterClass="java.lang.String">
+    SELECT
+        C.USER_NAME        
+    FROM
+        M_USER C
+    WHERE C.IS_DELETED = '0' AND C.ID_USER = #idUser#
+  </select>
+  
+  <select id="SELECT.B_BIF.S02_03.SQL004" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+    SELECT
+        D.ID_CUST_PLAN        
+    FROM
+        T_BIF_D D
+    WHERE D.ID_REF = '$idRef$'
+  </select>
+  
+  <update id="UPDATE.B_BIF.S02_05.SQL001" parameterClass="java.util.HashMap">		
+		UPDATE T_BIF_H SET			
+		    <isNotEmpty property="changeIdConsultant">
+	    		OBTAIN_VERIFICATION = '0',
+	    	</isNotEmpty>
+			ID_CONSLT = #idConslt#,
+			ID_QCS = #idQcs#,
+			ID_QUO = #idQuo#,
+			ADR_TYPE = #adrType#,
+			ADDRESS1 = #addr1#,
+			ADDRESS2 = #addr2#,
+			ADDRESS3 = #addr3#,
+			ADDRESS4 = #addr4#,
+			TEL_NO = #tel#,
+			FAX_NO = #fax#,
+			CONTACT_NAME = #contactName#,
+			CUST_PO = #custPo#,
+			JOB_NO = #jobNo#,
+			CUST_MODE = #mode#,
+			CTTERM = #ctterm#,
+			CTTERM3_DAY = #ctterm3_day#,
+			DELIVERY = #delivery#,
+			REMARKS = #remarks#,
+			BILL_CUR = #billCur#,
+			EXPORT_CUR = #exportCur#,
+			CONV_RATE = #convRate#,
+			REQ_USER = #reqUser#,
+			DATE_REQ = #dateReq#,
+			USER_COMMENT = #userComment#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#,
+			CONTACT_TYPE = #contactType#,
+			CUST_NAME = #custName#,
+			ZIP_CODE = #zipCode#,
+			COUNTRY = #countryCd#,
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			MULTI_BILL_PERIOD = #checkMultipleInOneInvoice#,
+			TERM_DAY = #term_day#,
+			DELIVERY_EMAIL=#checkDeliveryEmail#,
+			CONTACT_EMAIL=#emailTo#,
+			CONTACT_EMAIL_CC=#emailCc#
+		WHERE ID_REF = #idRef# 	    
+  </update>
+  
+  <update id="DELETE.B_BIF.S02_06.SQL001" parameterClass="java.util.HashMap">		
+		UPDATE T_BIF_H SET						
+			IS_DELETED = '1',
+			ID_STATUS = 'DS5',
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#
+		WHERE ID_REF = '$idRef$' 	    
+  </update>
+  
+  <update id="UPDATE.B_BIF.S02_06.SQL002" parameterClass="java.util.HashMap">		
+		UPDATE T_CUST_PLAN_D SET						
+			PLAN_STATUS = 'PS1',
+			DATE_UPDATED = ,
+			ID_LOGIN = #idLogin#
+		WHERE ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #idref#) 	    
+  </update>
+  
+  <select id="SELECT.B_BIF.SQL007"  resultClass="java.lang.String">
+		SELECT NVL(MAX(id_doc),0) FROM t_doc 
+  </select>
+  <select id="SELECT.B_BIF.SQL008"  resultClass="java.lang.String">
+		SELECT ID_CUST_PLAN 
+		FROM T_BIF_D
+		WHERE ID_REF = #ID_REF#
+	</select>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL006" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_DOC (ID_DOC,DOC_TYPE,FILENAME,FILELOCATION,IS_DELETED,DATE_UPDATED,ID_LOGIN)
+		VALUES (#idDoc#,#docType#,#fileName#,#fileLocation#,'0',sysdate,#idLogin#)
+		<selectKey keyProperty="newDocID" resultClass="java.lang.Integer" type="post">
+	    	SELECT MAX(id_doc) FROM T_DOC
+	  	</selectKey>	    
+  </insert>
+  
+  <insert id="INSERT.B_BIF.S02_02.SQL008" parameterClass="java.util.HashMap">		
+		INSERT INTO
+		    T_WF_DOC (ID_REF,SECTION_GROUP,ID_DOC,IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES (#idRef#,#sectionGroup#,#idDoc#,'0',sysdate,sysdate,#idLogin#,#idAudit#)	    
+  </insert>
+  
+  <select id="SELECT.B_BIF.S02_04.SQL001"  resultClass="nttdm.bsys.bif.bean.FileInfo" parameterClass="nttdm.bsys.bif.bean.WF_DOC">
+		SELECT T1.filename,T1.id_doc
+		FROM T_DOC T1, T_WF_DOC T2
+		WHERE T1.doc_type = #doc_type# AND T1.is_deleted ='0' 
+			AND T1.id_doc = T2.id_doc AND T2.id_ref = #id_ref#
+		AND T2.section_group = #section_group# AND T2.is_deleted ='0' 
+	</select>
+  
+  	<update id="DELETE.B_BIF.DOC.SQL001" parameterClass="nttdm.bsys.bif.bean.WF_DOC">
+		UPDATE
+		        t_wf_doc
+		    SET
+		        is_deleted = '1',
+		        ID_AUDIT = #idAudit#
+		    WHERE
+		        id_ref = #id_ref#
+		        AND section_group = #section_group#
+		        AND id_doc = #id_doc#
+	</update>
+<!-- B_BIF_S03 Start -->
+	<select id="SELECT.B_BIF.S03.SQL001" 
+	resultClass="java.util.HashMap" 
+	parameterClass="java.util.HashMap"
+	resultSetType="SCROLL_INSENSITIVE">
+		SELECT NVL(USER_NAME,ID_APPROVER) USER_NAME, DATE_APPR, APPR_STATUS, APPR_COMMENT, ID_WF_APPROVAL
+		FROM T_WF_APPROVAL LEFT OUTER JOIN M_USER ON ID_APPROVER = ID_USER 
+		WHERE TRIM(ID_REF) = TRIM(#ID_REF#)
+			AND SECTION_GROUP = #SECTION_GROUP#
+			AND SECTION_NO = #SECTION_NO#
+		ORDER BY ID_WF_APPROVAL ASC
+	</select>
+	<insert id="INSERT.B_BIF.S03.SQL001" parameterClass="java.util.HashMap">
+	INSERT INTO T_BIF_H(
+		ID_REF,
+		ID_CUST,
+		ID_CONSLT,
+		ID_QCS,
+		ID_QUO,
+		BIF_TYPE,
+		ADR_TYPE,
+		ADDRESS1,
+		ADDRESS2,
+		ADDRESS3,
+		ADDRESS4,
+		FAX_NO,
+		TEL_NO,
+		CONTACT_NAME,
+		CUST_PO,
+		JOB_NO,
+		CN_TYPE,
+		CN_TYPE6,
+		DELIVERY,
+		REMARKS,
+		BILL_CUR,
+		EXPORT_CUR,
+		CONV_RATE,
+		REQ_USER,
+		DATE_REQ,
+		USER_COMMENT,
+		ID_STATUS,
+		IS_CLOSED,
+		IS_DELETED,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN,
+		ID_AUDIT,
+		CONTACT_TYPE,
+		CUST_NAME,
+		ZIP_CODE,
+		COUNTRY,
+		OBTAIN_VERIFICATION,
+		IS_DISPLAY_EXP_AMT,
+		MULTI_BILL_PERIOD,
+		CTTERM3_DAY,
+		TERM_DAY,
+		DELIVERY_EMAIL,
+		CONTACT_EMAIL,
+		CONTACT_EMAIL_CC) 
+	VALUES(
+		#ID_REF#,
+		#ID_CUST#,
+		#ID_CONSLT#,
+		#ID_QCS#,
+		#ID_QUO#,
+		#BIF_TYPE#,
+		#ADR_TYPE#,
+		#ADDRESS1#,
+		#ADDRESS2#,
+		#ADDRESS3#,
+		#ADDRESS4#,
+		#FAX_NO#,
+		#TEL_NO#,
+		#CONTACT_NAME#,
+		#CUST_PO#,
+		#JOB_NO#,
+		#CN_TYPE#,
+		#CN_TYPE6#,
+		#DELIVERY#,
+		#REMARKS#,
+		#BILL_CUR#,
+		#EXPORT_CUR#,
+		#CONV_RATE#,
+		#REQ_USER#,
+		TO_DATE(#DATE_REQ#,'DD/MM/YYYY'),
+		#USER_COMMENT#,
+		#ID_STATUS#,
+		'0',
+		'0',
+		sysdate,
+		sysdate,
+		#ID_LOGIN#,
+		#ID_AUDIT#,
+		#CONTACT_TYPE#,
+		#CUST_NAME#,
+		#ZIP_CODE#,
+		#COUNTRY_CD#,
+		'0',
+		#isExpAmt#,
+		#checkMultipleInOneInvoice#,
+		#ctterm3_day#,
+		#term_day#,
+		#checkDeliveryEmail#,
+		#emailTo#,
+		#emailCc#)
+	</insert>
+	<insert id="INSERT.B_BIF.S03.SQL002" parameterClass="java.util.HashMap">
+	INSERT INTO T_BIF_D(
+		ID_CUST_PLAN,
+		ID_REF,
+		DATE_UPDATED,
+		DATE_CREATED,
+		ID_LOGIN,
+		ID_AUDIT)
+	VALUES(
+		#ID_CUST_PLAN#,
+		#ID_REF#,
+		sysdate,
+		sysdate,
+		#ID_LOGIN#,
+		#ID_AUDIT#)
+	</insert>
+	<insert id="INSERT.B_BIF.S03.SQL003" parameterClass="java.util.HashMap">
+	INSERT INTO T_SECTION(
+		SECTION_GROUP,
+		ID_REF,
+		SECTION_NO,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN,
+		ID_AUDIT)
+	VALUES(
+		#SECTION_GROUP#,
+		#ID_REF#,
+		#SECTION_NO#,
+		sysdate,
+		sysdate,
+		#ID_LOGIN#,
+		#ID_AUDIT#)
+	</insert>
+	<insert id="INSERT.B_BIF.S03.SQL004" parameterClass="java.util.HashMap">
+	INSERT INTO T_DOC(
+		ID_DOC,
+		DOC_TYPE,
+		FILENAME,
+		FILELOCATION,
+		IS_DELETED,
+		DATE_CREATED,
+		ID_LOGIN)
+	VALUES(
+		#ID_DOC#,
+		#DOC_TYPE#,
+		#FILENAME#,
+		#FILELOCATION#,
+		'0',
+		sysdate,
+		#ID_LOGIN#)
+	</insert>
+	<insert id="INSERT.B_BIF.S03.SQL005" parameterClass="java.util.HashMap">
+	INSERT INTO T_WF_DOC(
+		ID_REF,
+		SECTION_GROUP,
+		ID_DOC,
+		IS_DELETED,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN)
+	VALUES(
+		#ID_REF#,
+		#SECTION_GROUP#,
+		#ID_DOC#,
+		sysdate,
+		sysdate,
+		#ID_LOGIN#)
+	</insert>
+	
+	<insert id="INSERT.B_BIF.S03.SQL006" parameterClass="java.util.HashMap">
+	INSERT INTO T_WF_APPROVAL(
+		ID_REF,
+		SECTION_GROUP,
+		SECTION_NO,
+		ID_APPROVER,
+		APPR_STATUS,
+		IS_REVISED,
+		ORIGINAL_APPROVER,
+		IS_FORWARDED,
+		IS_ESCALATED,
+		ID_ACTION,
+		IS_DELETED,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN)
+	VALUES(
+		#ID_REF#,
+		#SECTION_GROUP#,
+		#SECTION_NO#,
+		#ID_APPROVER#,
+		#APPR_STATUS#,
+		#IS_REVISED#,
+		#ORIGINAL_APPROVER#,
+		#IS_FORWARDED#,
+		#IS_ESCALATED#,
+		#ID_ACTION#,
+		#IS_DELETED#,
+		sysdate,
+		sysdate,
+		#ID_LOGIN#)
+	</insert>
+	
+	<delete id="DELETE.B_BIF.S03.SQL001" parameterClass="java.util.HashMap">
+	UPDATE T_BIF_H
+	SET IS_DELETED = #IS_DELETED#,
+		ID_STATUS = #ID_STATUS#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#,
+		ID_AUDIT = #ID_AUDIT#
+	WHERE ID_REF = #ID_REF#
+	</delete>
+	<delete id="DELETE.B_BIF.S03.SQL002" parameterClass="java.util.HashMap">
+	UPDATE T_WF_DOC 
+	SET	IS_DELETED = #IS_DELETED#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#,
+		ID_AUDIT = #ID_AUDIT#
+	WHERE ID_REF = #ID_REF#
+	</delete>
+	<delete id="DELETE.B_BIF.S03.SQL003" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_D
+	SET	SERVICES_STATUS = #PLAN_STATUS#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#,
+		ID_AUDIT = #ID_AUDIT#
+	WHERE ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #ID_REF#)
+	AND ID_CUST_PLAN NOT IN(SELECT D.ID_CUST_PLAN
+	FROM T_BIF_D D, T_BIF_H H 
+	WHERE D.ID_CUST_PLAN in(SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #ID_REF#)
+	AND D.ID_REF = H.ID_REF 
+	AND D.ID_REF != #ID_REF#
+	AND D.IS_DELETED !='1'
+	AND H.IS_DELETED !='1'
+	AND H.ID_STATUS != 'DS0')
+	</delete>
+	<delete id="DELETE.B_BIF.S03.SQL004" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_H
+	SET	PLAN_STATUS = #PLAN_STATUS#,
+		DATE_UPDATED = sysdate,
+		ID_LOGIN = #ID_LOGIN#,
+		ID_AUDIT = #ID_AUDIT#
+	WHERE ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #ID_REF#)
+	AND ID_CUST_PLAN NOT IN(SELECT D.ID_CUST_PLAN
+	FROM T_BIF_D D, T_BIF_H H 
+	WHERE D.ID_CUST_PLAN in(SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #ID_REF#)
+	AND D.ID_REF = H.ID_REF 
+	AND D.ID_REF != #ID_REF#
+	AND D.IS_DELETED !='1'
+	AND H.IS_DELETED !='1'
+	AND H.ID_STATUS != 'DS0')
+	</delete>
+	
+	<update id="UPDATE.B_BIF.S03.SQL001" parameterClass="java.util.HashMap">
+        UPDATE T_CUST_PLAN_D SET						
+			SERVICES_STATUS = #PLAN_STATUS#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #ID_LOGIN#,
+		    ID_AUDIT = #ID_AUDIT#
+		WHERE ID_CUST_PLAN = #ID_CUST_PLAN#
+	</update>
+	<update id="UPDATE.B_BIF.S03.SQL002" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_H SET						
+			PLAN_STATUS = #PLAN_STATUS#,
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #ID_LOGIN#,
+		    ID_AUDIT = #ID_AUDIT#
+		WHERE ID_CUST_PLAN = #ID_CUST_PLAN#
+    </update>
+    <update id="UPDATE.B_BIF.S03.SQL003" parameterClass="java.util.HashMap">		
+		UPDATE T_BAC_H SET
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE ID_BILL_ACCOUNT = (SELECT ID_BILL_ACCOUNT FROM T_CUST_PLAN_H WHERE ID_CUST_PLAN = #ID_CUST_PLAN#)
+  </update>
+	<!-- PS8 UPDATE START -->
+	<update id="UPDATE.B_BIF.SQL002" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_D
+		SET SERVICES_STATUS = #PLAN_STATUS#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE
+			ID_CUST_PLAN = #ID_CUST_PLAN#
+	</update>
+	<update id="UPDATE.B_BIF.SQL003" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_H
+		SET PLAN_STATUS = #PLAN_STATUS#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE
+			ID_CUST_PLAN = #ID_CUST_PLAN#
+	</update>
+	<!-- PS8 UPDATE END -->
+	<select id="SELECT.B_BIF.S03_01.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<!-- Get BIF INFO -->
+	SELECT H.*, (SELECT USER_NAME FROM M_USER WHERE H.REQ_USER = ID_USER) as REQ_USER_NAME,
+		(SELECT USER_NAME FROM M_USER WHERE H.BIL_OPBY = ID_USER) as BIL_OPBY_NAME,
+		(SELECT USER_NAME FROM M_USER WHERE H.ID_CONSLT = ID_USER) as CONSLT_NAME,
+		(SELECT CUST_ACC_NO FROM M_CUST WHERE ID_CUST = H.ID_CUST) as CUST_ACC_NO,
+		(SELECT USER_NAME FROM M_USER WHERE H.VERIFY_BY = ID_USER) as VERIFY_BY_USER_NAME
+	FROM T_BIF_H H
+	WHERE H.ID_REF = #ID_REF#
+	</select>
+	<select id="SELECT.B_BIF.S03_02.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<!-- Get STATUS INFO -->
+	SELECT t.*, (SELECT DISTINCT APPR_STATUS FROM T_WF_APPROVAL WHERE ID_REF = #ID_REF# AND APPR_STATUS = 'AS3') REJECT_STATUS 
+	FROM (SELECT APPR_STATUS, t2.SECTION_NO, ID_STATUS, ID_APPROVER, SECTION_GROUP, ID_WF_APPROVAL
+    FROM (SELECT ID_REF, ID_STATUS
+	          FROM T_BIF_H
+	          WHERE ID_REF = #ID_REF#) t1 
+	    	LEFT OUTER JOIN 
+	          (SELECT t2.ID_REF, APPR_STATUS, ID_WF_APPROVAL, ID_APPROVER, ID_TFR_USER, t2.SECTION_GROUP, t2.SECTION_NO
+	          FROM T_WF_APPROVAL t2 
+	          LEFT OUTER JOIN M_ATR_TFR t3
+	          ON t3.ID_USER = ID_APPROVER AND t2.SECTION_NO = t3.SECTION_NO AND ID_SCREEN = 'BIF'
+	          WHERE APPR_STATUS = 'AS1' AND t2.ID_REF = #ID_REF#) t2
+	    	ON  t1.ID_REF = t2.ID_REF   
+	    	AND (t2.ID_APPROVER = #ID_USER# OR t2.ID_TFR_USER = #ID_USER#) 
+			ORDER BY ID_WF_APPROVAL) t
+    WHERE ROWNUM = 1
+	</select>
+	<select id="SELECT.B_BIF.S03_02.SQL001_01" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<!-- GET APPROVAL STATUS OF FIRST SECTION -->
+    SELECT COUNT(I.APPR_STATUS) NOT_APPR_NO
+	FROM T_BIF_H A, T_WF_APPROVAL I
+	WHERE A.ID_REF = I.ID_REF AND A.ID_REF = #ID_REF#
+        AND I.SECTION_NO = #sectionNo# AND A.ID_STATUS = 'DS2'
+	</select>
+	<select id="SELECT.B_BIF.S03_02.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT A.APPR_STATUS, A.SECTION_NO, A.ID_APPROVER, A.SECTION_GROUP, A.ID_WF_APPROVAL,
+		TO_CHAR((SELECT DISTINCT RESPONSE_EXPIRE + SYSDATE FROM T_WF_ACTION WHERE ID_REF = A.ID_REF 
+  			AND SECTION_NO = A.SECTION_NO AND ID_ACTION = A.ID_ACTION), 'dd/MM/yyyy') RESPONSE_EXPIRE
+	FROM T_WF_APPROVAL A
+	WHERE  A.ID_REF = #ID_REF# AND A.APPR_STATUS = #APPR_STATUS#
+	</select>
+	<update id="UPDATE.B_BIF.S03_02.SQL001" parameterClass="java.util.HashMap">
+		UPDATE T_BIF_H
+		SET	
+			<isNotEmpty property="changeIdConsultant">
+	    		OBTAIN_VERIFICATION = '0',
+	    	</isNotEmpty>
+			ID_CONSLT = #ID_CONSLT#,
+			ID_QCS = #ID_QCS#,
+			ID_QUO = #ID_QUO#,
+			ADR_TYPE = #ADR_TYPE#,
+			ADDRESS1 = #ADDRESS1#,
+			ADDRESS2 = #ADDRESS2#,
+			ADDRESS3 = #ADDRESS3#,
+			ADDRESS4 = #ADDRESS4#,
+			TEL_NO = #TEL_NO#,
+			FAX_NO = #FAX_NO#,
+			CONTACT_NAME = #CONTACT_NAME#,
+			CUST_PO = #CUST_PO#,
+			JOB_NO = #JOB_NO#,
+			CN_TYPE = #CN_TYPE#,
+			CN_TYPE6 = #CN_TYPE6#,
+			DELIVERY = #DELIVERY#,
+			REMARKS = #REMARKS#,
+			BILL_CUR = #BILL_CUR#,
+			EXPORT_CUR = #EXPORT_CUR#,
+			CONV_RATE = #CONV_RATE#,
+			<isNotEmpty property="REQ_USER">
+				REQ_USER = #REQ_USER#,
+			</isNotEmpty>
+			<isNotEmpty property="DATE_REQ">
+				DATE_REQ = TO_DATE(#DATE_REQ#,'DD/MM/YYYY'),
+			</isNotEmpty>
+			USER_COMMENT = #USER_COMMENT#,
+			ID_AUDIT = #ID_AUDIT#,
+			CONTACT_TYPE = #CONTACT_TYPE#,
+			CUST_NAME = #CUST_NAME#,
+			ZIP_CODE = #ZIP_CODE#,
+			COUNTRY = #COUNTRY_CD#,
+			IS_DISPLAY_EXP_AMT = #isExpAmt#,
+			MULTI_BILL_PERIOD = #checkMultipleInOneInvoice#,
+			DELIVERY_EMAIL=#checkDeliveryEmail#,
+			CONTACT_EMAIL=#emailTo#,
+			CONTACT_EMAIL_CC=#emailCc#
+		WHERE ID_REF = #ID_REF#
+	</update>
+	<update id="UPDATE.B_BIF.S03_02.SQL002" parameterClass="java.util.HashMap">
+		UPDATE T_BIF_H
+		SET	ID_STATUS = #ID_STATUS#
+		WHERE TRIM(ID_REF) = TRIM(#ID_REF#)
+	</update>
+	<update id="UPDATE.B_BIF.S03_05.SQL001">
+		UPDATE T_WF_APPROVAL
+		SET IS_REVISED = #IS_REVISED#,
+			APPR_STATUS = #APPR_STATUS#,
+			DATE_APPR = sysdate,
+			<isEqual property="IS_SAVE" compareValue="1">
+			APPR_COMMENT = #APPR_COMMENT#,
+			</isEqual>
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE ID_WF_APPROVAL = #ID_WF_APPROVAL#
+	</update>
+	<update id="UPDATE.B_BIF.S03_06.SQL001">
+		UPDATE T_BIF_H
+		SET BIL_OPBY = #BIL_OPBY#,
+			DATE_BIFRCV = TO_DATE(#DATE_BIFRCV#,'DD/MM/YYYY'),
+			BIL_REFNO = #BIL_REFNO#,
+			DATE_PRINTED = TO_DATE(#DATE_PRINTED#,'DD/MM/YYYY'),
+			DATE_SIGNED = TO_DATE(#DATE_SIGNED#,'DD/MM/YYYY'),
+			ID_LOGIN = #ID_LOGIN#,
+			ID_AUDIT = #ID_AUDIT#
+		WHERE TRIM(ID_REF) = TRIM(#ID_REF#)
+	</update>
+<!-- B_BIF_S03 End -->
+	<update id="UPDATE.B_BIF.IS_DISPLAY_EXP_AMT" parameterClass="java.util.HashMap">
+		UPDATE
+		      T_CUST_PLAN_H
+		SET 
+		      IS_DISPLAY_EXP_AMT = #isExpAmt#,
+		      DATE_UPDATED = sysdate
+			  <isNotEmpty property="idAudit">
+			    ,ID_AUDIT = #idAudit#
+			  </isNotEmpty>
+		WHERE
+		      ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #idRef#)
+	</update>
+	<update id="UPDATE.B_BIF.MULTI_BILL_PERIOD" parameterClass="java.util.HashMap">
+		UPDATE 
+		    T_BIF_H
+	    SET 
+	        CUST_NAME = #custName#,
+	        ADDRESS1 = #addr1#,
+	        ADDRESS2 = #addr2#,
+	        ADDRESS3 = #addr3#,
+	        ADDRESS4 = #addr4#,
+	        TEL_NO = #tel#,
+	        FAX_NO = #fax#,
+	        CONTACT_NAME = #contactName#,
+	        CONTACT_EMAIL = #emailToAdd#,
+	        CONTACT_EMAIL_CC = #emailCcAdd#,
+	        ZIP_CODE = #zipCode#,
+	        COUNTRY = #countryCd#,
+	        MULTI_BILL_PERIOD = #checkMultipleInOneInvoice#,
+	        IS_DISPLAY_EXP_AMT = #isExpAmt#,
+		    DATE_UPDATED = sysdate,
+		    ID_LOGIN = #idLogin#,
+		    ID_AUDIT = #idAudit#
+	    WHERE 
+	        ID_REF = #idRef#
+	</update>
+	<select id="SELECT.B_BIF.IS_DISPLAY_EXP_AMT" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		      IS_DISPLAY_EXP_AMT
+		FROM
+		      T_CUST_PLAN_H
+		WHERE
+		      ID_CUST_PLAN IN (SELECT ID_CUST_PLAN FROM T_BIF_D WHERE ID_REF = #idRef#)
+	</select>
+	<select id="SELECT.B_BIF.CUST_PLAN_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	          A.ID_CUST_PLAN,
+	          A.ID_CUST,
+	          A.PAYMENT_METHOD,
+	          A.BILL_CURRENCY,
+	          A.EXPORT_CURRENCY,
+	          A.FIXED_FOREX,
+	          A.IS_DISPLAY_EXP_AMT,
+	          B.ID_CUST_PLAN_GRP
+	    FROM 
+	          T_CUST_PLAN_H A INNER JOIN T_CUST_PLAN_D B 
+	          ON A.ID_CUST_PLAN = B.ID_CUST_PLAN AND B.IS_DELETED = '0'
+	    WHERE
+	          A.ID_CUST_PLAN = #idCustPlan#
+	</select>
+	<update id="UPDATE.B_BIF.T_BAC_IS_DISPLAY_EXP_AMT" parameterClass="java.util.HashMap">
+		UPDATE
+		      T_BAC_H
+		SET 
+		      IS_DISPLAY_EXP_AMT = #isExpAmt#,
+		      DATE_UPDATED = sysdate
+			  <isNotEmpty property="idAudit">
+			    ,ID_AUDIT = #idAudit#
+			  </isNotEmpty>
+		WHERE
+		      ID_BILL_ACCOUNT IN 
+		      (
+		        SELECT 
+		              B.ID_BILL_ACCOUNT
+		        FROM 
+		              T_BIF_D A INNER JOIN T_CUST_PLAN_H B
+		              ON A.ID_CUST_PLAN = B.ID_CUST_PLAN
+		              WHERE A.ID_REF = #idRef#
+		      )
+	</update>
+	<select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE 
+			ID_PLAN_GRP IN 
+			(
+				SELECT 
+					ID_PLAN_GRP
+				FROM 
+					T_CUST_PLAN_D A INNER JOIN T_CUST_PLAN_LINK B
+					ON A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP AND B.IS_DELETED = '0'
+				WHERE 
+					A.ID_CUST_PLAN = #idCustPlan#
+					AND A.IS_DELETED = '0'
+			)
+			AND BATCH_ID = 'RD'
+	</select>
+	<select id="GET_SUBSCIPTION_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW,
+			ACCESS_ACCOUNT_TEST
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_CUST_PLAN = #idCustPlan#
+			AND IS_DELETED = '0'
+	</select>
+	
+	<update id="UPDATE.B_BIF.S02_03_01.SQL001" parameterClass="java.util.HashMap">
+		UPDATE T_BIF_H SET			
+			OBTAIN_VERIFICATION = #obtainVerification#,
+			DATE_OBT_VERIFY = sysdate,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_REF = #idRef#
+	</update>
+	
+	<update id="UPDATE.B_BIF.S02_03_01.SQL002" parameterClass="java.util.HashMap">		
+		UPDATE T_BIF_H SET			
+			VERIFY_BY = #idLogin#,
+			DATE_OBT_APPROVAL = sysdate,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_REF = #idRef#
+  </update>
+	<select id="SELECT.B_BIF.SQL_BILL_ACC" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	          B.CUST_ADR_TYPE,
+	          B.CONTACT_TYPE,
+	          (
+	          	SELECT
+			          count(*)
+			    FROM
+			          T_BAC_D C
+			    WHERE
+			          B.ID_BILL_ACCOUNT = C.ID_BILL_ACCOUNT
+	          ) AS BAC_D_COUNT,
+	          B.BILL_CURRENCY,
+	          B.EXPORT_CURRENCY,
+	          B.ID_BILL_ACCOUNT,
+	          B.DELIVERY, 
+	          B.DELIVERY_EMAIL
+	    FROM
+	          T_CUST_PLAN_H A INNER JOIN T_BAC_H B 
+	          ON A.ID_BILL_ACCOUNT = B.ID_BILL_ACCOUNT AND B.IS_DELETED = '0'
+	    WHERE
+	          INSTR(#idCustPlan#,':' || A.ID_CUST_PLAN || ':') > 0
+	          AND A.IS_DELETED = '0'
+	  </select>
+	  <select id="SELECT.B_BIF.SQL_BILL_ACC_TAX_TYPE" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	          B.TAX_TYPE
+	    FROM
+	          T_CUST_PLAN_H A INNER JOIN T_BAC_H B 
+	          ON A.ID_BILL_ACCOUNT = B.ID_BILL_ACCOUNT AND B.IS_DELETED = '0'
+	    WHERE
+	          INSTR(#idCustPlan#,':' || A.ID_CUST_PLAN || ':') > 0
+	          AND A.IS_DELETED = '0'
+	  </select>
+	  
+	  <select id="SELECT.B_BIF.CPM_TAX_WORD" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_TAX_WORD'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+     </select>
+     
+     <select id="SELECT.B_BIF.TAX_RATE" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'GST'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+     </select>
+     
+     <select id="SELECT.B_BIF.SQL_TAX_TYPE_BY_ID_REF" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	    	  B.TAX_TYPE
+	    FROM
+	          T_BIF_D D INNER JOIN  T_CUST_PLAN_H A ON D.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+	          INNER JOIN T_BAC_H B ON A.ID_BILL_ACCOUNT = B.ID_BILL_ACCOUNT AND B.IS_DELETED = '0'
+		WHERE
+	          D.ID_REF = #idRef#
+	  </select>
+     
+	  <select id="SELECT.B_BIF.SQL_BILL_ACC_BY_ID_REF" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	    	  B.TAX_TYPE,
+	          B.CUST_ADR_TYPE,
+	          B.CONTACT_TYPE,
+	          C.TERM,
+	          C.TERM_DAY
+	    FROM
+	          T_BIF_D D INNER JOIN  T_CUST_PLAN_H A ON D.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+	          INNER JOIN T_BAC_H B ON A.ID_BILL_ACCOUNT = B.ID_BILL_ACCOUNT AND B.IS_DELETED = '0'
+	          INNER JOIN T_BAC_D C ON B.ID_BILL_ACCOUNT = C.ID_BILL_ACCOUNT
+	    WHERE
+	          D.ID_REF = #idRef#
+	  </select>
+	<select id="SELECT.B_BIF.SQL_TEL_FAX_CONTACT" resultClass="java.lang.String">
+	    SELECT
+	          G.SET_VALUE
+	    FROM 
+	          M_GSET_D G
+	    WHERE 
+	          G.ID_SET = 'TEL_FAX_CONTACT'
+	          AND G.SET_SEQ = 1
+	          AND G.IS_DELETED = '0'
+	</select>
+	<select id="selectCURRENCY_STD" resultClass="java.lang.String">
+              SELECT
+                 G.SET_VALUE
+           FROM 
+                 M_GSET_D G
+           WHERE 
+                 G.ID_SET = 'CURRENCY_STD'
+                 AND G.SET_SEQ = 1
+                 AND G.IS_DELETED = '0'
+       </select>
+       <select id="selectDEF_CURRENCY" resultClass="java.lang.String">
+              SELECT
+                 G.SET_VALUE
+           FROM 
+                 M_GSET_D G
+           WHERE 
+                 G.ID_SET = 'DEF_CURRENCY'
+                 AND G.SET_SEQ = 1
+                 AND G.IS_DELETED = '0'
+       </select>
+       <select id="selectACCESS_TYPE" parameterClass="java.lang.String" resultClass="java.lang.String">
+            SELECT ACCESS_TYPE
+			FROM m_user_access
+			WHERE ID_USER = #loginId#
+			AND id_sub_module = 'B-BIF-E2'
+       </select>
+       <select id="uploadDisplay" parameterClass="java.lang.String" resultClass="java.lang.String">
+            SELECT A. ACCESS_TYPE
+			FROM  M_USER_ACCESS A,M_SUB_MODULES B
+			WHERE A.ID_SUB_MODULE = B.ID_SUB_MODULE
+			AND   A.ID_USER = #loginId#
+			AND   B.SUB_MOD_NAME = 'BIF - Upload Attachment After Approval'
+       </select>
+       <select id="selectFileName" parameterClass="java.lang.Long" resultClass="java.util.HashMap">
+		SELECT FILENAME, FILELOCATION FROM T_DOC WHERE ID_DOC = #id_doc#
+	   </select>
+</sqlMap>

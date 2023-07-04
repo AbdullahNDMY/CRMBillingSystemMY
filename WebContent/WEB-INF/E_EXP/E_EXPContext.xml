@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_EXP/SC_E_EXP_S01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_EXP/SC_E_EXP_S01LogSCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/E_EXP/SC_E_EXP_S01DSP" scope="singleton"/>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EXP/PR_E_EXP_S01InitBL" scope="singleton">
+        <property name="businessLogic" ref="PR_E_EXP_S01InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_exp.blogic.PR_E_EXP_S01InitBLogic"
+        id="PR_E_EXP_S01InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EXP/PR_E_EXP_S01ExecuteBL" scope="singleton">
+        <property name="businessLogic" ref="PR_E_EXP_S01ExecuteBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_exp.blogic.PR_E_EXP_S01ExecuteBLogic"
+        id="PR_E_EXP_S01ExecuteBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EXP/PR_E_EXP_S01ExecuteCheckErrorBL" scope="singleton">
+        <property name="businessLogic" ref="PR_E_EXP_S01ExecuteCheckErrorBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_exp.blogic.PR_E_EXP_S01ExecuteCheckErrorBLogic"
+        id="PR_E_EXP_S01ExecuteCheckErrorBLogic" scope="singleton">
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_EXP/RP_E_EXP_S01DownloadBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_EXP_S01DownloadBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_exp.blogic.RP_E_EXP_S01DownloadBLogic"
+        id="RP_E_EXP_S01DownloadBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EXP/RP_E_EXP_S01LogInitBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_EXP_S01LogInitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_exp.blogic.RP_E_EXP_S01LogInitBLogic"
+        id="RP_E_EXP_S01LogInitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

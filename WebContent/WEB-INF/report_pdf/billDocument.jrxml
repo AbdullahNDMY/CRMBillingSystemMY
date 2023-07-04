@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RP_B_BTH_P01" pageWidth="595" pageHeight="842" columnWidth="517" leftMargin="50" rightMargin="28" topMargin="72" bottomMargin="72" whenResourceMissingType="Empty">
+	<property name="ireport.zoom" value="1.3310000000000097"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<style name="10B" mode="Opaque" forecolor="#000000" backcolor="#999999" fill="Solid" vAlign="Middle" fontName="Times New Roman" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="10R" fontName="Times New Roman" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="9RT" mode="Opaque" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<pen lineColor="#000000"/>
+			<topPen lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="9R" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true"/>
+	<style name="9RTend" fontName="Times New Roman" fontSize="9" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<topPen lineWidth="0.75" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="9Tab" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="9Tae" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="linea" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<topPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="lineb" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="lineR" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<rightPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="lineRBT" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<topPen lineWidth="0.75" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="line">
+		<box>
+			<bottomPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="double" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<pen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineStyle="Double" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="9R_1" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.75"/>
+			<bottomPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="10R_1" fontName="Times New Roman" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<leftPen lineWidth="0.75"/>
+		</box>
+	</style>
+	<style name="line_1">
+		<box>
+			<leftPen lineWidth="0.75"/>
+			<bottomPen lineWidth="0.75" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="lineRBT_1" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false">
+		<box>
+			<pen lineStyle="Double"/>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineStyle="Double"/>
+			<bottomPen lineWidth="0.75" lineStyle="Double" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="10B_1" mode="Opaque" forecolor="#000000" backcolor="#999999" fill="Solid" fontName="Times New Roman" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="10B_2" mode="Opaque" forecolor="#000000" backcolor="#999999" fill="Solid" fontName="Times New Roman" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+		<box>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="9Rm" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid"/>
+		</box>
+	</style>
+	<style name="9Rmr" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<bottomPen lineWidth="0.75"/>
+			<rightPen lineWidth="0.75"/>
+		</box>
+	</style>
+	<style name="9Rmr_1" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<topPen lineWidth="0.75"/>
+			<bottomPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.75"/>
+		</box>
+	</style>
+	<style name="footup" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="footdown" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="footleft" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="footright" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="footleftup" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="footleftdowm" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="footrightup" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="footrightdown" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<pen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineStyle="Solid" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="9Rm_1" fontName="Times New Roman" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="true">
+		<box>
+			<topPen lineWidth="0.75" lineStyle="Solid"/>
+			<leftPen lineWidth="0.75" lineStyle="Solid"/>
+		</box>
+		<conditionalStyle>
+			<style/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="dataset1"/>
+	<parameter name="COM_ADR_LINE1" class="java.lang.String"/>
+	<parameter name="COM_ADR_LINE2" class="java.lang.String"/>
+	<parameter name="ZIP_COUNTRY" class="java.lang.String"/>
+	<parameter name="COM_FAX_NO" class="java.lang.String"/>
+	<parameter name="COM_TEL_NO" class="java.lang.String"/>
+	<parameter name="COM_REGNO" class="java.lang.String"/>
+	<parameter name="typeExport" class="java.lang.String"/>
+	<parameter name="ComTelLab" class="java.lang.String"/>
+	<parameter name="ComFaxLab" class="java.lang.String"/>
+	<parameter name="ComRegLab" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="DATE_REQ" class="java.lang.String"/>
+	<parameter name="InvoiceNo" class="java.lang.String"/>
+	<parameter name="vID_REF" class="java.lang.String"/>
+	<parameter name="BillAccNo" class="java.lang.String"/>
+	<parameter name="BILL_ACC" class="java.lang.String"/>
+	<parameter name="CUST_NAME" class="java.lang.String"/>
+	<parameter name="add3" class="java.lang.String"/>
+	<parameter name="ADDRESS2" class="java.lang.String"/>
+	<parameter name="ADDRESS1" class="java.lang.String"/>
+	<parameter name="attenTo" class="java.lang.String"/>
+	<parameter name="CONTACT_NAME" class="java.lang.String"/>
+	<parameter name="nolable" class="java.lang.String"/>
+	<parameter name="item" class="java.lang.String"/>
+	<parameter name="Qty" class="java.lang.String"/>
+	<parameter name="Unit_Price" class="java.lang.String"/>
+	<parameter name="Price" class="java.lang.String"/>
+	<parameter name="GST" class="java.lang.String"/>
+	<parameter name="BILL_CURRENCY" class="java.lang.String"/>
+	<parameter name="subTol" class="java.lang.String"/>
+	<parameter name="GSTper" class="java.lang.String"/>
+	<parameter name="ITEM_GST" class="java.math.BigDecimal"/>
+	<parameter name="total" class="java.lang.String"/>
+	<parameter name="valueTotal" class="java.math.BigDecimal"/>
+	<parameter name="ExchangeRate" class="java.lang.String"/>
+	<parameter name="valueExchangeRate" class="java.math.BigDecimal"/>
+	<parameter name="forGST" class="java.lang.String"/>
+	<parameter name="valueAmountGST" class="java.math.BigDecimal"/>
+	<parameter name="totalGSTlab" class="java.lang.String"/>
+	<parameter name="totalAmoutGSTlab" class="java.lang.String"/>
+	<parameter name="GstExchange" class="java.lang.String"/>
+	<parameter name="sumGST" class="java.lang.String"/>
+	<parameter name="bank" class="java.lang.String"/>
+	<parameter name="BANK_NAME1" class="java.lang.String"/>
+	<parameter name="accno" class="java.lang.String"/>
+	<parameter name="accname" class="java.lang.String"/>
+	<parameter name="swiftCode" class="java.lang.String"/>
+	<parameter name="COM_ACCT_NAME1" class="java.lang.String"/>
+	<parameter name="COM_ACC_CUR1" class="java.lang.String"/>
+	<parameter name="COM_SWIFT1" class="java.lang.String"/>
+	<parameter name="COM_ADR_LINE3" class="java.lang.String"/>
+	<parameter name="SUBTOTAL" class="java.math.BigDecimal"/>
+	<parameter name="amoutGSTlab" class="java.lang.String"/>
+	<parameter name="valueTotAmout" class="java.math.BigDecimal"/>
+	<parameter name="valueTotalGST" class="java.math.BigDecimal"/>
+	<parameter name="BANK_NAME2" class="java.lang.String"/>
+	<parameter name="BANK_NAME0" class="java.lang.String"/>
+	<parameter name="COM_ACCT_NAME2" class="java.lang.String"/>
+	<parameter name="COM_ACCT_NAME0" class="java.lang.String"/>
+	<parameter name="COM_SWIFT2" class="java.lang.String"/>
+	<parameter name="COM_SWIFT0" class="java.lang.String"/>
+	<parameter name="COM_ACC_CUR2" class="java.lang.String"/>
+	<parameter name="COM_ACC_CUR0" class="java.lang.String"/>
+	<parameter name="ZIP_COUNTRY_COM" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["..\\WEB-INF\\report_pdf\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SIMPLE_DATA" class="java.util.HashMap"/>
+	<parameter name="listFooter" class="java.lang.Object"/>
+	<parameter name="listItem" class="java.lang.Object"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="line" class="java.lang.Boolean"/>
+	<parameter name="BRANCH_NAME0" class="java.lang.String"/>
+	<parameter name="BRANCH_NAME1" class="java.lang.String"/>
+	<parameter name="BRANCH_NAME2" class="java.lang.String"/>
+	<parameter name="COM_NAME" class="java.lang.String"/>
+	<parameter name="custPo" class="java.lang.String"/>
+	<parameter name="CUST_PO" class="java.lang.String"/>
+	<parameter name="page" class="java.lang.String"/>
+	<parameter name="telfax" class="java.lang.String"/>
+	<parameter name="signature" class="java.lang.String"/>
+	<parameter name="pageInfo" class="java.lang.String"/>
+	<parameter name="Exchange" class="java.lang.Boolean"/>
+	<parameter name="billtype" class="java.lang.Boolean"/>
+	<parameter name="custinfo" class="java.lang.String"/>
+	<parameter name="cominfo" class="java.lang.String"/>
+	<parameter name="isPlayTitle" class="java.lang.Boolean"/>
+	<field name="logo" class="java.lang.String"/>
+	<group name="exchange">
+		<groupExpression><![CDATA[$F{logo}]]></groupExpression>
+		<groupFooter>
+			<band height="75" splitType="Stretch">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement style="9RTend" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="408" y="-1" width="75" height="13"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{SUBTOTAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="9RTend" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="-1" width="408" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{subTol}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement style="9RTend" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="408" y="12" width="75" height="13"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{ITEM_GST}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="10B" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="25" width="408" height="13" backcolor="#CCCCCC"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{total}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="9RTend" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="12" width="408" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{GSTper}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement style="10B" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="408" y="25" width="75" height="13" backcolor="#CCCCCC"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{valueTotal}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="114" splitType="Stretch">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="9Rm" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="84" height="13" isRemoveLineWhenBlank="true">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{ExchangeRate}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement style="9Rmr" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="368" y="25" width="99" height="13" backcolor="#CCCCCC">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{valueTotAmout}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="lineb" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="252" y="25" width="117" height="13" backcolor="#CCCCCC">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{totalAmoutGSTlab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement style="9Rmr_1" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="368" y="0" width="99" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{valueAmountGST}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="linea" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="199" y="0" width="170" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{amoutGSTlab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.0000;-#,##0.0000" isBlankWhenNull="true">
+					<reportElement style="linea" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="84" y="0" width="116" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{valueExchangeRate} == null ? new BigDecimal(1) : $P{valueExchangeRate}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement style="lineR" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="368" y="12" width="99" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{valueTotalGST}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="9R_1" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="12" width="369" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{totalGSTlab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="line_1" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="25" width="252" height="13">
+						<printWhenExpression><![CDATA[$P{Exchange}]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{forGST}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="linea" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="276" y="97" width="232" height="13" isRemoveLineWhenBlank="true"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{signature}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="26">
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="517" height="26"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{typeExport}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="85">
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="78" y="26" width="212" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BILL_ACC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="50" width="20" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="104" y="50" width="24" height="13"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="0" y="2" width="78" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{InvoiceNo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="0" y="14" width="78" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Right" vAlign="Middle">
+				<reportElement x="310" y="2" width="182" height="52"/>
+				<imageExpression class="java.lang.String"><![CDATA["nttcom_min.jpg"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="78" y="14" width="212" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{DATE_REQ}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="78" y="2" width="212" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{vID_REF}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="0" y="50" width="78" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{page}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="0" y="38" width="78" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{custPo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="339" y="52" width="178" height="13" forecolor="#000000"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="99" y="50" width="6" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" stretchType="RelativeToTallestObject" mode="Transparent" x="83" y="38" width="207" height="13" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{CUST_PO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="78" y="50" width="2" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10R" mode="Transparent" x="0" y="26" width="78" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BillAccNo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="10R" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="66" width="290" height="13"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{custinfo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="10R" stretchType="RelativeToTallestObject" mode="Transparent" x="339" y="65" width="178" height="13"/>
+				<textElement verticalAlignment="Top" lineSpacing="1_1_2">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{cominfo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="78" y="38" width="2" height="13"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="27">
+			<printWhenExpression><![CDATA[$P{isPlayTitle}]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B" mode="Opaque" x="29" y="0" width="280" height="26" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{item}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B_1" mode="Opaque" x="408" y="0" width="75" height="14" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{Price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B" mode="Opaque" x="483" y="0" width="34" height="26" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{GST}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B_2" mode="Opaque" x="408" y="13" width="75" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["("+$P{BILL_CURRENCY}+")"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B" mode="Opaque" x="0" y="0" width="29" height="26" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{nolable}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B_1" mode="Opaque" x="348" y="0" width="60" height="14" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{Unit_Price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B" mode="Opaque" x="308" y="0" width="40" height="26" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{Qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="10B_2" mode="Opaque" x="348" y="13" width="60" height="13" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["("+$P{BILL_CURRENCY}+")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<subreport>
+				<reportElement style="9RTend" mode="Transparent" x="0" y="0" width="517" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="subTotal">
+					<subreportParameterExpression><![CDATA[$P{SUBTOTAL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{listItem}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["../report_pdf/billDocument_subreportDetail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="161">
+			<printWhenExpression><![CDATA[$P{billtype}]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="517" height="17" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{listFooter} != null]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[$P{listFooter}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["../report_pdf/billDocument_subreportFooter1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footright" positionType="Float" x="366" y="40" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BRANCH_NAME2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" x="231" y="40" width="134" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BRANCH_NAME1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footup" positionType="Float" x="232" y="28" width="134" height="13">
+					<printWhenExpression><![CDATA[!$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" x="80" y="40" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BRANCH_NAME0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleftup" positionType="Float" x="0" y="28" width="78" height="13">
+					<printWhenExpression><![CDATA[$P{line}]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{bank}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footrightup" positionType="Float" x="366" y="28" width="151" height="13">
+					<printWhenExpression><![CDATA[!$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footup" positionType="Float" x="80" y="28" width="152" height="13">
+					<printWhenExpression><![CDATA[!$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleft" positionType="Float" mode="Transparent" x="0" y="53" width="78" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{accname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footdown" positionType="Float" mode="Transparent" x="80" y="79" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_SWIFT0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footright" positionType="Float" mode="Transparent" x="366" y="53" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACCT_NAME2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footright" positionType="Float" mode="Transparent" x="366" y="66" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACC_CUR2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footrightdown" positionType="Float" mode="Transparent" x="366" y="79" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_SWIFT2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="80" y="66" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACC_CUR0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleft" positionType="Float" mode="Transparent" x="0" y="66" width="78" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{accno}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="231" y="53" width="134" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACCT_NAME1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footdown" positionType="Float" mode="Transparent" x="231" y="79" width="135" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_SWIFT1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleftdowm" positionType="Float" mode="Transparent" x="0" y="79" width="78" height="13"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{swiftCode}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="231" y="66" width="134" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACC_CUR1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="80" y="53" width="151" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{COM_ACCT_NAME0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleftup" positionType="Float" mode="Transparent" x="0" y="28" width="78" height="13">
+					<printWhenExpression><![CDATA[!$P{line}]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{bank}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footrightup" positionType="Float" mode="Transparent" x="366" y="28" width="151" height="13">
+					<printWhenExpression><![CDATA[$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footup" positionType="Float" mode="Transparent" x="232" y="28" width="134" height="13">
+					<printWhenExpression><![CDATA[$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footup" positionType="Float" mode="Transparent" x="80" y="28" width="152" height="13">
+					<printWhenExpression><![CDATA[$P{line}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{BANK_NAME0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="footleft" positionType="Float" mode="Transparent" x="0" y="40" width="78" height="13"/>
+				<textElement/>
+			</textField>
+			<staticText>
+				<reportElement style="footdown" positionType="Float" mode="Transparent" x="76" y="79" width="5" height="13"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="footup" positionType="Float" mode="Transparent" x="76" y="28" width="5" height="13"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="76" y="53" width="5" height="13"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="9R" positionType="Float" mode="Transparent" x="76" y="66" width="5" height="13"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

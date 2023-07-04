@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_BNK/M_BNKS01DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNKS01Blogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNKS01Blogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_BNK/M_BNKS01SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS01Blogic"
+        id="M_BNKS01Blogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_BNK/M_BNKS02vSCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNKS02vBlogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNKS02vBlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS02vBlogic"
+        id="M_BNKS02vBlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNKS02neBlogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNKS02neBlogicBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_BNK/M_BNKS02neSCR" scope="singleton"/>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS02neBlogic"
+        id="M_BNKS02neBlogicBLogic" scope="singleton">
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_BNK/M_BNKS02neDSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_BNK/M_BNKS02vDSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNKS02edBlogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNKS02eBlogicBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_BNK/M_BNKS02eSCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/M_BNK/M_BNKS02edDSP" scope="singleton"/>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS02edBlogic"
+        id="M_BNKS02eBlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS02deBlogic"
+        id="M_BNKS02deBlogicBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNKS02deBlogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNKS02deBlogicBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_bnk.blogic.M_BNKS03Blogic"
+        id="M_BNK_S03Blogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_BNK/M_BNK_S03Blogic" scope="singleton">
+        <property name="businessLogic" ref="M_BNK_S03Blogic"/>
+    </bean>    
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_BNK/M_BNK_S03SCR" scope="singleton">
+    </bean>
+</beans>

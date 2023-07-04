@@ -1,0 +1,50 @@
+.ppm table {
+	font-size: 11px;
+}
+
+.ppm td.borTd {
+	border-bottom: 1px solid #CEE7FF;
+}
+.gst {
+	color: red;
+}
+.svc_subpl td {
+	border-bottom: 1px solid #CEE7FF;
+}
+.search_result_table tr td {
+	padding-right: 10px;
+	padding-left: 2px;
+}
+.header_s04 td {
+	padding: 5px auto;
+}
+.content_s04 {
+	
+}
+.searchCriteriaTable{
+    margin-top:0.05in;
+    background-color:#F8F8F8;
+    border-collapse: collapse;
+    width:100%; 
+}
+.searchCriteriaTable td.col1Top{
+    padding-top: 0.1in;
+    padding-left: 0.15in;
+    border-top: solid 2px #CFCFCF;
+    text-align: right;
+}
+
+.searchCriteriaTable td.col2Top{
+    padding-top: 0.1in;
+    border-top: solid 2px #CFCFCF;
+    text-align: left;
+}
+
+.searchCriteriaTable td.col3Top{
+    padding-top: 0.1in;
+    border-top: solid 2px #CFCFCF;
+    text-align: left;
+}
+.searchCriteriaTable td.colBottom{
+    border-bottom: solid 2px #CFCFCF;
+}

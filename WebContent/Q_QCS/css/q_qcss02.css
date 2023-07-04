@@ -1,0 +1,305 @@
+.hidden { display: none; }
+.unhidden { display: block; }
+
+.hideInputFile{
+	display: none;	
+}
+input.realFileQCS
+    {
+  position:absolute;
+      left:21%;
+      -moz-opacity:0;
+      filter:alpha(opacity: 0);
+      opacity: 0;
+      z-index: 2;
+      width:0px;
+      border-width:0px;
+}
+input.fakeFileQCS
+    { 
+  z-index:1;
+  width:80px;
+  height:24px;
+    }
+ input.realFileSectGrp
+    {
+  position:absolute;
+      left:24%;
+      -moz-opacity:0;
+      filter:alpha(opacity: 0);
+      opacity: 0;
+      z-index: 2;
+      width:0px;
+      border-width:0px;
+}   
+.ContractInnerLeftTextbox{
+	width: 99%;
+	border:none;
+	text-align: left;	
+}
+.ContractInnerRightTextbox{
+	width: 99%;
+	border:none;
+	text-align: right;	
+}
+.DateTextBox{
+	width: 100px;
+	font-family: Tahoma;
+}
+.RemarkTextBox{
+	width: 95%;	
+}
+.SessionRemarkTextBox{
+	width: 70%;	
+}
+.CustomerListBox{
+	width: 80%;
+	font-family: Tahoma;
+}
+.ListBox{
+	width: 150px;
+	font-family: Tahoma;
+}
+.OtherTextBox{
+	width: 50px;
+}
+.generalInfo{
+	margin-top:0.05in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+}
+.generalInfo table{
+	font-size : 11px;	
+}
+.generalInfo td.header{
+	text-align: left;
+	background-color: #EAEAEA;
+	font: bold;	
+}
+
+.generalInfo td.colLeft{
+	text-align: left;
+}
+.generalInfo td.colRight{
+	text-align: right;
+}
+.generalInfo td.statusCol{
+	text-align: center;
+	vertical-align: top;
+}
+.contractInfo {
+	margin-top:0.05in;
+	width:100%;	
+}
+.contractInfo table{
+	font-size : 11px;	
+}
+.contractInfo td.header{
+	text-align: center;
+	font-weight: bold;
+	background-color: #EBEADB;
+	height:25px;
+	border: solid 1px #000000;	
+
+}
+.contractInfo td.colLeft{
+	text-align: left;	
+	border: solid 1px #000000;
+	padding-left: 0.05in;
+}
+.contractInfo td.colRight{
+	text-align: right;	
+	border: solid 1px #000000;
+}
+.contractInfo td.colRightNoBorder{
+	text-align: right;	
+}
+.contractInfo td.colCenter{
+	text-align: center;	
+	border: solid 1px #000000;
+}
+.contractValue {
+	width:100%;	
+}
+.contractValue table{
+	font-size : 11px;	
+}
+.contractValue td.colRight{
+	text-align: right;	
+	border: solid 1px #000000;
+}
+.contractValue td.colRightNoBorder{
+	text-align: right;	
+}
+
+.sessionHeader{
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+	border: solid 2px #CECECE;
+	margin-top:0.05in;
+}
+.sessionHeader table{
+	font-size : 11px;
+}
+.sessionHeader td.standardCol{
+	text-align: center;
+	background-color: #F8F8F8;
+	font: bold;	
+	height: 28px;
+	
+}
+.sessionHeader td.nonStandardCol{
+	text-align: center;
+	background-color: #EAEAEA;
+	font: bold;
+	
+}
+.sessionHeader td.concurrenceCol{
+	text-align: center;
+	background-color: #F8F8F8;
+	font: bold;	
+	
+}
+.sessionHeader td.statusCol{
+	text-align: center;
+	background-color: #F8F8F8;
+	font: bold;	
+}
+
+.sessionDetail{
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+	border: solid 2px #CECECE;
+	margin-top:0.01in;
+}
+.sessionDetail table{
+	font-size : 11px;
+}
+.sessionDetail td.standardCol{
+	text-align: left;
+	vertical-align:top;
+	background-color: #FFFFFF;
+	height: 70px;
+	border-bottom: solid 1px #CECECE;
+	padding-left: 0.1in;	
+}
+.sessionDetail td.nonStandardCol{
+	text-align: left;
+	vertical-align:top;
+	background-color: #F2F2F2;
+	border-bottom: solid 1px #CECECE;
+}
+.sessionDetail td.nonStandardNoBorderCol{
+	text-align: left;
+	vertical-align:top;
+	background-color: #FFFFFF;
+}
+.sessionDetail td.concurrenceCol{
+	text-align: center;
+	vertical-align:top;
+	background-color: #FFFFFF;
+	border-bottom: solid 1px #CECECE;
+}
+.sessionDetail td.concurrenceNoBorderCol{
+	text-align: center;
+	vertical-align:top;
+	background-color: #FFFFFF;
+}
+.sessionDetail td.statusCol{
+	text-align: left;
+	vertical-align:top;
+	background-color: #F8F8F8;
+	border-bottom: solid 1px #CECECE;
+}
+
+.sessionDetail td.statusConcurrenceCol{
+	text-align: left;
+	vertical-align:top;
+	background-color: #FFFFFF;
+	border-bottom: solid 1px #CECECE;
+}
+.sessionDetail td.otherCols{
+	text-align: left;
+	padding-bottom: 0.05in;
+	padding-left: 0.1in;
+}
+.ObtainApprovalButton{
+	width: 110px;	
+}
+.DS0Class{
+	color:#FF6600;
+	background-color: #FF9900;
+	text-align: center;
+}
+.DS1Class{
+	color:#008000;
+	background-color: #00FF00;
+	text-align: center;
+}
+.DS2Class{
+	color:#FFCC00;
+	background-color: #FFFF00;
+	text-align: center;
+}
+.DS3Class{
+	color:#000080;
+	background-color: #0000FF;
+	text-align: center;
+}
+.DS4Class{
+	color:#FF0000;
+	background-color: #FFB3B3;
+	text-align: center;
+}
+.DS5Class{
+	color:#808080;
+	background-color: #D9D9D9;
+	text-align: center;
+}
+.AS0Class{
+	vertical-align:top;
+	background-color: #F8F8F8;
+	border-bottom: solid 1px #CECECE;
+}
+.AS1Class{
+	color:#FFCC00;
+	background-color: #FFFF00;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS2Class{
+	color:#008000;
+	background-color: #00FF00;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS3Class{
+	color:#FF0000;
+	background-color: #FFB3B3;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS4Class{
+	color:#808080;
+	background-color: #D9D9D9;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS5Class{
+	color:#008000;
+	background-color: #00FF00;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS6Class{
+	background-color: #808080;
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}
+.AS7Class{
+	vertical-align:top;
+	border-bottom: solid 1px #CECECE;
+}

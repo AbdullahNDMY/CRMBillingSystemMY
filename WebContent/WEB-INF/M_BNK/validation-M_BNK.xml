@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+
+<form-validation>
+	
+    <formset>
+    	<form name="/M_BNKS02neBlogic">
+      
+        <field property="tbxBankCode"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Bank Code" name="maxlength"
+               resource="false" position="0"/>
+            <arg key="Bank Code" name="required"
+               resource="false" position="0"/>   
+               
+            <arg key="4" name="maxlength" resource="false" position="1"/>   
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>4</var-value>
+          </var>      
+        </field> 
+        
+         <field property="tbxBankName"
+            depends="required,maxlength">   
+           <msg key="errors.ERR1SC005" name="required" />            
+            <arg key="Bank Name" name="maxlength"
+               resource="false" position="0"/>               
+            <arg key="Bank Name" name="required"
+               resource="false" position="0"/>                  
+            <arg key="100" name="maxlength" resource="false" position="1"/>  
+            <var>
+            <var-name>maxlength</var-name>
+            <var-value>100</var-value>
+          </var>   
+        </field>
+        <field property="cboAddressCountryRA" 
+        	depends="required">
+        	<arg key="Registered Address Country" name="required" resource="false" position="0" />
+        </field>	
+        
+         <field property="tbxBranchCode"
+            depends="required,maxlength,validatedulcheck">            
+           <msg key="errors.ERR1SC005" name="required" />  
+           
+           <arg key="Branch Code" name="required" position="0"  resource="false"/>              
+            <arg key="Branch Code" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="3" name="maxlength" 
+             resource="false" position="1"/>  
+          <arg key="errors.dulfield.name" name="validatedulcheck" position="0"  resource="true"/> 
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>3</var-value>
+          </var>      
+        </field> 
+        
+          <field property="tbxBranchName"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Branch Name" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="100" name="maxlength"
+               resource="false" position="1"/>  
+               
+             <arg key="Branch Name" name="required"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>100</var-value>
+          </var>      
+        </field> 
+        <field property="tbxBankBICCode"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Bank BIC Code" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="11" name="maxlength"
+               resource="false" position="1"/>  
+               
+             <arg key="Bank BIC Code" name="required"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>11</var-value>
+          </var>      
+        </field>
+        <field property="tbxTelNo"
+            depends="maxlength">            
+      
+            <arg key="Tel No." name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>           
+            
+               
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        <field property="tbxFaxNo"
+            depends="maxlength">            
+            <arg key="Fax No." name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>              
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        
+          <field property="tbxAddressLine1RA"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Registered Address line 1" name="required"
+               resource="false" position="0"/>
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>150</var-value>
+          </var>      
+        </field>
+                  
+        
+        <field property="tbxAddressLine1CA"
+            depends="maxlength">            
+         <arg key="Correspondance Address line 1 " name="maxlength"
+               resource="false" position="0"/>   
+               <arg key="15" name="maxlength"
+               resource="false" position="0"/>  
+          
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>150</var-value>
+          </var>      
+        </field>
+             
+                
+          <field property="tbxZipCodeRA"
+            depends="required">               
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Registered Address Zip Code" name="required"
+               resource="false" position="0"/>
+             
+        </field>
+        
+         <field property="tbxZipCodeCA"
+            depends="maxlength">               
+                  
+             <arg key="Correspondence Address Country" name="maxlength"
+               resource="false" position="0"/>   
+               <arg key="15" name="maxlength"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>15</var-value>
+          </var>      
+        </field>
+      
+        
+      <field property="tbxContactNamePC"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Contact Name"  name="required"
+               resource="false" position="0"/>
+            <arg key="Contact Name"  name="maxlength"
+               resource="false" position="0"/> 
+            <arg key="50"  name="maxlength"
+               resource="false" position="1"/>      
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>50</var-value>
+          </var>      
+        </field>        
+       <field property="tbxDesignationPC"
+            depends="maxlength">                      
+            <arg key="Primary Designation " name="maxlength"
+               resource="false" position="0"/>
+            <arg key="15" name="maxlength"
+               resource="false" position="1"/>
+          
+                  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>50</var-value>
+          </var>      
+        </field>
+        
+        <field property="tbxTelephoneNoPC"
+            depends="maxlength">            
+         
+            <arg key="Primary Telephone" name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>  
+            
+                 
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+       
+       <field property="tbxFaxNoPC"
+            depends="maxlength">            
+        
+            <arg key="Primary Fax" name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>
+           
+                    
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        
+        <field property="tbxEmailPC" depends="mask">
+        	<arg key="Primary Contact's E-mail Address" position="0" name="mask" resource="false"/>  	
+        	<var>
+              		<var-name>mask</var-name>
+             		<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>           						
+            </var>
+        </field>
+       
+        <field property="tbxEmailBC" depends="mask">
+        	<arg key="Secondary Contact's E-mail Address" position="0" name="mask" resource="false"/>        	
+        	<var>
+                	<var-name>mask</var-name>
+                	<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>
+            </var>
+        </field>
+       
+       <field property="tbxEmailOC" depends="mask">
+        	<arg key="Other Contact's E-mail Address" position="0" name="mask" resource="false"/>        	
+        	<var>
+                	<var-name>mask</var-name>
+                	<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>
+            </var>
+        </field>
+       
+    	</form>
+
+	<form name="/M_BNKS02edBlogic">
+      
+         <field property="tbxBankCode"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+           
+            <arg key="Bank Code" name="maxlength"
+               resource="false" position="0"/>    
+            <arg key="Bank Code" name="required"
+               resource="false" position="0"/>  
+            <arg key="4" name="maxlength" resource="false" position="1"/>   
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>4</var-value>
+          </var>      
+        </field> 
+        
+         <field property="tbxBankName"
+            depends="required,maxlength">   
+           <msg key="errors.ERR1SC005" name="required" />  
+          
+            <arg key="Bank Name" name="maxlength"
+               resource="false" position="0"/>   
+            <arg key="Bank Name" name="required"
+               resource="false" position="0"/>              
+            <arg key="100" name="maxlength" resource="false" position="1"/>  
+            <var>
+            <var-name>maxlength</var-name>
+            <var-value>100</var-value>
+          </var>   
+        </field>
+        
+        
+         <field property="tbxBranchCode"
+            depends="required,maxlength,validateduleditcheck">            
+           <msg key="errors.ERR1SC005" name="required" />  
+                      
+           <arg key="Branch Code" name="required" position="0"  resource="false"/>              
+            <arg key="Branch Code" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="3" name="maxlength" 
+             resource="false" position="1"/>  
+          <arg key="errors.dulfield.name" name="validateduleditcheck" position="0"  resource="true"/> 
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>3</var-value>
+          </var>      
+        </field> 
+        
+          <field property="tbxBranchName"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Branch Name" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="100" name="maxlength"
+               resource="false" position="1"/>  
+               
+             <arg key="Branch Name" name="required"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>100</var-value>
+          </var>      
+        </field> 
+        
+        <field property="tbxBankBICCode"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Bank BIC Code" name="maxlength"
+               resource="false" position="0"/>
+             <arg key="11" name="maxlength"
+               resource="false" position="1"/>  
+               
+             <arg key="Bank BIC Code" name="required"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>11</var-value>
+          </var>      
+        </field>
+        
+        <field property="tbxTelNo"
+            depends="maxlength">            
+        
+            <arg key="Tel No." name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>   
+              
+               
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        <field property="tbxFaxNo"
+            depends="maxlength">            
+       
+            <arg key="Fax No." name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>             
+         
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        
+          <field property="tbxAddressLine1RA"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Registered Address line 1" name="required"
+               resource="false" position="0"/>
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>150</var-value>
+          </var>      
+        </field>
+        
+        
+        <field property="tbxAddressLine1CA"
+            depends="maxlength">  
+            <arg key="Correspondance Address line 1" name="maxlength"
+               resource="false" position="0"/>
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>150</var-value>
+          </var>      
+        </field>
+      
+          <field property="tbxZipCodeRA"
+            depends="required">               
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Zip Code Registered Address" name="required"
+               resource="false" position="0"/>
+             
+        </field>
+        
+         <field property="tbxZipCodeCA"
+            depends="maxlength">               
+       
+         
+             <arg key="Zip Code Correspondance Address" name="maxlength"
+               resource="false" position="0"/>   
+               <arg key="15" name="maxlength"
+               resource="false" position="0"/>  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>15</var-value>
+          </var>      
+        </field>
+        
+        
+          <field property="cboAddressCountryRA"
+            depends="required">            
+           <msg key="errors.ERR1SC005" name="required" />  
+           <arg key="Registered Address Country" name="required"
+               resource="false" position="0"/>
+             
+           
+                         
+        </field>
+        	
+      
+        
+      <field property="tbxContactNamePC"
+            depends="required,maxlength">            
+           <msg key="errors.ERR1SC005" name="required" />  
+            <arg key="Contact Name"  name="required"
+               resource="false" position="0"/>
+            <arg key="Contact Name"  name="maxlength"
+               resource="false" position="0"/> 
+            <arg key="50"  name="maxlength"
+               resource="false" position="1"/>      
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>50</var-value>
+          </var>      
+        </field>
+       <field property="tbxDesignationPC"
+            depends="maxlength">            
+       
+            <arg key="Primary Designation " name="maxlength"
+               resource="false" position="0"/>
+            <arg key="50" name="maxlength"
+               resource="false" position="1"/>
+          
+                  
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>50</var-value>
+          </var>      
+        </field>
+        
+        <field property="tbxTelephoneNoPC"
+            depends="maxlength">            
+         
+            <arg key="Primary Telephone" name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>  
+             
+                
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+       
+       <field property="tbxFaxNoPC"
+            depends="maxlength">            
+        
+            <arg key="Primary Fax" name="maxlength"
+               resource="false" position="0"/>
+            <arg key="20" name="maxlength"
+               resource="false" position="1"/>
+           
+                    
+          <var>
+            <var-name>maxlength</var-name>
+            <var-value>20</var-value>
+          </var>      
+        </field>
+        
+	    <field property="tbxEmailPC" depends="mask">
+        	<arg key="Primary Contact's E-mail Address" position="0" name="mask" resource="false"/>      	
+        	
+        	<var>
+                	<var-name>mask</var-name>
+                	<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>
+            </var>
+        </field>
+       
+        <field property="tbxEmailBC" depends="mask">
+        	<arg key="Secondary Contact's E-mail Address" position="0" name="mask" resource="false"/>        	
+        	<var>
+                	<var-name>mask</var-name>
+                	<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>
+            </var>
+        </field>
+       
+       <field property="tbxEmailOC" depends="mask">
+        	<arg key="Other Contact's E-mail Address" position="0" name="mask" resource="false"/>        	
+        	<var>
+                	<var-name>mask</var-name>
+                	<var-value>^[A-Za-z0-9-_]+(\.[A-Za-z0-9-_]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-_]+)*(\.[A-Za-z]{2,4})$</var-value>
+            </var>
+        </field>
+       
+    	</form>
+
+
+      
+ 	</formset>
+ 	
+ 	
+</form-validation>
+

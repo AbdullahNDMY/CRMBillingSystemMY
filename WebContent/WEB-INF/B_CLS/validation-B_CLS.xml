@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+ <formset>
+      <form name="/B_CLSR01BLogic">	  								
+		<field depends="number, intRange" property="month">
+				<arg key="screen.b_cls.month" position="0" resource="true" />
+				<arg key="${var:integerLength}" name="number" position="1"
+					resource="false" />
+				<arg key="${var:scale}" name="number" position="2" resource="false" />
+				<arg key="${var:min}" name="intRange" position="1" resource="false" />
+				<arg key="${var:max}" name="intRange" position="2" resource="false" />
+				<var>
+					<var-name>integerLength</var-name>
+					<var-value>2</var-value>
+				</var>
+				<var>
+					<var-name>scale</var-name>
+					<var-value>0</var-value>
+				</var>
+				<var>
+					<var-name>isAccordedInteger</var-name>
+					<var-value>false</var-value>
+				</var>
+				<var>
+					<var-name>isAccordedScale</var-name>
+					<var-value>false</var-value>
+				</var>
+				<var>
+					<var-name>min</var-name>
+					<var-value>1</var-value>
+				</var>
+				<var>
+					<var-name>max</var-name>
+					<var-value>12</var-value>
+				</var>
+			</field>
+		    <field property="year" depends="numericString"> 
+		      <arg key="screen.b_cls.year" position="0" /> 
+		    </field> 
+      </form>
+ </formset>
+</form-validation>

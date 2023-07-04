@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+		<form name="/M_COMS01_01_Save">
+			<field indexedListProperty="listCompanyBank" property="idBank" depends="required">
+				<msg name="required" key="errors.ERR1SC038"/>
+				<arg position="0" key="screen.m_com.s01_1.table.col3"/>
+			</field>
+			<field indexedListProperty="listCompanyBank" property="accountNumber" depends="required">
+				<msg name="required" key="errors.ERR1SC005"/>
+				<arg position="0" key="screen.m_com.s01_1.table.col6"/>
+			</field>
+			<field indexedListProperty="listCompanyBank" property="accountType" depends="required">
+				<msg name="required" key="errors.ERR1SC038"/>
+				<arg position="0" key="screen.m_com.s01_1.table.col7"/>
+			</field>
+			<field indexedListProperty="listCompanyBank" property="accountName" depends="required">
+				<msg name="required" key="errors.ERR1SC005"/>
+				<arg position="0" key="screen.m_com.s01_1.table.col9"/>
+			</field>
+			<!--
+			<field indexedListProperty="listCompanyBank" property="swift" depends="required">
+				<msg name="required" key="errors.ERR1SC005"/>
+				<arg position="0" key="screen.m_com.s01_1.table.col9"/>
+			</field>
+			-->
+		</form>
+    </formset>
+</form-validation>

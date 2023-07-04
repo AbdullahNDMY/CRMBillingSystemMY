@@ -1,0 +1,122 @@
+@CHARSET "Shift_JIS";
+
+* {
+    margin: 0px;
+    padding: 0px; 
+    overflow: auto;
+} 
+.QCSSearchResultTableHeader
+{
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	border:solid 1px #CFCFCF;
+	color: #616161;
+	width:75%;	
+}
+.QCSSearchResultTableHeader td.header{
+	height: 23px;
+	text-align: left;
+	font-weight: bold;
+	color: #616161;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTableHeader td.Title{
+	height: 25px;
+	text-align: left;
+	font-weight: bold;
+	font-size: large;
+	color: #616161;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTableHeader td.New{
+	height: 25px;
+	text-align: right;
+	font-size: small;
+	color: #616161;
+	border-bottom:solid 1px #CFCFCF;	
+}
+
+.QCSSearchResultTable table
+{
+	font-size:12px;
+}
+.QCSSearchResultTable 
+{
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	border:solid 1px #CFCFCF;
+	color: #616161;
+	width:100%;	
+}
+.QCSSearchResultTable td
+{
+	padding: 0px 0px 0px 0px;
+	background-color:#F8F8F8;	
+}
+.QCSSearchResultTable td.default{
+	text-align: left;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable td.high{
+	text-align: left;
+	color: red;
+	border-bottom:solid 1px #CFCFCF;	
+}
+
+.QCSSearchResultTable td.low{
+	text-align: left;		
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable td.medium{
+	text-align: left;
+	color: #C8AB06;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable td.normal{
+	text-align: left;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable td.bottom{
+	text-align: left;
+	border-bottom-style: none;	
+} 
+
+
+.QCSSearchResultTable1 table
+{
+	font-size:12px;
+}
+.QCSSearchResultTable1 
+{
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	border:solid 1px #CFCFCF;
+	color: #616161;
+	width:75%;	
+}
+.QCSSearchResultTable1 td
+{
+	padding: 0px 0px 0px 0px;
+	background-color:#F8F8F8;	
+}
+.QCSSearchResultTable1 td.default{
+	text-align: left;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable1 td.high{
+	text-align: left;
+	color: red;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable1 td.low{
+	text-align: left;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable1 td.normal{
+	text-align: left;
+	border-bottom:solid 1px #CFCFCF;	
+}
+.QCSSearchResultTable1 td.bottom{
+	text-align: left;
+	border-bottom-style: none;	
+} 

@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="B_CSB">
+	<select id="SELECT.BSYS.BCSB.SQL_2.1.1" resultClass="org.apache.struts.util.LabelValueBean">
+		SELECT ID_CUST as value, CONCAT(CUST_NAME,CONCAT('-',ID_CUST)) as label
+		FROM M_CUST
+		WHERE INTER_COMP = '1' AND IS_DELETED = 0
+		ORDER BY CUST_NAME ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_2.1.2" resultClass="org.apache.struts.util.LabelValueBean">
+		SELECT ID_CUST as value, CONCAT(CUST_NAME,CONCAT('-',ID_CUST)) as label
+		FROM M_CUST
+		WHERE IS_DELETED = 0
+		ORDER BY CUST_NAME ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.CUST_INFO" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT ID_CUST, CUST_NAME
+		FROM M_CUST
+		WHERE ID_CUST=#idCust#
+	</select>
+	<select id="SELECT.BSYS.BCSB.BAC_PLAYER" resultClass="org.apache.struts.util.LabelValueBean">
+		SELECT ID_CUST as value, CONCAT(CUST_NAME,CONCAT('-',ID_CUST)) as label
+		FROM M_CUST
+		WHERE IS_DELETED = 0
+		ORDER BY CUST_NAME ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.GET_BILL_ACC_NO" parameterClass="java.util.HashMap" 
+		resultClass="org.apache.struts.util.LabelValueBean">
+		SELECT M.ID_BILL_ACCOUNT as value, M.ID_BILL_ACCOUNT as label FROM T_BAC_H M WHERE
+		M.IS_DELETED = '0'
+		AND TRIM(M.ID_CUST)=#idCust#
+	</select>
+	<select id="SELECT.BSYS.BCSB.BAC_H_BY_KEY" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap">
+		SELECT M.ID_BILL_ACCOUNT, M.PAYMENT_METHOD ,M.BILL_CURRENCY 
+		FROM T_BAC_H M WHERE
+		TRIM(M.ID_BILL_ACCOUNT)=#idBillAccount#
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL003" resultClass="org.apache.struts.util.LabelValueBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT H.ID_COM_BANK as value, CONCAT(I.BANK_FULL_NAME, CONCAT('-',H.COM_ACCT_NO)) as label
+		FROM M_BANK I, M_COM_BANKINFO H
+		WHERE  I.ID_BANK = H.ID_BANK
+           AND I.IS_DELETED = '0'
+           AND H.STATUS = '1' AND H.DEFAULT_ACC = '1'
+           ORDER BY I.BANK_FULL_NAME ASC, H.COM_ACCT_NO ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_2.2" parameterClass="java.util.HashMap"
+			resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean" 
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE,DATE_REQ AS DATE_REQ_DATE,
+		  ID_REF, BILL_CURRENCY, BILL_AMOUNT, 0 AS APPLIED, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE TRIM(ID_CUST)='$idCust$' 
+			AND IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+		<dynamic prepend="AND">			
+			<isNotEmpty prepend="AND" property="curCode">
+				BILL_CURRENCY = '$curCode$'
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_2.4" parameterClass="java.util.HashMap"
+			resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean" 
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE,DATE_REQ AS DATE_REQ_DATE,
+		  ID_REF, BILL_CURRENCY, BILL_AMOUNT, 0 AS APPLIED, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE 
+			IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+		<dynamic prepend="AND">	
+			<isNotEmpty prepend="AND" property="idCustList"> 
+				TRIM(ID_CUST) IN
+				<iterate  property="idCustList" conjunction="," close=")" open="(" >
+					#idCustList[]#
+				</iterate>
+			</isNotEmpty>		
+			<isNotEmpty prepend="AND" property="curCode">
+				BILL_CURRENCY = '$curCode$'
+			</isNotEmpty>
+		</dynamic>
+        ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.BAC_DEB_INFO" parameterClass="java.util.HashMap"
+			resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean" 
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE,DATE_REQ AS DATE_REQ_DATE,
+		  ID_REF, BILL_CURRENCY, BILL_AMOUNT, 0 AS APPLIED, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE TRIM(ID_CUST)=#idCust# 
+			AND IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+			AND TRIM(BILL_ACC) = #idBillAccount#
+        ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL005" parameterClass="java.util.HashMap" resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT h.*, TO_CHAR(h.DATE_TRANS, 'dd/MM/yyyy') AS DATE_TRANS_CHAR,TO_CHAR(h.REJECT_DATE, 'dd/MM/yyyy') AS REJECT_DATE_CHAR
+		FROM T_CSB_H h
+		WHERE h.RECEIPT_NO = '$idRef$'
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL008" parameterClass="java.util.HashMap" resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT h.*, TO_CHAR(h.DATE_TRANS, 'dd/MM/yyyy') AS DATE_TRANS_CHAR,TO_CHAR(h.REJECT_DATE, 'dd/MM/yyyy') AS REJECT_DATE_CHAR
+		FROM T_CSB_H H
+		WHERE TRIM(h.RECEIPT_NO) = #idRef#
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_2.3" parameterClass="java.util.HashMap" 
+		resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean"
+			resultSetType="SCROLL_INSENSITIVE">
+			SELECT * FROM (
+		SELECT 1 AS APPLIED, TO_CHAR(h.DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, d.ID_REF, h.BILL_CURRENCY, h.DATE_REQ AS DATE_REQ_DATE,
+		  h.BILL_AMOUNT, (h.BILL_AMOUNT - h.PAID_AMOUNT + d.AMT_PAID) AS AMT_DUE, d.AMT_PAID, d.FOREX_LOSS, d.FOREX_GAIN, h.BILL_TYPE
+		FROM T_CSB_D d, T_BIL_H h
+		WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+		  AND d.ID_REF = h.ID_REF
+		  AND d.IS_DELETED = 0
+		UNION ALL
+		SELECT 0 AS APPLIED, TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, ID_REF, BILL_CURRENCY, DATE_REQ AS DATE_REQ_DATE,
+		  BILL_AMOUNT, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE TRIM(ID_CUST)='$idCust$' 
+			AND IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+			AND BILL_CURRENCY = '$curCode$'
+			AND ID_REF NOT IN (SELECT d.ID_REF
+								FROM T_CSB_D d, T_BIL_H h
+								WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+								  AND d.ID_REF = h.ID_REF
+								  AND d.IS_DELETED = 0)
+			) A ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.SQL_2.5" parameterClass="java.util.HashMap" 
+		resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean"
+			resultSetType="SCROLL_INSENSITIVE">
+            SELECT * FROM (
+		SELECT 1 AS APPLIED, TO_CHAR(h.DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, d.ID_REF, h.BILL_CURRENCY, h.DATE_REQ AS DATE_REQ_DATE,
+		  h.BILL_AMOUNT, (h.BILL_AMOUNT - h.PAID_AMOUNT + d.AMT_PAID) AS AMT_DUE, d.AMT_PAID, d.FOREX_LOSS, d.FOREX_GAIN, h.BILL_TYPE
+		FROM T_CSB_D d, T_BIL_H h
+		WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+		  AND d.ID_REF = h.ID_REF
+		  AND d.IS_DELETED = 0
+		UNION ALL
+		SELECT 0 AS APPLIED, TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, ID_REF, BILL_CURRENCY, DATE_REQ AS DATE_REQ_DATE,
+		  BILL_AMOUNT, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+			AND BILL_CURRENCY = '$curCode$'
+			AND ID_REF NOT IN (SELECT d.ID_REF
+								FROM T_CSB_D d, T_BIL_H h
+								WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+								  AND d.ID_REF = h.ID_REF
+								  AND d.IS_DELETED = 0)
+	   <dynamic prepend="AND">	
+			<isNotEmpty prepend="AND" property="idCustList"> 
+				TRIM(ID_CUST) IN
+				<iterate  property="idCustList" conjunction="," close=")" open="(" >
+					#idCustList[]#
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+            ) A ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.SQL_2.6" parameterClass="java.util.HashMap" 
+		resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean"
+			resultSetType="SCROLL_INSENSITIVE">
+            SELECT * FROM (
+		SELECT 1 AS APPLIED, TO_CHAR(h.DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, d.ID_REF, h.BILL_CURRENCY, h.DATE_REQ AS DATE_REQ_DATE,
+		  h.BILL_AMOUNT, (h.BILL_AMOUNT - h.PAID_AMOUNT + d.AMT_PAID) AS AMT_DUE, d.AMT_PAID, d.FOREX_LOSS, d.FOREX_GAIN, h.BILL_TYPE
+		FROM T_CSB_D d, T_BIL_H h
+		WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+		  AND d.ID_REF = h.ID_REF
+		  AND d.IS_DELETED = 0
+		UNION ALL
+		SELECT 0 AS APPLIED, TO_CHAR(DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, ID_REF, BILL_CURRENCY, DATE_REQ AS DATE_REQ_DATE,
+		  BILL_AMOUNT, BILL_AMOUNT - PAID_AMOUNT AS AMT_DUE, 0 AS AMT_PAID, 0 AS FOREX_LOSS, 0 AS FOREX_GAIN, BILL_TYPE
+		FROM T_BIL_H
+		WHERE TRIM(ID_CUST)='$idCust$' 
+			AND IS_DELETED='0' 
+			AND BILL_AMOUNT > PAID_AMOUNT 
+			AND BILL_TYPE in ('IN','DN') 
+			AND TRIM(BILL_ACC) = #idBillAccount#
+			AND ID_REF NOT IN (SELECT d.ID_REF
+								FROM T_CSB_D d, T_BIL_H h
+								WHERE TRIM(d.RECEIPT_NO) = '$idRef$'
+								  AND d.ID_REF = h.ID_REF
+								  AND d.IS_DELETED = 0)
+								  
+            ) A ORDER BY DATE_REQ_DATE ASC, ID_REF ASC
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.SQL_3.2" parameterClass="java.util.HashMap" 
+		resultClass="nttdm.bsys.b_csb.dto.Debit_info_bean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 1 AS APPLIED, TO_CHAR(h.DATE_REQ, 'dd/mm/yyyy') AS DATE_REQ, d.ID_REF, h.BILL_CURRENCY, 
+		  h.BILL_AMOUNT, d.AMT_DUE, d.AMT_PAID, d.FOREX_LOSS, d.FOREX_GAIN, h.BILL_TYPE
+		FROM T_CSB_D d, T_BIL_H h
+		WHERE d.RECEIPT_NO = '$idRef$'
+		  AND d.ID_REF = h.ID_REF
+		  AND d.IS_DELETED = 0
+        ORDER BY h.DATE_REQ ASC, ID_REF ASC
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_3.2.2" parameterClass="java.util.HashMap" 
+		resultClass="java.lang.Integer"	resultSetType="SCROLL_INSENSITIVE">
+		SELECT BILL_AMOUNT - PAID_AMOUNT FROM T_BIL_H WHERE ID_REF = #idRef#
+	</select>
+	<select id="SELECT.BSYS.BCSB.BIL_H_BY_KEY" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap"	resultSetType="SCROLL_INSENSITIVE">
+		SELECT ID_REF, BILL_AMOUNT, PAID_AMOUNT, TO_CHAR(LAST_PAYMENT_DATE, 'dd/mm/yyyy') AS LAST_PAYMENT_DATE
+		FROM T_BIL_H WHERE TRIM(ID_REF) = #idRef#
+	</select>
+	<insert id="INSERT.BSYS.BCSB.SQL_4.1" parameterClass="java.util.HashMap" >
+		INSERT INTO T_CSB_H (
+		  receipt_no, 
+		  id_cust, 
+		  id_com_bank, 
+		  other_payer, 
+		  pmt_method, 
+		  ID_BILL_ACCOUNT,
+		  date_trans, 
+		  receipt_ref, 
+		  cur_code, 
+		  amt_received, 
+		  remark, 
+		  pmt_status, 
+		  balance_amt, 
+		  reference1, 
+		  reference2, 
+		  bank_charge, 
+		  PAID_PRE_INVOICE,
+		  OVER_PAID,
+		  IS_EXPORT,
+		  is_closed, 
+		  is_deleted, 
+		  date_created, 
+		  date_updated, 
+		  id_login,
+		  id_audit)
+		VALUES (
+		  #receiptNo#,
+		  #idCust#,
+		  #bankAcc#,
+		  #other#,
+		  #pmtMethod#,
+		  #idBillAccount#,
+		  TO_DATE(#transDate#,'DD/MM/YYYY'),
+		  #receiptRef#,
+		  #curCode#,
+		  #amtReceived#,
+		  #remark#,
+		  #paymentStatus#,
+		  #balanceAmt#,
+		  #paymentRef1#,
+		  #paymentRef2#,
+		  #bankCharge#,
+		  #paidPreInvoice#,
+		  #overPaid#,
+		  '0',
+		  '0',
+		  '0', 
+		  sysdate, 
+		  sysdate, 
+		  #idLogin#,
+		  #idAudit#
+		)
+	</insert>
+	<insert id="INSERT.BSYS.BCSB.SQL_4.2" parameterClass="java.util.HashMap">
+		INSERT INTO T_CSB_D (
+		  receipt_no, 
+		  id_ref, 
+		  amt_paid, 
+		  amt_due, 
+		  forex_loss, 
+		  forex_gain, 
+		  is_deleted, 
+		  date_created, 
+		  date_updated, 
+		  id_login,
+		  id_audit)
+		VALUES (
+		  #receiptNo#,
+		  #idRef#,
+		  #amtPaid#,
+		  #amtDue#,
+		  #forexLoss#,
+		  #forexGain#,
+		  0,
+		  sysdate,
+		  sysdate,
+		  #idLogin#,
+		  #idAudit#
+		)
+	</insert>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.3.1" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET date_updated = sysdate, 
+		  id_login = #idLogin#, 
+		  paid_amount = (paid_amount + #payment#),
+		  id_audit = #idAudit#
+		WHERE id_ref = #idRef#
+	</update> 
+	<update id="UPDATE.BSYS.BCSB.SQL_4.3.2" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET last_payment_date = to_date(#lastPayment#,'dd/MM/YYYY'), 
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE id_ref = #idRef#
+		  AND (last_payment_date &lt; to_date(#lastPayment#,'dd/MM/YYYY') or last_payment_date is null)
+	</update> 
+	<update id="UPDATE.BSYS.BCSB.SQL_4.4" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET is_settled = 1, 
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE id_ref = #idRef#
+		  AND bill_amount = paid_amount
+	</update> 
+    <select id="getDeleteOrRejectCashBook" parameterClass="string" resultClass="java.util.HashMap">
+         select * from T_CSB_H h
+         where receipt_no = #idRef#
+    </select>
+	<update id="UPDATE.BSYS.BCSB.SQL_5.1"  parameterClass="java.util.HashMap">
+		UPDATE T_CSB_H SET is_deleted = '1', DATE_UPDATED = sysdate, ID_AUDIT = #idAudit#, ID_LOGIN = #idLogin#
+		WHERE receipt_no = #idRef#	
+	</update>
+	<update id="UPDATE.BSYS.BCSB.CSB_H_REJECT"  parameterClass="java.util.HashMap">
+		UPDATE T_CSB_H SET PMT_STATUS = 'R', DATE_UPDATED = sysdate, ID_AUDIT = #idAudit#, ID_LOGIN = #idLogin#,
+		REJECT_DATE = TO_DATE(#rejectionDate#,'DD/MM/YYYY'), REJECT_DESC = #remark#
+		WHERE receipt_no = #idRef#	
+	</update>
+	<update id="UPDATE.BSYS.BCSB.TOTAL_AMOUNT"  parameterClass="java.util.HashMap">
+		UPDATE T_BAC_H SET 
+			TOTAL_AMT_DUE = TOTAL_AMT_DUE - #amtReceived#, 
+			DATE_UPDATED = sysdate, 
+			ID_AUDIT = #idAudit#, 
+			ID_LOGIN = #idLogin#
+		WHERE TRIM(ID_BILL_ACCOUNT) = #idBillAccount#	
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_6.1" parameterClass="java.util.HashMap">
+		UPDATE T_CSB_H SET
+		  id_com_bank = #bankAcc#, 
+		  other_payer = #other#, 
+		  pmt_method = #pmtMethod#, 
+		  date_trans = TO_DATE(#transDate#,'DD/MM/YYYY'), 
+		  receipt_ref = #receiptRef#, 
+		  cur_code = #curCode#, 
+		  amt_received = #amtReceived#, 
+		  remark = #remark#, 
+		  pmt_status = #paymentStatus#, 
+		  balance_amt = #balanceAmt#, 
+		  reference1 = #paymentRef1#, 
+		  reference2 = #paymentRef2#, 
+		  bank_charge = #bankCharge#, 
+		  PAID_PRE_INVOICE = #paidPreInvoice#,
+		  OVER_PAID = #overPaid#,
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE TRIM(receipt_no) = #receiptNo#
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.5" parameterClass="java.util.HashMap">
+		UPDATE T_CSB_D SET
+		  amt_paid = #amtPaid#, 
+		  amt_due = #amtDue#, 
+		  forex_loss = #forexLoss#, 
+		  forex_gain = #forexGain#, 
+		  is_deleted = '0', 
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE TRIM(receipt_no) = #receiptNo#
+		  AND TRIM(id_ref) = #idRef#
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.5.2" parameterClass="java.util.HashMap">
+		UPDATE T_CSB_D SET AMT_DUE =  #amtOrig# + AMT_PAID, ID_AUDIT = #idAudit# WHERE ID_REF = #idRef#
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.7" parameterClass="java.util.HashMap">
+		UPDATE T_CSB_D SET
+		  is_deleted = '1',
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE TRIM(receipt_no) = #receiptNo#
+		  AND TRIM(id_ref) = #idRef#
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.6.1" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET date_updated = sysdate, 
+		  id_login = #idLogin#, 
+		  paid_amount = (paid_amount - #prePayment# + #payment#),
+		  id_audit = #idAudit#
+		WHERE TRIM(id_ref) = #idRef#
+	</update> 
+	<update id="UPDATE.BSYS.BCSB.SQL_4.6.2" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET last_payment_date = to_date(#lastPayment#,'dd/MM/YYYY'), 
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE id_ref = #idRef#
+		  AND (last_payment_date &lt; to_date(#lastPayment#,'dd/MM/YYYY') or last_payment_date is null)
+	</update> 
+	<update id="UPDATE.BSYS.BCSB.SQL008" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET is_settled = 0, 
+		  date_updated = sysdate, 
+		  id_login = #idLogin#,
+		  id_audit = #idAudit#
+		WHERE id_ref = #idRef#
+		  AND bill_amount = paid_amount
+	</update> 
+	<update id="UPDATE.BSYS.BCSB.SQL_4.8.1"  parameterClass="java.util.HashMap">
+		UPDATE T_CSB_D SET is_deleted = '1', date_updated = sysdate, id_login = #idLogin#, id_audit = #idAudit#
+		WHERE receipt_no = #idRef#	
+	</update>
+	<update id="UPDATE.BSYS.BCSB.SQL_4.8.2" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET date_updated = sysdate, 
+		  id_login = #idLogin#, 
+		  paid_amount = (paid_amount - #amtPaid#),
+		  id_audit = #idAudit#,
+		  IS_SETTLED = '0'
+		WHERE TRIM(id_ref) = #idRef#
+	</update> 
+    <update id="UPDATE.BSYS.BCSB.SETTLED" parameterClass="java.util.HashMap">
+        Update
+            T_BIL_H D
+        Set
+            D.IS_SETTLED     =    case when D.BILL_AMOUNT = D.PAID_AMOUNT then '1' else '0' end,
+            D.DATE_UPDATED    =    SYSDATE,
+            D.ID_LOGIN      =    #idLogin#,
+            D.ID_AUDIT      =    #idAudit#
+        WHERE
+            D.ID_REF   =  RPAD(#idRef#,20,' ')
+    </update>
+	<update id="UPDATE.BSYS.BCSB.NEW_UPDATE_BIL_H" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H 
+		SET date_updated = sysdate, 
+		  id_login = #idLogin#, 
+		  paid_amount = (paid_amount - #prePayment# + #amtPaid#),
+		  id_audit = #idAudit#,
+		  IS_SETTLED = #isSettled#,
+		  LAST_PAYMENT_DATE = #lastPayment#
+		WHERE TRIM(id_ref) = #idRef#
+	</update> 
+	<!-- search page -->
+	<select id="SELECT.BSYS.BCSB.SQL_1.1" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT rownum as NINDEX, t.*
+		FROM (SELECT TO_CHAR(c.DATE_TRANS, 'DD/MM/YYYY') as DATE_TRANS, c.CUST_NAME,
+			  c.RECEIPT_NO, c.REFERENCE1, c.CUR_CODE, CONCAT(c.CUR_CODE, CONCAT(' ', c.AMT_RECEIVED)) as AMT_RECEIVED_STR,
+			  c.AMT_RECEIVED, c.PMT_METHOD, CONCAT(i.BANK_FULL_NAME, CONCAT('-', h.COM_ACCT_NO)) as BANK_ACC,
+			  c.BALANCE_AMT, c.PMT_STATUS,c.ID_BILL_ACCOUNT, c.CUSTOMER_TYPE
+			FROM (SELECT c1.*, g1.CUST_NAME as CUST_NAME, g1.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c1, M_CUST g1 WHERE g1.ID_CUST = c1.ID_CUST
+			      UNION ALL
+			      SELECT c2.*, c2.OTHER_PAYER as CUST_NAME, g2.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c2, M_CUST g2 WHERE g2.ID_CUST = c2.ID_CUST and c2.ID_CUST = '-1') c
+			      LEFT JOIN M_COM_BANKINFO h ON h.ID_COM_BANK = c.ID_COM_BANK LEFT JOIN M_BANK i
+			      ON i.ID_BANK = h.ID_BANK
+			WHERE c.IS_DELETED = 0
+			<dynamic prepend="AND">			
+				<isNotEmpty prepend="AND" property="payer">
+					UPPER(c.CUST_NAME) like UPPER('%$payer$%')
+				</isNotEmpty>
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+				<isNotEmpty prepend="AND" property="payerType">
+					UPPER(c.CUSTOMER_TYPE) like UPPER('%$payerType$%')
+				</isNotEmpty>
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->			
+				<isNotEmpty prepend="AND" property="refNo">
+					UPPER(c.REFERENCE1) like UPPER('%$refNo$%')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="pmtMethod">
+					c.PMT_METHOD = '$pmtMethod$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="curCode">
+					c.CUR_CODE = '$curCode$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="startDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="endDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="bankAcc">
+					c.ID_COM_BANK = '$bankAcc$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="paymentStatus">
+					c.PMT_STATUS = '$paymentStatus$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="receiptNo">
+					UPPER(c.RECEIPT_NO) like UPPER('%$receiptNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="billaccNo">
+					UPPER(c.ID_BILL_ACCOUNT) like UPPER('%$billaccNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="filterBybalance">
+					c.BALANCE_AMT &gt; 0
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY c.DATE_TRANS DESC, c.RECEIPT_NO DESC
+			) t
+	</select>
+	<select id="SELECT.BSYS.BCSB.SQL_1.2" parameterClass="java.util.HashMap" 
+		resultClass="java.lang.Integer"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT count(*)
+		FROM (SELECT TO_CHAR(c.DATE_TRANS, 'DD/MM/YYYY') as DATE_TRANS, c.CUST_NAME,
+			  c.RECEIPT_NO, c.REFERENCE1, c.CUR_CODE, CONCAT(c.CUR_CODE, CONCAT(' ', c.AMT_RECEIVED)) as AMT_RECEIVED_STR,
+			  c.AMT_RECEIVED, c.PMT_METHOD, CONCAT(i.BANK_FULL_NAME, CONCAT('-', h.COM_ACCT_NO)) as BANK_ACC,
+			  c.BALANCE_AMT, c.PMT_STATUS, c.CUSTOMER_TYPE
+			FROM (SELECT c1.*, g1.CUST_NAME as CUST_NAME, g1.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c1, M_CUST g1 WHERE g1.ID_CUST = c1.ID_CUST
+			      UNION ALL
+			      SELECT c2.*, c2.OTHER_PAYER as CUST_NAME, g2.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c2, M_CUST g2 WHERE g2.ID_CUST = c2.ID_CUST and c2.ID_CUST = '-1') c
+			  LEFT JOIN M_COM_BANKINFO h ON h.ID_COM_BANK = c.ID_COM_BANK LEFT JOIN M_BANK i
+			      ON i.ID_BANK = h.ID_BANK
+			WHERE c.IS_DELETED = 0
+			<dynamic prepend="AND">			
+				<isNotEmpty prepend="AND" property="payer">
+					UPPER(c.CUST_NAME) like UPPER('%$payer$%')
+				</isNotEmpty>
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+				<isNotEmpty prepend="AND" property="payerType">
+					UPPER(c.CUSTOMER_TYPE) like UPPER('%$payerType$%')
+				</isNotEmpty>
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->			
+				<isNotEmpty prepend="AND" property="refNo">
+					UPPER(c.REFERENCE1) like UPPER('%$refNo$%')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="pmtMethod">
+					c.PMT_METHOD = '$pmtMethod$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="curCode">
+					c.CUR_CODE = '$curCode$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="startDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="endDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="bankAcc">
+					c.ID_COM_BANK = '$bankAcc$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="paymentStatus">
+					c.PMT_STATUS = '$paymentStatus$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="receiptNo">
+					UPPER(c.RECEIPT_NO) like UPPER('%$receiptNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="billaccNo">
+					UPPER(c.ID_BILL_ACCOUNT) like UPPER('%$billaccNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="filterBybalance">
+					c.BALANCE_AMT &gt; 0
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY c.DATE_TRANS DESC, c.RECEIPT_NO DESC
+			) t
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.SQL_1.3" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT c.CUR_CODE,sum(AMT_RECEIVED) as TOTAL_AMT_RECEIVED, sum(BALANCE_AMT) as TOTAL_BALANCE_AMT
+			FROM (SELECT c1.*, g1.CUST_NAME as CUST_NAME, g1.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c1, M_CUST g1 WHERE g1.ID_CUST = c1.ID_CUST
+			<dynamic prepend="AND">	
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+				<isNotEmpty prepend="AND" property="payerType">
+					UPPER(g1.CUSTOMER_TYPE) like UPPER('%$payerType$%')
+				</isNotEmpty>
+				<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->			
+			</dynamic>
+			      UNION ALL
+			      SELECT c2.*, c2.OTHER_PAYER as CUST_NAME, g2.CUSTOMER_TYPE as CUSTOMER_TYPE FROM T_CSB_H c2, M_CUST g2 WHERE g2.ID_CUST = c2.ID_CUST and c2.ID_CUST = '-1'
+			      <dynamic prepend="AND">	
+						<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->
+						<isNotEmpty prepend="AND" property="payerType">
+							UPPER(g2.CUSTOMER_TYPE) like UPPER('%$payerType$%')
+						</isNotEmpty>
+						<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 -->			
+					</dynamic>
+			      ) c
+			      LEFT JOIN M_COM_BANKINFO h ON h.ID_COM_BANK = c.ID_COM_BANK LEFT JOIN M_BANK i
+			      ON i.ID_BANK = h.ID_BANK
+			WHERE c.IS_DELETED = 0
+			<dynamic prepend="AND">			
+				<isNotEmpty prepend="AND" property="payer">
+					UPPER(c.CUST_NAME) like UPPER('%$payer$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="refNo">
+					UPPER(c.REFERENCE1) like UPPER('%$refNo$%')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="pmtMethod">
+					c.PMT_METHOD = '$pmtMethod$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="curCode">
+					c.CUR_CODE = '$curCode$'
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="startDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE('$startDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="endDate">
+					TO_DATE(to_char(c.DATE_TRANS,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE('$endDate$','DD/MM/YYYY')
+				</isNotEmpty>			
+				<isNotEmpty prepend="AND" property="bankAcc">
+					c.ID_COM_BANK = '$bankAcc$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="paymentStatus">
+					c.PMT_STATUS = '$paymentStatus$'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="receiptNo">
+					UPPER(c.RECEIPT_NO) like UPPER('%$receiptNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="billaccNo">
+					UPPER(c.ID_BILL_ACCOUNT) like UPPER('%$billaccNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="filterBybalance">
+					c.BALANCE_AMT &gt; 0
+				</isNotEmpty>
+			</dynamic>
+			group by c.CUR_CODE
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.SQL_GET_M_GSET_D" parameterClass="java.lang.String" 
+		resultClass="java.util.HashMap"	resultSetType="SCROLL_INSENSITIVE">
+		SELECT G.SET_VALUE FROM M_GSET_D G WHERE G.ID_SET = 'CB_AUTO_OFFSET' AND G.SET_VALUE = #setValue#
+	</select>
+	
+	<select id="SELECT.BSYS.BCSB.CSB_D_KEY" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap"	resultSetType="SCROLL_INSENSITIVE">
+		SELECT T.AMT_PAID FROM T_CSB_D T WHERE TRIM(T.RECEIPT_NO) = #receiptNo# AND TRIM(T.ID_REF) = #idRef# AND T.IS_DELETED = 0
+	</select>
+	<select id="SELECT.BSYS.BCSB.CSB_D_KEY_DEL_IN" parameterClass="java.util.HashMap" 
+		resultClass="java.util.HashMap"	resultSetType="SCROLL_INSENSITIVE">
+		SELECT T.AMT_PAID,T.IS_DELETED FROM T_CSB_D T WHERE TRIM(T.RECEIPT_NO) = #receiptNo# AND TRIM(T.ID_REF) = #idRef#
+	</select>
+	<select id="SELECT.BSYS.BCSB.GET_PAYMENT_REF_DE" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT rsm.value
+    	FROM RESOURCESMAINT rsm 
+    	WHERE rsm.category = 'PAYMENT_REF_DETAIL'
+          AND rsm.seq = #seq#
+          AND rsm.resource_id = CONCAT('PayRef_', #paymentMethod#)
+	</select>
+	<select id="SELECT.BSYS.BCSB.GET_ALL_PAYMENT_REF_DE1" resultClass="nttdm.bsys.b_csb.dto.PaymentRefDetail">
+		SELECT substr(rsm.resource_id, 8, 2) AS PAYMENT_METHOD, rsm.value AS REF_DETAIL
+    	FROM RESOURCESMAINT rsm 
+    	WHERE rsm.category = 'PAYMENT_REF_DETAIL'
+          AND rsm.seq = 1
+	</select>
+	<select id="SELECT.BSYS.BCSB.GET_ALL_PAYMENT_REF_DE2" resultClass="nttdm.bsys.b_csb.dto.PaymentRefDetail">
+		SELECT substr(rsm.resource_id, 8, 2) AS PAYMENT_METHOD, rsm.value AS REF_DETAIL
+    	FROM RESOURCESMAINT rsm 
+    	WHERE rsm.category = 'PAYMENT_REF_DETAIL'
+          AND rsm.seq = 2
+	</select>
+	<select id="SELECT.BSYS.BCSB.T_BIL_H_BILL_ACC" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      BILL_ACC,
+		      (BILL_AMOUNT - PAID_AMOUNT) AS OUTSTANDING_AMOUNT
+    	FROM
+    	      T_BIL_H
+    	WHERE
+    	      ID_REF = #idRef#
+	</select>
+	<select id="SELECT.BSYS.BCSB.GET_IS_CHECK_MUL_CHAR" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'MULTI_BYTE_CHK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+    <!--  #617 modification for B_CSB_S02 start -->
+    <select id="getRefundTotalForReceipt" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT COUNT(*) AS TOTAL_NUM,NVL(SUM(T.AMT_PAID),0) AS REFUND_AMOUNT 
+        FROM T_CSB_D T 
+        WHERE 
+        T.IS_DELETED='0' AND
+        T.ID_REF=#idRef#
+    </select>
+
+    <select id="getRefundInfoList" resultClass="java.util.HashMap" parameterClass="string">
+        SELECT ROWNUM AS NO,CSB.*
+        FROM (
+            SELECT H.REFERENCE2, TO_CHAR(H.DATE_TRANS,'DD/MM/YYYY') AS DATE_TRANS,
+            H.RECEIPT_NO, H.CUR_CODE, H.BALANCE_AMT, H.ID_COM_BANK, H.PMT_METHOD, D.AMT_PAID,H.AMT_RECEIVED
+            FROM T_CSB_D D LEFT OUTER JOIN T_CSB_H H ON D.RECEIPT_NO = H.RECEIPT_NO
+            WHERE
+            D.IS_DELETED='0' AND
+            H.IS_DELETED='0' AND
+            D.ID_REF=#receiptNo# ) CSB
+    </select>
+    <!--  #617 modification for B_CSB_S02 end -->
+    <!--  #617 modification especially B_CSB_S03 start -->
+    <select id="getBillAccInfo" resultClass="nttdm.bsys.b_csb.dto.BillAccountInfo" parameterClass="string" >
+        SELECT M.CUST_NAME as custName,
+               T.ID_CUST as idCust,
+               T.ID_BILL_ACCOUNT as idBillAccount,
+               T.PAYMENT_METHOD as paymentMethod,
+               T.BILL_CURRENCY as billCurrency,
+               T.TOTAL_AMT_DUE as totalAmtDue 
+        FROM T_BAC_H T ,M_CUST M
+        WHERE 
+        T.ID_CUST = M.ID_CUST
+        AND T.ID_BILL_ACCOUNT=#idBillAccount#
+    </select>
+    <select id="getPaymentInfoList" resultClass="nttdm.bsys.b_csb.dto.PaymentInformation" parameterClass="string" >
+        SELECT T.RECEIPT_NO AS receiptNo,
+           TO_CHAR(T.DATE_TRANS,'DD/MM/YYYY') AS receiptDate,
+           T.CUR_CODE AS currency,
+           T.AMT_RECEIVED AS amountReceived,
+           T.BALANCE_AMT AS balanceAmount
+        FROM T_CSB_H T
+        WHERE
+        T.IS_DELETED='0' AND T.BALANCE_AMT &gt; 0 AND T.PMT_STATUS='N'
+        AND T.ID_BILL_ACCOUNT=#idBillAccount#
+        ORDER BY T.RECEIPT_NO
+    </select>
+    <update id="updateTotalAmount"  parameterClass="java.util.HashMap">
+        UPDATE T_BAC_H SET 
+            TOTAL_AMT_DUE = TOTAL_AMT_DUE + #amtReceived#, 
+            DATE_UPDATED = sysdate, 
+            ID_AUDIT = #idAudit#, 
+            ID_LOGIN = #idLogin#
+        WHERE ID_BILL_ACCOUNT = #idBillAccount#
+    </update>
+    <update id="updateTotalAmountDelete"  parameterClass="java.util.HashMap">
+        UPDATE T_BAC_H SET 
+            TOTAL_AMT_DUE = TOTAL_AMT_DUE - #amtReceived#, 
+            DATE_UPDATED = sysdate, 
+            ID_AUDIT = #idAudit#, 
+            ID_LOGIN = #idLogin#
+        WHERE ID_BILL_ACCOUNT = #idBillAccount#
+    </update>
+    <update id="updateCsbHeaderDelete"  parameterClass="java.util.HashMap">
+        UPDATE T_CSB_H SET is_deleted = '1', DATE_UPDATED = sysdate, ID_AUDIT = #idAudit#, ID_LOGIN = #idLogin#
+        WHERE receipt_no = #receiptNo#  
+    </update>
+    <update id="updateCsbDetailDelete"  parameterClass="java.util.HashMap">
+        UPDATE T_CSB_D D
+        SET
+            D.IS_DELETED = '1',
+            D.ID_AUDIT = #idAudit#,
+            D.ID_LOGIN = #idLogin#,
+            D.DATE_CREATED = SYSDATE
+        WHERE
+            D.RECEIPT_NO = #receiptNo#
+    </update>
+    <update id="updateCSBBalanceDelete"  parameterClass="java.util.HashMap">
+        UPDATE T_CSB_H C 
+        SET
+            C.BALANCE_AMT = C.BALANCE_AMT + #amtPaid#,
+            C.DATE_UPDATED = SYSDATE, 
+            C.ID_AUDIT = #idAudit#, 
+            C.ID_LOGIN = #idLogin#
+        WHERE C.RECEIPT_NO = #idRef#
+    </update>
+    <update id="updateCSBBalance"  parameterClass="java.util.HashMap">
+        UPDATE T_CSB_H C 
+        SET
+            C.BALANCE_AMT = C.BALANCE_AMT - #amtPaid#,
+            C.DATE_UPDATED = sysdate, 
+            C.ID_AUDIT = #idAudit#, 
+            C.ID_LOGIN = #idLogin#
+        WHERE C.RECEIPT_NO = #idRef#
+    </update>
+    <select id="getReceiptInfo" resultClass="java.util.HashMap" parameterClass="string">
+        SELECT C.* ,TO_CHAR(C.DATE_TRANS,'DD/MM/YYYY') AS TRANS_DATE,M.CUST_NAME
+        FROM T_CSB_H C,M_CUST M
+        WHERE 
+        C.IS_DELETED='0'
+        AND C.ID_CUST = M.ID_CUST
+        AND C.RECEIPT_NO=#receiptNo#
+    </select>
+    <select id="getReceiptPaymentInfoList" resultClass="nttdm.bsys.b_csb.dto.PaymentInformation" parameterClass="string">
+        SELECT
+        'Y' AS appliedTo,
+        D.ID_REF AS receiptNo,
+        TO_CHAR(C.DATE_TRANS,'DD/MM/YYYY') AS receiptDate,
+        C.CUR_CODE AS currency,
+        C.AMT_RECEIVED AS amountReceived,
+        D.AMT_DUE AS balanceAmount,
+        D.AMT_PAID AS refundAmount
+        FROM
+        T_CSB_D D LEFT OUTER JOIN T_CSB_H C ON D.ID_REF = C.RECEIPT_NO
+        WHERE 
+        D.RECEIPT_NO=#receiptNo#
+        AND D.IS_DELETED='0'
+        ORDER BY D.ID_REF
+    </select>
+    <select id="getMGSetDInfo" resultClass="java.lang.String">
+        SELECT G.SET_VALUE  
+        FROM M_GSET_D G
+        WHERE G.ID_SET = 'CB_AUTO_OFFSET' AND G.SET_SEQ = 1
+    </select>
+    <update id="updateCSBHeaderEdit" parameterClass="java.util.HashMap">
+        UPDATE T_CSB_H SET
+          ID_COM_BANK = #bankAcc#,
+          PMT_METHOD = #pmtMethod#,
+          DATE_TRANS = TO_DATE(#transDate#,'DD/MM/YYYY'),
+          REMARK = #remark#,
+          REFERENCE2 = #paymentRef2#,
+          DATE_UPDATED = SYSDATE,
+          ID_LOGIN = #idLogin#,
+          ID_AUDIT = #idAudit#
+        WHERE RECEIPT_NO = #receiptNo#
+    </update>
+    <!--  #617 modification especially B_CSB_S03 end -->
+</sqlMap>

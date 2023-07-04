@@ -1,0 +1,27 @@
+.group-content fieldset {
+	width: 60%;
+}
+
+/* SC_E_MEX_SP1 */
+body#SC_E_MEX_SP1 {
+	
+}
+
+body#SC_E_MEX_SP1 #scheduler,
+body#SC_E_MEX_SP1 #manual {
+	display: none;
+}
+.centerDiv {
+	width: 50px;
+	margin: 20px auto 0px auto;
+}
+.giroGenFile .actionBt {
+	width: 130px;
+	margin: 0 auto;
+}
+.giroGenFile .actionBt input {
+	width: 48%;
+}
+.giroGenFile table tr td {
+	padding-top: 15px;
+} 

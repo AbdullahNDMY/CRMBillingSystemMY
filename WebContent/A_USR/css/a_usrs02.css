@@ -1,0 +1,135 @@
+h4{
+	width:99.9%;
+	margin-top:8px;
+	border-top:1px solid #CFCFCF;
+	background-color:#EAEAEA;
+	padding:6px 0px 6px 5px;
+	font-weight:bold;
+	font-size:medium;
+	margin-bottom:0px;
+}
+.wrapper{
+	width:100%;
+	background-color:#F8F8F8;
+}
+
+#generalInformation table{
+	width:100%;
+	margin:8px 0px 8px 5px;
+}
+#generalInformation .header{
+	width:30%;
+}
+#generalInformation .value{
+	width:30%;
+}
+#generalInformation .extra{
+	width:40%;
+}
+#generalInformation .pelsoftdept{
+	width:40%;
+}
+#generalInformation .left{
+	width:75%;
+}
+
+#generalInformation .left input{
+	width:210px;
+}
+#generalInformation .left select{
+	width:210px;
+}
+#generalInformation .extra input{
+	width:44px;
+}
+#generalInformation .pelsoftdept input{
+	width:75px;
+}
+#generalInformation .notText input{
+    width:auto;
+}
+#generalInformation .right{
+	width:19.5%;
+	text-align:center;
+	margin-top:11px;
+	margin-right:12px;
+}
+
+#generalInformation .right img{
+	display:block;
+	width:100px;
+	height:100px;
+}
+
+#generalInformation .right button{
+	margin-top:7px;
+	width:70px;
+	text-align:center;
+}
+
+fieldset{
+	width:100%;
+	margin-top:12px;
+	border:1px solid #DADACD;
+	padding:7px 0px 10px 0px;
+}
+fieldset label{
+	margin-right:20px;
+}
+legend{
+	color:#3A70DD;
+	padding:0px 3px 0px 3px;
+}
+#userAccessInformation{
+	background-color:#FFFFFF;
+}
+#userAccessInformation table{
+	width:99%;
+	border-collapse:collapse;
+	margin-top:10px;
+}
+#userAccessInformation .header{
+	background-color:#EBEADB;
+	text-align:center;
+}
+#userAccessInformation td{
+	border:1px solid #282828;
+}
+#userAccessInformation .colModule{
+	width:20.33%;
+}
+#userAccessInformation .colSubModule{
+	width:43.67%;
+}
+#userAccessInformation .colAccessType{
+	width:12%;
+	text-align:center;
+}
+hr{
+	width:100%;
+	border:2px solid #DFDFDF;
+	margin-top:2px;
+	margin-bottom:0px
+}
+
+.groupButton{
+	margin-top:7px;
+	margin-bottom:5px;
+}
+.groupButton button{
+	margin-right:4px;
+}
+
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+
+.clear{
+	clear:both;
+}
+.cancel, .fileName, .percentage {
+	display: none;
+}

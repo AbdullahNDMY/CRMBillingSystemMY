@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S07SCR" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S07SRCBlogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S07SRCBlogic"
+        id="B_CPM_S07SRCBlogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S07Edit" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S07SRCBlogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S07Save" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S07SaveBlogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S07SaveBlogic"
+        id="B_CPM_S07SaveBlogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S07EditScr" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S07EditScr"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S07EditScrLogic"
+        id="B_CPM_S07EditScr" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S07DSP" scope="prototype">
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S01LoadBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S01LoadBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S01SearchBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S01SearchBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S01LoadBLogic"
+        id="B_CPM_S01LoadBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S01SearchBLogic"
+        id="B_CPM_S01SearchBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S01DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S02EditDSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02BL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02BLogic"
+        id="B_CPM_S02BLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02SaveBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S02SaveBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02LoadSCR" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S02EditSCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02EditSCRBLogic"
+        id="B_CPM_S02EditSCRBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02SaveBLogic"
+        id="B_CPM_S02SaveBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02_LoadPlanBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02_LoadPlanBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02_LoadPlanBLogic"
+        id="B_CPM_S02_LoadPlanBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02ViewBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02ViewBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02ViewBLogic"
+        id="B_CPM_S02ViewBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02ApproveBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02ApproveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02ApproveBLogic"
+        id="B_CPM_S02ApproveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S02ViewDSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S02DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02DeleteBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02DeleteBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02DeleteBLogic"
+        id="B_CPM_S02DeleteBLogic" scope="singleton">
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/B_CPM/B_CPM_S05DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S05BL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S05BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S05BLogic"
+        id="B_CPM_S05BLogic" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02AddPlanBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02AddPlanBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02AddPlanBLogic"
+        id="B_CPM_S02AddPlanBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- Add Exist SubPlan Start -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02AddExistPlanBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02AddExistPlanBL"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02AddExistPlanBLogic"
+        id="B_CPM_S02AddExistPlanBL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- Add Exist SubPlan End -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02UpdateServiceStatusBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02SuspendBLogic"/>
+    </bean>
+    <bean
+        class="nttdm.bsys.b_cpm.blogic.B_CPM_S02UpdateServiceStatusBLogic"
+        id="B_CPM_S02SuspendBLogic" scope="singleton">
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S01DownloadBLogic"
+        name="/B_CPM/B_CPM_S01DownloadBL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S01CheckExportBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S01CheckExportBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S01CheckExportBLogic"
+        id="B_CPM_S01CheckExportBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S02CancelAndBackToDraftBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S02CancelAndBackToDraftBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02CancelAndBackToDraftBLogic"
+        id="B_CPM_S02CancelAndBackToDraftBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S05InitBL" scope="singleton">
+        <property name="businessLogic" ref="B_CPM_S05InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S05InitBLogic"
+        id="B_CPM_S05InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02RemoveServiceOrSubPlanCheckAjaxAction"
+        name="/B_CPM/B_CPM_S02RemoveServiceOrSubPlanCheckAjax" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- B_CPM_S04 start -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/B_CPM/B_CPM_S04SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction" 
+        name="/B_CPM/B_CPM_S04DSP" scope="prototype"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S04SearchBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S04SearchBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S04SearchBLogic"
+        id="B_CPM_S04SearchBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S04InitBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S04InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S04InitBLogic"
+        id="B_CPM_S04InitBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/B_CPM/B_CPM_S04CheckErrorBL" scope="prototype">
+        <property name="businessLogic" ref="B_CPM_S04CheckErrorBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S04CheckErrorBLogic"
+        id="B_CPM_S04CheckErrorBLogic" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- B_CPM_S04 end -->
+    <bean class="nttdm.bsys.b_cpm.blogic.B_CPM_S02RateType2ChangeAjaxAction"
+        name="/B_CPM/B_CPM_S02RateType2ChangeAjax" scope="prototype">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+</beans>

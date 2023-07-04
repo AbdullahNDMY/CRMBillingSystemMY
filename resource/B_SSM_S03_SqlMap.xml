@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="B_SSM_S03">
+	<!--************************************ Sql result map  ******************************-->
+	<!-- Result map of service name -->
+	<resultMap id="customerServiceNameResult"
+		class="java.util.HashMap">
+		<result property="serviceID" column="SVC_LEVEL2" />
+		<result property="serviceName" column="BILL_DESC" />
+		<result property="customerPlanLinkID"
+			column="ID_CUST_PLAN_LINK" />
+		<result property="svcStart" column="SVC_START" />
+		<result property="svcEnd" column="SVC_END" />
+	</resultMap>
+	
+	<resultMap id="customerServiceNameInfoResult"
+		class="java.util.HashMap">
+		<result property="serviceID" column="ID_CUST_PLAN_GRP" />
+		<result property="serviceName" column="BILL_DESC" />
+		<result property="svcStart" column="SVC_START" />
+		<result property="svcEnd" column="SVC_END" />
+		<result property="completionDate" column="COMPLETION_DATE" />
+	</resultMap>
+	
+	<resultMap id="customerNameResult" class="java.util.HashMap">
+	  <result property="customerName" column="CUST_NAME"/>
+	  <result property="customerType" column="CUSTOMER_TYPE"/>
+	  <result property="accMgrPrim" column="ACC_MGR_PRIM"/>
+	</resultMap>
+
+	<resultMap id="subscriptionInfoResult" class="java.util.HashMap">
+		<result property="companyName" column="COM_NAME" />
+		<result property="addressLine1" column="COM_ADR_LINE1" />
+		<result property="addressLine2" column="COM_ADR_LINE2" />
+		<result property="addressLine3" column="COM_ADR_LINE3" />
+		<result property="companyCodeCountry" column="CODE_COUNTRY" />
+		<result property="companyZipCode" column="COMPANY_ZIP_CODE" />
+		<result property="companyCountry" column="COMPANY_COUNTRY" />
+		<result property="companyTelNo" column="COM_TEL_NO" />
+		<result property="companyFaxNo" column="COM_FAX_NO" />
+		<result property="companyRegNo" column="COM_REGNO" />
+		<result property="companyGstRegNo" column="COM_GST_REG_NO" />
+		<result property="companyWebsite" column="COM_WEBSITE" />
+
+		<result property="customerName" column="CUST_NAME" />
+		<result property="customerAddress1" column="CUST_ADR_LINE1" />
+		<result property="customerAddress2" column="CUST_ADR_LINE2" />
+		<result property="customerCodeCountry"
+			column="CUST_CODE_COUNTRY" />
+		<result property="coTelNo" column="CO_TEL_NO" />
+		<result property="coFaxNo" column="CO_FAX_NO" />
+		<result property="homeTelNo" column="HOME_TEL_NO" />
+		<result property="homeFaxNo" column="HOME_FAX_NO" />
+		<result property="customerType" column="CUSTOMER_TYPE" />
+		<result property="contactID" column="ID_IT_CONTACT" />
+		<result property="serviceLineProvider" column="SUPPLIER_NAME" />
+		<result property="instantAddressID" column="ID_INST_ADR" />
+		<result property="instantAddressLine1" column="INST_ADR_LINE1" />
+		<result property="instantAddressLine2" column="INST_ADR_LINE2" />
+		<result property="instantAddressLine3" column="INST_ADR_LINE3" />
+		<result property="instantAddressCodeCountry"
+			column="INST_ADR_CODE_COUNTRY" />
+		<result property="instantAddressType" column="T_INST_ADR_TYPE" />
+		<result property="mrtgID" column="ID_MRTG" />
+		<result property="mrtgURL" column="MRTG_URL" />
+		<result property="mrtgID" column="MRTG_ID" />
+		<result property="mrtgPassword" column="MRTG_PW" />
+		
+		<result property="firewallID" column="ID_FIREWALL" />
+		<result property="firewallNo" column="FIREWALL_NO" />
+		<result property="firewallModel" column="FIREWALL_MODEL" />
+		<result property="firewallSerialNo" column="FIREWALL_SERIAL_NO" />
+		<result property="firewallTrustedInterfaceIP"
+			column="INT_IP_TRUSTED" />
+		<result property="firewallUntrustedInterfaceIP"
+			column="INT_IP_UNTRUSTED" />
+		<result property="firewallType" column="FIREWALL_TYPE" />
+		<result property="firewallNAT" column="NAT" />
+		<result property="firewallDHCPOn" column="DHCP" />
+		<result property="firewallDHCPRange" column="DHCP_IP_RANGE" />
+		<result property="firewallDNS" column="DNS" />
+
+		<result property="mailID" column="ID_MAIL" />
+		<result property="emailSetupDomainName" column="DOMAIN_NAME" />
+		<result property="webmailUrl" column="WEBMAIL_URL" />
+		<result property="emailSetupPOP3" column="POP_SERVER_NAME" />
+		<result property="emailSetupSMTP" column="SMTP_SERVER_NAME" />
+		<result property="primDomainNo" column="PRIMDOMAIN_NO" />
+		<result property="secDomainNo" column="SECDOMAIN_NO" />
+		<result property="ftpID" column="ID_FTP" />
+		<result property="ftpIPAddress" column="FTP_IP" />
+		<result property="ftpAccountName" column="FTP_ACC_NAME" />
+		<result property="ftpPassword" column="FTP_PW" />
+		<result property="ftpServerCapacity" column="SERVER_CAPACITY" />
+		<result property="ftpDefaultPage" column="DEFAULT_PAGE" />
+		<result property="ftpURL" column="FTP_URL" />
+		<result property="dnsZoneID" column="ID_DNS_ZONE" />
+		<result property="dnsMigrationCurrentServer" column="MIG_SERVER" />
+		<result property="dnsMigrationCurrentServer2" column="MIG_SERVER2" />
+		<result property="dnsMigrationCurrentServer3" column="MIG_SERVER3" />
+		<result property="dnsMigrationCurrentRegistrar" column="MIG_REGISTRAR" />
+
+		<result property="rackEquipID" column="ID_RACK_H" />
+		<result property="serverInfoID" column="ID_SERVER_INFO" />
+		<result property="helpdeskEmail" column="COM_EMAIL" />
+		<result property="helpdeskTelNo" column="COM_TEL_NO" />
+		<result property="subscriptionMemo" column="SUBSCRIPTION_MEMO" />
+		<result property="printedRemark" column="PRINTED_REMARK" />
+		
+		<result property="userName" column="USER_NAME" />
+	</resultMap>
+
+   <resultMap id="cPEConfigInfoResult" class="java.util.HashMap">
+   		<result property="cpeConfID" column="ID_CPE_CONF_D" />
+		<result property="ipAddressWANISPEdgeRouter" column="ISP_EDGE_IP" />
+		<result property="ipAddressRouterWANInterface" column="ROUTER_WAN_IP" />
+		<result property="ipAddressLANNetwork" column="NETWORK_ADR" />
+		<result property="cpeConfigurationUsed" column="IS_MANAGED_CPE" />
+		<result property="cpeConfigurationModelInstalled" column="CPE_MODEL_INSTALLED" />
+		<result property="cpeConfigurationSerialNo" column="CPE_SERIAL_NO" />
+		<result property="cpeConfigurationLAN" column="CPE_LAN" />
+		<result property="cpeConfigurationWAN" column="CPE_WAN" />
+		<result property="cpeConfigurationEquipmentItem" column="EQUIP_ITEMS_PACKAGE" />
+		<result property="cpeConfigurationCustomerConfRouter" column="CUST_SPEC_CONF_ROUTER" />
+		<result property="cpeConfigurationName" column="CPE_NAME" />
+   </resultMap>
+
+	<resultMap id="serviceInfoResult" class="java.util.HashMap">
+		<result property="idCustPlanGrps"
+			column="ID_CUST_PLAN_GRP" />
+		<result property="SERVICE_NAME" column="BILL_DESC" />
+		<result property="SERVICE_COMMISSION_DATE" column="COMPLETION_DATE" />
+		<result property="serviceType" column="SERVICE_TYPE" />
+	</resultMap>
+
+	<resultMap id="reportDisplayResult" class="java.util.HashMap">
+		<result property="subscriptionInfoID" column="INFO_ID" />
+	</resultMap>
+
+	<resultMap id="itContactInfoResult" class="java.util.HashMap">
+		<result property="type" column="TYPE" />
+		<result property="name" column="NAME" />
+		<result property="label" column="LABEL" />
+		<result property="designation" column="DESIGNATION" />
+		<result property="telNo" column="TEL_NO" />
+		<result property="faxNo" column="FAX_NO" />
+		<result property="email" column="EMAIL" />
+	</resultMap>
+
+	<resultMap id="rackEquipmentInfoResult" class="java.util.HashMap">
+		<result property="rackNo" column="RACK_NO" />
+		<result property="maxPower" column="MAX_POWER" />
+		<result property="equipmentSuite" column="EQUIP_SUITE" />
+		<result property="equipmentLocation" column="EQUIP_LOCATION" />
+	</resultMap>
+
+	<resultMap id="ipInfoResult" class="java.util.HashMap">
+		<result property="interfaceIP" column="INTERFACE_IP" />
+		<result property="ipZone" column="ZONE" />
+	</resultMap>
+
+	<resultMap id="policyInfoResult" class="java.util.HashMap">
+		<result property="policy" column="POLICY" />
+		<result property="protocol" column="PROTOCOL" />
+		<result property="destination" column="DESTINATION" />
+		<result property="source" column="SOURCE" />
+		<result property="action" column="ACTION" />
+		<result property="remarks" column="REMARKS" />
+	</resultMap>
+
+	<resultMap id="popAccountInfoResult" class="java.util.HashMap">
+		<result property="no" column="NO" />
+		<result property="popAccount" column="POP_ACCOUNT" />
+		<result property="password" column="MAIL_PW" />
+		<result property="mailboxSize" column="MAILBOX_SIZE" />
+		<result property="antiVirus" column="VIRUS_SCAN" />
+		<result property="antiSpam" column="ANTI_SPAM" />
+		<result property="junkMgmt" column="JUNK_MGT" />
+		<result property="mailAccount" column="MAIL_ACCOUNT" />
+		<result property="mailBoxQty" column="MAILBOX_QTY" />
+	</resultMap>
+
+	<resultMap id="dnsDomainInfoResult" class="java.util.HashMap">
+		<result property="domainName" column="DNS_DOMAIN" />
+		<result property="type" column="DNS_TYPE" />
+		<result property="ipAddress" column="DNS_IP" />
+		<result property="weight" column="DNS_WEIGHT" />
+	</resultMap>
+
+	<resultMap id="serverInfoResult" class="java.util.HashMap">
+		<result property="serverName" column="SERVER_NAME" />
+		<result property="hardware" column="HARDWARE" />
+		<result property="os" column="OS" />
+		<result property="ip" column="IP" />
+		<result property="gateway" column="GATEWAY" />
+		<result property="subnetMask" column="SUBNET_MASK" />
+		<result property="mosVersion" column="MOS" />
+		<result property="hostID" column="HOST_ID" />
+		<result property="serialNo" column="SERIAL_NO" />
+		<result property="userLicense" column="USER_LICENSE" />
+		<result property="primaryDNS" column="PRIMARY_DNS" />
+		<result property="secondaryDNS" column="SECOND_DNS" />
+		<result property="modelNo" column="MODEL_NO" />
+		<result property="webHostSpace" column="WEB_HOST_SPACE" />
+		<result property="sql" column="SQL" />
+		<result property="sqlDBName" column="SQL_DB_NAME" />
+		<result property="sqlSize" column="SQL_SIZE" />
+		<result property="sqlID" column="SQL_ID" />
+		<result property="sqlDBPassword" column="SQL_DB_PW" />
+		<result property="backup" column="BACKUP" />
+		<result property="backupSize" column="BACKUP_SIZE" />
+		<result property="monitoring" column="MONITORING" />
+		<result property="installedApplication" column="INSTALLED_APP" />
+	</resultMap>
+
+	<!--************************************ Select Sql statements  ******************************-->
+    <!-- B_SSM_S03_01 get bill desc -->
+    <select id="getBillDescbyID" resultClass="java.lang.String" parameterClass="string">
+        SELECT T.BILL_DESC FROM T_CUST_PLAN_D T WHERE T.ID_CUST_PLAN_GRP = #serviceId#
+    </select>
+    <select id="getSubPlans" resultClass="java.lang.String" parameterClass="string">
+        SELECT M.SVC_DESC
+        FROM T_CUST_PLAN_D D 
+             LEFT OUTER JOIN T_CUST_PLAN_LINK L ON D.ID_CUST_PLAN_GRP = L.ID_CUST_PLAN_GRP
+             LEFT OUTER JOIN T_CUST_PLAN_SVC S ON S.ID_CUST_PLAN_LINK = L.ID_CUST_PLAN_LINK
+             LEFT OUTER JOIN M_SVC M ON M.ID_SERVICE = S.SVC_LEVEL3
+        WHERE 
+            D.ID_CUST_PLAN_GRP = #serviceId#
+            AND L.IS_DELETED='0'
+            AND S.IS_DELETED='0'
+            AND M.IS_DELETED='0'
+    </select>
+	<!-- Function get customer service names -->
+	<select id="getCustomerServiceInfo"
+		resultMap="customerServiceNameInfoResult"
+		parameterClass="java.util.HashMap">
+		SELECT
+				TO_CHAR(B.BILL_DESC) BILL_DESC
+		        ,B.ID_CUST_PLAN_GRP
+		        ,to_char(b.SVC_START,'dd/mm/yyyy') SVC_START
+		        ,to_char(b.SVC_END,'dd/mm/yyyy') SVC_END
+		        ,to_char(b.COMPLETION_DATE,'dd/mm/yyyy') COMPLETION_DATE
+		    FROM
+		        T_CUST_PLAN_D B
+		    WHERE
+		        B.ID_CUST_PLAN = #customerPlanID#
+		        AND B.IS_DELETED = 0
+		    ORDER BY B.ID_CUST_PLAN_GRP
+	</select>
+	
+	<select id="getCustomerAddress" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT
+	      adr.ADR_TYPE, adr.ADR_LINE1, adr.ADR_LINE2, adr.ADR_LINE3, adr.zip_code,adr.country,
+	      (CASE WHEN adr.ZIP_CODE is NOT NULL and adr.COUNTRY is NULL THEN ZIP_CODE
+	            WHEN adr.ZIP_CODE is NULL and adr.COUNTRY is NOT NULL THEN 
+	                 (SELECT RC.VALUE FROM RESOURCESMAINT RC WHERE RC.RESOURCE_ID=adr.COUNTRY AND CATEGORY='COUNTRY')
+	            WHEN adr.ZIP_CODE is NOT NULL and adr.COUNTRY is NOT NULL THEN 
+	                 adr.ZIP_CODE || ',' ||(SELECT RC.VALUE FROM RESOURCESMAINT RC WHERE RC.RESOURCE_ID=adr.COUNTRY AND CATEGORY='COUNTRY')
+	            ELSE ''
+	       END
+	      ) ADR_LINE4
+	        FROM
+	            M_CUST_ADR adr
+		    WHERE
+		        ID_CUST=#customerID#
+	</select>
+	
+	<select id="getCustomerPlanLinkInfo" resultClass="java.util.HashMap"
+		parameterClass="java.util.HashMap">
+		SELECT
+		        SVC_LEVEL2,
+		        ID_CUST_PLAN_LINK
+		    FROM
+		        T_CUST_PLAN_LINK A
+		    WHERE
+		    	A.IS_DELETED = 0
+		        <dynamic>
+			        <isNotEmpty property="idCustPlanGrp" prepend="AND">				
+						<iterate prepend="A.ID_CUST_PLAN_GRP IN " 
+							 open="(" close=")"
+							 conjunction=","
+							 property="idCustPlanGrp">
+						#idCustPlanGrp[]#
+						</iterate> 				
+					</isNotEmpty>
+				</dynamic>
+	</select>
+	
+	<select id="getCustomerServiceNames"
+		resultMap="customerServiceNameResult"
+		parameterClass="java.util.HashMap">
+		SELECT
+		        SVC_LEVEL2
+		        ,TO_CHAR(B.BILL_DESC) BILL_DESC
+		        ,ID_CUST_PLAN_LINK
+		        ,to_char(b.SVC_START,'dd/mm/yyyy') SVC_START
+		        ,to_char(b.SVC_END,'dd/mm/yyyy') SVC_END
+		    FROM
+		        T_CUST_PLAN_LINK A
+		        ,T_CUST_PLAN_D B
+		        ,M_SVC C
+		    WHERE
+		        B.ID_CUST_PLAN = #customerPlanID#
+		        AND A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP
+		        AND A.SVC_LEVEL2 = C.ID_SERVICE
+		        AND A.IS_DELETED = 0
+	</select>
+	
+	<select id="getCustomerName" parameterClass="java.util.HashMap" resultMap="customerNameResult">
+		SELECT  R.CUST_NAME,R.CUSTOMER_TYPE, R.ACC_MGR_PRIM
+		FROM M_CUST R			
+		WHERE					
+			R.ID_CUST=#customerID# AND
+			R.IS_DELETED=0
+	</select>
+
+	<select id="getServiceInfo" resultMap="serviceInfoResult">
+		select
+				to_char(cpd.COMPLETION_DATE,'dd/MM/yyyy') COMPLETION_DATE,
+				to_char(cpd.BILL_DESC) BILL_DESC,
+				to_char(cpd.BILL_DESC) SERVICE_TYPE,
+				to_char (cpd.ID_CUST_PLAN_GRP) ID_CUST_PLAN_GRP
+		    from
+		        T_CUST_PLAN_D cpd
+		    where
+		    cpd.IS_DELETED = 0
+			<dynamic prepend=" and cpd.ID_CUST_PLAN_GRP in ">
+				<iterate property="customerPlanGrps" open="("
+				close=")" conjunction=",">
+				#customerPlanGrps[]#
+				</iterate>
+			</dynamic>
+			ORDER BY cpd.ID_CUST_PLAN_GRP
+	</select>
+
+	<select id="getReportDisplay" resultMap="reportDisplayResult">  
+		select
+            distinct(to_char(ssm.INFO_ID)) INFO_ID
+        from
+            T_CUST_PLAN_LINK cpl
+            ,T_CUST_PLAN_D cpd
+            ,M_SSM ssm
+        where
+            ssm.ID_SERVICE = cpl.SVC_LEVEL2
+            and cpd.id_cust_plan_grp=cpl.id_cust_plan_grp
+            and cpd.id_cust_plan_grp=#idCustPlanGrp#
+            and ssm.REPORT = '1'
+            and ssm.IS_DELETED = 0
+            and cpl.IS_DELETED = 0
+            and cpd.IS_DELETED = 0
+            order by ssm.INFO_ID
+	</select>
+	<select id="selectServiceBasicInfo" resultClass="java.lang.String">
+		select r.resource_id
+		from RESOURCESMAINT r
+		where r.CATEGORY = 'SUBSCRIPTION_INFO'
+		  and r.IS_DELETED = 0
+		order by r.SEQ asc
+ 	</select>
+
+	<select id="getSubscriptionInfo"
+		resultMap="subscriptionInfoResult">
+		select
+		        distinct cadr.ID_CUST
+		        ,com.COM_NAME
+		        ,adr.COM_ADR_LINE1
+		        ,adr.COM_ADR_LINE2
+		        ,adr.COM_ADR_LINE3
+		        ,concat (
+		            adr.ZIP_CODE
+		            ,adr.COUNTRY
+		        ) CODE_COUNTRY
+		        ,adr.ZIP_CODE COMPANY_ZIP_CODE
+		        ,adr.COUNTRY COMPANY_COUNTRY
+		        ,com.COM_TEL_NO
+		        ,com.COM_FAX_NO
+		        ,com.COM_REGNO
+		        ,com.COM_GST_REG_NO
+		        ,com.COM_WEBSITE
+		        ,cust.CUST_NAME
+		        ,cadr.ADR_LINE1 CUST_ADR_LINE1
+		        ,(
+		            cadr.ADR_LINE2 || ' ' || cadr.ADR_LINE3
+		        ) CUST_ADR_LINE2
+		        ,(
+		            cadr.ZIP_CODE || ' ' || cadr.COUNTRY
+		        ) CUST_CODE_COUNTRY
+		        ,cust.CO_TEL_NO
+		        ,cust.HOME_TEL_NO
+		        ,cust.CO_FAX_NO
+		        ,cust.HOME_FAX_NO
+		        ,cust.CUSTOMER_TYPE
+		        ,ith.ID_CONTACT ID_IT_CONTACT
+		        ,sh.SUPPLIER_NAME
+		        ,ia.ADR_LINE1 INST_ADR_LINE1
+		        ,ia.ADR_LINE2 INST_ADR_LINE2
+		        ,ia.ADR_LINE3 INST_ADR_LINE3
+		        ,ia.ID_INST_ADR
+		        ,(
+		            ia.ZIP_CODE || ' ' || ia.COUNTRY
+		        ) INST_ADR_CODE_COUNTRY
+		        ,ia.ADR_TYPE T_INST_ADR_TYPE
+		        ,mr.ID_MRTG
+		        ,mr.MRTG_URL
+		        ,mr.MRTG_ID
+		        ,mr.MRTG_PW
+		        ,fw.ID_FIREWALL
+		        ,fw.FIREWALL_NO
+		        ,fw.FIREWALL_MODEL
+		        ,fw.SERIAL_NO FIREWALL_SERIAL_NO
+		        ,fw.INT_IP_TRUSTED
+		        ,fw.INT_IP_UNTRUSTED
+		        ,fw.FIREWALL_TYPE
+		        ,fw.NAT
+		        ,fw.DHCP
+		        ,fw.DHCP_IP_RANGE
+		        ,fw.DNS
+		        ,ma.ID_MAIL
+		        ,ma.DOMAIN_NAME
+                ,ma.WEBMAIL_URL
+		        ,ma.POP_SERVER_NAME
+		        ,ma.SMTP_SERVER_NAME
+		        ,(SELECT  PRIMDOMAIN_NO FROM M_COM G WHERE G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)) PRIMDOMAIN_NO
+		        ,(SELECT  SECDOMAIN_NO FROM M_COM G WHERE G.ID_COM = (SELECT MIN(ID_COM) FROM M_COM)) SECDOMAIN_NO
+		        ,fi.ID_FTP
+		        ,fi.FTP_IP
+		        ,fi.FTP_ACC_NAME
+		        ,fi.FTP_PW
+		        ,fi.SERVER_CAPACITY
+		        ,fi.DEFAULT_PAGE
+		        ,fi.FTP_URL
+		        ,dz.ID_DNS_ZONE
+		        ,dz.MIG_SERVER
+		        ,dz.MIG_SERVER2
+		        ,dz.MIG_SERVER3
+		        ,dz.MIG_REGISTRAR
+		        ,rph.ID_RACK_H
+		        ,sih.ID_SERVER_INFO
+		        ,to_char(si.MEMO) SUBSCRIPTION_MEMO
+		        ,to_char(si.PRINTED_REMARK) PRINTED_REMARK
+		        ,cc.COM_EMAIL
+		        ,cc.COM_TEL_NO
+		        ,m_user.USER_NAME
+		    from
+		        M_COM com
+		        ,M_COM_ADR adr
+		        ,M_CUST cust
+		        ,M_CUST_ADR cadr
+		        ,T_CUST_PLAN_H cph
+		        ,T_SUBSCRIPTION_INFO si
+		        ,T_CUST_PLAN_LINK cpl
+		        ,M_SUPPLIER_H sh
+		        ,T_INST_ADR ia
+		        ,T_MRTG mr
+		        ,T_FIREWALL fw
+		        ,T_MAIL_ADDRESS ma
+		        ,T_FTP_INT fi
+		        ,T_DNS_ZONE dz
+		        ,T_RACK_POWER_H rph
+		        ,T_SERVER_INFO_H sih
+		        ,M_COM_CTC cc
+		        ,T_IT_CONTACT_H ith
+		        ,M_USER m_user
+		    where
+		        adr.ID_COM = com.ID_COM
+		        and adr.COM_ADR_TYPE = 'CA'
+		        and com.ID_COM = (
+		            select
+		                    max (c1.ID_COM)
+		                from
+		                    M_COM c1
+		                where
+		                    c1.IS_DELETED = 0
+		        )
+		        and com.IS_DELETED = 0
+		        and si.ID_SUB_INFO = #subscriptionID#
+		        and si.ID_CUST_PLAN = cph.ID_CUST_PLAN
+		        and si.IS_DELETED = 0
+		        and cph.ID_CUST = cust.ID_CUST
+		        and cph.IS_DELETED = 0
+		        and cust.IS_DELETED = 0
+		        and cadr.ID_CUST(+) = cust.ID_CUST
+		        and cadr.ADR_TYPE(+) = #addType#
+		        and cadr.IS_DELETED(+) = 0
+		        and m_user.ID_USER(+) = cust.ACC_MGR_PRIM
+		        and m_user.IS_DELETED(+) = 0
+		        and si.CARRIER = sh.ID_SUPPLIER(+)
+		        and sh.IS_DELETED(+) = 0
+		        and ia.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and ia.IS_DELETED(+) = 0
+		        and mr.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and mr.IS_DELETED(+) = 0
+		        and fw.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and fw.IS_DELETED(+) = 0
+		        and ma.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and ma.IS_DELETED(+) = 0
+		        and fi.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and fi.IS_DELETED(+) = 0
+		        and dz.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and dz.IS_DELETED(+) = 0
+		        and rph.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and rph.IS_DELETED(+) = 0
+		        and sih.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and sih.IS_DELETED(+) = 0
+		        and ith.ID_SUB_INFO (+) = si.ID_SUB_INFO
+		        and ith.IS_DELETED(+) = 0
+		        and cc.ID_COM = com.ID_COM
+		        and cc.COM_CTC_TYPE = 'TC'
+	</select>
+	
+	<select id="getCPEConfInfo" resultMap="cPEConfigInfoResult">
+		select ccd.ID_CPE_CONF_D
+		        ,ccd.ISP_EDGE_IP
+		        ,ccd.ROUTER_WAN_IP
+		        ,ccd.NETWORK_ADR
+		        ,ccd.IS_MANAGED_CPE
+		        ,ccd.CPE_MODEL_INSTALLED
+		        ,ccd.SERIAL_NO CPE_SERIAL_NO
+		        ,ccd.CPE_LAN
+		        ,ccd.CPE_WAN
+		        ,ccd.EQUIP_ITEMS_PACKAGE
+		        ,ccd.CUST_SPEC_CONF_ROUTER
+		        ,ccd.CPE_NAME
+		from T_CPE_CONF_H cch left join T_CPE_CONF_D ccd on
+			ccd.ID_CPE_CONF_H = cch.ID_CPE_CONF_H
+			and cch.IS_DELETED = 0 
+			and ccd.IS_DELETED = 0
+		where  cch.ID_SUB_INFO  = #subscriptionID#
+		ORDER BY TO_NUMBER(SUBSTR(ccd.CPE_NAME, 5)) ASC
+	</select>
+
+	<select id="getITContactInfo" resultMap="itContactInfoResult">
+		select
+		        tp. "TYPE"
+		        ,tp.LABEL
+		        ,icd.NAME
+		        ,icd.DESIGNATION
+		        ,icd.TEL_NO
+		        ,icd.FAX_NO
+		        ,icd.EMAIL
+		    from
+		        (
+		            select
+		                    icd1.CONTACT_TYPE
+		                    ,icd1.NAME
+		                    ,icd1.DESIGNATION
+		                    ,icd1.TEL_NO
+		                    ,icd1.FAX_NO
+		                    ,icd1.EMAIL
+		                from
+		                    T_IT_CONTACT_D icd1
+		                where
+		                    icd1.ID_CONTACT = #contactID#
+		                    and icd1.IS_DELETED = 0
+		        ) icd
+		        ,(
+		            select 'C1' "TYPE", 'Contact 1' LABEL from dual
+		            union
+		            select 'C2' "TYPE", 'Contact 2' LABEL from dual
+		            union
+		            select 'C3' "TYPE", 'Contact 3' LABEL from dual
+		        ) tp
+		    where
+		        tp. "TYPE" = icd.CONTACT_TYPE (+)
+		    order by
+		        "TYPE"
+	</select>
+
+	<select id="getRackEquipmentInfo"
+		resultMap="rackEquipmentInfoResult">
+		select
+		        rpd.RACK_NO
+		        ,rpd.MAX_POWER
+		        ,el.EQUIP_LOCATION
+		        ,rpd.EQUIP_SUITE
+		    from
+		        T_RACK_POWER_D rpd
+		        ,M_EQUIP_LOCATION el
+		    where
+		        rpd.ID_RACK_H = #rackEquipID#
+		        and rpd.EQUIP_LOCATION = el.ID_EQUIP_LOCATION (+)
+		        and rpd.IS_DELETED = 0
+		    order by rpd.ID_RACK_D
+	</select>
+
+	<select id="getIPInfo" resultMap="ipInfoResult">
+		select
+		        fii.INTERFACE_IP
+		        ,fii.ZONE
+		    from
+		        T_FIREWALL_INT_IP fii
+		    where
+		        fii.ID_FIREWALL = #firewallID#
+		        and fii.IS_DELETED = 0
+	</select>
+
+	<select id="getPolicyInfo" resultMap="policyInfoResult">
+		SELECT to_char (rownum) "POLICY",t.* FROM(
+		select
+		        fp.PROTOCOL
+		        ,fp.DESTINATION
+		        ,fp.SOURCE
+		        ,fp.ACTION
+		        ,fp.REMARKS
+		    from
+		        T_FIREWALL_POLICY fp
+		    where
+		        fp.ID_FIREWALL = #firewallID#
+		        and fp.IS_DELETED = 0
+		        ) t
+	</select>
+
+	<select id="getPOPAccountInfo" resultMap="popAccountInfoResult">
+		SELECT to_char (rownum) "NO",t.* FROM(
+		select
+		        ma.POP_ACCOUNT
+		        ,ma.MAIL_PW
+		        ,ma.MAILBOX_SIZE
+		        ,ma.VIRUS_SCAN
+		        ,ma.ANTI_SPAM
+		        ,ma.JUNK_MGT
+		        ,ma.MAIL_ACCOUNT
+		        ,to_char(ma.MAILBOX_QTY) MAILBOX_QTY
+		    from
+		        T_MAIL_ACCOUNT ma
+		    where
+		        ma.ID_MAIL = #mailID#
+		        and ma.IS_DELETED = 0
+		 ORDER BY to_char(ma.DATE_CREATED,'yyyymmdd'),upper(ma.MAIL_ACCOUNT)) t
+	</select>
+
+	<select id="getDNSDomainInfo" resultMap="dnsDomainInfoResult">
+		select
+		        dzr.DNS_DOMAIN
+		        ,dzr.DNS_TYPE
+		        ,dzr.DNS_IP
+		        ,dzr.DNS_WEIGHT
+		    from
+		        T_DNS_ZONE_REC dzr
+		    where
+		        dzr.ID_DNS_ZONE = #dnsZoneID#
+		        and dzr.IS_DELETED = 0
+	</select>
+
+	<select id="getServerInfo" resultMap="serverInfoResult">
+		select
+		        si.SERVER_NAME
+		        ,si.HARDWARE
+		        ,si.OS
+		        ,si.IP
+		        ,si.GATEWAY
+		        ,si.SUBNET_MASK
+		        ,si.MOS
+		        ,si.HOST_ID
+		        ,si.SERIAL_NO
+		        ,si.USER_LICENSE
+		        ,si.PRIMARY_DNS
+		        ,si.SECOND_DNS
+		        ,si.MODEL_NO
+		        ,si.WEB_HOST_SPACE
+		        ,si.SQL
+		        ,si.SQL_DB_NAME
+		        ,si.SQL_SIZE
+		        ,si.SQL_ID
+		        ,si.SQL_DB_PW
+		        ,si.BACKUP
+		        ,si.BACKUP_SIZE
+		        ,si.MONITORING
+		        ,si.INSTALLED_APP
+		    from
+		        T_SERVER_INFO_D si
+		    where
+		        si.ID_SERVER_INFO = #serverInfoID#
+		        and si.IS_DELETED = 0
+	</select>
+
+</sqlMap>

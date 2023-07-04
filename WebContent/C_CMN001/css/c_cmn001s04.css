@@ -1,0 +1,67 @@
+@CHARSET "Shift_JIS";
+
+body {
+    width: 213px;
+    background: #FFFFFF;
+    font-family : "Calibri";
+    overflow: hidden;
+}
+
+.menuContainer {
+	background-color: #FFFFFF;
+	color: #000000;
+	text-align: center;
+	vertical-align: top;
+	margin-top: 0.15in;
+	margin-left: 0.075in;
+	border-collapse: collapse;
+	border: 0px;
+	cursor: pointer;
+	width: 2.125in;
+}
+
+
+.labelSubHeader {
+	background-image: url(../../image/subheader.png);
+	background-repeat: repeat-x;
+	height : 21px;
+	width : 300px;
+	font-weight: bold;
+	color: #000000;
+	text-align: left;
+	vertical-align: middle;
+	border: solid 1px #C0C0C0;
+}
+
+.menuItems {
+	background-color: #E8E8E8;
+	height: 100px;
+	font-size : 14px;
+	color: #000000;
+	text-align: left;
+	vertical-align: top;
+	border: solid 1px #C0C0C0;
+}
+
+.parentMenu {
+	font-weight: bold;
+	display: block;
+}
+
+.subMenu {
+	font-weight: lighter;
+	font-size : 13px;
+	display: block;
+}
+
+.hide {
+	display: none;
+}
+
+.show {
+	display: block;
+}
+
+.show2 {
+	display: inline;
+}

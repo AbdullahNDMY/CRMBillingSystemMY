@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_ATM">
+<select id="SELECT.M_ATM.SQL001" 
+          resultClass="nttdm.bsys.m_atm.bean.M_ATMBean">
+    SELECT	id_tfr_user,c.id_screen,c.section_no,d.section_desc, e.role_name, 
+    		TO_CHAR(c.eff_date_from,'dd/MM/yyyy') AS eff_date_from, 
+    		TO_CHAR(c.eff_date_to,'dd/MM/yyyy') AS eff_date_to, c.id_user, c.id_login	
+	FROM 	m_user a,  m_atr_tfr c	, m_section d, rolemaint e
+	WHERE
+			c.id_user	=	a.id_user AND c.section_no=d.section_no
+            AND e.id_role = (select id_role from m_user where id_user = c.id_tfr_user) AND a.id_user = #id_user#
+</select> 
+<select id="SELECT.M_ATM.SQL002" 
+		parameterClass="java.lang.String"
+		resultClass="nttdm.bsys.m_atm.bean.User_RoleBean">
+    SELECT b.role_name, a.id_user
+	FROM m_user a, rolemaint b
+	WHERE a.id_role=b.id_role AND a.id_user =#id_tfr_user#
+</select> 
+<select id="SELECT.M_ATM.SQL003" 
+		parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+    SELECT user_name
+	FROM m_user a
+	WHERE a.id_user =#id_tfr_user#
+</select>
+<select id="SELECT.M_ATM.SQL004" 
+		resultClass="org.apache.struts.util.LabelValueBean">
+    SELECT DISTINCT e.pic as value, e.pic as label
+	FROM m_atr_tfr c, m_wf_action e
+	WHERE c.section_no=e.section_no
+	AND e.action_type ='AA' 
+	AND c.id_user =#id_user#
+</select>  
+<select id="SELECT.M_ATM.SQL005" resultClass="org.apache.struts.util.LabelValueBean">
+    SELECT ID_USER as value, USER_NAME as label
+	FROM M_USER
+	ORDER BY USER_NAME
+</select>  
+<update id="UPDATE.M_ATM.SQL001"
+          parameterClass="nttdm.bsys.m_atm.dto.M_ATMInput">
+    UPDATE m_atr_tfr
+    SET    	 
+        id_tfr_user=#id_tfr_user#,
+        eff_date_from=TO_DATE(#eff_date_from#,'dd-MM-yyyy'),
+        eff_date_to=TO_DATE(#eff_date_to#,'dd-MM-yyyy'),
+        id_login=#id_login#,
+        date_updated=SYSDATE,
+        id_audit=#auditID#
+    WHERE
+        id_user = #id_user#
+</update>
+<update id="UPDATE.M_ATM.SQL002"
+          parameterClass="nttdm.bsys.m_atm.bean.M_ATMBean">
+    UPDATE m_atr_tfr
+    SET
+        id_tfr_user=#id_tfr_user#,
+        eff_date_from=TO_DATE(#eff_date_from#,'dd-MM-yyyy'),
+        eff_date_to=TO_DATE(#eff_date_to#,'dd-MM-yyyy'),
+        id_login=#id_login#,
+        date_updated=SYSDATE,
+        id_audit=#auditID#
+    WHERE
+        id_user = #id_user#
+        AND
+        id_screen=#id_screen#
+        AND
+        section_no=#section_no#
+</update>
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+</sqlMap>

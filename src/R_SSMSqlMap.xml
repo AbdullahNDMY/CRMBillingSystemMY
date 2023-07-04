@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_SSM">
+    <!-- retrieve customer plans that contains Mailing hosting service with SPM items. -->
+    <select id="SEARCH_CUST_PLAN_ALL_ITEMS" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT 
+            B.ID_CUST_PLAN, 
+            B.ID_CUST,
+            B.PLAN_STATUS,
+            H.CUST_NAME, 
+            H.CUSTOMER_TYPE,
+            E.ID_SUB_INFO,
+            C.ID_CUST_PLAN_GRP,
+            TO_CHAR(C.BILL_DESC) as BILL_DESC,
+            TO_CHAR(C.SVC_START, 'DD/MM/YYYY') as SVC_START, 
+            TO_CHAR(C.SVC_END, 'DD/MM/YYYY') as SVC_END, 
+            C.SERVICES_STATUS, 
+            C.BILLING_STATUS,
+            D.ID_CUST_PLAN_LINK,
+            D.ID_PLAN,
+            D.ID_PLAN_GRP,
+            D.RATE_TYPE,
+            D.RATE_MODE,
+            D.QUANTITY,
+            D.UNIT_PRICE,
+            D.TOTAL_AMOUNT,
+            TO_CHAR(D.ITEM_DESC) as ITEM_DESC,
+            (SELECT A.UOM FROM M_PLAN_BATCH_MAPPING A WHERE A.ID_PLAN = D.ID_PLAN AND A.ID_PLAN_GRP = D.ID_PLAN_GRP AND A.BATCH_ID = 'MH') AS UOM
+        FROM T_CUST_PLAN_H B
+            INNER JOIN T_CUST_PLAN_D C ON B.ID_CUST_PLAN = C.ID_CUST_PLAN AND B.IS_DELETED = 0 AND C.IS_DELETED = 0
+            INNER JOIN T_CUST_PLAN_LINK D ON C.ID_CUST_PLAN_GRP = D.ID_CUST_PLAN_GRP AND D.IS_DELETED = 0
+            INNER JOIN T_SUBSCRIPTION_INFO E ON B.ID_CUST_PLAN = E.ID_CUST_PLAN AND E.IS_DELETED = 0
+            LEFT OUTER JOIN M_CUST H ON H.ID_CUST = B.ID_CUST
+        WHERE C.ID_CUST_PLAN IN (
+                SELECT DISTINCT PD.ID_CUST_PLAN
+                FROM T_CUST_PLAN_D PD, T_CUST_PLAN_LINK LK, M_PLAN_BATCH_MAPPING PBM
+                WHERE PD.ID_CUST_PLAN_GRP = LK.ID_CUST_PLAN_GRP 
+                    AND LK.ID_PLAN = PBM.ID_PLAN AND PBM.BATCH_ID = 'MH' AND LK.ID_PLAN_GRP = PBM.ID_PLAN_GRP AND PBM.UOM='SPM')
+            AND C.BILLING_STATUS IN ('BS0','BS1','BS2')
+        ORDER BY B.ID_CUST ASC, E.ID_SUB_INFO DESC, C.ID_CUST_PLAN_GRP ASC, D.ID_CUST_PLAN_LINK ASC
+    </select>
+
+    <!-- Retrieve service information of UOM related OptionID(ID_CUST_PLAN_LINK). -->
+    <select id="SEARCH_CUST_PLAN_LINK_SERVICE_STATUS" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT * FROM
+        (
+            SELECT
+                    B.ID_CUST_PLAN, 
+                    B.PLAN_STATUS,
+                    C.ID_CUST_PLAN_GRP,
+                    C.SERVICES_STATUS, 
+                    C.BILLING_STATUS,
+                    D.ID_CUST_PLAN_LINK,
+                    (SELECT A.UOM FROM M_PLAN_BATCH_MAPPING A WHERE A.ID_PLAN = D.ID_PLAN AND A.ID_PLAN_GRP = D.ID_PLAN_GRP AND A.BATCH_ID = 'MH') AS UOM
+                FROM T_CUST_PLAN_H B
+                    INNER JOIN T_CUST_PLAN_D C ON B.ID_CUST_PLAN = C.ID_CUST_PLAN AND B.IS_DELETED = 0 AND C.IS_DELETED = 0
+                    INNER JOIN T_CUST_PLAN_LINK D ON C.ID_CUST_PLAN_GRP = D.ID_CUST_PLAN_GRP AND D.IS_DELETED = 0
+                WHERE D.ID_PLAN IN (SELECT PBM.ID_PLAN FROM M_PLAN_BATCH_MAPPING PBM WHERE PBM.BATCH_ID = 'MH')
+        ) DATA
+        WHERE ID_CUST_PLAN = #ID_CUST_PLAN# AND ID_CUST_PLAN_LINK = #ID_CUST_PLAN_LINK# AND UOM = #UOM#
+    </select>
+
+    <!-- Mail Account Configuration setting information in SSM. -->
+    <select id="SEARCH_MAIL_ADDR_ACCOUNT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT TO_CHAR(B.ID_MAIL) AS ID_MAIL
+              ,COUNT(A.ID_MAILACC) AS MAILACC_COUNT
+              ,NVL(SUM(A.MAILBOX_QTY) ,0) AS MAILBOX_QTY
+              ,NVL(SUM(A.VIRUS_SCAN) ,0) AS VIRUS_SCAN_COUNT
+              ,NVL(SUM(A.ANTI_SPAM) ,0) AS ANTI_SPAM_COUNT
+              ,NVL(SUM(A.JUNK_MGT) ,0) AS JUNK_MGT_COUNT
+              ,B.AUTO_MAIL_ACC
+              ,B.AUTO_MAILBOX_QTY
+              ,B.AUTO_VIRUS_SCAN
+              ,B.AUTO_ANTI_SPAM
+              ,B.AUTO_JUNK_MGT
+              ,B.OPT_BASE_QTY
+              ,B.OPT_MAIL_ACC
+              ,B.OPT_ADDT_OPTION
+              ,B.OPT_MAILBOX_QTY
+              ,B.OPT_VIRUS_SCAN
+              ,B.OPT_ANTI_SPAM
+              ,B.OPT_JUNK_MGT
+        FROM T_MAIL_ADDRESS B
+            LEFT OUTER JOIN T_MAIL_ACCOUNT A ON A.ID_MAIL = B.ID_MAIL AND B.IS_DELETED = '0' AND A.IS_DELETED = '0'
+        WHERE B.ID_SUB_INFO = #ID_SUB_INFO#
+        GROUP BY B.ID_MAIL
+                 ,B.AUTO_MAIL_ACC
+                 ,B.AUTO_MAILBOX_QTY
+                 ,B.AUTO_VIRUS_SCAN
+                 ,B.AUTO_ANTI_SPAM
+                 ,B.AUTO_JUNK_MGT
+                 ,B.OPT_BASE_QTY
+                 ,B.OPT_MAIL_ACC
+                 ,B.OPT_ADDT_OPTION
+                 ,B.OPT_MAILBOX_QTY
+                 ,B.OPT_VIRUS_SCAN
+                 ,B.OPT_ANTI_SPAM
+                 ,B.OPT_JUNK_MGT
+    </select>
+    
+    <select id="GET_EXPORT_CUSTOMER_PLAN" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT 
+            B.ID_CUST_PLAN, 
+            B.ID_CUST,
+            B.PLAN_STATUS,
+            H.CUST_NAME, 
+            H.CUSTOMER_TYPE,
+            E.ID_SUB_INFO,
+            C.ID_CUST_PLAN_GRP,
+            TO_CHAR(C.BILL_DESC) as BILL_DESC,
+            TO_CHAR(C.SVC_START, 'DD/MM/YYYY') as SVC_START, 
+            TO_CHAR(C.SVC_END, 'DD/MM/YYYY') as SVC_END, 
+            C.SERVICES_STATUS, 
+            C.BILLING_STATUS,
+            D.ID_CUST_PLAN_LINK,
+            D.ID_PLAN,
+            D.ID_PLAN_GRP,
+            D.SVC_LEVEL1,
+            D.SVC_LEVEL2,
+            T2.SVC_GRP_NAME,
+            T3.SVC_DESC,
+            D.RATE_TYPE,
+            D.RATE_MODE,
+            D.QUANTITY,
+            D.UNIT_PRICE,
+            D.TOTAL_AMOUNT,
+            TO_CHAR(D.ITEM_DESC) as ITEM_DESC,
+            (SELECT A.UOM FROM M_PLAN_BATCH_MAPPING A WHERE A.ID_PLAN = D.ID_PLAN AND A.ID_PLAN_GRP = D.ID_PLAN_GRP AND A.BATCH_ID = 'MH') AS UOM,
+            T4.SVC_LEVEL3, 
+            T4.SVC_LEVEL4,
+            T4.SVC_DESC AS PLAN
+        FROM T_CUST_PLAN_H B
+            INNER JOIN T_CUST_PLAN_D C ON B.ID_CUST_PLAN = C.ID_CUST_PLAN AND B.IS_DELETED = 0 AND C.IS_DELETED = 0
+            INNER JOIN T_CUST_PLAN_LINK D ON C.ID_CUST_PLAN_GRP = D.ID_CUST_PLAN_GRP AND D.IS_DELETED = 0
+            INNER JOIN T_SUBSCRIPTION_INFO E ON B.ID_CUST_PLAN = E.ID_CUST_PLAN AND E.IS_DELETED = 0
+            LEFT OUTER JOIN M_CUST H ON H.ID_CUST = B.ID_CUST
+            LEFT OUTER JOIN M_SVG T2 ON D.SVC_LEVEL1 = T2.SVC_GRP
+            LEFT OUTER JOIN M_SVC T3 ON D.SVC_LEVEL2 = T3.ID_SERVICE
+            LEFT OUTER JOIN (
+                SELECT T1.ID_CUST_PLAN_LINK, T1.ID_CUST_PLAN_SVC, T1.SVC_LEVEL3, T1.SVC_LEVEL4 , VT3.SVC_DESC
+                FROM T_CUST_PLAN_SVC T1, M_SVC VT3 ,
+                (   SELECT ID_CUST_PLAN_LINK, MIN(ID_CUST_PLAN_SVC) AS ID_CUST_PLAN_SVC_MIN
+                    FROM T_CUST_PLAN_SVC
+                    GROUP BY ID_CUST_PLAN_LINK
+                ) VT2
+                WHERE T1.ID_CUST_PLAN_SVC = VT2.ID_CUST_PLAN_SVC_MIN AND T1.SVC_LEVEL3 = VT3.ID_SERVICE
+                AND T1.IS_DELETED = '0'
+            ) T4 ON T4.ID_CUST_PLAN_LINK = D.ID_CUST_PLAN_LINK
+        WHERE C.ID_CUST_PLAN IN (
+                SELECT DISTINCT PD.ID_CUST_PLAN
+                FROM T_CUST_PLAN_D PD, T_CUST_PLAN_LINK LK, M_PLAN_BATCH_MAPPING PBM
+                WHERE PD.ID_CUST_PLAN_GRP = LK.ID_CUST_PLAN_GRP 
+                    AND LK.ID_PLAN = PBM.ID_PLAN AND PBM.BATCH_ID = 'MH' AND LK.ID_PLAN_GRP = PBM.ID_PLAN_GRP AND PBM.UOM='SPM')
+            AND C.BILLING_STATUS IN ('BS0','BS1','BS2')
+        ORDER BY B.ID_CUST ASC, E.ID_SUB_INFO DESC, C.ID_CUST_PLAN_GRP ASC, D.ID_CUST_PLAN_LINK ASC
+    </select>
+</sqlMap>

@@ -1,0 +1,148 @@
+body {
+	overflow: visible;
+	width: 1100px;
+}
+
+#B_SSM_S04_Page_Content {	
+	background-color: white;	
+	-moz-border-radius: 11px;
+	-webkit-border-radius: 11px;
+	border-radius: 11px;
+	behavior: url(./border-radius.htc);
+	overflow: visible;	
+	width: 100%;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Header {
+	background-color: #f0f0f0;
+	border-top: 2px solid #cacaca;
+	border-bottom: 2px solid #cacaca;
+	font:bold 13px;
+	font-weight: bold;
+	padding-top: 3px;
+	padding-bottom: 3px;
+    padding-left: 3px;
+    width: 100%;
+	color:#090f90; 
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Errors {
+	padding-top: 5px;	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Buttons {	
+	font-size: 15px;
+	margin-top: 10px;
+	margin-bottom: 3px;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Buttons_Text {
+	font-size: 15px;
+	width: 75px;	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel {		
+	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_HeaderSubInfo_Table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_HeaderSubInfo_Table_Col {
+	width: 47%;
+	height: 20px;
+	font-size: 15px;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_ResultInfo {
+	padding-top: 0px;
+	padding-left: 5px;			
+	background-color: #c0c0c0;
+	border: 1px solid #dcdccf;
+}
+
+span .B_SSM_S04_Page_Form_ResultPanel_ResultInfo_Title {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult {
+	margin-top: 3px;		
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table {
+	border: 1px solid #dcdccf; 
+	width: 100%;
+	overflow: visible;
+	font-size: 15px;
+	border-collapse: collapse;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table_HeaderCol {
+	background-color: #f8f8f8;
+	font-size: 15px;
+	font-weight: bold;	
+	vertical-align: middle;
+	text-align: left;	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table_HeaderRow {
+	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table_Col {
+	border-top: 1px solid #dcdccf;
+	font-size: 15px;
+	font-weight: normal;	
+	vertical-align: middle;
+	text-align: center;	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table_Col_BottomVAlign {
+	border-top: 1px solid #dcdccf;
+	font-size: 15px;
+	font-weight: normal;	
+	vertical-align: bottom;
+	text-align: center;	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Table_Col_UpVAlign {
+	border-top: 1px solid #dcdccf;
+	font-size: 15px;
+	font-weight: normal;	
+	vertical-align: top;
+	text-align: left;	
+}
+
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Table {
+	padding-top: 5px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Table .B_SSM_S04_Page_Form_Table_Col{
+	padding-top: 5px;
+	width: 47%;
+	vertical-align: top;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Table .B_SSM_S04_Page_Form_Table_InfoKeyCol{	
+	width: 135px;
+	vertical-align: middle;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_Table .B_SSM_S04_Page_Form_Table_InfoKeyCol_UpVAlign{	
+	width: 135px;
+	vertical-align: top;
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Span_Main {
+	
+}
+
+#B_SSM_S04_Page_Content .B_SSM_S04_Page_Form_ResultPanel_DisplayResult_Span_Sub {
+	color: #a04c51; 
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+   <!-- Action forwarding to B_SSM_S03_Page -->
+   <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+         name="/B_SSM_S03/B_SSM_S03_Action" 
+         scope="prototype"/>
+   <bean class="nttdm.bsys.b_ssm.s03.action.B_SSM_S03_01SCRAction"
+         name="/B_SSM_S03/B_SSM_S03_01SCR" 
+         scope="prototype">
+         <property name="queryDAO" ref="queryDAO"/>
+   </bean>
+   
+   <!-- Action processing requests displaying sub info from B_SSM_S03_Page -->	        
+   <bean  class="nttdm.bsys.b_ssm.s03.action.B_SSM_S03_Request_Process_Action"
+          name="/B_SSM_S03/B_SSM_S03_View_Action" 
+          scope="prototype">      
+   </bean>        
+  
+   <!-- Action processing business from requests of B_SSM_S03_Page -->	        
+   <bean class="nttdm.bsys.b_ssm.s03.action.B_SSM_S03_BProcess_Action"
+        name="/B_SSM_S03/B_SSM_S03_Request_Process_Action" 
+        scope="prototype">
+        <property name="businessLogic" 
+        		  ref="B_SSM_S03_Request_Process_Blogic"/>
+   </bean>  
+   
+    <!-- Bean Blogic processing request from B_SSM_S03_Page -->
+   <bean class="nttdm.bsys.b_ssm.s03.blogic.B_SSM_S03_Request_Process_Blogic"
+         id="B_SSM_S03_Request_Process_Blogic" 
+         scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+   </bean>    
+   
+</beans>

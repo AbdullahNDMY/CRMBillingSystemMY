@@ -1,0 +1,67 @@
+.generalSplitter{
+	height: 0.05in;	
+}
+.generalHeader{
+	background-color:#E8E8E8;
+	height: 0.22in;	
+	vertical-align: middle;
+	width: 100%;
+	font-weight: bold;
+}
+.formview-title
+{
+	width:160px;
+	horizontal-align:left;
+}
+.formview-splitter
+{
+	width:40px;
+	horizontal-align:center;
+}
+.formview-content
+{
+	horizontal-align:left;
+}
+
+.wrapper{
+	width:100%;
+	background-color:#F8F8F8;
+}
+
+#auditDetailInfo{
+	background-color:#FFFFFF;
+}
+#auditDetailInfo table{
+	width:94%;
+	border-collapse:collapse;
+	margin-top:10px;
+	word-break:break-all;
+}
+#auditDetailInfo .header{
+	background-color:#EBEADB;
+	text-align:center;
+}
+#auditDetailInfo td{
+	border:1px solid #282828;
+	text-align:center;
+}
+#auditDetailInfo .colNo{
+	width:7%;
+	text-align:center;
+}
+#auditDetailInfo .colTable{
+	width:20%;
+	text-align:center;
+}
+#auditDetailInfo .colField{
+	width:17%;
+	text-align:center;
+}
+#auditDetailInfo .colOldData{
+	width:25%;
+	text-align:center;
+}
+#auditDetailInfo .colNewData{
+	width:25%;
+	text-align:center;
+}

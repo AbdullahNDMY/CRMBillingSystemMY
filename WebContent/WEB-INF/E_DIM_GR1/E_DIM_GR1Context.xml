@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <!--Blogic-->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_DIM_GR1/E_DIM_GR101BL" scope="singleton">
+        <property name="businessLogic" ref="E_DIM_GR101BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_dim_gr1.blogic.E_DIM_GR101BLogic"
+        id="E_DIM_GR101BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_DIM_GR1/E_DIM_GR1_201BL" scope="singleton">
+        <property name="businessLogic" ref="E_DIM_GR1_201BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_dim_gr1.blogic.E_DIM_GR1_201BLogic"
+        id="E_DIM_GR1_201BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_DIM_GR1/E_DIM_GR102BL" scope="singleton">
+        <property name="businessLogic" ref="E_DIM_GR102BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_dim_gr1.blogic.E_DIM_GR102BLogic"
+        id="E_DIM_GR102BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_DIM_GR1/E_DIM_GR103BL" scope="singleton">
+        <property name="businessLogic" ref="E_DIM_GR103BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_dim_gr1.blogic.E_DIM_GR103BLogic"
+        id="E_DIM_GR103BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/E_DIM_GR1/E_DIM_GR1DSP" scope="singleton"/>
+</beans>

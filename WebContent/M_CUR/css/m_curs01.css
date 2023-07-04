@@ -1,0 +1,17 @@
+@CHARSET "Shift_JIS";
+input{
+	width: 200px;
+}
+.hide
+{
+	display:none;
+}
+.show
+{
+	display:inherit;
+}
+.header2 {
+	border-bottom: #cfcfcf 2px solid;
+	height: 20px;
+	font-weight: bold;
+}

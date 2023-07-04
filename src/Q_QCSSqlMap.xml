@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="Q_QCS">
+
+
+	<select id="SELECT.Q_QCS.SQL001" parameterClass="nttdm.bsys.q_qcs.dto.Q_QCSR01Input" resultClass="nttdm.bsys.q_qcs.bean.QCSHeader">
+		SELECT ROWNUM as "row_num", T.*
+		FROM 
+			(SELECT  TO_CHAR(t1.date_req,'dd/MM/yyyy') date_req, TRIM(t1.id_ref) id_ref, t1.id_cust, t2.cust_name, t1.id_conslt, t3.user_name, t1.id_quo, 
+					CASE t1.id_status
+						WHEN 'DS0' THEN 'Drafted'
+						WHEN 'DS1' THEN 'Open' 
+						WHEN 'DS2' THEN 'Approval In-Progress' 
+						WHEN 'DS3' THEN 'Completed' 
+						WHEN 'DS4' THEN 'Rejected' 
+						WHEN 'DS5' THEN 'Cancelled'
+					END  id_status
+			FROM t_qcs_h t1, m_cust t2, m_user t3
+			WHERE t1.is_deleted = '0' AND t2.is_deleted(+) = '0' AND t3.is_deleted(+) = '0' 
+				AND  t2.id_cust(+)= t1.id_cust AND t3.id_user (+)= t1.id_conslt
+			<dynamic prepend="AND">
+				<isNotEmpty prepend="AND" property="cust_name">
+					LOWER(t2.cust_name) LIKE LOWER(#cust_name#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="user_name">
+					LOWER(t3.user_name) LIKE LOWER(#user_name#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="id_ref">
+					LOWER(TRIM(t1.id_ref)) LIKE LOWER(#id_ref#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="id_quo">
+					LOWER(t1.id_quo) LIKE LOWER(#id_quo#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="start_date">
+					t1.date_req &gt;= TO_DATE(#start_date#,'dd/MM/yyyy')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="end_date">
+					t1.date_req &lt;= TO_DATE(#end_date#,'dd/MM/yyyy')
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY t1.date_req DESC) T
+	</select>
+	<select id="SELECT.Q_QCS.SQL002" parameterClass="nttdm.bsys.q_qcs.dto.Q_QCSR01Input" resultClass="java.lang.String">
+			SELECT  COUNT(*) 
+			FROM t_qcs_h t1, m_cust t2, m_user t3
+			WHERE t1.is_deleted = '0' AND t2.is_deleted(+) = '0' AND t3.is_deleted(+) = '0' 
+				AND  t2.id_cust(+)= t1.id_cust AND t3.id_user (+)= t1.id_conslt
+			<dynamic prepend="AND">
+				<isNotEmpty prepend="AND" property="cust_name">
+					LOWER(t2.cust_name) LIKE LOWER(#cust_name#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="user_name">
+					LOWER(t3.user_name) LIKE LOWER(#user_name#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="id_ref">
+					LOWER(TRIM(t1.id_ref)) LIKE LOWER(#id_ref#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="id_quo">
+					LOWER(t1.id_quo) LIKE LOWER(#id_quo#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="start_date">
+					t1.date_req &gt;= TO_DATE(#start_date#,'dd/MM/yyyy')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="end_date">
+					t1.date_req &lt;= TO_DATE(#end_date#,'dd/MM/yyyy')
+				</isNotEmpty>
+			</dynamic>
+	</select>
+	<select id="SELECT.Q_QCS.SQL003" parameterClass="java.lang.String" resultClass="nttdm.bsys.q_qcs.bean.QCSHeader">
+				SELECT id_status, is_closed
+				FROM t_qcs_h
+				WHERE TRIM(id_ref) = TRIM(#id_ref#)	
+	</select>
+		
+	<insert id="INSERT.Q_QCS.SQL004" parameterClass="nttdm.bsys.q_qcs.dto.Q_QCSR03Input">
+		INSERT
+		    INTO
+		        t_qcs_h (
+		            id_ref
+		            ,id_cust
+		            ,id_conslt
+		            ,id_quo
+		            ,req_user
+		            ,date_req
+		            ,cust_mode
+		            ,ctterm
+		            ,ctterm3_day
+		            ,deposit
+		            ,remarks
+		            ,id_status
+		            ,is_closed
+		            ,is_deleted
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		    VALUES (
+		        #id_ref#
+		        ,#id_cust#
+		        ,#id_conslt#
+		        ,'0'
+		        ,#req_user#
+		        ,TO_DATE(#date_req#,'dd/MM/yyyy')
+		        ,#cust_mode#
+		        ,#ctterm#
+		        ,#ctterm3_day#
+		        ,#deposit#
+		        ,#remarks#
+		        ,#id_status#
+		        ,'0'
+		        ,'0'
+		        ,sysdate
+		        ,sysdate
+		        ,#id_login#
+		    )
+	</insert>
+	
+	
+	<insert id="INSERT.Q_QCS.SQL005" parameterClass="nttdm.bsys.q_qcs.bean.QCSDetail">
+		INSERT
+		    INTO
+		        t_qcs_d (
+		            id_svc
+		            ,id_ref
+		            ,svc_grp
+		            ,capacity
+		            ,nrc
+		            ,mrc
+		            ,term
+		            ,total
+		            ,tariff
+		            ,disc
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		    VALUES (
+		        #id_svc#
+		        ,#id_ref#
+		        ,#svc_grp#
+		        ,#capacity#
+		        ,#nrc#
+		        ,#mrc#
+		        ,#term#
+		        ,#total#
+		        ,#tariff#
+		        ,#disc#
+		        ,sysdate
+		        ,sysdate
+		        ,#id_login#
+		    )
+	</insert>
+	
+	<insert id="INSERT.Q_QCS.SQL006" parameterClass="nttdm.bsys.q_qcs.bean.QCSSection">
+		INSERT
+		    INTO
+		        t_section (
+		            section_group
+		            ,id_ref
+		            ,section_no
+		            ,value
+		            ,remarks
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		    VALUES (
+		        #section_group#
+		        ,#id_ref#
+		        ,#section_no#
+		        ,#value#
+		        ,#remarks#
+		        ,sysdate
+		        ,sysdate
+		        ,#id_login#
+		    )
+	</insert>
+
+	<select id="SELECT.Q_QCS.SQL007" parameterClass="java.lang.String" resultClass="nttdm.bsys.q_qcs.bean.QCSHeader">
+		SELECT
+		        id_ref
+		        ,id_cust
+		        ,id_conslt
+		        ,id_quo
+		        ,req_user
+		        ,TO_CHAR(date_req,'dd/MM/yyyy') date_req
+		        ,cust_mode
+		        ,ctterm
+		        ,ctterm3_day
+		        ,deposit
+		        ,remarks
+		        ,id_status
+		    FROM
+		        t_qcs_h
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+		        AND is_deleted = '0'
+		     
+	</select>
+	
+	<select id="SELECT.Q_QCS.SQL008" parameterClass="java.lang.String" resultClass="nttdm.bsys.q_qcs.bean.QCSDetail">
+		SELECT
+		        id_svc
+		        ,id_ref
+		        ,svc_grp
+		        ,capacity
+		        ,nrc
+		        ,mrc
+		        ,term
+		        ,total
+		        ,tariff
+		        ,disc
+		    FROM
+		        t_qcs_d
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+	</select>
+	
+	
+	<select id="SELECT.Q_QCS.SQL009" parameterClass="java.lang.String" resultClass="nttdm.bsys.q_qcs.bean.QCSSection">
+		SELECT section_group,id_ref,section_no,value,remarks
+		FROM
+		        t_section
+		WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+	</select>
+	<select id="SELECT.Q_QCS.SQL010" resultClass="java.lang.Integer">
+		SELECT nvl(max(id_svc),0)		
+		FROM t_qcs_d
+		     
+	</select>
+	
+	<update id="UPDATE.Q_QCS.SQL011" parameterClass="nttdm.bsys.q_qcs.bean.QCSHeader">
+		UPDATE
+	        t_qcs_h
+	    SET
+	        id_status = #id_status#
+	    WHERE
+	        TRIM(id_ref) = TRIM(#id_ref#) AND is_deleted = '0'
+	</update>
+	
+	<update id="UPDATE.Q_QCS.SQL012" parameterClass="nttdm.bsys.q_qcs.dto.Q_QCSR03Input">
+		UPDATE
+		        t_qcs_h
+		    SET
+		        id_cust = #id_cust#
+		        ,id_conslt = #id_conslt#
+		        ,id_quo = #id_quo#
+		        ,req_user = #req_user#
+		        ,date_req = TO_DATE(#date_req#,'dd/MM/yyyy')
+		        ,cust_mode = #cust_mode#
+		        ,ctterm = #ctterm#
+		        ,ctterm3_day = #ctterm3_day#
+		        ,deposit = #deposit#
+		        ,remarks = #remarks#
+		        ,date_updated = sysdate
+		        ,id_login = #id_login#
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#) AND is_deleted = '0'
+	</update>
+	
+	<delete id="DELETE.Q_QCS.SQL013" parameterClass="java.lang.String">
+		DELETE
+	    FROM
+	        t_qcs_d
+	    WHERE
+	        RTRIM(id_ref) = #id_ref#
+	</delete>
+		
+	<update id="UPDATE.Q_QCS.SQL014" parameterClass="nttdm.bsys.q_qcs.bean.QCSSection">
+		UPDATE
+		        t_section
+		    SET
+		        section_no = #section_no#
+		        ,value = #value#
+		        ,remarks = #remarks#
+		        ,date_updated = sysdate
+		        ,id_login = #id_login#
+		    WHERE
+		        section_group = #section_group#
+		        AND TRIM(id_ref) = TRIM(#id_ref#)
+	</update>
+	<!-- Delete QCS Header -->	
+	
+	<update id="UPDATE.Q_QCS.SQL015" parameterClass="nttdm.bsys.q_qcs.bean.QCSHeader" >
+		UPDATE
+	        t_qcs_h
+	    SET
+	        id_status = #id_status#
+	        ,is_deleted = '1'
+	        ,date_updated = sysdate
+	        ,id_login = #id_login#
+	    WHERE
+	        TRIM(id_ref) = TRIM(#id_ref#)
+	</update>
+	<!-- Delete T_WF_DOC -->
+	
+	<update id="UPDATE.Q_QCS.SQL016" parameterClass="nttdm.bsys.q_qcs.bean.QCSHeader">
+		UPDATE
+	        t_wf_doc
+	    SET
+	        is_deleted = '1'
+	        ,date_updated = sysdate
+	        ,id_login = #id_login#
+	    WHERE
+	        TRIM(id_ref) = TRIM(#id_ref#)
+	</update>
+	<select id="SELECT.Q_QCS.SQL017" parameterClass="nttdm.bsys.q_qcs.bean.Qcs_Approval" resultClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		
+		SELECT t2.id_approver,t2.section_group,t2.section_no
+		FROM t_qcs_h t1, t_wf_approval t2
+		WHERE TRIM(t1.id_ref)= TRIM(#id_ref#) and t1.is_deleted='0' and t1.id_ref = t2.id_ref 
+			and t1.id_status=#id_status# and t2.appr_status=#appr_status#
+	</select>
+
+	<insert id="INSERT.Q_QCS.SQL018" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		INSERT
+	    INTO
+	        t_wf_approval (
+	            id_ref
+	            ,section_group
+	            ,section_no
+	            ,id_approver
+	            ,date_appr
+	            ,appr_status
+	            ,id_forward_to
+	            ,is_revised
+	            ,original_approver
+	            ,is_forwarded
+	            ,is_escalated
+	            ,id_action
+	            ,is_deleted
+	            ,date_created
+	            ,date_updated
+	            ,id_login
+	        )
+	    VALUES (
+	        #id_ref#
+	        ,#section_group#
+	        ,#section_no#
+	        ,#id_approver#
+	        ,#date_appr#
+	        ,#appr_status#
+	        ,#id_forward_to#
+	        ,'0'
+	        ,#original_approver#
+	        ,'0'
+	        ,'0'
+	        ,#id_action#
+	        ,'0'
+	        ,SYSDATE
+	        ,SYSDATE
+	        ,#id_login#
+	    )
+	</insert>
+	
+	<select id="SELECT.Q_QCS.SQL019" parameterClass="java.lang.String" resultClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		SELECT
+	        id_ref
+	        ,section_group
+	        ,section_no
+	        ,id_approver
+	        ,appr_status
+	        ,id_forward_to
+	        ,is_revised
+	        ,original_approver
+	        ,is_forwarded
+	        ,is_escalated
+	        ,id_action
+	        ,date_appr
+	    FROM
+	        t_wf_approval
+	    WHERE
+	        TRIM(id_ref) = TRIM(#id_ref#)
+	</select>
+	
+	<select id="SELECT.Q_QCS.SQL020" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL" resultClass="java.lang.Integer">
+		SELECT
+	        COUNT(id_ref)
+	    FROM
+	        t_wf_approval
+	    WHERE
+	        TRIM(id_ref) = TRIM(#id_ref#)
+	        AND section_no = #section_no#
+	        AND appr_status = #appr_status#
+	        AND is_deleted = '0'
+	</select>
+	
+	
+	<update id="UPDATE.Q_QCS.SQL021" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		UPDATE
+		        t_wf_approval
+		    SET
+		        date_appr = #date_appr#
+		        ,appr_status = #new_appr_status#
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+		        AND section_no = #section_no#
+		        AND appr_status = #appr_status#
+		        AND is_revised = '0'
+		        AND is_deleted = '0'
+	</update>
+	<insert id="INSERT.Q_QCS.SQL022" parameterClass="nttdm.bsys.m_alt.bean.FileInfo">
+		INSERT
+		    INTO
+		        t_doc (
+		            doc_type
+		            ,filename
+		            ,filelocation
+		            ,is_deleted
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		 	VALUES(
+	            #doc_type#
+	            ,#filename#
+	            ,#filelocation#
+	            ,'0'
+	            ,sysdate
+	            ,sysdate
+	            ,#id_login#		 	
+		 	)		   		    	 
+	</insert>
+	<select id="SELECT.Q_QCS.SQL023"  resultClass="java.lang.String">
+		SELECT NVL(MAX(id_doc),0) FROM t_doc 
+	</select>
+	
+	<insert id="INSERT.Q_QCS.SQL024" parameterClass="nttdm.bsys.common.bean.T_WF_DOCBean">
+		INSERT
+		    INTO
+		        t_wf_doc (
+		            id_ref
+		            ,section_group
+		            ,id_doc
+		            ,is_deleted
+		            ,date_created
+		            ,date_updated
+		            ,id_login
+		        )
+		    VALUES (
+		        #id_ref#
+		        ,#section_group#
+		        ,#id_doc#
+		        ,'0'
+		        ,SYSDATE
+		        ,SYSDATE
+		        ,#id_login#
+		    )
+	</insert>
+	<select id="SELECT.Q_QCS.SQL025"  resultClass="nttdm.bsys.m_alt.bean.FileInfo" parameterClass="nttdm.bsys.q_qcs.bean.WF_DOC">
+		SELECT T1.filename,T1.id_doc
+		FROM T_DOC T1, T_WF_DOC T2
+		WHERE T1.doc_type = #doc_type# AND T1.is_deleted ='0' 
+			AND T1.id_doc = T2.id_doc AND TRIM(T2.id_ref) = TRIM(#id_ref#)
+		AND T2.section_group = #section_group# AND T2.is_deleted ='0' 
+	</select>
+	
+	<update id="UPDATE.Q_QCS.SQL026" parameterClass="nttdm.bsys.q_qcs.bean.WF_DOC">
+		UPDATE
+		        t_wf_doc
+		    SET
+		        is_deleted = '1'
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+		        AND section_group = #section_group#
+		        AND id_doc = #id_doc#
+	</update>
+	<select id="SELECT.Q_QCS.SQL027"  resultClass="nttdm.bsys.q_qcs.bean.WF_ACTION" parameterClass="nttdm.bsys.q_qcs.bean.WF_ACTION_SECTION">
+		SELECT t3.section_group,t3.section_no,t3.pic, NVL2(t4.date_appr,TO_CHAR(t4.date_appr,'dd/MM/yyyy'),'') date_appr, t4.appr_status
+		FROM
+			(SELECT t2.pic,t1.section_group,t2.section_no
+			FROM m_wf_section t1, m_wf_action t2
+			WHERE t1.id_screen= #id_screen#  AND t1.section_no=t2.section_no AND t2.action_type=#action_type#
+					) t3,( SELECT section_group,section_no,id_approver,date_appr,appr_status FROM t_wf_approval WHERE  TRIM(id_ref) = TRIM(#id_ref#))t4
+		WHERE t3.section_group = t4.section_group(+) AND t3.section_no = t4.section_no(+) AND t3.pic = t4.id_approver(+) 
+	</select>
+	
+	<update id="UPDATE.Q_QCS.SQL028" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		UPDATE
+		        t_wf_approval
+		    SET
+		        id_approver = #id_approver#
+		        ,date_appr = SYSDATE
+		        ,appr_status = #appr_status#
+		        ,is_revised = #is_revised#
+		        ,date_updated = SYSDATE
+		        ,id_login = #id_login#
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+		        AND section_group = #section_group#
+		        AND section_no = #section_no#
+	</update>
+	
+	<select id="SELECT.Q_QCS.SQL029" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL" resultClass="nttdm.bsys.common.bean.T_WF_APPROVAL">
+		SELECT
+			section_group
+	        ,section_no
+	        ,appr_status
+	    FROM
+	        t_wf_approval
+		WHERE 
+			TRIM(id_ref) = TRIM(#id_ref#) AND id_approver = #id_approver#
+			AND is_deleted = '0' AND appr_status &lt;&gt; #appr_status#
+		ORDER BY section_no ASC
+		        
+	</select>
+	<update id="UPDATE.Q_QCS.SQL030" parameterClass="nttdm.bsys.q_qcs.bean.QCSSection">
+		UPDATE
+		        t_section
+		    SET
+		        remarks = #remarks#
+		        ,date_updated = sysdate
+		        ,id_login = #id_login#
+		    WHERE
+		        section_group = #section_group#
+		        AND TRIM(id_ref) = TRIM(#id_ref#)
+	</update>
+	
+	<select id="SELECT.Q_QCS.SQL031" parameterClass="nttdm.bsys.common.bean.T_WF_SECTIONBean" resultClass="java.lang.String">
+		SELECT
+		        sequence_no
+		    FROM
+		        t_wf_section
+		    WHERE
+		        TRIM(id_ref) = TRIM(#id_ref#)
+		        AND id_screen = #id_screen#
+		        AND section_group = #section_group#
+		        AND section_no = #section_no#
+	</select>
+	
+	<select id="SELECT.Q_QCS.SQL032" parameterClass="nttdm.bsys.common.bean.WF_TABLEBean" resultClass="java.lang.Integer">
+		SELECT
+		        COUNT(*)
+		    FROM
+		        m_atr_tfr
+		    WHERE
+		        id_screen = #id_screen#
+		        AND section_no = #section_no#
+		        AND id_user = #id_user#
+		        AND id_tfr_user = #id_tfr_user#
+	</select>
+	<select id="SELECT.Q_QCS.SQL033" parameterClass="java.lang.String" resultClass="nttdm.bsys.common.bean.T_WF_SECTIONBean">
+		SELECT DISTINCT section_group , sequence_no 
+		FROM M_WF_SECTION 
+		WHERE id_screen = #id_screen# AND section_group != 'QUO' ORDER BY sequence_no ASC 
+	</select>
+	<select id="SELECT.Q_QCS.SQL034" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL" resultClass="java.lang.String">
+		SELECT DISTINCT appr_status 
+		FROM t_wf_approval 
+		WHERE TRIM(id_ref) = TRIM(#id_ref#) AND section_group = #section_group# 
+		  AND section_no = #section_no# AND id_approver = #id_approver#
+	</select>
+	<update id="UPDATE.Q_QCS.SQL035" parameterClass="nttdm.bsys.q_qcs.bean.QCSSection">
+		UPDATE
+		        t_section
+		    SET
+		        remarks = #remarks#
+		        ,date_updated = sysdate
+		        ,id_login = #id_login#
+		    WHERE
+		        section_group = #section_group#
+		        AND TRIM(id_ref) = TRIM(#id_ref#)
+	</update>
+	<select id="SELECT.Q_QCS.SQL036" parameterClass="nttdm.bsys.common.bean.WF_TABLEBean" resultClass="java.lang.Integer">
+		SELECT t2.response_expire
+		FROM m_wf_section t1, m_wf_action t2
+		WHERE t1.id_screen = #id_screen# AND t1.section_group=#section_group# AND t1.section_no = t2.section_no
+			 AND action_type = #action_type# AND t2.pic = #pic# AND t2.section_no = #section_no#
+	</select>
+	<select id="SELECT.Q_QCS.SQL037" parameterClass="nttdm.bsys.common.bean.WF_TABLEBean" resultClass="java.lang.String">
+		SELECT id_user
+		FROM m_atr_tfr
+		WHERE id_screen = #id_screen# AND section_no = #section_no# AND id_tfr_user = #id_tfr_user#
+	</select>
+	<select id="SELECT.Q_QCS.SQL038" parameterClass="nttdm.bsys.common.bean.T_WF_APPROVAL" resultClass="java.lang.String">
+		SELECT DISTINCT id_login 
+		FROM t_wf_approval 
+		WHERE TRIM(id_ref) = TRIM(#id_ref#) AND section_group = #section_group# 
+		  AND section_no = #section_no# AND appr_status = #appr_status# 
+	</select>
+</sqlMap>

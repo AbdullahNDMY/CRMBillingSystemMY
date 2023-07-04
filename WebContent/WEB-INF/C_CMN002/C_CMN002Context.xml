@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<!-- モジュール固有のBean定義 -->
+
+  <!-- 共通定義のインポート -->
+  <import resource="../commonContext.xml" />
+
+<!-- ======================================== アクション・業務ロジック定義 -->
+  <!-- アクション定義 -->
+  
+    
+	<bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/C_CMN002/C_CMN002SCR" scope="singleton"/>
+    
+    <bean id="C_CMN002_BLogic" scope="singleton"
+		class="nttdm.bsys.c_cmn002.blogic.C_CMN002BLogic">
+            <property name="queryDAO" ref="queryDAO"></property> 
+            <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+  	<bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/C_CMN002/C_CMN002BLogic" scope="singleton">
+        <property name="businessLogic" ref="C_CMN002_BLogic"/>
+    </bean>    
+    
+    <bean name="/C_CMN002/C_CMN002Action" scope="singleton"
+          class="jp.terasoluna.fw.web.struts.actions.DispatchAction">
+    </bean>  
+
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/C_CMN002/C_CMN002DelBLogic" scope="singleton">
+        <property name="businessLogic" ref="C_CMN002DeleteBLogic"/>
+    </bean>      
+    
+    <bean id="C_CMN002DeleteBLogic" scope="singleton"
+	      class="nttdm.bsys.c_cmn002.blogic.C_CMN002DeleteBLogic">
+          <property name="queryDAO" ref="queryDAO"/>
+	      <property name="updateDAO" ref="updateDAO" />
+	</bean>
+</beans>

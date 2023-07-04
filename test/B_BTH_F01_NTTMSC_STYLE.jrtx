@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperTemplate PUBLIC "-//JasperReports//DTD Template//EN" "http://jasperreports.sourceforge.net/dtds/jaspertemplate.dtd">
+
+<jasperTemplate>
+	<style name="font_8_Arial" isBlankWhenNull="true" fontName="Arial" fontSize="8"/>
+	<style name="font_8b_Arial" isBlankWhenNull="true" fontName="Arial" fontSize="8" isBold="true"/>
+	<style name="font_10_Arial" isBlankWhenNull="true" fontName="Arial" fontSize="10"/>
+	<style name="font_10b_Arial" isBlankWhenNull="true" fontName="Arial" fontSize="10" isBold="true"/>
+	<style name="font_9_TimesNewRoman" isBlankWhenNull="true" fontName="Times New Roman" fontSize="9"/>
+	<style name="font_10_TimesNewRoman" isBlankWhenNull="true" fontName="Times New Roman" fontSize="10"/>
+	<style name="font_10b_TimesNewRoman" isBlankWhenNull="true" fontName="Times New Roman" fontSize="10" isBold="true"/>
+	<style name="font_14b_TimesNewRoman" fill="Solid" isBlankWhenNull="true" fontName="Times New Roman" fontSize="14" isBold="true"/>
+</jasperTemplate>

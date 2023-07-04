@@ -1,0 +1,189 @@
+.wrapper{
+	width:99%;
+	background-color:#F4F3EF;
+	border:1px solid #D9D9D9;
+}
+
+.detail {
+	border-top:1px solid #d0d0d0;	
+}
+
+.groupButton{
+	margin-top:7px;
+}
+.groupButton button{
+	margin-left:10px;
+}
+
+.searchFound{
+	background-color:#C0C0C0;
+	font-weight:bold;
+	font-size:medium;
+	width:100%;
+	border:1px solid #D0D0D0;
+	margin-top:7px;
+	padding:5px;
+}
+
+.pageLink{
+	width:100%;
+	background-color:#F8F8F8;
+	border:1px solid #D0D0D0;
+	margin-top:2px;
+}
+.result{
+	border-collapse:collapse;
+	background-color:#F8F8F8;
+	border:1px solid #D0D0D0;
+	width:100%;
+}
+.result .header{
+	font-weight:bold;
+	text-align: left;
+}
+
+#subscription .searchCondition{
+	width:100%;
+	margin:8px 0px 8px 8px;
+}
+
+#subscription .result td{
+	border-bottom:1px solid #D0D0D0;
+}
+
+#subscription .colNo{
+	width:4.54%;
+}
+#subscription .colCustName{
+	width:14%;
+}
+#subscription .colSubscriptionId{
+	width:13%;
+}
+#subscription .colAccessAccount{
+	width:14%;
+}
+#subscription .colRouterNo{
+	width:9.37%;
+}
+#subscription .colRouterType{
+	width:10.37%;
+}
+#subscription .colModemNo{
+	width:9.37%;
+}
+#subscription .colAdslNo{
+	width:12.67%;
+}
+#subscription .colDomainName{
+	width:12.67%;
+}
+
+
+#subscription .colLeftHeader{
+	width:14.85%;
+}
+
+#subscription .colLeftValue{
+	width:32.62%;
+}
+#subscription .colRightHeader{
+	width:14.95%;
+}	
+#subscription .colRightVlaue{
+	width:37.58%;
+}
+#subscription input{
+	width:280px;
+}
+#subscription select{
+	width:280px;
+}
+#plan{
+	width:100%;
+}
+#plan .searchCondition{
+	width:920px;
+	margin:8px 0px 8px 8px;
+}
+#plan .colLeftHeader{
+	width:11.75%;
+}
+
+#plan .colLeftValue{
+	width:35.28%;
+}
+
+#plan .colRightHeader{
+	width:9.8%;
+}
+
+#plan .colRightValue{
+	width:27.76%;
+}
+
+
+#plan .colNewCustomer{
+	width:15.41%;
+}
+#plan label{
+	width:33%;
+}
+#plan .colLeftValue input{
+	width:auto;
+}
+#plan .colLeftValue select{
+	width:auto;
+}
+
+#plan .colNo{
+	width:4.66%;
+}
+#plan .colSubId{
+	width:7%;
+}
+#plan .colCustName{
+	width:12.94%;
+}
+#plan .colPlanName{
+	width:10.26%;
+}
+#plan .colToggleIcon{
+	width:2.81%;
+}
+#plan .colDescription{
+	width:17.83%;
+}
+#plan .colTransactionType{
+	width:4.95%;
+}
+#plan .colBillServiceGroup{
+	width:8.21%;
+}
+
+#plan .colBillCurrency{
+	width:4.85%;
+}
+#plan .colFrom{
+	width:9.62%;
+}
+#plan .colTo{
+	width:9.82%;
+}
+#plan .colStatus{
+	width:6.55%
+}
+#plan .result td{
+		border-bottom:1px solid #D0D0D0;
+}
+
+.spanTogglePlace {
+	color: #a04c51;
+}
+
+td .headerBorder {
+	border-top: 1px solid #d0d0d0;
+}
+.custPlanSearchCond tr td {
+	padding: 0px 4px;
+}

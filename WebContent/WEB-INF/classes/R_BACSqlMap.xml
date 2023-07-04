@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_BAC">
+	<select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'R-BAC'
+	</select>
+	<select id="SELECT.R_BAC.SQL001" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.r_bac.dto.R_BAC_R02Input">
+		SELECT ROWNUM AS DATA_REQ,C.ID_CUST, C.ID_BILL_ACCOUNT, C.PAYMENT_METHOD, C.BILL_CURRENCY, C.TOTAL_AMT_DUE, E.CUST_NAME
+		,NVL(AMOUNTA,0), NVL(AMOUNTC,0), NVL(AMOUNTD,0)
+		,(NVL(AMOUNTA,0)-NVL(AMOUNTC,0)-NVL(AMOUNTD,0)) as ACTUAL_AMOUNT
+		,(NVL(TOTAL_AMT_DUE,0) - (NVL(AMOUNTA,0)-NVL(AMOUNTC,0)-NVL(AMOUNTD,0))) as VARIANCE_AMOUNT
+		FROM T_BAC_H C, M_CUST E,
+		  (
+             SELECT NVL(SUM(I.BILL_AMOUNT),0) as AMOUNTA, BILL_ACC
+             FROM T_BIL_H I 
+             WHERE  I.BILL_TYPE IN ('IN','DN') AND I.IS_DELETED='0'
+             GROUP BY BILL_ACC
+          ) INDN,
+          (
+             SELECT NVL(SUM(I2.BILL_AMOUNT),0)as AMOUNTC, BILL_ACC
+             FROM T_BIL_H I2
+             WHERE I2.BILL_TYPE = 'CN' AND I2.IS_DELETED='0'
+             GROUP BY BILL_ACC
+          ) CN,
+          (
+             SELECT NVL(SUM(G.AMT_RECEIVED),0) AS AMOUNTD, id_bill_account
+             FROM T_CSB_H G
+             WHERE G.IS_DELETED = '0'
+             AND G.PMT_STATUS = 'N'
+             GROUP BY ID_BILL_ACCOUNT
+          ) CSB
+		WHERE
+			C.ID_CUST = E.ID_CUST
+            AND INDN.BILL_ACC(+) = C.ID_BILL_ACCOUNT 
+            AND CN.BILL_ACC(+) = C.ID_BILL_ACCOUNT 
+            AND CSB.ID_BILL_ACCOUNT(+) = C.ID_BILL_ACCOUNT 
+			AND C.IS_DELETED='0'
+     		AND E.IS_DELETED='0'
+			<isNotEmpty prepend="AND" property="custId">
+                 UPPER(C.ID_CUST) LIKE UPPER('%$custId$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="custName">
+                UPPER(E.CUST_NAME) LIKE UPPER('%$custName$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billCurrency">
+                C.BILL_CURRENCY = #billCurrency#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paymentMethod">
+                C.PAYMENT_METHOD = #paymentMethod#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billAcc">
+                C.ID_BILL_ACCOUNT = RPAD(#billAcc#,20,' ')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="totalamount">
+                C.TOTAL_AMT_DUE &lt;&gt; (NVL(AMOUNTA,0)-NVL(AMOUNTC,0)-NVL(AMOUNTD,0))
+            </isNotEmpty>
+         ORDER BY C.ID_CUST DESC,C.ID_BILL_ACCOUNT ASC
+	</select>
+	<select id="SELECT.R_BAC.SQL002" resultClass="java.lang.Integer" parameterClass="nttdm.bsys.r_bac.dto.R_BAC_R02Input">
+		SELECT COUNT(*)
+		FROM
+		(SELECT ROWNUM AS DATA_REQ,C.ID_CUST, C.ID_BILL_ACCOUNT, C.PAYMENT_METHOD, C.BILL_CURRENCY, C.TOTAL_AMT_DUE, E.CUST_NAME
+		FROM T_BAC_H C, M_CUST E,
+          (
+             SELECT NVL(SUM(I.BILL_AMOUNT),0) as AMOUNTA, BILL_ACC
+             FROM T_BIL_H I 
+             WHERE  I.BILL_TYPE IN ('IN','DN') AND I.IS_DELETED='0'
+             GROUP BY BILL_ACC
+          ) INDN,
+          (
+             SELECT NVL(SUM(I2.BILL_AMOUNT),0)as AMOUNTC, BILL_ACC
+             FROM T_BIL_H I2
+             WHERE I2.BILL_TYPE = 'CN' AND I2.IS_DELETED='0'
+             GROUP BY BILL_ACC
+          ) CN,
+          (
+             SELECT NVL(SUM(G.AMT_RECEIVED),0) AS AMOUNTD, id_bill_account
+             FROM T_CSB_H G
+             WHERE G.IS_DELETED = '0'
+             AND G.PMT_STATUS = 'N'
+             GROUP BY ID_BILL_ACCOUNT
+          ) CSB
+		WHERE
+			C.ID_CUST = E.ID_CUST
+            AND INDN.BILL_ACC(+) = C.ID_BILL_ACCOUNT 
+            AND CN.BILL_ACC(+) = C.ID_BILL_ACCOUNT 
+            AND CSB.ID_BILL_ACCOUNT(+) = C.ID_BILL_ACCOUNT 
+			AND C.IS_DELETED='0'
+     	 	AND E.IS_DELETED='0'
+			<isNotEmpty prepend="AND" property="custId">
+                 UPPER(C.ID_CUST) LIKE UPPER('%$custId$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="custName">
+                UPPER(E.CUST_NAME) LIKE UPPER('%$custName$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billCurrency">
+                C.BILL_CURRENCY = #billCurrency#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="paymentMethod">
+                C.PAYMENT_METHOD = #paymentMethod#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="billAcc">
+                C.ID_BILL_ACCOUNT = RPAD(#billAcc#,20,' ')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="totalamount">
+                C.TOTAL_AMT_DUE &lt;&gt; (NVL(AMOUNTA,0)-NVL(AMOUNTC,0)-NVL(AMOUNTD,0))
+            </isNotEmpty>
+            )
+	</select>
+    <select id="getBillAccs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT T.ID_BILL_ACCOUNT , T.PAYMENT_METHOD, T.TOTAL_AMT_DUE
+        FROM T_BAC_H T
+        WHERE
+        T.IS_DELETED='0'
+        AND T.ID_BILL_ACCOUNT LIKE '$billAcc$%'
+        ORDER BY T.ID_BILL_ACCOUNT
+    </select>
+    <!-- 1 -->
+    <select id="getReceiptsNoDetails" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.ID_CUST,
+            A.RECEIPT_NO, TO_CHAR(A.DATE_TRANS,'DD/MM/YYYY') DATE_TRANS, 
+            A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+            A.REFERENCE2, A.PMT_STATUS, A.PMT_METHOD, A.ID_CUST
+        FROM T_CSB_H A
+        WHERE A.RECEIPT_NO NOT IN (SELECT DISTINCT RECEIPT_NO FROM T_CSB_D D WHERE D.IS_DELETED='0')
+        AND A.PMT_STATUS='N'
+        AND A.IS_DELETED='0'
+        AND A.ID_BILL_ACCOUNT = #billacc#
+        ORDER BY A.RECEIPT_NO
+    </select>
+    
+    <!-- 2 -->
+    <select id="getReceiptOverMatch" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.AMT_RECEIVED, B.AMT_PAID
+        FROM T_CSB_H A, 
+          (
+            SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            GROUP BY RECEIPT_NO
+          ) B
+        WHERE A.IS_DELETED = 0
+        AND A.RECEIPT_NO =  B.RECEIPT_NO
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &lt; B.AMT_PAID
+        AND A.ID_BILL_ACCOUNT = #billacc#
+        ORDER BY A.RECEIPT_NO
+    </select>
+    
+    <!-- 3 -->
+    <select id="getReceiptNotFullyMatch" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.AMT_RECEIVED, A.BALANCE_AMT, B.AMT_PAID
+        FROM T_CSB_H A, 
+          (
+            SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            GROUP BY RECEIPT_NO
+          ) B
+        WHERE A.IS_DELETED = 0
+        AND A.RECEIPT_NO =  B.RECEIPT_NO
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &gt; B.AMT_PAID
+        AND A.ID_BILL_ACCOUNT = #billacc#
+        ORDER BY A.RECEIPT_NO
+    </select>
+    
+    <!-- 4 -->
+    <select id="getInvoiceOverMatch" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.BILL_ACC, A.ID_REF, A.PAID_AMOUNT, A.IS_SETTLED, B.AMT_PAID,A.BILL_AMOUNT,TO_CHAR(A.DATE_REQ,'DD/MM/YYYY') AS DATE_REQ
+        FROM T_BIL_H A, 
+          (
+            SELECT ID_REF, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY ID_REF
+          ) B
+        WHERE A.IS_DELETED = '0'
+        AND A.ID_REF =  B.ID_REF
+        AND A.PAID_AMOUNT &lt; B.AMT_PAID
+        AND A.BILL_ACC = #billacc#
+        ORDER BY A.ID_REF
+    </select>
+    
+    <!-- 5 -->
+    <select id="getInvoiceNotFullyMatch" parameterClass="string" resultClass="java.util.HashMap">
+       SELECT A.BILL_ACC, A.ID_REF, A.PAID_AMOUNT, A.IS_SETTLED, NVL(B.AMT_PAID,0) AS AMT_PAID,
+              A.BILL_AMOUNT,TO_CHAR(A.DATE_REQ,'DD/MM/YYYY') AS DATE_REQ
+        FROM T_BIL_H A, 
+          (
+            SELECT ID_REF, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY ID_REF
+          ) B
+        WHERE A.IS_DELETED = '0'
+        AND A.ID_REF =  B.ID_REF(+)
+        AND (A.PAID_AMOUNT &gt; B.AMT_PAID OR B.AMT_PAID IS NULL OR A.BILL_AMOUNT-A.PAID_AMOUNT &gt; 0)
+        AND A.BILL_ACC= #billacc#
+        ORDER BY A.ID_REF
+    </select>
+    
+    <!-- 6 -->
+    <select id="getReceiptAmountNegative" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.DATE_TRANS,
+         A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+         A.PMT_STATUS, A.REJECT_DATE, A.REJECT_DESC, A.PMT_METHOD, A.ID_CUST
+        FROM T_CSB_H A
+        WHERE 
+        A.IS_DELETED = '0'
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &lt; A.BALANCE_AMT
+        AND A.ID_BILL_ACCOUNT = #billacc#
+        ORDER BY A.ID_BILL_ACCOUNT
+    </select>
+
+<!-- S_1 -->
+    <select id="getExportSql1" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.ID_CUST,
+            A.RECEIPT_NO, TO_CHAR(A.DATE_TRANS,'DD/MM/YYYY') DATE_TRANS, 
+            A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+            A.REFERENCE2, A.PMT_STATUS, A.PMT_METHOD, A.ID_CUST
+        FROM T_CSB_H A
+        WHERE A.RECEIPT_NO NOT IN (SELECT DISTINCT RECEIPT_NO FROM T_CSB_D D WHERE D.IS_DELETED='0')
+        AND A.PMT_STATUS='N'
+        AND A.IS_DELETED='0'
+        ORDER BY A.ID_BILL_ACCOUNT
+    </select>
+    
+    <!-- S_2 -->
+    <select id="getExportSql2"  resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.AMT_RECEIVED, B.AMT_PAID
+        FROM T_CSB_H A, 
+          (
+            SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            GROUP BY RECEIPT_NO
+          ) B
+        WHERE A.IS_DELETED = 0
+        AND A.RECEIPT_NO =  B.RECEIPT_NO
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &lt; B.AMT_PAID
+        ORDER BY A.ID_BILL_ACCOUNT
+    </select>
+    
+    <!-- S_3 -->
+    <select id="getExportSql3" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.AMT_RECEIVED, A.BALANCE_AMT, B.AMT_PAID
+        FROM T_CSB_H A, 
+          (
+            SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            GROUP BY RECEIPT_NO
+          ) B
+        WHERE A.IS_DELETED = 0
+        AND A.RECEIPT_NO =  B.RECEIPT_NO
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &gt; B.AMT_PAID
+        ORDER BY A.ID_BILL_ACCOUNT
+    </select>
+    
+    <!-- S_4 -->
+    <select id="getExportSql4" resultClass="java.util.HashMap">
+        SELECT A.BILL_ACC, A.ID_REF, A.PAID_AMOUNT, A.IS_SETTLED, B.AMT_PAID
+        FROM T_BIL_H A, 
+          (
+            SELECT ID_REF, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY ID_REF
+          ) B
+        WHERE A.IS_DELETED = '0'
+        AND A.ID_REF =  B.ID_REF
+        AND A.PAID_AMOUNT &lt; B.AMT_PAID
+        ORDER BY A.BILL_ACC
+    </select>
+    
+    <!-- S_5 -->
+    <select id="getExportSql5" resultClass="java.util.HashMap">
+       SELECT A.BILL_ACC, A.ID_REF, A.PAID_AMOUNT, A.IS_SETTLED, B.AMT_PAID
+        FROM T_BIL_H A, 
+          (
+            SELECT ID_REF, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY ID_REF
+          ) B
+        WHERE A.IS_DELETED = '0'
+        AND A.ID_REF =  B.ID_REF(+)
+        AND (A.PAID_AMOUNT &gt; B.AMT_PAID OR B.AMT_PAID IS NULL OR A.BILL_AMOUNT-A.PAID_AMOUNT &gt; 0)
+        ORDER BY A.BILL_ACC
+    </select>
+    
+    <!-- S_6 -->
+    <select id="getExportSql6" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.RECEIPT_NO, A.DATE_TRANS,
+         A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+         A.PMT_STATUS, A.REJECT_DATE, A.REJECT_DESC, A.PMT_METHOD, A.ID_CUST
+        FROM T_CSB_H A
+        WHERE 
+        A.IS_DELETED = '0'
+        AND A.PMT_STATUS = 'N'
+        AND A.AMT_RECEIVED &lt; A.BALANCE_AMT
+        ORDER BY A.ID_BILL_ACCOUNT
+    </select>
+
+    <select id="getLatestInvoice" parameterClass="string" resultClass="string">
+        SELECT * FROM (
+            SELECT ID_REF
+            FROM T_BIL_H 
+            WHERE BILL_ACC = #billAcc#
+            AND IS_DELETED='0'
+            ORDER BY ID_REF DESC
+        )
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getInvoices" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT BILL_ACC, ID_REF, BILL_AMOUNT, PAID_AMOUNT, (BILL_AMOUNT-PAID_AMOUNT) AS OUTSTANDING, IS_SETTLED
+        FROM T_BIL_H 
+        WHERE BILL_ACC = #billAcc#
+        AND IS_DELETED='0'
+        ORDER BY ID_REF
+    </select>
+
+    <select id="getReceipts" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.RECEIPT_NO, to_char(A.DATE_TRANS,'DD/MM/YYYY') AS DATE_TRANS, 
+              A.AMT_RECEIVED, A.BALANCE_AMT, A.REFERENCE1, B.ID_REF, B.AMT_PAID, B.AMT_DUE, A.PMT_STATUS
+        FROM T_CSB_H A, T_CSB_D B
+        WHERE A.RECEIPT_NO = B.RECEIPT_NO
+        AND A.IS_DELETED = 0
+        AND B.IS_DELETED = 0
+        AND B.ID_REF = #diRef#
+        ORDER BY B.ID_REF, A.PMT_STATUS, A.RECEIPT_NO
+    </select>
+    
+    <select id="getReceiptNoInvoice" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT A.RECEIPT_NO, to_char(A.DATE_TRANS,'DD/MM/YYYY') AS DATE_TRANS,
+             A.AMT_RECEIVED, A.BALANCE_AMT, A.REFERENCE1, A.REJECT_DESC, A.PMT_STATUS
+        FROM T_CSB_H A
+        WHERE A.RECEIPT_NO NOT IN (
+          SELECT C.RECEIPT_NO
+          FROM T_CSB_H C, T_CSB_D B
+          WHERE C.RECEIPT_NO = B.RECEIPT_NO
+          AND C.IS_DELETED = 0  
+          AND B.IS_DELETED = 0
+          AND C.ID_BILL_ACCOUNT = #billAcc#
+        )
+        AND A.IS_DELETED = 0
+        AND A.ID_BILL_ACCOUNT = #billAcc#
+        ORDER BY A.PMT_STATUS,A.RECEIPT_NO
+    </select>
+
+    <!--  analysis 1 start -->
+    <select id="getReceiptNoDetail" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.ID_CUST,
+            A.RECEIPT_NO, TO_CHAR(A.DATE_TRANS,'DD/MM/YYYY') DATE_TRANS, 
+            A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+            (A.AMT_RECEIVED-A.BALANCE_AMT) AS BALANCE_AMT_C,
+            A.REFERENCE2, A.PMT_STATUS, A.PMT_METHOD, A.ID_CUST,A.CUR_CODE,A.ID_COM_BANK,C.BILL_AMOUNT
+        FROM T_CSB_H A ,T_BIL_H C
+        WHERE A.RECEIPT_NO NOT IN (SELECT DISTINCT RECEIPT_NO FROM T_CSB_D D WHERE D.IS_DELETED='0')
+        AND (A.AMT_RECEIVED-A.BALANCE_AMT) = C.BILL_AMOUNT
+        AND (A.AMT_RECEIVED-A.BALANCE_AMT) &gt; 0
+        AND A.PMT_STATUS='N'
+        AND A.IS_DELETED='0'
+        AND C.IS_DELETED='0'
+        AND A.DATE_TRANS &lt; TO_DATE('2010-01-01','YYYY-MM-DD')
+        AND C.ID_REF = RPAD(A.REFERENCE1,20,' ')
+        AND A.ID_BILL_ACCOUNT LIKE '$billAcc$%'
+        ORDER BY A.RECEIPT_NO
+    </select>
+
+    <select id="getReceiptNoDetail23" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+        SELECT A.ID_BILL_ACCOUNT, A.ID_CUST,
+            A.RECEIPT_NO, TO_CHAR(A.DATE_TRANS,'DD/MM/YYYY') DATE_TRANS, 
+            A.AMT_RECEIVED,A.BALANCE_AMT, A.REFERENCE1, 
+            (A.AMT_RECEIVED-A.BALANCE_AMT) AS BALANCE_AMT_C,
+            A.REFERENCE2, A.PMT_STATUS, A.PMT_METHOD, A.ID_CUST,A.CUR_CODE,A.ID_COM_BANK,TO_CHAR(C.DATE_REQ,'DD/MM/YYYY') AS DATE_REQ,C.BILL_AMOUNT
+        FROM T_CSB_H A ,T_BIL_H C
+        WHERE A.RECEIPT_NO NOT IN (SELECT DISTINCT RECEIPT_NO FROM T_CSB_D D WHERE D.IS_DELETED='0')
+        AND (A.AMT_RECEIVED-A.BALANCE_AMT) &lt;&gt; C.BILL_AMOUNT
+        AND (A.AMT_RECEIVED-A.BALANCE_AMT) &gt; 0
+        AND A.PMT_STATUS='N'
+        AND A.IS_DELETED='0'
+        AND C.IS_DELETED='0'
+        AND A.DATE_TRANS &lt; TO_DATE('2010-01-01','YYYY-MM-DD')
+        AND C.ID_REF = RPAD(A.REFERENCE1,20,' ')
+        AND A.ID_BILL_ACCOUNT LIKE '$billAcc$%'
+        ORDER BY A.RECEIPT_NO
+    </select>
+
+    <select id="checkReference1" resultClass="string">
+        SELECT REFERENCE1
+        FROM T_CSB_H A
+        WHERE 
+        A.PMT_STATUS='N'
+        AND A.IS_DELETED='0'
+    </select>
+
+<!-- 
+    SELECT COUNT(*) AS CSB_NO
+    FROM T_CSB_H A
+    WHERE A.REFERENCE1 = #REFERENCE1#
+    AND A.PMT_STATUS='N'
+    AND A.IS_DELETED='0'
+ -->
+    <!--  analysis 1 end -->
+
+    <!--  analysis 2 start -->
+    <delete id="deleteTempBil">
+        truncate table TEMP_BIL 
+    </delete>
+    <delete id="deleteTempCsb">
+        truncate table TEMP_CSB 
+    </delete>
+
+    <insert id="insertBilHaveDetail" parameterClass="java.util.HashMap">
+        INSERT  INTO  TEMP_BIL(BILL_ACC,ID_REF,BILL_AMOUNT,PAID_AMOUNT,PAID_AMOUNT_C,OUTSTANDING,IS_SETTLED,DATE_REQ)
+        SELECT A.BILL_ACC, A.ID_REF, A.BILL_AMOUNT,A.PAID_AMOUNT ,B.AMT_PAID AS PAID_AMOUNT_C, 
+              (A.BILL_AMOUNT-B.AMT_PAID) AS OUTSTANDING, A.IS_SETTLED, A.DATE_REQ
+        FROM T_BIL_H A, 
+          (
+            SELECT ID_REF, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY ID_REF
+          ) B
+        WHERE A.IS_DELETED = 0
+        AND A.ID_REF =  B.ID_REF
+        AND A.BILL_ACC LIKE '$billAcc$%'
+        AND A.PAID_AMOUNT &gt; B.AMT_PAID
+        AND A.IS_SETTLED=1
+        ORDER BY A.BILL_ACC, A.ID_REF
+    </insert>
+    <insert id="insertBilNoDetail" parameterClass="java.util.HashMap">
+        INSERT  INTO TEMP_BIL(BILL_ACC,ID_REF,BILL_AMOUNT,PAID_AMOUNT,PAID_AMOUNT_C,OUTSTANDING,IS_SETTLED,DATE_REQ)
+        SELECT A.BILL_ACC, A.ID_REF, A.BILL_AMOUNT, A.PAID_AMOUNT,(A.BILL_AMOUNT-A.PAID_AMOUNT) AS PAID_AMOUNT_C, 
+              A.BILL_AMOUNT AS OUTSTANDING, A.IS_SETTLED, A.DATE_REQ
+        FROM T_BIL_H A
+        WHERE A.IS_DELETED = 0
+        AND A.ID_REF NOT IN 
+            (SELECT DISTINCT ID_REF FROM T_CSB_D D ,T_CSB_H H
+            WHERE D.IS_DELETED='0'
+            AND H.IS_DELETED='0'
+            AND H.PMT_STATUS='N'
+            )
+        AND A.BILL_ACC LIKE '$billAcc$%'
+        AND A.IS_SETTLED=1
+        ORDER BY A.BILL_ACC, A.ID_REF
+    </insert>
+    <insert id="insertCsbHaveDetail" parameterClass="java.util.HashMap">
+      INSERT INTO TEMP_CSB
+      (ID_BILL_ACCOUNT,
+       RECEIPT_NO,
+       DATE_TRANS,
+       AMT_RECEIVED,
+       BALANCE_AMT_C,
+       BALANCE_AMT,
+       REFERENCE1,
+       PMT_METHOD,
+       ID_CUST,
+       CUR_CODE,
+       ID_COM_BANK)
+      SELECT A.ID_BILL_ACCOUNT,
+             A.RECEIPT_NO,
+             A.DATE_TRANS,
+             A.AMT_RECEIVED,
+             (A.AMT_RECEIVED - A.BALANCE_AMT - B.AMT_PAID) AS BALANCE_AMT_C,
+             A.BALANCE_AMT,
+             REFERENCE1,
+             A.PMT_METHOD,
+             A.ID_CUST,
+             A.CUR_CODE,
+             A.ID_COM_BANK
+        FROM T_CSB_H A,
+             (SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+                FROM T_CSB_D
+               WHERE IS_DELETED = 0
+               GROUP BY RECEIPT_NO) B
+       WHERE A.IS_DELETED = 0
+         AND A.RECEIPT_NO = B.RECEIPT_NO
+         AND A.PMT_STATUS = 'N'
+         AND A.ID_BILL_ACCOUNT LIKE '$billAcc$%'
+         AND A.AMT_RECEIVED &gt; B.AMT_PAID
+         AND (A.AMT_RECEIVED - A.BALANCE_AMT - B.AMT_PAID) &gt; 0
+       ORDER BY A.ID_BILL_ACCOUNT, A.RECEIPT_NO
+    </insert>
+    <insert id="insertCsbNoDetail" parameterClass="java.util.HashMap">
+      INSERT INTO TEMP_CSB
+      (ID_BILL_ACCOUNT,
+       RECEIPT_NO,
+       DATE_TRANS,
+       AMT_RECEIVED,
+       BALANCE_AMT_C,
+       BALANCE_AMT,
+       REFERENCE1,
+       PMT_METHOD,
+       ID_CUST,
+       CUR_CODE,
+       ID_COM_BANK)
+      SELECT A.ID_BILL_ACCOUNT,
+             A.RECEIPT_NO,
+             A.DATE_TRANS,
+             A.AMT_RECEIVED,
+             (A.AMT_RECEIVED - A.BALANCE_AMT) as BALANCE_AMT_C,
+             A.BALANCE_AMT,
+             REFERENCE1,
+             A.PMT_METHOD,
+             A.ID_CUST,
+             A.CUR_CODE,
+             A.ID_COM_BANK
+        FROM T_CSB_H A
+       WHERE A.RECEIPT_NO NOT IN
+             (SELECT DISTINCT RECEIPT_NO FROM T_CSB_D where IS_DELETED = 0)
+         AND A.ID_BILL_ACCOUNT LIKE '$billAcc$%'
+         AND A.PMT_STATUS = 'N'
+         AND (A.AMT_RECEIVED - A.BALANCE_AMT) &gt; 0
+         AND A.IS_DELETED = 0
+         AND A.AMT_RECEIVED &gt; 0
+         AND A.DATE_TRANS &lt; TO_DATE('2010-01-01', 'YYYY-MM-DD')
+       ORDER BY A.ID_BILL_ACCOUNT
+    </insert>
+
+    <select id="getBillaccFromTempCsb" resultClass="string" >
+       SELECT DISTINCT ID_BILL_ACCOUNT FROM TEMP_CSB ORDER BY ID_BILL_ACCOUNT
+    </select>
+    <select id="getTempBalance" resultClass="java.math.BigDecimal" parameterClass="string">
+       SELECT SUM(BALANCE_AMT_C) FROM TEMP_CSB T WHERE T.ID_BILL_ACCOUNT = #billAcc#
+    </select>
+    <select id="getTempOutstanding" resultClass="java.math.BigDecimal" parameterClass="string">
+       SELECT NVL(SUM(T.OUTSTANDING),0) FROM TEMP_BIL T WHERE T.BILL_ACC = #billAcc#
+    </select>
+    <select id="getTempCsb" resultClass="java.util.HashMap" parameterClass="string">
+        SELECT t.* ,TO_CHAR(t.DATE_TRANS,'DD/MM/YYYY') AS DATE_TRANS_STR 
+        FROM TEMP_CSB T 
+        WHERE T.ID_BILL_ACCOUNT = #billAcc#
+        ORDER BY T.RECEIPT_NO ASC
+    </select>
+    <select id="getTempBil" resultClass="java.util.HashMap" parameterClass="string">
+        SELECT * FROM (
+            SELECT T.* ,TO_CHAR(T.DATE_REQ,'DD/MM/YYYY') AS DATE_REQ_STR
+            FROM TEMP_BIL T
+            WHERE
+            T.OUTSTANDING &gt; 0
+            AND T.BILL_ACC = #billAcc#
+            ORDER BY T.ID_REF ASC
+        ) WHERE ROWNUM = 1
+    </select>
+    <select id="getTempBils" resultClass="java.util.HashMap" parameterClass="string">
+        SELECT T.* ,TO_CHAR(T.DATE_REQ,'DD/MM/YYYY') AS DATE_REQ_STR
+        FROM TEMP_BIL T
+        WHERE
+        T.OUTSTANDING &gt; 0
+        AND T.BILL_ACC = #billAcc#
+        ORDER BY T.ID_REF ASC
+    </select>
+    <update id="updateTempBil" parameterClass="java.util.Map">
+        UPDATE TEMP_BIL
+        SET
+           PAID_AMOUNT_C = #paidAmt#,
+           OUTSTANDING = #outstanding#
+        WHERE ID_REF = #idRef#
+    </update>
+
+    <select id="getBillForGst" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT * FROM TEMP_BIL T 
+        WHERE
+        T.DATE_REQ &lt; TO_DATE('01-03-2002','DD-MM-YYYY')
+        AND T.BILL_ACC = #billAcc#
+    </select>
+
+    <select id="getCsbDmCount" parameterClass="string" resultClass="java.lang.Integer">
+        SELECT COUNT(*) AS DMCNT
+        FROM T_CSB_H T
+        WHERE T.RECEIPT_NO=RPAD(#receiptNo#,20,' ')
+    </select>
+    <!--  analysis 2 end -->
+
+    <!-- analysis 3 start-->
+    <select id="getTotalOutstanding" parameterClass="string" resultClass="java.math.BigDecimal">
+        SELECT NVL(SUM(T.OUTSTANDING),0) FROM TEMP_BIL T
+        WHERE T.BILL_ACC=#billAcc#
+        AND T.OUTSTANDING &gt;0
+    </select>
+    
+    <select id="getInvoiceNoPayment" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT T.* FROM TEMP_BIL T
+        WHERE T.BILL_ACC=#billAcc#
+        AND T.OUTSTANDING &gt;0
+    </select>
+    
+    <select id="getLastCsb" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT * FROM (   
+            SELECT T.* ,TO_CHAR(t.DATE_TRANS,'DD/MM/YYYY') AS DATE_TRANS_STR FROM TEMP_CSB T
+            WHERE T.ID_BILL_ACCOUNT=#billAcc#
+            ORDER BY T.RECEIPT_NO DESC
+        )
+        WHERE ROWNUM=1
+    </select>
+    
+    <select id="getInvalidCashBooks" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT H.RECEIPT_NO,H.ID_BILL_ACCOUNT,H.BALANCE_AMT,H.AMT_RECEIVED,NVL(D.AMT_PAID,0) AS AMT_PAID
+        FROM T_CSB_H H ,
+          (
+            SELECT RECEIPT_NO, SUM(AMT_PAID) AS AMT_PAID
+            FROM T_CSB_D
+            WHERE IS_DELETED = 0
+            AND RECEIPT_NO IN (SELECT RECEIPT_NO FROM T_CSB_H WHERE IS_DELETED=0 AND PMT_STATUS='N')
+            GROUP BY RECEIPT_NO
+          ) D
+        WHERE 
+        H.IS_DELETED = '0'  
+        AND H.RECEIPT_NO = D.RECEIPT_NO(+)
+        AND (D.AMT_PAID IS NULL OR H.AMT_RECEIVED-H.BALANCE_AMT &gt; D.AMT_PAID)
+        AND H.PMT_STATUS='N'
+        AND H.DATE_TRANS &gt; TO_DATE('31/12/2009','DD/MM/YYYY')
+        AND H.ID_BILL_ACCOUNT=#billAcc#
+    </select>
+    <select id="checkCashBookDetail" parameterClass="string" resultClass="java.lang.Integer">
+      select count(*) 
+      from T_CSB_D d
+      where 
+      d.RECEIPT_NO = #receiptNo#
+      and d.IS_DELETED = '0'
+    </select>
+    <!-- analysis 3 end -->
+	<!-- 
+	<select id="SELECT.R_BAC.SQL003" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(C.BILL_AMOUNT),0)
+		FROM T_BIL_H C
+		WHERE 
+			C.BILL_ACC=#id_bill_account#
+			AND C.BILL_TYPE IN ('IN','DN')
+			AND C.IS_DELETED='0'
+	</select>
+	<select id="SELECT.R_BAC.SQL004" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(C.BILL_AMOUNT),0)
+		FROM T_BIL_H C
+		WHERE 
+			C.BILL_ACC=#id_bill_account#
+			AND C.BILL_TYPE = 'CN'
+			AND C.IS_DELETED='0'
+	</select>
+	<select id="SELECT.R_BAC.SQL005" resultClass="java.math.BigDecimal" parameterClass="java.lang.String">
+		SELECT NVL(SUM(G.AMT_RECEIVED),0)
+		FROM T_CSB_H G
+		WHERE
+			G.ID_BILL_ACCOUNT = #id_bill_account#
+			AND G.IS_DELETED = '0'
+	</select>
+	-->
+</sqlMap>

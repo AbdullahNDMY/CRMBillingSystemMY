@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <!-- SP1 action -->
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_SP1BLogic"
+        id="RP_E_MEX_SP1BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_SP1BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_SP1BLogic"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/SC_E_MEX_SP1SCR" scope="singleton">
+        <property name="businessLogic" ref="SC_E_MEX_SP1SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.SC_E_MEX_SP1SCRBLogic"
+        id="SC_E_MEX_SP1SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- /S01 action -->
+    <!-- GR1 action -->
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_GR1BLogic"
+        id="RP_E_MEX_GR1BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_GR1BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_GR1BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/SC_E_MEX_GR1SCR" scope="singleton">
+        <property name="businessLogic" ref="SC_E_MEX_GR1SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.SC_E_MEX_GR1SCRBLogic"
+        id="SC_E_MEX_GR1SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- /GR1 action -->
+    <!-- CT1 action -->
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_CT1BLogic"
+        id="RP_E_MEX_CT1BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_CT1BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_CT1BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/SC_E_MEX_CT1SCR" scope="singleton">
+        <property name="businessLogic" ref="SC_E_MEX_CT1SCRBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.SC_E_MEX_CT1SCRBLogic"
+        id="SC_E_MEX_CT1SCRBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <!-- /CT1 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_SP1_2BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_SP1_2BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_MEX/SC_E_MEX_SP1_2SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_SP1_2BLogic"
+        id="RP_E_MEX_SP1_2BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_CT1_2BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_CT1_2BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_GR1_2BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_GR1_2BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_GR1_3BL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_GR1_3BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_MEX/SC_E_MEX_CT1_2SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_MEX/SC_E_MEX_GR1_2SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/E_MEX/SC_E_MEX_GR1_3SCR" scope="singleton"/>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_CT1_2BLogic"
+        id="RP_E_MEX_CT1_2BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_GR1_2BLogic"
+        id="RP_E_MEX_GR1_2BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_GR1_3BLogic"
+        id="RP_E_MEX_GR1_3BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_SP1SubmitBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_SP1SubmitBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_CT1SubmitBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_CT1SubmitBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_MEX/RP_E_MEX_GR1SubmitBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_GR1SubmitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_SP1SubmitBLogic"
+        id="RP_E_MEX_SP1SubmitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_CT1SubmitBLogic"
+        id="RP_E_MEX_CT1SubmitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_GR1SubmitBLogic"
+        id="RP_E_MEX_GR1SubmitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_MEX/RP_E_MEX_SP1DownloadBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_SP1DownloadBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_SP1DownloadBLogic"
+        id="RP_E_MEX_SP1DownloadBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_MEX/RP_E_MEX_CT1DownloadBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_CT1DownloadBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_CT1DownloadBLogic"
+        id="RP_E_MEX_CT1DownloadBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/E_MEX/RP_E_MEX_GR1DownloadBL" scope="singleton">
+        <property name="businessLogic" ref="RP_E_MEX_GR1DownloadBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_mex.blogic.RP_E_MEX_GR1DownloadBLogic"
+        id="RP_E_MEX_GR1DownloadBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

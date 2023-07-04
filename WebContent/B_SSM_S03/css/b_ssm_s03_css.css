@@ -1,0 +1,116 @@
+body {
+	overflow: hidden;
+	width: 580px;
+}
+
+.LoadingWindow {
+	position:absolute;	
+	left:0px;
+	top:0px;				
+	text-align: center; 
+	vertical-align: middle; 
+	opacity:0.6;
+	filter:alpha(opacity=30);
+	background: white;
+}
+
+#B_SSM_S03_Page_Content {
+	background-color: white;	
+	-moz-border-radius: 11px;
+	-webkit-border-radius: 11px;
+	border-radius: 11px;
+	behavior: url(./border-radius.htc);
+	overflow: hidden;	
+	width: 100%;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Header {
+	background-color: #f0f0f0;
+	border-top: 2px solid #cacaca;
+	border-bottom: 2px solid #cacaca;
+	font-size: 16px;
+	font-weight: bold;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	color:#090f90; 
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_HeaderSubInfo_Table {
+	width: 100%;
+	font-size: 15px;
+	border-collapse: collapse;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_HeaderSubInfo {
+
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Errors {
+	padding-top: 5px;
+	color:red;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Buttons {
+	margin-top: 5px;
+	margin-bottom: 3px;
+	padding-left: 15px;
+	font-size: 15px;	
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Buttons_Text {
+	font-size: 15px;	
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_FieldSet {
+	height: 150px;
+	width: 570px;
+	overflow: hidden;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_FieldSet_Legend {
+	font-weight: bold;		
+	font-size: 15px;
+	color: #4876ff;	
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Table {
+	padding-top: 5px;
+	height: 20px;
+	width: 445px;
+	font-size: 15px;
+	border-collapse: collapse;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Table .B_SSM_S03_Page_Form_Table_Row_Header {
+	background: #A9E2F3;	
+	border-width: 0px;
+	height: 20px;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Table .B_SSM_S03_Page_Form_Table_Col_Header {
+	background: #A9E2F3;
+	border-width: 0px;	
+	height: 20px;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Table .B_SSM_S03_Page_Form_Table_Col_Header_CheckBox {
+	background: #A9E2F3;
+	border-width: 0px;	
+	width: 15px;
+	height: 20px;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_Table .B_SSM_S03_Page_Form_Table_Col_CheckBox {
+	border-width: 0px;	
+	width: 15px;
+	height: 20px;
+}
+
+#B_SSM_S03_Page_Content .B_SSM_S03_Page_Form_FieldSet_Content {
+	width: 100%;
+	height: 125px;
+	overflow: scroll;
+}
+.textAlignTop tr td {
+	vertical-align: top;
+}

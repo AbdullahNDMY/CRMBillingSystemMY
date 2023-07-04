@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<!-- G_BIL_P01 START -->
+	<update id="TEST.G_BIL_P01.UPDATE.SQL001">
+		UPDATE M_CUST SET IS_DELETED = '1'
+    </update>
+    
+    <update id="TEST.G_BIL_P01.UPDATE.SQL002">
+        UPDATE M_GSET_D SET SET_VALUE = #SET_VALUE#
+        WHERE ID_SET = #ID_SET# AND SET_SEQ = #SET_SEQ#
+    </update>
+
+    <update id="TEST.G_BIL_P01.UPDATE.SQL003">
+        UPDATE M_CUST SET CUSTOMER_TYPE = #CUSTOMER_TYPE#
+        WHERE ID_CUST = #ID_CUST#
+    </update>
+    
+	<update id="TEST.G_BIL_P01.UPDATE.SQL006" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_H 
+		SET BILL_INSTRUCT = 'A'
+		WHERE ID_CUST_PLAN = #ID_CUST_PLAN#
+    </update>
+
+	<update id="TEST.G_BIL_P01.UPDATE.SQL007" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_D 
+		SET BILL_DESC = to_clob(#BILL_DESC#)
+		WHERE ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP#
+    </update>
+
+	<update id="TEST.G_BIL_P01.UPDATE.SQL008" parameterClass="java.util.HashMap">
+		UPDATE T_CUST_PLAN_LINK 
+		SET ITEM_DESC = to_clob(#ITEM_DESC#)
+		WHERE ID_CUST_PLAN_LINK = #ID_CUST_PLAN_LINK#
+	</update>
+
+	<update id="TEST.G_BIL_P01.UPDATE.SQL009" parameterClass="java.util.HashMap">
+		UPDATE
+		T_CUST_PLAN_D SET BILL_DESC = null
+		WHERE ID_CUST_PLAN = #ID_CUST_PLAN#
+	</update>
+
+	<insert id="TEST.G_BIL_P01.INSERT.SQL001" parameterClass="java.util.HashMap">
+		INSERT
+		INTO T_SET_BATCH (id_batch, batch_type,
+		status, filename, date_created, date_updated, id_login)
+		VALUES
+		(T_SET_BATCH_SEQ.nextval,'GB','1','',
+		<isEmpty property="date_created">
+			sysdate,
+        </isEmpty>
+		<isNotEmpty property="date_created">
+			TO_DATE(#date_created#,'yyyy-MM-dd
+			HH24:MI:SS'),
+        </isNotEmpty>
+		sysdate,
+		'sysadmin')
+	</insert>
+
+	<select id="TEST.G_BIL_P01.SELECT.SQL001" resultClass="nttdm.bsys.m_alt.bean.Notice">
+		SELECT
+		id_msg
+		,msg_type
+		,priority
+		,TO_CHAR(start_date,'dd/MM/yyyy') start_date
+		,TO_CHAR(end_date,'dd/MM/yyyy') end_date
+		,TO_CHAR(reminder_date,'dd/MM/yyyy') reminder_date
+		,to_msg
+		,cc_msg
+		,subject
+		,msg
+		,id_creator
+		FROM m_alt_h
+    </select>
+
+	<select id="TEST.G_BIL_P01.SELECT.SQL002" resultClass="java.lang.String">
+		SELECT
+		MESSAGE
+		FROM T_SET_BATCH_LOG
+    </select>
+    
+    <select id="TEST.G_ADT_P01.SELECT.SQL001" resultClass="java.util.HashMap">
+		SELECT ID_AUDIT, ID_USER, ID_MODULE, ID_SUB_MODULE, REFERENCE, STATUS,ACTION from M_AUDIT_TRAIL_H
+		where rownum &lt; 2
+		order by DATE_CREATED desc
+    </select>
+    <select id="TEST.G_ADT_P01.SELECT.SQL002" resultClass="java.util.HashMap" parameterClass="java.lang.Integer">
+		SELECT ID_AUDIT, ID_USER, ID_MODULE, ID_SUB_MODULE, REFERENCE, STATUS,ACTION from M_AUDIT_TRAIL_H
+		where ID_AUDIT = #id#
+    </select>
+	<insert id="TEST.G_ADT_P01.INSERT.SQL001" parameterClass="java.lang.Integer">
+		insert into M_AUDIT_TRAIL_D (ID_AUDIT, AUDIT_SEQ)
+		values(#id#,#id#)
+	</insert>	
+
+    <select id="TEST.G_ALT_P06.SELECT.SQL001" resultClass="java.util.HashMap" >
+		SELECT t.*,to_char(t.MSG) as MSG_SRING
+		from M_ALT_H t
+		where rownum &lt; 2
+		order by t.DATE_CREATED desc
+    </select>
+    <select id="TEST.G_ALT_P06.SELECT.SQL002" resultClass="java.util.HashMap" >
+		SELECT t.*
+		from M_ALT_D t
+		where rownum &lt; 2
+		order by t.DATE_CREATED desc
+    </select>
+    
+	<select id="TEST.G_BIL_P01.SELECT.SQL005" resultClass="java.lang.String">
+		SELECT
+		SEQ_M_CUST.NEXTVAL AS "idCust"
+		FROM dual
+    </select>
+
+	<select id="TEST.G_BIL_P01.SELECT.SQL006" resultClass="java.util.HashMap">
+		SELECT TO_CHAR(ITEM_DESC) as ITEM_DESC FROM T_BIL_D ORDER BY ITEM_ID ASC
+    </select>
+
+	<select id="TEST.G_BIL_P01.SELECT.SQL007" resultClass="java.util.HashMap">
+		SELECT
+		TO_CHAR(ID_BIF) as ID_BIF,
+		TO_CHAR(ID_QCS) as ID_QCS,
+		TO_CHAR(QUO_REF)
+		as QUO_REF,
+		TO_CHAR(CUST_PO) as CUST_PO,
+		TO_CHAR(ID_CONSULT) as
+		ID_CONSULT,
+		TO_CHAR(TERM) as TERM
+		FROM T_BIL_H ORDER BY ID_REF ASC
+	</select>
+    
+	<!-- G_BIL_P01 END -->
+
+	<!-- G_PAG_P01 START -->
+	<update id="TEST.G_PAG_P01.UPDATE.SQL001">
+		UPDATE M_USER_ACCESS
+		SET ACCESS_TYPE = #accessType#
+		WHERE ID_USER='sysadmin'
+		AND ID_SUB_MODULE='B-BIF' 
+    </update>
+	<!-- G_PAG_P01 END -->
+
+	<!-- G_SET_P01 START -->
+	<insert id="TEST.G_SET_P01.INSERT.SQL001" parameterClass="nttdm.bsys.common.bean.T_SET_BATCH">
+		insert into t_set_batch_log (id_batch_log, id_batch, message, is_deleted,
+		date_created, date_updated, id_login)
+		values(t_set_batch_log_seq.nextval,'$ID_BATCH$',to_clob('$message$'),'0',sysdate,sysdate,'$ID_LOGIN$')
+	</insert>	
+	
+	<insert id="TEST.G_SET_P01.INSERT.SQL002"  parameterClass="nttdm.bsys.common.bean.T_SET_BATCH"> 
+	   insert into t_set_batch (id_batch, batch_type, status, filename, is_deleted ,date_created, date_updated, id_login)
+		values(T_SET_BATCH_SEQ.nextval,'$BATCH_TYPE$','$STATUS$','$FILENAME$','0',sysdate-1,sysdate,'$ID_LOGIN$')
+   </insert>
+   
+	<update id="TEST.G_SET_P01.UPDATE.SQL001">
+	UPDATE m_gset_d  SET set_value='100' where id_set='BATCH_TIME_INTERVAL'
+    </update>
+    
+	<select id="TEST.G_SET_P01.SELECT.SQL001" resultClass="nttdm.bsys.common.bean.T_SET_BATCH">
+		SELECT
+		ID_BATCH,MESSAGE
+		FROM T_SET_BATCH_LOG
+    </select>
+	<!-- G_SET_P01 END -->
+	
+	
+	<!-- G_SET_P02 START -->
+	<update id="TEST.G_SET_P02.UPDATE.SQL001">
+	UPDATE m_gset_d  SET set_value= #dailyTime# where id_set='BATCH_RUNTIME'
+    </update>
+	<!-- G_SET_P02 END -->
+	
+	<!-- B_BAC_S01 START -->
+	<update id="TEST.B_BAC_S01.UPDATE.SQL001" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_D  SET BILL_DESC = to_clob(#BILL_DESC#) where ID_CUST_PLAN_GRP=#ID_CUST_PLAN_GRP#
+    </update>
+	<!-- B_BAC_S01 END -->	
+	<!-- G_CPM_P03 START -->
+	<select id="TEST.G_CPM_P03.SELECT.SQL001" resultClass="java.lang.String">
+		SELECT SEQ_T_CUST_PLAN_H.CURRVAL FROM DUAL  
+    </select>
+    <select id="TEST.G_CPM_P03.SELECT.SQL002" resultClass="java.lang.String">
+		SELECT SEQ_T_CUST_PLAN_D.CURRVAL FROM DUAL  
+    </select>
+    <select id="TEST.G_CPM_P03.SELECT.SQL003" resultClass="java.lang.String">
+		SELECT SEQ_T_CUST_PLAN_LINK.CURRVAL FROM DUAL  
+    </select>
+    <select id="TEST.G_CPM_P03.SELECT.SQL004" resultClass="java.lang.String">
+		SELECT SEQ_T_CUST_PLAN_SVC.CURRVAL FROM DUAL  
+    </select>
+	<!-- G_CPM_P03 END -->
+	
+	<!-- G_CSB_P02 START -->
+	<select id="SELECT.BSYS.G_CSB_P02.SQL009" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT * FROM T_CSB_H A WHERE TRIM(A.RECEIPT_NO) = #receiptNo#
+	</select>
+	
+	<select id="SELECT.BSYS.G_CSB_P02.SQL010" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT * FROM T_BIL_H B WHERE TRIM(B.ID_REF) = #idRef#
+	</select>
+	
+	<select id="SELECT.BSYS.G_CSB_P02.SQL011" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM T_CSB_D C WHERE 
+		TRIM(C.RECEIPT_NO) = #receiptNo#
+		AND TRIM(C.ID_REF) = #idRef#
+	</select>
+	<!-- G_CSB_P02 END -->
+	
+	<!-- E_EXP_F02 START -->
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.HEADER.SQL003" resultClass="java.util.HashMap">
+		select SET_VALUE
+		from M_GSET_D
+		where ID_SET='CB_AUTO_OFFSET'
+	
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.BATCHLOG.SQL004" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select *
+ 		from t_set_batch_log
+		where id_batch= #id_batch#
+	
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F02.SUBCB.BATCH.SQL005" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select *
+ 		from t_set_batch
+		where id_batch= #id_batch#
+	
+	</select>
+	<select id="SELECT.BSYS.E_EXP_F02_Sub.SQL004" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select *
+ 		from t_ar_stmt_h
+		where id_cust='$id_cust$' and stmt_date=to_date('$stmt_date$','DDMMYYYY') and stmt_currency='$stmt_currency$'
+	
+	</select>
+	<!-- E_EXP_F02 END -->
+	
+	<!-- B_BAC_S02 START -->
+	<update id="TEST.B_BAC_S02_221.UPDATE.SQL001" parameterClass="java.util.HashMap">
+	UPDATE T_BAC_H  SET IS_SINGPOST = #IS_SINGPOST# where ID_BILL_ACCOUNT=#ID_BILL_ACCOUNT#
+    </update>
+	<update id="TEST.B_BAC_S02_221.UPDATE.SQL002" parameterClass="java.util.HashMap">
+	UPDATE T_CUST_PLAN_D  SET BILL_DESC = to_clob(#BILL_DESC#) where ID_CUST_PLAN_GRP=#ID_CUST_PLAN_GRP#
+    </update>
+    <insert id="TEST.BSYS.B_BAC_SO2_211.INSERT.SQL001" parameterClass="java.util.HashMap">
+	insert into T_CUST_PLAN_D (ID_CUST_PLAN_GRP, ID_CUST_PLAN, SERVICES_STATUS, SVC_START, SVC_END, AUTO_RENEW,
+                              MIN_SVC_PERIOD, MIN_SVC_START, MIN_SVC_END, CONTRACT_TERM, CONTRACT_TERM_NO,
+                              PRO_RATE_BASE, PRO_RATE_BASE_NO, IS_LUMP_SUM, BILL_DESC, IS_DELETED, DATE_CREATED,
+                              DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+	values(#ID_CUST_PLAN_GRP#, #ID_CUST_PLAN#, #SERVICES_STATUS#, sysdate, sysdate, #AUTO_RENEW#,
+                              #MIN_SVC_PERIOD#, sysdate, sysdate, #CONTRACT_TERM#,
+                              #CONTRACT_TERM_NO#, #PRO_RATE_BASE#, #PRO_RATE_BASE_NO#, #IS_LUMP_SUM#,
+                              empty_clob(), #IS_DELETED#, sysdate, sysdate, #ID_LOGIN#, #ID_AUDIT#)
+	</insert>
+	<select id="TEST.BSYS.B_BAC_SO2_212.SELECT.SQL001" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM T_BAC_H
+		ORDER BY DATE_CREATED DESC
+	</select>
+	<select id="TEST.BSYS.B_BAC_SO2_231.SELECT.SQL001" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM T_BAC_H
+		WHERE ID_BILL_ACCOUNT = #idBillAccount#
+	</select>
+	<select id="TEST.BSYS.B_BAC_SO2_231.SELECT.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM T_CUST_PLAN_H
+		WHERE ID_BILL_ACCOUNT = #idBillAccount#
+	</select>
+	<select id="TEST.BSYS.B_BAC_SO2_242.SELECT.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM T_BAC_D
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="idCustPlans">
+			    ID_CUST_PLAN IN
+			    <iterate property="idCustPlans" open="(" close=")" conjunction=",">
+			     	 #idCustPlans[]# 
+			    </iterate>
+		    </isNotEmpty>
+		</dynamic>
+	</select>
+	<update id="TEST.E_EXP_F02.UPDATE.SQL100" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H  SET CUST_PO= 'aaaaa' where ID_REF='1'
+    </update>
+	<!-- B_BAC_S02 END -->
+	
+	<!-- B_CSB_S02 START-->
+	<select id="TEST.BSYS.CSB_S02.SQL001" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT * FROM T_CSB_H WHERE RECEIPT_NO = #receiptNo#
+	</select>
+	<select id="TEST.BSYS.CSB_S02.SQL002" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT * FROM T_BIL_H WHERE ID_REF = #idRef#
+	</select>
+	<select id="TEST.BSYS.CSB_S02.SQL003" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT * FROM T_BAC_H WHERE TRIM(ID_BILL_ACCOUNT) = #idBillAccount#
+	</select>
+	<select id="TEST.BSYS.CSB_S02.SQL004" resultClass="java.util.HashMap">
+		SELECT * FROM T_CSB_H
+	</select>
+	<select id="TEST.BSYS.CSB_S02.SQL005" resultClass="java.util.HashMap">
+		SELECT * FROM T_CSB_D
+	</select>
+	<!-- B_CSB_S02 END -->
+	
+	<update id="TEST.G_SGP_P02.UPDATE.T_SGP_IMP_HD" parameterClass="java.util.HashMap">
+	UPDATE T_SGP_IMP_HD  SET DATE_UPDATED = SYSDATE where ID_SGP_IMP_BATCH=#ID_SGP_IMP_BATCH#
+    </update>
+    <select id="TEST.G_SGP_P02.SELECT.T_SGP_IMP_HD" resultClass="java.util.HashMap">
+         SELECT *
+         FROM T_SGP_IMP_HD
+         order by ID_SGP_IMP_BATCH
+    </select>
+    <select id="TEST.G_SGP_P02.SELECT.T_SGP_IMP_DT" resultClass="java.util.HashMap">
+         SELECT *
+         FROM T_SGP_IMP_DT
+         order by ID_SGP_IMP_BATCH,BUSINESS_DATE
+    </select>
+    <select id="TEST.G_SGP_P02.SELECT.T_CSB_H" resultClass="java.util.HashMap">
+         SELECT *
+         FROM T_CSB_H
+         order by RECEIPT_NO
+    </select>
+    <select id="TEST.G_SGP_P02.SELECT.T_BAC_H" resultClass="java.util.HashMap">
+         SELECT *
+         FROM T_BAC_H
+         order by ID_BILL_ACCOUNT
+    </select>
+	<update id="TEST.G_SGP_P01.UPDATE.T_BIL_D" parameterClass="java.util.HashMap">
+	UPDATE T_BIL_D SET ITEM_DESC = TO_CLOB(#ITEM_DESC#) where TRIM(ID_REF)=TRIM(#ID_REF#) AND TRIM(ITEM_ID) = TRIM(#ITEM_ID#)
+    </update>
+	<update id="TEST.G_SGP_P01.UPDATE.T_SGP_EXP_HD" parameterClass="java.util.HashMap">
+	UPDATE T_SGP_EXP_HD  SET DATE_UPDATED = SYSDATE where ID_SGP_EXP_BATCH=#ID_SGP_EXP_BATCH#
+    </update>
+	<update id="TEST.G_SGP_P01.UPDATE.t_bil_h" parameterClass="java.util.HashMap">
+		UPDATE t_bil_h
+		   SET is_export = 0
+		 WHERE TRIM(id_ref) = TRIM(#idRef#)
+	</update>
+	<!-- R_AGR_R02 -->
+    <update id="TEST.R_AGR_R02.UPDATE.SQL001" parameterClass="java.util.HashMap">
+		UPDATE
+		T_BIL_H SET DATE_REQ = TO_DATE(#dateReq#, 'yyyy-mm-dd')
+		WHERE ID_REF = '2'
+	</update>
+	 <select id="TEST.SELECT.G_SET_P01.SQL1" resultClass="java.lang.Integer">
+         select T_SET_BATCH_SEQ.CURRVAL  from dual
+    </select>
+    <select id="TEST.SELECT.G_DOC_P02.SQL1" resultClass="java.lang.Integer">
+         select SEQ_T_DOC.nextval  from dual
+    </select>
+    <select id="TEST.SELECT.G_CMN_P02.SQL1" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from m_alt_d t where t.ID_MSG=#id_msg#
+    </select>
+    <select id="TEST.SELECT.G_CMN_P02.SQL2" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from m_alt_h t where t.ID_MSG=#id_msg#
+    </select>
+    <select id="TEST.SELECT.G_CLC_P01.SQL1" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_CLC_IMP_HD t where t.ID_CLC_IMP_BATCH=#ID_CLC_IMP_BATCH#
+    </select>
+    <select id="selectB_BIL_S02_02_02BLogic_001" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_BIL_H t where t.ID_REF=#ID_REF#
+    </select>
+    <!-- E_EXP_F02 add-->
+    <select id="select.e_exp_f02.getbatch" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from (select * from t_set_Batch order by Date_Updated desc ) where rownum &lt; 2
+    </select>
+    <select id="select.e_exp_f02.getT_ARM_STMT_H" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_AR_STMT_H where ID_STMT = #id_stmt#
+    </select>
+    <select id="select.e_exp_f02.getT_ARM_STMT_D" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select to_char(CUST_PO) as CUST_PO ,T_AR_STMT_D.* from T_AR_STMT_D where ID_STMT = #id_stmt#
+    </select>
+    <select id="select.e_exp_f02.insert.getT_ARM_STMT_H" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_AR_STMT_H where rownum &lt; 2
+    </select>
+    <select id="select.e_exp_f02..insert.getT_ARM_STMT_D" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select to_char(CUST_PO) as CUST_PO ,T_AR_STMT_D.* from T_AR_STMT_D where rownum &lt; 2
+    </select>
+    <!-- E_EXP_F02 -->
+    
+    <!-- G_GIR_P01 Start -->
+    <select id="select.e_exp_f02.t_gir_exp_hd.001" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_GIR_EXP_HD where rownum &lt; 2
+    </select>
+    <select id="select.e_exp_f02.t_gir_exp_hd.002" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_GIR_EXP_HD where ID_GIR_EXP_BATCH &lt;&gt;'223'
+    </select>
+    <select id="select.e_exp_f02.t_batch_log.001" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_BATCH_LOG where rownum &lt; 2
+    </select>
+    <select id="select.e_exp_f02.t_batch_log.002" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_BATCH_LOG where ID_BATCH_REF_NO = #idbatch#
+    </select>
+    <select id="select.e_exp_f02.t_gir_exp_hd.003" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+         select * from T_GIR_EXP_HD where ID_GIR_EXP_BATCH = #idbatch#
+    </select>
+    <!-- G_GIR_P01 End -->
+</sqlMap>

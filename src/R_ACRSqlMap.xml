@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_ACR">
+    <select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT ACCESS_TYPE        
+        FROM M_USER_ACCESS
+        WHERE ID_USER = #idUser# 
+        AND ID_SUB_MODULE = 'R-ACR'
+    </select>
+    <select id="countAccrualReport" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+        SELECT COUNT(*) FROM(
+          SELECT DISTINCT
+            #UsageMonthYear# AS DATE_REQ,
+            TRIM(A.CUST_NAME) AS CUST_NAME,
+            A.BILL_INSTRUCT,
+            A.ID_SUB_INFO,
+            A.SVC_DESC,
+            NVL(
+             CASE 
+                 WHEN A.SERVICES_STATUS='PS1' THEN 'Draft'
+                 WHEN A.SERVICES_STATUS='PS3' THEN 'Active'
+                 WHEN A.SERVICES_STATUS='PS6' THEN 'Suspended'
+                 WHEN A.SERVICES_STATUS='PS7' THEN 'Terminated'
+             END, '') AS SERVICES_STATUS,
+            TO_CHAR(A.SVC_START, 'DD/MM/YYYY') AS SVC_START,
+            A.BILL_CURRENCY,
+            A.TOTAL_AMOUNT,
+            A.ID_PLAN, 
+            A.ID_PLAN_GRP, 
+            A.ID_CUST_PLAN_LINK,
+            D.MONTH_YEAR,
+            D.INVOICE_TOTAL
+        FROM V_T_CUST_SSM A
+        LEFT JOIN T_CLC_IMP_MONTHLY_SUM D ON A.ID_SUB_INFO = D.ID_CLC_CUST AND D.MONTH_YEAR = #UsageMonthYear#
+        WHERE A.RATE_TYPE &lt;&gt; 'EX' 
+        AND (A.BILL_INSTRUCT &lt;&gt; '6' OR (A.BILL_INSTRUCT='6' AND (TO_CHAR(A.SVC_START,'MM/YYYY') = #UsageMonthYear#)))
+        AND (A.RATE_MODE &lt;&gt; '6' OR (A.RATE_MODE='6' AND (TO_CHAR(A.SVC_START,'MM/YYYY') = #UsageMonthYear#)))
+        AND NOT EXISTS (
+            SELECT '1' FROM T_BIL_D B 
+            WHERE A.SVC_LEVEL2 = B.SVC_LEVEL2 
+            AND A.ID_CUST_PLAN = B.ID_CUST_PLAN 
+            AND A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP 
+            AND A.ID_CUST_PLAN_LINK = B.ID_CUST_PLAN_LINK 
+            AND B.IS_DELETED = 0
+            AND TO_CHAR(B.BILL_FROM,'YYYY/MM') &lt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM')
+            AND TO_CHAR(B.BILL_TO,'YYYY/MM') &gt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM')
+         )
+         <dynamic prepend="AND">
+             <isNotEmpty prepend="AND" property="UsageMonthYear">
+                 (TO_CHAR(A.SVC_START,'YYYY/MM') &lt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM'))
+                    AND
+                 (A.SVC_END IS NULL OR TO_CHAR(A.SVC_END,'YYYY/MM') &gt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM'))
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxCustomerName">
+                 UPPER(A.CUST_NAME) LIKE UPPER('%$tbxCustomerName$%')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxServiceName">
+                 UPPER(A.SVC_DESC) LIKE UPPER('%$tbxServiceName$%')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxSubID">
+                 UPPER(A.ID_SUB_INFO) LIKE UPPER('%$tbxSubID$%')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxServiceStartFrom">
+                 A.SVC_START &gt;= TO_DATE(#tbxServiceStartFrom#, 'DD/MM/YYYY')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxServiceStartTo">
+                 A.SVC_START &lt;= TO_DATE(#tbxServiceStartTo#, 'DD/MM/YYYY')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxServiceStatus">
+                 A.SERVICES_STATUS IN 
+                 <iterate property="tbxServiceStatus"
+                      open="(" close=")"
+                      conjunction=",">
+                   #tbxServiceStatus[]# 
+                 </iterate>
+             </isNotEmpty>
+             <isEmpty prepend="AND" property="tbxServiceStatus">
+                 A.SERVICES_STATUS IN ('PS1','PS3','PS6','PS7') 
+             </isEmpty>
+             <isNotEmpty prepend="AND" property="cboCurrency">
+                 A.BILL_CURRENCY = #cboCurrency#
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxImportedAmount">
+                 D.INVOICE_TOTAL &gt; 0
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxCustomerId">
+                 UPPER(A.ID_CUST) LIKE UPPER('%$tbxCustomerId$%')
+             </isNotEmpty>
+             <isNotEmpty prepend="AND" property="tbxUnbillAmount">
+                 A.TOTAL_AMOUNT &gt; 0
+             </isNotEmpty>
+         </dynamic>
+          ) DATA
+    </select>
+    <select id="getListAccrualReport" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT DISTINCT
+            #UsageMonthYear# AS DATE_REQ,
+            TRIM(A.CUST_NAME) AS CUST_NAME,
+            A.BILL_INSTRUCT,
+            A.ID_SUB_INFO,
+            A.SVC_DESC,
+            NVL(
+            CASE 
+                WHEN A.SERVICES_STATUS='PS1' THEN 'Draft'
+                WHEN A.SERVICES_STATUS='PS3' THEN 'Active'
+                WHEN A.SERVICES_STATUS='PS6' THEN 'Suspended'
+                WHEN A.SERVICES_STATUS='PS7' THEN 'Terminated'
+            END, '') AS SERVICES_STATUS,
+            TO_CHAR(A.SVC_START, 'DD/MM/YYYY') AS SVC_START,
+            A.BILL_CURRENCY,
+            A.TOTAL_AMOUNT,
+            A.ID_PLAN, 
+            A.ID_PLAN_GRP, 
+            A.ID_CUST_PLAN_LINK,
+            D.MONTH_YEAR,
+            D.INVOICE_TOTAL,
+            A.ID_CUST,
+            A.PRO_RATE_BASE,
+            TO_CHAR(A.ITEM_DESC) ITEM_DESC,
+            A.PRO_RATE_BASE_NO,
+            A.RATE_MODE,
+            NVL(TO_CHAR(A.SVC_END,'DD/MM/YYYY'),'') SVC_END
+        FROM V_T_CUST_SSM A
+        LEFT JOIN T_CLC_IMP_MONTHLY_SUM D ON A.ID_SUB_INFO = D.ID_CLC_CUST AND D.MONTH_YEAR = #UsageMonthYear#
+        WHERE A.RATE_TYPE &lt;&gt; 'EX' 
+        AND (A.BILL_INSTRUCT &lt;&gt; '6' OR (A.BILL_INSTRUCT='6' AND (TO_CHAR(A.SVC_START,'MM/YYYY') = #UsageMonthYear#)))
+        AND (A.RATE_MODE &lt;&gt; '6' OR (A.RATE_MODE='6' AND (TO_CHAR(A.SVC_START,'MM/YYYY') = #UsageMonthYear#)))
+        AND NOT EXISTS (
+            SELECT '1' FROM T_BIL_D B 
+            WHERE A.SVC_LEVEL2 = B.SVC_LEVEL2 
+            AND A.ID_CUST_PLAN = B.ID_CUST_PLAN 
+            AND A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP 
+            AND A.ID_CUST_PLAN_LINK = B.ID_CUST_PLAN_LINK 
+            AND B.IS_DELETED = 0
+            AND TO_CHAR(B.BILL_FROM,'YYYY/MM') &lt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM')
+            AND TO_CHAR(B.BILL_TO,'YYYY/MM') &gt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM')
+        )
+            <dynamic prepend="AND">
+                <isNotEmpty prepend="AND" property="UsageMonthYear">
+                    (TO_CHAR(A.SVC_START,'YYYY/MM') &lt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM'))
+                    AND
+                    (A.SVC_END IS NULL OR TO_CHAR(A.SVC_END,'YYYY/MM') &gt;= TO_CHAR(TO_DATE('01/' || #UsageMonthYear#, 'DD/MM/YYYY'), 'YYYY/MM'))
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxCustomerName">
+                    UPPER(A.CUST_NAME) LIKE UPPER('%$tbxCustomerName$%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxServiceName">
+                    UPPER(A.SVC_DESC) LIKE UPPER('%$tbxServiceName$%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxSubID">
+                    UPPER(A.ID_SUB_INFO) LIKE UPPER('%$tbxSubID$%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxServiceStartFrom">
+                    A.SVC_START &gt;= TO_DATE(#tbxServiceStartFrom#, 'DD/MM/YYYY')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxServiceStartTo">
+                    A.SVC_START &lt;= TO_DATE(#tbxServiceStartTo#, 'DD/MM/YYYY')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxServiceStatus">
+                    A.SERVICES_STATUS IN 
+                    <iterate property="tbxServiceStatus"
+                         open="(" close=")"
+                         conjunction=",">
+                      #tbxServiceStatus[]# 
+                    </iterate>
+                </isNotEmpty>
+                <isEmpty prepend="AND" property="tbxServiceStatus">
+                    A.SERVICES_STATUS IN ('PS1','PS3','PS6','PS7') 
+                </isEmpty>
+                <isNotEmpty prepend="AND" property="cboCurrency">
+                    A.BILL_CURRENCY = #cboCurrency#
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxImportedAmount">
+                    D.INVOICE_TOTAL &gt; 0
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxCustomerId">
+                    UPPER(A.ID_CUST) LIKE UPPER('%$tbxCustomerId$%')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxUnbillAmount">
+                    A.TOTAL_AMOUNT &gt; 0
+                </isNotEmpty>
+            </dynamic>
+            ORDER BY A.ID_CUST ASC, ID_SUB_INFO ASC, SVC_START ASC
+    </select>
+    <select id="SELECT.R_RAC.GETMAPPING" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+        SELECT COUNT(*)
+        FROM 
+        M_PLAN_BATCH_MAPPING T
+        WHERE 
+        T.ID_PLAN_GRP = #ID_PLAN_GRP#
+        AND T.BATCH_ID = 'CC'
+    </select>
+</sqlMap>

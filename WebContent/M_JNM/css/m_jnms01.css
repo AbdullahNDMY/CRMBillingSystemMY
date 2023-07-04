@@ -1,0 +1,30 @@
+body{
+
+}
+.generalInfo{
+	margin-top:0.05in;
+	background-color:#c0c0c0;
+	border-collapse: collapse;
+	width:100%;	
+	font-weight: bold;
+}
+
+.jobTitle{
+	background-color:#F8F8F8;
+	height: 0.35in;	
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	width: 100%;
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+.jobTable{
+	background-color:#F8F8F8;
+	height: 0.26in;	
+	border-collapse: collapse;
+	border:solid 2px #CFCFCF;
+	margin:solid 2px #CFCFCF;
+	width: 100%;
+	vertical-align: middle;
+}

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_MEX">
+	
+	<select id="SP1_countHistory" resultClass="java.lang.Integer">
+	  SELECT COUNT(id_sgp_exp_batch)
+	    FROM T_SGP_EXP_HD
+	</select>
+	
+	<select id="SP1_getHistory" resultClass="java.util.HashMap">
+	  SELECT ID_SGP_EXP_BATCH,
+           FILENAME,
+           CLOSE_MONTHYEAR,
+           DATE_UPLOADED,
+           STATUS,
+           DATE_CREATED,
+           DATE_UPDATED,
+           ID_LOGIN,
+           TO_CHAR(DATE_UPLOADED, 'dd/mm/yyyy HH24:mi:ss') AS DATE_UPDATED_FMT
+	    FROM T_SGP_EXP_HD
+	   ORDER BY DATE_UPLOADED DESC
+	</select>
+	
+	<select id="GR1_countHistory" resultClass="java.lang.Integer">
+	  SELECT COUNT(id_gir_exp_batch)
+	    FROM T_GIR_EXP_HD
+	</select>
+	
+	<select id="GR1_getHistory" resultClass="java.util.HashMap">
+	  SELECT ID_GIR_EXP_BATCH,
+           FILENAME,
+           CLOSE_MONTHYEAR,
+           DATE_UPLOADED,
+           STATUS,
+           DATE_CREATED,
+           DATE_UPDATED,
+           ID_LOGIN,
+           TO_CHAR(DATE_UPLOADED, 'dd/mm/yyyy HH24:mi:ss') AS DATE_UPDATED_FMT
+	    FROM T_GIR_EXP_HD
+	   ORDER BY DATE_UPLOADED DESC
+	</select>
+	
+	<select id="CT1_countHistory" resultClass="java.lang.Integer">
+	  SELECT COUNT(id_cit_exp_batch)
+	    FROM T_CIT_EXP_HD
+	</select>
+	
+	<select id="CT1_getHistory" resultClass="java.util.HashMap">
+	  SELECT ID_CIT_EXP_BATCH,
+           FILENAME,
+           CLOSE_MONTHYEAR,
+           DATE_UPLOADED,
+           STATUS,
+           DATE_CREATED,
+           DATE_UPDATED,
+           ID_LOGIN,
+           TO_CHAR(DATE_UPLOADED, 'dd/mm/yyyy HH24:mi:ss') AS DATE_UPDATED_FMT,
+           (SELECT COUNT(*) FROM T_BATCH_LOG T WHERE T.ID_BATCH_REF_NO = ID_CIT_EXP_BATCH AND T.ID_BATCH_TYPE='G_CIT_P01') AS LOGNUM
+	    FROM T_CIT_EXP_HD
+	   ORDER BY ID_CIT_EXP_BATCH DESC
+	</select>
+	
+	<select id="getLogReview" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  SELECT id_batch_log,
+	         id_batch_ref_no,
+	         error_msg,
+	         date_created,
+	         date_updated,
+	         id_login,
+	         id_batch_type,
+	         TO_CHAR(date_updated, 'dd/mm/yyyy HH24:mi:ss') AS date_updated_fmt
+	    FROM T_BATCH_LOG
+	   WHERE ID_BATCH_TYPE = #idBatchType#
+	     AND ID_BATCH_REF_NO = #idBatchRefNo#
+	   ORDER BY ID_BATCH_LOG ASC
+	</select>
+	
+	<select id="getSchedulerSetting" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  SELECT *
+	    FROM T_BATCH_SCH B
+	   WHERE B.ID_BATCH_TYPE = #idBatchType#
+	</select>
+	
+	<update id="updateSchedulerSetting" parameterClass="java.util.HashMap">
+	  UPDATE t_batch_sch
+	     SET is_active = #isActive#
+	  	<isNotEmpty property="execDay">
+	         ,exec_day = #execDay#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="execHour">
+	         ,exec_hour = #execHour#
+	  	</isNotEmpty>
+	  	<isNotEmpty property="execMinute">
+	         ,exec_minute = #execMinute#
+	  	</isNotEmpty>
+	  <isNotEmpty property="deductionDate">
+	         ,giro_deduct_day = #deductionDate#
+	  </isNotEmpty>
+	  <isNotEmpty property="bankAcc">
+	         ,id_com_bank = #bankAcc#
+	  </isNotEmpty>
+	         , date_updated = sysdate
+	  <isNotEmpty property="idAudit">
+	         ,id_audit = #idAudit#
+	  </isNotEmpty>
+	  <isNotEmpty property="idLogin">
+	         ,ID_LOGIN = #idLogin#
+	  </isNotEmpty>		         
+	   WHERE id_batch_type = #idBatchType#
+	</update>
+	
+	<insert id="addSchedulerSetting" parameterClass="java.util.HashMap">
+	  INSERT INTO t_batch_sch
+	         (id_batch_type, is_active, exec_day, exec_hour, exec_minute
+	  <isNotEmpty property="deductionDate">
+	         ,giro_deduct_day
+	  </isNotEmpty>
+	  <isNotEmpty property="bankAcc">
+	         ,id_com_bank
+	  </isNotEmpty>
+	         , id_login
+	  <isNotEmpty property="idAudit">
+	         ,id_audit
+	  </isNotEmpty>
+			)
+	  VALUES (#idBatchType#, #isActive#, #execDay#, #execHour#, #execMinute#
+	  <isNotEmpty property="deductionDate">
+	         ,#deductionDate#
+	  </isNotEmpty>
+	  <isNotEmpty property="bankAcc">
+	         ,#bankAcc#
+	  </isNotEmpty>
+	         , #idLogin#
+	  <isNotEmpty property="idAudit">
+	         ,#idAudit#
+	  </isNotEmpty>
+	         )
+	</insert>
+	<!-- SQL : For Process #16.0 -->
+	<select id="getBankAccount" resultClass="org.apache.struts.util.LabelValueBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT H.ID_COM_BANK as value, CONCAT(I.BANK_FULL_NAME, CONCAT('-',H.COM_ACCT_NO)) as label
+		FROM M_BANK I, M_COM_BANKINFO H
+		WHERE  I.ID_BANK = H.ID_BANK AND I.IS_DELETED = '0'
+               AND H.STATUS = '1' AND H.DEFAULT_ACC = '1'
+           ORDER BY I.BANK_FULL_NAME ASC, H.COM_ACCT_NO ASC
+	</select>
+</sqlMap>

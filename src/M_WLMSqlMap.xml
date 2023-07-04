@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_WLM">
+	<select id="SELECT.M_WLM.SQL001" 
+			parameterClass="nttdm.bsys.m_wlm.dto.M_WLMR01Input" 
+			resultClass="nttdm.bsys.m_wlm.bean.SectionGroupBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	id_secgrp, secgrp_desc, order_seq
+		FROM 	m_section_group
+		WHERE 	id_screen = #id_screen# 
+		ORDER BY order_seq
+	</select>
+	<select id="SELECT.M_WLM.SQL002" 
+			parameterClass="nttdm.bsys.m_wlm.dto.M_WLMR01Input" 
+			resultClass="nttdm.bsys.m_wlm.bean.SectionBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	g.id_secgrp, s.section_no, s.section_desc
+		FROM 	m_section_group g, m_section s 
+		WHERE 	g.id_secgrp = s.id_secgrp AND
+				g.id_screen = #id_screen#
+		ORDER BY g.order_seq, s.order_seq
+	</select>
+	<select id="SELECT.M_WLM.SQL003" 
+			parameterClass="nttdm.bsys.m_wlm.dto.M_WLMR01Input" 
+			resultClass="nttdm.bsys.m_wlm.bean.SectionBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	g.id_secgrp, w.section_no, w.sequence_no, s.section_desc
+		FROM   	m_wf_section w, m_section_group g, m_section s 
+		WHERE  	w.section_group = g.id_secgrp AND
+       			w.section_no = s.section_no AND
+       			g.id_screen = #id_screen#
+		ORDER BY sequence_no
+	</select>
+	<select id="SELECT.M_WLM.SQL004" 
+			parameterClass="nttdm.bsys.m_wlm.dto.M_WLMR01Input" 
+			resultClass="nttdm.bsys.m_wlm.bean.LevelBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	g.id_secgrp, wa.section_no, wa.level_seq
+		FROM 	m_wf_action wa, m_wf_section ws, m_section_group g
+		WHERE 	wa.section_no = ws.section_no AND
+   				ws.section_group = g.id_secgrp AND
+    			g.id_screen = #id_screen#
+		GROUP BY g.id_secgrp, wa.section_no, wa.level_seq
+		ORDER BY g.id_secgrp, wa.section_no, wa.level_seq
+	</select>
+	<select id="SELECT.M_WLM.SQL005" 
+			parameterClass="nttdm.bsys.m_wlm.dto.M_WLMR01Input" 
+			resultClass="nttdm.bsys.m_wlm.bean.ActionBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT 	g.id_secgrp, 
+				wa.section_no, 
+				wa.level_seq, 
+				wa.id_action, 
+				wa.action_type, 
+				wa.pic, 
+				wa.response_expire, 
+				wa.condition_primary, 
+				wa.condition_operator, 
+				wa.condition_secondary
+		FROM 	m_wf_action wa, m_wf_section ws, m_section_group g
+		WHERE 	wa.section_no = ws.section_no AND
+   				ws.section_group = g.id_secgrp AND
+    			g.id_screen = #id_screen#
+		ORDER BY g.id_secgrp, wa.section_no, wa.level_seq
+	</select>
+	<select id="SELECT.M_WLM.SQL006" resultClass="org.apache.struts.util.LabelValueBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT a.id_user as value, a.user_name as label FROM m_user a WHERE a.is_deleted=0 ORDER BY a.user_name
+	</select>
+	
+	<delete id="DELETE.M_WLM.SQL001" 
+			parameterClass="nttdm.bsys.m_wlm.bean.SectionBean">
+		DELETE 
+			FROM 	m_wf_section
+		    WHERE 	id_screen = #id_screen# AND
+		    		section_group = #id_secgrp#
+	</delete>
+	<delete id="DELETE.M_WLM.SQL002" 
+			parameterClass="nttdm.bsys.m_wlm.bean.SectionBean">
+		DELETE 
+			FROM 	m_wf_action
+		    WHERE 	section_no IN (	SELECT 	s.section_no
+									FROM 	m_section_group g, m_section s 
+									WHERE 	g.id_secgrp = s.id_secgrp AND
+											g.id_screen = #id_screen# AND 
+											g.id_secgrp = #id_secgrp#)
+	</delete>
+	<delete id="DELETE.M_WLM.SQL003" 
+			parameterClass="nttdm.bsys.m_wlm.bean.SectionBean">
+		DELETE 
+			FROM 	m_atr_tfr
+		    WHERE 	id_screen = #id_screen# AND
+		    		section_no = #section_no# AND
+		    		id_user = #id_user#
+	</delete>
+	<insert id="INSERT.M_WLM.SQL001" 
+			parameterClass="nttdm.bsys.m_wlm.bean.SectionBean">
+		INSERT INTO m_wf_section 	(id_screen, 
+									section_group,
+									section_no,
+									sequence_no,
+									date_created,
+									date_updated,
+									id_login,
+									id_audit)
+		VALUES 	(#id_screen#, 
+				#id_secgrp#,
+				#section_no#,
+				#sequence_no#,
+				sysdate,
+				sysdate,
+				#id_user#,
+				#auditID#)
+	</insert>
+	<insert id="INSERT.M_WLM.SQL002" 
+			parameterClass="nttdm.bsys.m_wlm.bean.ActionBean">
+		INSERT INTO m_wf_action 	(section_no, 
+									level_seq,
+									id_action,
+									action_type,
+									pic,
+									response_expire,
+									condition_primary,
+									condition_operator,
+									condition_secondary,
+									date_created,
+									date_updated,
+									id_login,
+									id_audit)
+		VALUES 	(#section_no#, 
+				#level_seq#,
+				#id_action#,
+				#action_type#,
+				#pic#,
+				#response_expire#,
+				#condition_primary#,
+				#condition_operator#,
+				#condition_secondary#,
+				sysdate,
+				sysdate,
+				#id_user#,
+				#auditID#)
+	</insert>
+	<insert id="INSERT.M_WLM.SQL003" 
+			parameterClass="nttdm.bsys.m_wlm.bean.SectionBean">
+		INSERT INTO m_atr_tfr 	(id_screen, 
+									section_no,
+									id_user,
+									date_created,
+									date_updated,
+									id_login,
+									id_audit)
+		VALUES 	(#id_screen#, 
+				#section_no#,
+				#id_user#,
+				sysdate,
+				sysdate,
+				#id_user#,
+				#auditID#)
+	</insert>
+</sqlMap>

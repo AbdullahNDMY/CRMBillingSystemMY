@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <!--
+    <formset>
+
+      <form name="/isValid">
+        <field property="codeArray" indexedListProperty="codeArray"
+            depends="prohibitedArray">
+          <arg key="##INDEX" resource="false" position="0"/>
+          <arg key="testValidate.codeArray" position="1"/>
+          <arg key="${var:chars}" resource="false" position="2"/>
+          <var>
+            <var-name>chars</var-name>
+            <var-value>!"#</var-value>
+          </var>
+        </field>
+      </form>
+    </formset>
+ -->
+    <formset>
+        <form name="/M_SVGS01_03BL">
+            <field depends="required,maxlength"
+                indexedListProperty="listServiceGroupBean" property="svc_grp_name">
+                <arg key="Category Name" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>20</var-value>
+                </var>
+            </field>
+            <!-- <field depends="required,maxlength"
+                indexedListProperty="listServiceGroupBean" property="acc_code">
+                <arg key="Accounting Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>15</var-value>
+                </var>
+            </field> -->
+            <field depends="required,maxlength"
+                indexedListProperty="listServiceGroupBean" property="origin_code">
+                <arg key="Origin Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>10</var-value>
+                </var>
+            </field>
+            <field depends="required,maxlength"
+                indexedListProperty="listServiceGroupBean" property="acc_code">
+                <arg key="Account / Revenue Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>15</var-value>
+                </var>
+            </field>
+            <field depends="required,maxlength"
+                indexedListProperty="listServiceGroupBean" property="product_code">
+                <arg key="Product Code" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>3</var-value>
+                </var>
+            </field>
+            <field depends="maxlength"
+                indexedListProperty="listServiceGroupBean" property="remark">
+                <arg key="Remark" position="0" resource="false"/>
+                <arg key="${var:maxlength}" name="maxlength"
+                    position="1" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field depends="required"
+                indexedListProperty="listServiceGroupBean" property="journal_no">
+                <arg key="Journal No" position="0" resource="false"/>
+            </field>
+        </form>
+    </formset>
+</form-validation>

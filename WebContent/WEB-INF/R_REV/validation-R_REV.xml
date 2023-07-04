@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+        <form name="/R_REV_R02BL">
+		    <field property="tbxPaidDateFrom" depends="validwhen,date">
+                <msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg name="validwhen" position="0" key="screen.r_rev.paidDateFrom"/>
+                <arg name="date" position="0" key="screen.r_rev.paidDateFrom"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>((tbxPaidDateTo == null) or (*this* != null))</var-value>
+                </var>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+            </field>
+            <field property="tbxPaidDateTo" depends="validwhen,date,dateCompare">
+                <msg name="validwhen" key="errors.ERR1SC005"/>
+                <msg name="dateCompare" key="errors.ERR1SC037"/>
+                <arg name="validwhen" position="0" key="screen.r_rev.paidDateTo"/>
+                <arg name="date" position="0" key="screen.r_rev.paidDateTo"/>                
+	            <arg name="dateCompare" position="0" key="screen.r_rev.paidDate"/>
+	            <arg name="dateCompare" position="1" key="screen.r_rev.paidDateTo"/>
+	            <arg name="dateCompare" position="2" key="screen.r_rev.paidDateFrom"/>
+	            <var>
+	                <var-name>test</var-name>
+	                <var-value>((tbxPaidDateFrom == null) or (*this* != null))</var-value>
+	            </var>
+	            <var>
+	                <var-name>datePatternStrict</var-name>
+	                <var-value>dd/MM/yyyy</var-value>
+	            </var>
+	            <var>
+	                <var-name>beginDateField</var-name>
+	                <var-value>tbxPaidDateFrom</var-value>
+	            </var>
+            </field>
+        </form>
+        <form name="/R_REV_R03BL">
+            <field property="tbxPaidDateFrom" depends="validwhen,date">
+                <msg name="validwhen" key="errors.ERR1SC005"/>
+                <arg name="validwhen" position="0" key="screen.r_rev.paidDateTo"/>
+                <arg name="date" position="0" key="screen.r_rev.paidDateFrom"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>((tbxPaidDateTo == null) or (*this* != null))</var-value>
+                </var>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+            </field>
+            <field property="tbxPaidDateTo" depends="validwhen,date,dateCompare">
+                <msg name="validwhen" key="errors.ERR1SC005"/>
+                <msg name="dateCompare" key="errors.ERR1SC037"/>
+                <arg name="validwhen" position="0" key="screen.r_rev.paidDateTo"/>
+                <arg name="date" position="0" key="screen.r_rev.paidDateTo"/>                
+                <arg name="dateCompare" position="0" key="screen.r_rev.paidDate"/>
+                <arg name="dateCompare" position="1" key="screen.r_rev.paidDateTo"/>
+                <arg name="dateCompare" position="2" key="screen.r_rev.paidDateFrom"/>
+                <var>
+                    <var-name>test</var-name>
+                    <var-value>((tbxPaidDateFrom == null) or (*this* != null))</var-value>
+                </var>
+                <var>
+                    <var-name>datePatternStrict</var-name>
+                    <var-value>dd/MM/yyyy</var-value>
+                </var>
+                <var>
+                    <var-name>beginDateField</var-name>
+                    <var-value>tbxPaidDateFrom</var-value>
+                </var>
+            </field>
+        </form>
+    </formset>
+</form-validation>

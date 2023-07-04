@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_RPT_SB01" pageWidth="595" pageHeight="842" columnWidth="469" leftMargin="63" rightMargin="63" topMargin="57" bottomMargin="36">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_RPT_SB01_STYLE.jrtx"]]></template>
+	<parameter name="billDesc" class="java.lang.String"/>
+	<parameter name="applyDate" class="java.lang.String"/>
+	<parameter name="routerSetting" class="java.lang.Object"/>
+	<parameter name="browserInfo" class="java.lang.Object"/>
+	<parameter name="operationAdd" class="java.lang.Object"/>
+	<parameter name="ftpInfo" class="java.lang.Object"/>
+	<parameter name="mailAccount" class="java.lang.Object"/>
+	<parameter name="mailAddress" class="java.lang.Object"/>
+	<parameter name="rackPower" class="java.lang.Object"/>
+	<parameter name="itContact" class="java.lang.Object"/>
+	<parameter name="teamwork" class="java.lang.Object"/>
+	<parameter name="support" class="java.util.HashMap"/>
+	<parameter name="teamworkClient" class="java.lang.Object"/>
+	<parameter name="headerInfo" class="java.lang.Object"/>
+	<parameter name="noticeMode" class="java.lang.String"/>
+	<parameter name="billDescAndPlan" class="java.lang.String"/>
+	<detail>
+		<band splitType="Stretch"/>
+		<band>
+			<subreport>
+				<reportElement x="0" y="0" width="468" height="0"/>
+				<dataSourceExpression><![CDATA[$P{headerInfo}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_headerInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="26">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" stretchType="RelativeToTallestObject" x="0" y="12" width="469" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Notice of "+$P{billDesc}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="27">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" stretchType="RelativeToTallestObject" x="0" y="0" width="470" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{billDesc}+"ご利用明細書"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="90" splitType="Prevent">
+			<staticText>
+				<reportElement style="default_font" x="0" y="0" width="194" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1. Thank you for your application dated]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="default_font" x="285" y="0" width="100" height="14"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[サービスお申込日]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="default_font" x="194" y="0" width="91" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{applyDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="default_font" x="385" y="0" width="84" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{applyDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="default_font" positionType="Float" x="0" y="44" width="469" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[3. The following services will be provided:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="default_font" positionType="Float" x="10" y="58" width="459" height="14"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[下記のとおり、お申し込みを承りました。]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="border_full_s" positionType="Float" x="9" y="72" width="459" height="14"/>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{billDescAndPlan}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="11" y="29" width="459" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("1").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["請求はサービスの設定が完了した日の翌日から開始いたします。"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="11" y="29" width="459" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("2").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["請求はサービスの設定が完了した日の当日から開始いたします。"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" positionType="Float" x="11" y="29" width="459" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("3").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["請求はサービスの設定が完了した日の翌月1日から開始いたします。"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="0" y="15" width="470" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("1").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Times New Roman" pdfFontName="Helvetica" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["2. The billing of this service will be commence on the next day after completion of service installation."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="0" y="15" width="470" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("2").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Times New Roman" pdfFontName="Helvetica" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["2. The billing of this service will be commence on the completion day of service installation."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="10" y="15" width="460" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("3").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0" leftPadding="0"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Times New Roman" pdfFontName="Helvetica" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["The billing of this service will be commence on the 1st day of the following month after completion of service installation."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="default_font" x="0" y="15" width="10" height="14" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[("3").equals($P{noticeMode})]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0" leftPadding="0"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Times New Roman" pdfFontName="Helvetica" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["2."+"\r\n"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="29">
+			<staticText>
+				<reportElement style="default_font" x="0" y="0" width="469" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[4. The following is the configuration for access into NTTi-net:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="default_font" x="10" y="14" width="459" height="14"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[下記の項目を、お使いのソフトウェアに設定してください。]]></text>
+			</staticText>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{routerSetting}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_RouterSetting.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{browserInfo}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_BrowserInfo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{operationAdd}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_OperationAddress.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{ftpInfo}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_FTPInformation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{mailAccount}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_MailAccount.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{mailAddress}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_MailAddress.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{rackPower}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_RackPower.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="462" height="0"/>
+				<dataSourceExpression><![CDATA[$P{itContact}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_ITContact.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{teamwork}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_Teamwork.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band>
+			<subreport>
+				<reportElement x="8" y="0" width="461" height="0"/>
+				<dataSourceExpression><![CDATA[$P{teamworkClient}]]></dataSourceExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["B_RPT_SB01_TeamworkClient.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="95">
+			<staticText>
+				<reportElement style="default_font" x="0" y="0" width="470" height="14"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[5. For assistance, you may either go to our Web Site. E-mail us or call our Help Desk.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="default_font" x="10" y="14" width="459" height="14"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="HeiseiKakuGo-W5" pdfEncoding="UniJIS-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ご質問は当社Web Siteをご覧頂くか、電子メールまたは電話にてお問い合わせてください。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full_s" x="8" y="28" width="180" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[NTTi-net Homepage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full_s" x="8" y="42" width="180" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[E-Mail for more Information]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full_s" x="8" y="70" width="180" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Telephone Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full_s" x="8" y="56" width="180" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[E-Mail for technical support]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="border_full_s" x="188" y="28" width="281" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{support}.get( "homepage" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="border_full_s" x="188" y="56" width="281" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{support}.get( "email_technical" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="border_full_s" x="188" y="42" width="281" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{support}.get( "email_info" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="border_full_s" x="188" y="70" width="281" height="14"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{support}.get( "tel" )]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

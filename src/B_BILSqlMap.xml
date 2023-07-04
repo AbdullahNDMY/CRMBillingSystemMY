@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="B_BIL">
+	<select id="getT_BIL_H" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT DISTINCT C.ID_REF,C.BILL_TYPE,C.IS_MANUAL,C.BILL_ACC,C.DATE_REQ,C.PAY_METHOD,C.ID_CUST,
+		C.ADR_TYPE,C.CONTACT_TYPE,to_char(C.ID_BIF) ID_BIF,to_char(C.ID_QCS) ID_QCS,to_char(C.QUO_REF) QUO_REF,
+		to_char(C.CUST_PO) CUST_PO,C.ID_CONSULT,C.TERM,C.BILL_CURRENCY,C.GST_PERCENT,C.GST_AMOUNT,
+		C.BILL_AMOUNT,C.PAID_AMOUNT,C.LAST_PAYMENT_DATE,C.IS_SETTLED,C.IS_SINGPOST,C.IS_EXPORT,
+		C.IS_DISPLAY_EXP_AMT,C.EXPORT_CUR,C.CUR_RATE,C.EXPORT_AMOUNT,C.FIXED_FOREX,C.NO_PRINTED,C.DATE_PRINTED,
+		C.USER_PRINTED,C.IS_CLOSED,C.ADDRESS1,C.ADDRESS2,C.ADDRESS3,C.ADDRESS4,C.ZIP_CODE,C.TERM,C.TERM_DAY,
+		C.COUNTRY,C.TEL_NO,C.FAX_NO,C.CONTACT_NAME,C.CONTACT_EMAIL,C.IS_DELETED,C.PREPARED_BY,C.DATE_CREATED,C.DELIVERY,C.DELIVERY_EMAIL,
+		C.DATE_UPDATED,C.ID_LOGIN,C.ID_AUDIT,C.SALUTATION,C.CUST_NAME,C.GSTAPPLYFLAG, NVL(F.TOTAL_AMT_DUE, 0) TOTAL_AMT_DUE, 
+		(C.BILL_AMOUNT-C.PAID_AMOUNT) OUTSTANDING_AMOUNT, E.CUSTOMER_TYPE, 
+		to_char(C.DATE_REQ, 'dd/MM/yyyy') DATE_REQ_FOM
+		FROM T_BIL_H C LEFT JOIN T_BIL_S F ON TRIM(C.ID_REF)=TRIM(F.ID_REF)
+		JOIN T_BIL_D D ON TRIM(C.ID_REF)=TRIM(D.ID_REF)
+		LEFT JOIN M_CUST E ON TRIM(C.ID_CUST)=TRIM(E.ID_CUST)
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="tbxBillingReference" prepend="AND">
+				UPPER(C.ID_REF) LIKE UPPER('%$tbxBillingReference$%')
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 ST -->
+			<isNotEmpty property="tbxCustomerId" prepend="AND">
+				UPPER(C.ID_CUST) 
+				LIKE UPPER('%$tbxCustomerId$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCustomerType" prepend="AND">
+				UPPER(E.CUSTOMER_TYPE) 
+				LIKE UPPER('%$cboCustomerType$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCategory" prepend="AND">
+				D.SVC_LEVEL1 = #cboCategory#
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 EN -->
+			<isNotEmpty property="tbxCustomerName" prepend="AND">
+				UPPER(TRIM(case C.SALUTATION when 'MR' then 'Mr' when 'MS' then 'Ms' when 'MRS' then 'Mrs' end||' '||C.CUST_NAME)) 
+				LIKE UPPER('%$tbxCustomerName$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboTransactionType" prepend="AND">
+				C.BILL_TYPE = #cboTransactionType#
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingAccountNo" prepend="AND">
+				UPPER(C.BILL_ACC) LIKE UPPER('%$tbxBillingAccountNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="jobNo" prepend="AND">
+				UPPER(D.JOB_NO) LIKE UPPER('%$jobNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingDateFrom">
+				<isNotEmpty property="tbxBillingDateTo" prepend="AND">
+					C.DATE_REQ BETWEEN #tbxBillingDateFrom# AND #tbxBillingDateTo#
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cboDocumentStatus" prepend="AND">
+				C.IS_CLOSED = #cboDocumentStatus#
+			</isNotEmpty>
+			<isNotEmpty property="cboBillingCurrency" prepend="AND">
+				C.BILL_CURRENCY = #cboBillingCurrency#
+			</isNotEmpty>
+			<isNotEmpty property="allNotChecked" prepend="AND"> 
+				C.IS_SETTLED IN ('0','1')
+			</isNotEmpty>
+			<isEmpty property="allNotChecked" prepend="AND"> 
+				(
+					1!=1
+					<isNotEmpty property="fullySettled">
+						OR (C.IS_SETTLED = '1')
+					</isNotEmpty>
+					<isNotEmpty property="partiallySettled">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT &lt;&gt; 0)
+					</isNotEmpty>
+					<isNotEmpty property="outstanding">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT = 0)
+					</isNotEmpty>
+				)
+			</isEmpty>
+			<isNotEmpty property="cboDeletedStatus" prepend="AND">
+				C.IS_DELETED = #cboDeletedStatus#
+			</isNotEmpty>
+			<isEmpty property="issueTypeAllNotChecked" prepend="AND"> 
+			    (
+			        1!=1
+			        <isNotEmpty property="issueTypeSingpost">
+						OR (C.IS_SINGPOST = '1' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeAuto">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeManual">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '1')
+					</isNotEmpty>
+			    )
+			</isEmpty>
+			<!-- email -->
+	        <isNotEmpty property="deliveryEmail" prepend="AND">
+	            C.DELIVERY_EMAIL IN
+	            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+	                #deliveryEmail[]#
+	            </iterate>
+	        </isNotEmpty>
+	        <!-- Delivery -->
+	        <isNotEmpty property="delivery" prepend="AND">
+	            C.DELIVERY IN
+	            <iterate  property="delivery" conjunction="," close=")" open="(" >
+	                #delivery[]#
+	            </iterate>
+	        </isNotEmpty>
+		</dynamic>
+		ORDER BY C.DATE_REQ DESC, C.ID_REF DESC
+	</select>
+	
+	<select id="getT_BIL_H_EXPORT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT DISTINCT C.ID_REF,C.BILL_TYPE,C.IS_MANUAL,C.BILL_ACC,C.DATE_REQ,C.PAY_METHOD,C.ID_CUST,
+		C.ADR_TYPE,C.CONTACT_TYPE,to_char(C.ID_BIF) ID_BIF,to_char(C.ID_QCS) ID_QCS,to_char(C.QUO_REF) QUO_REF,
+		to_char(C.CUST_PO) CUST_PO,C.ID_CONSULT,C.TERM,C.BILL_CURRENCY,C.GST_PERCENT,C.GST_AMOUNT,
+		C.BILL_AMOUNT,C.PAID_AMOUNT,C.LAST_PAYMENT_DATE,C.IS_SETTLED,C.IS_SINGPOST,C.IS_EXPORT,
+		C.IS_DISPLAY_EXP_AMT,C.EXPORT_CUR,C.CUR_RATE,C.EXPORT_AMOUNT,C.FIXED_FOREX,C.NO_PRINTED,C.DATE_PRINTED,
+		C.USER_PRINTED,C.IS_CLOSED,C.ADDRESS1,C.ADDRESS2,C.ADDRESS3,C.ADDRESS4,C.ZIP_CODE,C.TERM,C.TERM_DAY,
+		C.COUNTRY,C.TEL_NO,C.FAX_NO,C.CONTACT_NAME,C.CONTACT_EMAIL,C.IS_DELETED,C.PREPARED_BY,C.DATE_CREATED,C.DELIVERY,C.DELIVERY_EMAIL,
+		C.DATE_UPDATED,C.ID_LOGIN,C.ID_AUDIT,C.SALUTATION,C.CUST_NAME,C.GSTAPPLYFLAG, NVL(F.TOTAL_AMT_DUE, 0) TOTAL_AMT_DUE, 
+		(C.BILL_AMOUNT-C.PAID_AMOUNT) OUTSTANDING_AMOUNT, E.CUSTOMER_TYPE, Sub1.CATEGORY,
+		to_char(C.DATE_REQ, 'dd/MM/yyyy') DATE_REQ_FOM
+		FROM T_BIL_H C LEFT JOIN T_BIL_S F ON TRIM(C.ID_REF)=TRIM(F.ID_REF)
+		JOIN T_BIL_D D ON TRIM(C.ID_REF)=TRIM(D.ID_REF)
+		LEFT JOIN M_CUST E ON TRIM(C.ID_CUST)=TRIM(E.ID_CUST)
+		<!-- #263 category performance issues CT 26072017 ST -->
+		<dynamic>
+			<isNotEmpty property="isOracle12c">
+				left outer JOIN (
+			    select ID_REF, LISTAGG(SVC_GRP_NAME, '/') WITHIN GROUP (ORDER BY SVC_GRP_NAME) AS CATEGORY from (select DISTINCT S2.ID_REF, S1.SVC_GRP_NAME from T_BIL_H S2 JOIN T_BIL_D S3 ON TRIM(S2.ID_REF)=TRIM(S3.ID_REF) JOIN M_SVG S1 ON TRIM(S3.SVC_LEVEL1)=TRIM(S1.SVC_GRP)) 
+			    group by ID_REF
+			    ) Sub1 ON TRIM(Sub1.ID_REF) = TRIM(C.ID_REF)
+			</isNotEmpty>
+			<isEmpty property="isOracle12c">
+				left outer JOIN (
+			    select ID_REF, to_char(REPLACE(WM_CONCAT(SVC_GRP_NAME),',','/')) AS CATEGORY from (select DISTINCT S2.ID_REF, S1.SVC_GRP_NAME from T_BIL_H S2 JOIN T_BIL_D S3 ON TRIM(S2.ID_REF)=TRIM(S3.ID_REF) JOIN M_SVG S1 ON TRIM(S3.SVC_LEVEL1)=TRIM(S1.SVC_GRP)) 
+			    group by ID_REF 
+			    ) Sub1 ON TRIM(Sub1.ID_REF) = TRIM(C.ID_REF)
+			</isEmpty>
+	    </dynamic>
+	    <!-- #263 category performance issues CT 26072017 EN -->
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="tbxBillingReference" prepend="AND">
+				UPPER(C.ID_REF) LIKE UPPER('%$tbxBillingReference$%')
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 ST -->
+			<isNotEmpty property="tbxCustomerId" prepend="AND">
+				UPPER(C.ID_CUST) 
+				LIKE UPPER('%$tbxCustomerId$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCustomerType" prepend="AND">
+				UPPER(E.CUSTOMER_TYPE) 
+				LIKE UPPER('%$cboCustomerType$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCategory" prepend="AND">
+				D.SVC_LEVEL1 = #cboCategory#
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 EN -->
+			<isNotEmpty property="tbxCustomerName" prepend="AND">
+				UPPER(TRIM(case C.SALUTATION when 'MR' then 'Mr' when 'MS' then 'Ms' when 'MRS' then 'Mrs' end||' '||C.CUST_NAME)) 
+				LIKE UPPER('%$tbxCustomerName$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboTransactionType" prepend="AND">
+				C.BILL_TYPE = #cboTransactionType#
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingAccountNo" prepend="AND">
+				UPPER(C.BILL_ACC) LIKE UPPER('%$tbxBillingAccountNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="jobNo" prepend="AND">
+				UPPER(D.JOB_NO) LIKE UPPER('%$jobNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingDateFrom">
+				<isNotEmpty property="tbxBillingDateTo" prepend="AND">
+					C.DATE_REQ BETWEEN #tbxBillingDateFrom# AND #tbxBillingDateTo#
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cboDocumentStatus" prepend="AND">
+				C.IS_CLOSED = #cboDocumentStatus#
+			</isNotEmpty>
+			<isNotEmpty property="cboBillingCurrency" prepend="AND">
+				C.BILL_CURRENCY = #cboBillingCurrency#
+			</isNotEmpty>
+			<isNotEmpty property="allNotChecked" prepend="AND"> 
+				C.IS_SETTLED IN ('0','1')
+			</isNotEmpty>
+			<isEmpty property="allNotChecked" prepend="AND"> 
+				(
+					1!=1
+					<isNotEmpty property="fullySettled">
+						OR (C.IS_SETTLED = '1')
+					</isNotEmpty>
+					<isNotEmpty property="partiallySettled">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT &lt;&gt; 0)
+					</isNotEmpty>
+					<isNotEmpty property="outstanding">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT = 0)
+					</isNotEmpty>
+				)
+			</isEmpty>
+			<isNotEmpty property="cboDeletedStatus" prepend="AND">
+				C.IS_DELETED = #cboDeletedStatus#
+			</isNotEmpty>
+			<isEmpty property="issueTypeAllNotChecked" prepend="AND"> 
+			    (
+			        1!=1
+			        <isNotEmpty property="issueTypeSingpost">
+						OR (C.IS_SINGPOST = '1' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeAuto">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeManual">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '1')
+					</isNotEmpty>
+			    )
+			</isEmpty>
+			<!-- email -->
+	        <isNotEmpty property="deliveryEmail" prepend="AND">
+	            C.DELIVERY_EMAIL IN
+	            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+	                #deliveryEmail[]#
+	            </iterate>
+	        </isNotEmpty>
+	        <!-- Delivery -->
+	        <isNotEmpty property="delivery" prepend="AND">
+	            C.DELIVERY IN
+	            <iterate  property="delivery" conjunction="," close=")" open="(" >
+	                #delivery[]#
+	            </iterate>
+	        </isNotEmpty>
+		</dynamic>
+		ORDER BY C.DATE_REQ DESC, C.ID_REF DESC
+	</select>
+	
+	<select id="getCategory" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+		select DISTINCT E.SVC_GRP_NAME from T_BIL_H C JOIN T_BIL_D D ON TRIM(C.ID_REF)=TRIM(D.ID_REF) JOIN M_SVG E ON TRIM(D.SVC_LEVEL1)=TRIM(E.SVC_GRP)
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="ID_REF" prepend="AND">
+				C.ID_REF = #ID_REF#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="GET_ORACLE_VERSION" resultClass="java.lang.String">
+        SELECT SET_VALUE FROM M_GSET_D 
+        WHERE ID_SET = 'ORACLE_VERSION' 
+        AND SET_SEQ = '1'   
+    </select>
+	<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 ST -->
+	<select id="countT_BIL_H" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT COUNT(DISTINCT C.ID_REF)
+		FROM T_BIL_H C LEFT JOIN T_BIL_S F ON TRIM(C.ID_REF)=TRIM(F.ID_REF)
+		JOIN T_BIL_D D ON TRIM(C.ID_REF)=TRIM(D.ID_REF)
+		LEFT JOIN M_CUST E ON TRIM(C.ID_CUST)=TRIM(E.ID_CUST)
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="tbxBillingReference" prepend="AND">
+				UPPER(C.ID_REF) LIKE UPPER('%$tbxBillingReference$%')
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 ST -->
+			<isNotEmpty property="tbxCustomerId" prepend="AND">
+				UPPER(C.ID_CUST) 
+				LIKE UPPER('%$tbxCustomerId$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCustomerType" prepend="AND">
+				UPPER(E.CUSTOMER_TYPE) 
+				LIKE UPPER('%$cboCustomerType$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboCategory" prepend="AND">
+				D.SVC_LEVEL1 = #cboCategory#
+			</isNotEmpty>
+			<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 EN -->
+			<isNotEmpty property="tbxCustomerName" prepend="AND">
+				UPPER(TRIM(case C.SALUTATION when 'MR' then 'Mr' when 'MS' then 'Ms' when 'MRS' then 'Mrs' end||' '||C.CUST_NAME)) 
+				LIKE UPPER('%$tbxCustomerName$%')
+			</isNotEmpty>
+			<isNotEmpty property="cboTransactionType" prepend="AND">
+				C.BILL_TYPE = #cboTransactionType#
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingAccountNo" prepend="AND">
+				UPPER(C.BILL_ACC) LIKE UPPER('%$tbxBillingAccountNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="jobNo" prepend="AND">
+				UPPER(D.JOB_NO) LIKE UPPER('%$jobNo$%')
+			</isNotEmpty>
+			<isNotEmpty property="tbxBillingDateFrom">
+				<isNotEmpty property="tbxBillingDateTo" prepend="AND">
+					C.DATE_REQ BETWEEN #tbxBillingDateFrom# AND #tbxBillingDateTo#
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="cboDocumentStatus" prepend="AND">
+				C.IS_CLOSED = #cboDocumentStatus#
+			</isNotEmpty>
+			<isNotEmpty property="cboBillingCurrency" prepend="AND">
+				C.BILL_CURRENCY = #cboBillingCurrency#
+			</isNotEmpty>
+			<isNotEmpty property="allNotChecked" prepend="AND"> 
+				C.IS_SETTLED IN ('0','1')
+			</isNotEmpty>
+			<isEmpty property="allNotChecked" prepend="AND"> 
+				(
+					1!=1
+					<isNotEmpty property="fullySettled">
+						OR (C.IS_SETTLED = '1')
+					</isNotEmpty>
+					<isNotEmpty property="partiallySettled">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT &lt;&gt; 0)
+					</isNotEmpty>
+					<isNotEmpty property="outstanding">
+						OR (C.IS_SETTLED = '0' AND C.PAID_AMOUNT = 0)
+					</isNotEmpty>
+				)
+			</isEmpty>
+			<isNotEmpty property="cboDeletedStatus" prepend="AND">
+				C.IS_DELETED = #cboDeletedStatus#
+			</isNotEmpty>
+			<isEmpty property="issueTypeAllNotChecked" prepend="AND"> 
+			    (
+			        1!=1
+			        <isNotEmpty property="issueTypeSingpost">
+						OR (C.IS_SINGPOST = '1' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeAuto">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeManual">
+						OR (C.IS_SINGPOST = '0' AND C. IS_MANUAL = '1')
+					</isNotEmpty>
+			    )
+			</isEmpty>
+			<!-- email -->
+	        <isNotEmpty property="deliveryEmail" prepend="AND">
+	            C.DELIVERY_EMAIL IN
+	            <iterate  property="deliveryEmail" conjunction="," close=")" open="(" >
+	                #deliveryEmail[]#
+	            </iterate>
+	        </isNotEmpty>
+	        <!-- Delivery -->
+	        <isNotEmpty property="delivery" prepend="AND">
+	            C.DELIVERY IN
+	            <iterate  property="delivery" conjunction="," close=")" open="(" >
+	                #delivery[]#
+	            </iterate>
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+	<!-- #263 [T11] Add customer type at inquiry screen and export result CT 06062017 EN -->
+	<select id="getHeaderInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT C.*, to_char(C.ID_BIF) ID_BIF_TXT, to_char(C.ID_QCS) ID_QCS_TXT, to_char(C.QUO_REF) QUO_REF_TXT,
+			to_char(C.CUST_PO) CUST_PO_TXT, 
+			to_char(C.DATE_REQ, 'dd/MM/yyyy') DATE_REQ_FOM, to_char(C.DATE_CREATED, 'dd/MM/yyyy') DATE_CREATED_FOM,
+			to_char(C.DUE_DATE, 'dd/MM/yyyy') DUE_DATE_FOM,
+			(SELECT USER_NAME FROM M_USER WHERE C.PREPARED_BY = ID_USER) AS PREPARED_BY_NAME,
+			(SELECT USER_NAME FROM M_USER WHERE C.ID_CONSULT = ID_USER) AS ID_CONSULT_NAME,
+			M.CUSTOMER_TYPE,M.CUST_ACC_NO AS CUST_ACC_NO
+		FROM T_BIL_H C LEFT JOIN M_CUST M ON C.ID_CUST = M.ID_CUST
+		WHERE C.ID_REF = #idRef#
+	</select>
+	<select id="getHeaderInfoForEdit" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT C.*, M.CUST_NAME M_CUST_NAME,M.SALUTATION M_SALUTATION, M.CUSTOMER_TYPE,
+		to_char(C.ID_BIF) ID_BIF_TXT, to_char(C.ID_QCS) ID_QCS_TXT, to_char(C.QUO_REF) QUO_REF_TXT,
+			to_char(C.CUST_PO) CUST_PO_TXT,
+			to_char(C.DATE_REQ, 'dd/MM/yyyy') DATE_REQ_FOM, to_char(C.DATE_CREATED, 'dd/MM/yyyy') DATE_CREATED_FOM,
+			to_char(C.DUE_DATE, 'dd/MM/yyyy') DUE_DATE_FOM,C.DELIVERY,C.DELIVERY_EMAIL,C.TERM,C.TERM_DAY,
+			(SELECT USER_NAME FROM M_USER WHERE C.PREPARED_BY = ID_USER) AS PREPARED_BY_NAME,
+			(SELECT USER_NAME FROM M_USER WHERE C.ID_CONSULT = ID_USER) AS ID_CONSULT_NAME,
+			M.CO_TEL_NO,
+			M.CO_FAX_NO,
+			M.HOME_TEL_NO,
+			M.HOME_FAX_NO,
+			M.CO_EMAIL,
+			F.ADR_LINE1,
+			F.ADR_LINE2,
+			F.ADR_LINE3,
+			F.ZIP_CODE AS M_CUST_ADR_ZIP_CODE,
+			F.COUNTRY AS M_CUST_ADR_COUNTRY,
+			(
+			  CASE 
+			  WHEN F.ZIP_CODE IS NULL AND F.COUNTRY IS NULL THEN ''
+			  WHEN F.ZIP_CODE IS NOT NULL AND F.COUNTRY IS NULL THEN F.ZIP_CODE
+			  WHEN F.ZIP_CODE IS NULL AND F.COUNTRY IS NOT NULL THEN F.ZIP_CODE
+			  ELSE F.ZIP_CODE || ', ' || F.COUNTRY END
+			) AS ADR_LINE4,
+			H.CONTACT_NAME AS M_CUST_CTC_CONTACT_NAME,
+			H.EMAIL AS  M_CUST_CTC_EMAIL,
+			H.EMAIL_CC AS  M_CUST_CTC_EMAILCC,
+			H.TEL_NO AS M_CUST_CTC_TEL_NO,
+			H.FAX_NO AS M_CUST_CTC_FAX_NO
+		FROM
+		    T_BIL_H C INNER JOIN M_CUST M
+		    ON C.ID_CUST = M.ID_CUST
+		    LEFT JOIN M_CUST_ADR F
+		    ON C.ID_CUST = F.ID_CUST 
+		    AND C.ADR_TYPE = F.ADR_TYPE
+		    LEFT JOIN M_CUST_CTC H
+		    ON C.ID_CUST = H.ID_CUST
+		    AND C.CONTACT_TYPE = H.CONTACT_TYPE
+		WHERE C.ID_REF = #idRef#
+	</select>
+	<select id="getMCustName" resultClass="java.lang.String" parameterClass="java.lang.String">
+		SELECT USER_NAME FROM M_USER WHERE ID_USER = #idUser#
+	</select>
+	<select id="getCustInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT M.* 
+		FROM T_BIL_H T INNER JOIN M_CUST M ON T.ID_CUST = M.ID_CUST
+		WHERE T.ID_REF = #idRef#
+	</select>
+	<select id="getDetailInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT C.*, D.*,TRIM(D.ITEM_NO) AS ITEM_NO_TEXT, D.ITEM_DESC as ITEM_DESC_TEXT,
+		to_char(D.MIN_SVC_FROM,'dd-Mon-yyyy') MIN_SVC_FROM_TEXT,to_char(D.MIN_SVC_TO,'dd-Mon-yyyy') MIN_SVC_TO_TEXT,
+		to_char(D.BILL_FROM,'dd-Mon-yyyy') BILL_FROM_TEXT,to_char(D.BILL_TO,'dd-Mon-yyyy') BILL_TO_TEXT
+		FROM T_BIL_H C INNER JOIN (SELECT * FROM T_BIL_D ORDER BY ITEM_ID ASC,ITEM_LEVEL ASC) D ON C.ID_REF = D.ID_REF
+		WHERE C.ID_REF = #idRef#
+        AND D.IS_DELETED = '0'
+	</select>
+	<select id="getFooterInfo" resultClass="java.util.HashMap">
+		SELECT SET_VALUE 
+		FROM M_GSET_D 
+		WHERE ID_SET = 'BILL_DOC_FOOTER'
+	</select>
+		
+	
+	<select id="SELECT.B_BIL.ADDRESSINFO" parameterClass="java.lang.Object" resultClass="java.util.HashMap">
+    	SELECT
+        	P.*        
+    	FROM
+       		M_CUST_ADR P
+    	WHERE P.ID_CUST = #idCust#
+   </select>
+	
+	<select id="SELECT.B_BIF.ATTNS" parameterClass="java.lang.Object" resultClass="java.util.HashMap" resultSetType="SCROLL_INSENSITIVE">
+	    SELECT
+	        '['||Q.CONTACT_TYPE||']'||Q.CONTACT_NAME AS CONTACT_NAME,
+	        Q.CONTACT_TYPE,
+	        Q.CONTACT_NAME as CONTACT_NAME_VALUE,
+	        Q.TEL_NO,
+	        Q.FAX_NO,
+	         Q.EMAIL,
+	        Q.EMAIL_CC,
+	        case Q.CONTACT_TYPE when 'BC' then 1 when 'BC2' then 2 when 'BC3' then 3  
+	        when 'BC4' then 4 when 'PC' then 5 when 'TC' then 6 else 7 end as SEQ
+	    FROM
+	        M_CUST_CTC Q
+	     WHERE 
+	    	Q.ID_CUST = #idCust#
+	    ORDER BY SEQ
+  </select>
+	<select id="getBankFooterInfo" resultClass="java.util.HashMap">
+		SELECT a.BANK_NAME, a.BRANCH_NAME, b.COM_ACCT_NAME, b.COM_ACCT_NO, b.COM_CUR, b.COM_SWIFT
+               ,b.DISPLAY_ORDER, b.DEFAULT_ACC, b.STATUS
+		FROM M_BANK a, M_COM_BANKINFO b
+		WHERE a.ID_BANK = b.ID_BANK
+		AND a.IS_DELETED = '0'
+        AND b.STATUS='1'
+        AND b.DISPLAY_ORDER &lt;&gt;'0'
+		ORDER BY b.DISPLAY_ORDER ASC,b.ID_COM_BANK
+	</select>
+	
+	<select id="getCompanyBankInfo" resultClass="java.lang.String" parameterClass="java.lang.String">
+		   SELECT CO_BANKINFO 
+		   FROM M_CUST 
+		   WHERE ID_CUST = #id_cust#
+	</select>
+	<select id="getSelectedBankFooterInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT a.BANK_NAME, 
+			   a.BRANCH_NAME, 
+			   b.COM_ACCT_NAME, 
+			   b.COM_ACCT_NO, 
+			   b.COM_CUR, 
+			   b.COM_SWIFT,
+               b.DISPLAY_ORDER, 
+               b.DEFAULT_ACC, 
+               b.STATUS
+		FROM M_BANK a, M_COM_BANKINFO b
+		WHERE a.ID_BANK = b.ID_BANK
+		AND a.IS_DELETED = '0'
+        AND b.STATUS='1'
+        AND b.ID_BANK= #idBank#
+	</select>
+		
+	<!-- SQL for Action:ActSave - Editing (B_BIL_S02): just update DATE_REQ field with current idRef -->
+	<update id="updateMiniT_BIL_H" parameterClass="java.util.HashMap">
+		UPDATE
+		  T_BIL_H SET 
+			DATE_REQ=#dateReq#, 
+			CUST_NAME=#custName#, 
+			SALUTATION=#salutation#,
+			ADDRESS1 = #address1#,
+			ADDRESS2 = #address2#,
+			ADDRESS3 = #address3#,
+			ADDRESS4 = #address4#,
+			ZIP_CODE = #zipCode#,
+			ID_QCS=#idQcs#,
+			QUO_REF=#quoRef#,
+			CUST_PO=#custPo#,
+			TERM=#term#,
+			ID_CONSULT=#idConsult#,
+			COUNTRY = #country#,
+			TEL_NO = #telNo#,
+			FAX_NO = #faxNo#,
+			CONTACT_NAME = #contactName#,
+			<!-- CONTACT_EMAIL = #contactEmail#, -->
+			<isNotEmpty property="exportAmountChangeFlg">
+				CUR_RATE = #curRate#,
+				EXPORT_AMOUNT = #exportAmount#,
+			</isNotEmpty>
+			DATE_UPDATED=sysdate, 
+			ID_LOGIN=#idLogin#,
+			PREPARED_BY=#idLogin#, 
+			ID_AUDIT=#idAudit#,
+			TERM_DAY = #termDay#,
+			DUE_DATE = #dueDate#,
+			DELIVERY=#delivery#,
+			DELIVERY_EMAIL=#deliverymail#,
+			ADR_TYPE=#adrType#,
+			CONTACT_EMAIL=#emailTo#,
+			CONTACT_EMAIL_CC=#emailCc#,
+			CONTACT_TYPE=#contactType#
+		WHERE ID_REF = #idRef#
+	</update>
+	<!-- SQL for Action:ActRe-Activate - Re-Activate (B_BIL_S02) just update IS_DELETED field with 0 -->
+    <update id="reActivateT_BIL_H" parameterClass="java.util.HashMap">
+        UPDATE T_BIL_H SET IS_DELETED='0', DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#, ID_AUDIT=#idAudit#
+        WHERE ID_REF = #idRef#
+    </update>
+	<select id="selectT_BIL_D_BY_ID_REF" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	    SELECT 
+	    	  ID_REF,
+	    	  ITEM_ID,
+	    	  ITEM_AMT,
+	    	  ITEM_GST,
+	    	  APPLY_GST,
+	    	  ITEM_SUBTOTAL,
+	    	  TAX_RATE
+		FROM
+			  T_BIL_D
+		WHERE
+			  ID_REF = #idRef# 
+			  AND ITEM_LEVEL = '1'
+			  AND IS_DELETED = '0'
+	</select>
+	<update id="updateMiniT_BIL_D" parameterClass="java.util.HashMap">
+		UPDATE
+			  T_BIL_D
+		SET
+			  ITEM_EXPORT_GST = #itemExportGst#,
+			  ITEM_EXPORT_AMT = #itemExportAmt#,
+			  DATE_UPDATED=sysdate, 
+			  ID_LOGIN=#idLogin#, 
+			  ID_AUDIT=#idAudit#
+		WHERE
+			  ID_REF = #idRef# 
+			  AND ITEM_ID = #itemId#
+	</update>
+	<!-- SQL for Action:ActDelete - Deleting (B_BIL_S02) just update IS_DELETED field with 1 -->
+	<update id="deleteT_BIL_H" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H SET IS_DELETED='1', DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#, ID_AUDIT=#idAudit#
+		WHERE ID_REF = #idRef#
+	</update>
+	<update id="deleteT_BIL_D_DELETED_FLG" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_D SET IS_DELETED='1', DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#, ID_AUDIT=#idAudit#
+		WHERE ID_REF = #idRef#
+	</update>
+	<select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'B-BIL'
+	</select>
+	<!-- get all customer -->
+	<select id="getAllCust" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT ID_CUST as value, 
+	    TRIM(case SALUTATION when 'MR' then 'Mr' when 'MS' then 'Ms' when 'MRS' then 'Mrs' end||' '||CUST_NAME) as label		
+		FROM M_CUST
+		WHERE IS_DELETED = '0' 
+		ORDER BY CUST_NAME
+	</select>
+	<!-- get all contact -->
+	<select id="getAllContact" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT
+	          H.CONTACT_TYPE as value,
+	          '['||H.CONTACT_TYPE||']'||H.CONTACT_NAME as label,
+	          case H.CONTACT_TYPE when 'BC' then 1 when 'PC' then 2 when 'TC' then 3 else 4 end as SEQ
+		FROM M_CUST_CTC H
+		WHERE H.ID_CUST = #idCust# 
+		ORDER BY SEQ
+	</select>
+	<select id="getAllContact1" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT C.Id_Cust as value, C.Cust_Name as label    
+    		FROM M_CUST C
+    	WHERE
+    	 C.ID_CUST = #idCust#
+	</select>
+	<!-- get all QCSRef -->
+	<select id="getAllQCSRef" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT J.ID_REF as value, J.ID_REF as label		
+		FROM T_QCS_H J
+		WHERE J.ID_CUST = #idCust# and J.IS_DELETED = '0' 
+		ORDER BY J.ID_REF
+	</select>
+	<!-- get all QuoRef -->
+	<select id="getAllQuoRef" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT J.ID_QUO as value, J.ID_QUO as label		
+		FROM T_QCS_H J
+		WHERE J.ID_CUST = #idCust# and J.IS_DELETED = '0' 
+		ORDER BY J.ID_QUO
+	</select>
+	<!-- get all AcManager -->
+	<select id="getAllAcManager" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT A.ID_USER as value, A.USER_NAME as label		
+		FROM M_USER A
+		WHERE A.IS_DELETED = '0'
+		AND A.USER_STATUS ='1'
+		ORDER BY A.USER_NAME
+	</select>
+	<!-- get all jobNo -->
+	<select id="getAllJobNo" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT K.ID_JOBNO as value, K.ID_JOBNO as label		
+		FROM M_JOB_LIST K
+		WHERE K.ID_CUST = #idCust# AND K.IS_DELETED = 0
+		ORDER BY K.ID_JOBNO
+	</select>
+	<!-- get all Billing Account No -->
+	<select id="getBillingAccountNo" resultClass="org.apache.struts.util.LabelValueBean">
+	    SELECT M.ID_BILL_ACCOUNT as value, M.ID_BILL_ACCOUNT as label		
+		FROM T_BAC_H M
+		WHERE M.ID_CUST = #idCust# AND M.IS_DELETED = 0
+		ORDER BY ID_BILL_ACCOUNT
+	</select>
+	<select id="getBAC_HInfo" resultClass="java.util.HashMap">
+	    SELECT ID_BILL_ACCOUNT,PAYMENT_METHOD,BILL_CURRENCY, CUST_ADR_TYPE, CONTACT_TYPE, DELIVERY,DELIVERY_EMAIL,TAX_TYPE
+		FROM T_BAC_H M
+		WHERE M.ID_BILL_ACCOUNT = #billAcc# AND M.IS_DELETED = 0
+	</select>
+	<!-- get customer adr -->
+	<select id="getCustAdr" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT *		
+		FROM M_CUST_ADR
+		WHERE ID_CUST = #idCust# AND ADR_TYPE = #adrType#
+	</select>
+	<!-- get customer info-->
+	<select id="getSingleCustInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT *	
+		FROM M_CUST
+		WHERE ID_CUST = #idCust# 
+		ORDER BY CUST_NAME
+	</select>
+	<!-- get M_GSET_D info-->
+	<select id="getMGSetDInfo" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	    SELECT G.SET_VALUE	
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CB_AUTO_OFFSET'
+	</select>
+	<!-- get single contact -->
+	<select id="getSingleContact" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT H.*		
+		FROM M_CUST_CTC H
+		WHERE H.ID_CUST = #idCust# AND H.CONTACT_TYPE = #contactType#
+		ORDER BY H.CONTACT_NAME
+	</select>
+	<!-- SQL for Action: ActSave - Editing - Header (B_BIL_S03ne) -->
+	<update id="updateHeaderInfo" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H SET 
+		    ID_CUST     =   #idCust#,
+			ADR_TYPE	=	#adrType#,
+			ADDRESS1	=	#address1#,
+			ADDRESS2	=	#address2#,
+			ADDRESS3	=	#address3#,
+			ADDRESS4	=	#address4#,
+			TEL_NO	=	#telNo#,
+			FAX_NO	=	#faxNo#,
+			ZIP_CODE	=	#zipCode#,
+			COUNTRY	=	#country#,
+			CONTACT_TYPE	=	#contactType#,
+			CONTACT_NAME	=	#contactName#,
+			CONTACT_EMAIL	=	#contactEmail#,
+			CONTACT_EMAIL_CC  =  #contactEmailCC#,
+			DELIVERY  =  #contactDelivery#,
+			DELIVERY_EMAIL  =  #contactDeliveryEmail#,
+			DATE_REQ	=	#dateReq#,
+			BILL_ACC  =#billAcc#,
+			ID_QCS	=	#idQcs#,
+			QUO_REF	=	#quoRef#,
+			CUST_PO	=	#custPo#,
+			ID_CONSULT	=	#idConsult#,
+			BILL_CURRENCY	=	#billCurrency#,
+			TERM	=	#term#,
+			TERM_DAY = #termDays#,
+			DUE_DATE = #contactDueDate#,
+			GST_PERCENT = #gstPercent#,
+			GST_AMOUNT = #gstAmount#,
+			BILL_AMOUNT = #billAmount#,
+			EXPORT_CUR = #exportCur#,
+			EXPORT_AMOUNT = #exportAmount#,
+			CUR_RATE = #curRate#,
+			FIXED_FOREX = #fixedForex#,
+			DATE_UPDATED	=	sysdate,
+			ID_LOGIN	=	#idLogin#,
+			ID_AUDIT = #idAudit#,
+			PAY_METHOD = #payMethod#,
+			CUST_NAME = #custName#,
+			SALUTATION = #salutation#
+		WHERE ID_REF = #idRef#
+	</update>
+	<!-- SQL for Action: ActSave - New - Header (B_BIL_S03ne) -->
+	<insert id="insertHeaderInfo" parameterClass="java.util.HashMap">
+	   INSERT INTO T_BIL_H(
+	   		ID_REF, BILL_TYPE, IS_MANUAL, BILL_ACC, 
+	   		DATE_REQ, PAY_METHOD, ID_CUST, ADR_TYPE, 
+	   		CONTACT_TYPE, ID_BIF, ID_QCS, QUO_REF, 
+	   		CUST_PO, ID_CONSULT, TERM, BILL_CURRENCY, 
+	   		GST_PERCENT, GST_AMOUNT, BILL_AMOUNT, PAID_AMOUNT, 
+	   		LAST_PAYMENT_DATE, IS_SETTLED, IS_SINGPOST, IS_EXPORT, 
+	   		IS_DISPLAY_EXP_AMT, EXPORT_CUR, CUR_RATE, EXPORT_AMOUNT, 
+	   		FIXED_FOREX, NO_PRINTED, DATE_PRINTED, USER_PRINTED, 
+	   		IS_CLOSED, ADDRESS1, ADDRESS2, ADDRESS3, 
+	   		ADDRESS4, ZIP_CODE, COUNTRY, TEL_NO, 
+	   		FAX_NO, CONTACT_NAME, CONTACT_EMAIL, CONTACT_EMAIL_CC, IS_DELETED, 
+	   		PREPARED_BY, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT,
+	   		CUST_NAME, SALUTATION,DUE_DATE,DELIVERY,DELIVERY_EMAIL,TERM_DAY) 
+	   		VALUES (
+	   			#idRef#,#billType#,#isManual#,#billAcc#,
+	   			#dateReq#,#payMethod#,#idCust#,#adrType#,
+	   			#contactType#,#idBif#,#idQcs#,#quoRef#,
+	   			#custPo#,#idConsult#,#term#,#billCurrency#,
+	   			#gstPercent#,#gstAmount#,#billAmount#,#paidAmount#,
+	   			#lastPaymentDate#,#isSettled#,#isSingPost#,#isExport#,
+	   			#isDisplayExpAmt#,#exportCur#,#curRate#,#exportAmount#,
+	   			#fixedForex#,#noPrinted#,#datePrinted#,#userPrinted#,
+	   			#isClosed#,#address1#,#address2#,#address3#,
+	   			#address4#,#zipCode#,#country#,#telNo#,
+	   			#faxNo#,#contactName#,#contactEmail#,#contactEmailCC#,#isDeleted#,
+	   			#prePared#,sysdate,sysdate,#idLogin#,#idAudit#,
+	   			#custName#,#salutation#,#contactDueDate#,#contactDelivery#,#contactDeliveryEmail#,#termDays#
+	   		)
+	</insert>
+	<select id="getGstAmount" resultClass="java.util.HashMap">
+		SELECT G.SET_VALUE FROM M_GSET_D G WHERE G.ID_SET = 'GST'
+	</select>
+	<update id="deleteDetail" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_D
+		SET IS_DELETED = 1,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_REF = #idRef# 
+			AND INSTR(#itemId#, '|' || ITEM_ID || '|') = 0
+	</update>
+	<insert id="insertDetailInfo1" parameterClass="java.util.HashMap">
+	    INSERT INTO T_BIL_D(
+				ID_REF, ITEM_ID, ITEM_LEVEL,ITEM_NO, ITEM_DESC, ITEM_QTY, ITEM_UPRICE, 
+				ITEM_AMT, ITEM_GST, ITEM_EXPORT_AMT, APPLY_GST, IS_DISPLAY,ID_CUST_PLAN, 
+				ID_CUST_PLAN_GRP, ID_CUST_PLAN_LINK, SVC_LEVEL1, SVC_LEVEL2, BILL_FROM, BILL_TO, JOB_NO, 
+				IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT,
+				ITEM_CAT, ITEM_TYPE, IS_DISPLAY_MIN_SVC, MIN_SVC_FROM, MIN_SVC_TO,IS_DISPLAY_JOBNO, DISPLAY_DISC,
+				ITEM_DISC_AMT, ITEM_SUBTOTAL, TAX_RATE, TAX_CODE, ITEM_EXPORT_GST, CUST_PO) 
+		VALUES(#idRef#,#itemId#,#itemLevel#,#itemNo#,#itemDesc#,#itemQty#,#itemUprice#,
+				#itemAtm#, #itemGst#, #itemExportAmt#, #applyGst#, #isDisplay#, #idCustPlan#, 
+				#idCustPlanGrp#,#idCustPlanLink#, #svcLevel1#, #svcLevel2#,#billFrom#,#billTo#, #jobNo#,
+				#isDeleted#,sysdate,sysdate,#idLogin#,#idAudit#,
+				#itemCat#, #itemType#, #isDisplayMinSvc#, #minSvcFrom#, #minSvcTo#,#isDisplayJobNo#,#displayDiscount#,
+				#itemDisc#, #itemSubTotal#, #taxRate#, #taxCode#, #itemExportGST#, #poNo#)
+	</insert>
+	<insert id="insertDetailInfo2" parameterClass="java.util.HashMap">
+		INSERT INTO T_BIL_D(
+				ID_REF, ITEM_ID, ITEM_LEVEL,ITEM_NO, ITEM_DESC, ITEM_QTY, ITEM_UPRICE, 
+				ITEM_AMT, ITEM_GST, ITEM_EXPORT_AMT, APPLY_GST, IS_DISPLAY,ID_CUST_PLAN, 
+				ID_CUST_PLAN_GRP, ID_CUST_PLAN_LINK, SVC_LEVEL1, SVC_LEVEL2, BILL_FROM, BILL_TO, JOB_NO, 
+				IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT, DISPLAY_DISC) 
+		VALUES(#idRef#,
+			(CASE WHEN (SELECT MAX(ITEM_ID) FROM T_BIL_D WHERE ID_REF = #idRef#) IS NULL THEN 0
+  			ELSE (SELECT MAX(ITEM_ID) FROM T_BIL_D WHERE ID_REF = #idRef#) END) + 1
+				,#itemLevel#,#itemNo#,#itemDesc#,#itemQty#,#itemUprice#,
+				#itemAtm#, #itemGst#, #itemExportAmt#, #applyGst#, #isDisplay#, #idCustPlan#, 
+				#idCustPlanGrp#,#idCustPlanLink#, #svcLevel1#, #svcLevel2#,#billFrom#,#billTo#, #jobNo#,
+				#isDeleted#,sysdate,sysdate,#idLogin#,#idAudit#,'0')
+	</insert>
+	<update id="updateDetailInfo" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_D
+		SET ITEM_LEVEL = #itemLevel#,
+		    ITEM_NO = #itemNo#,
+			ITEM_DESC = #itemDesc#,
+			ITEM_QTY = #itemQty#,
+			ITEM_UPRICE = #itemUprice#,
+			ITEM_AMT = #itemAtm#,
+			ITEM_GST = #itemGst#,
+			<!--
+			ID_CUST_PLAN = #idCustPlan#,
+			ID_PLAN_GRP = #idPlanGrp#,
+			BILL_SVC_ID = #billSvcId#,
+			BILL_FROM = #billFrom#,
+			BILL_TO = #billTo#,
+			IS_DELETED = #isDeleted#,
+			-->
+			IS_DELETED = #isDeleted#,
+			DATE_UPDATED = sysdate,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_REF = #idRef# 
+			AND ITEM_ID = #itemId#
+	</update>
+	<update id="updateBAC" parameterClass="java.util.HashMap">
+		UPDATE T_BAC_H 
+		SET 
+		    <isNotEmpty property="idAudit">
+                ID_AUDIT=#idAudit#,
+            </isNotEmpty>
+			DATE_UPDATED=sysdate, 
+			ID_LOGIN=#idLogin#,
+			TOTAL_AMT_DUE = TOTAL_AMT_DUE - #pBillAmount# + #cBillAmount#
+		WHERE TRIM(ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+	</update>
+	<!-- Manual Billing Document creation need to update T_BIL_S total amount due -->
+    <select id="getTotalAmount" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT TOTAL_AMT_DUE
+        FROM T_BAC_H 
+        WHERE TRIM(ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+    </select>
+    <insert id="insertBilS" parameterClass="java.util.HashMap">
+        INSERT INTO T_BIL_S
+            (ID_REF, TOTAL_AMT_DUE, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+        VALUES
+            (TRIM(#idRef#), #totalAmountDue#, '0', SYSDATE, SYSDATE, #idLogin#, #idAudit#)
+    </insert>
+    <update id="updateBilS" parameterClass="java.util.HashMap">
+        UPDATE T_BIL_S
+        SET
+            <isNotEmpty property="idAudit">
+                ID_AUDIT=#idAudit#,
+            </isNotEmpty>
+            TOTAL_AMT_DUE = #totalAmountDue#,
+            DATE_UPDATED = SYSDATE,
+            ID_LOGIN = #idLogin#
+        WHERE TRIM(ID_REF) = TRIM(#idRef#)
+    </update>
+	<delete id="deleteT_BIL_D" parameterClass="java.lang.String">
+		DELETE T_BIL_D WHERE ID_REF=#idRef#
+	</delete>
+	
+	<select id="selectPreBillAmount" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT BILL_AMOUNT,BILL_TYPE,BILL_ACC FROM T_BIL_H  where TRIM(id_ref) = TRIM(#idRef#)
+	</select>
+	
+	<select id="select_M_JNM_STATUS" resultClass="java.lang.String">
+    	SELECT IS_DISPLAY
+		FROM M_SUB_MODULES
+		WHERE  ID_MODULE='M' and ID_SUB_MODULE ='M-JNM'
+    </select>
+        
+	<select id="selectServiceAndSubPlan" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT t.*,to_char(BILL_DESC) BILL_DESC_TEXT, ITEM_DESC as ITEM_DESC_TEXT,
+		to_char(MIN_SVC_START,'dd-Mon-yyyy') MIN_SVC_START_TEXT,to_char(MIN_SVC_END,'dd-Mon-yyyy') MIN_SVC_END_TEXT
+		 FROM 
+		 (
+		 	SELECT A.ID_CUST_PLAN, A.ID_CUST, A.PLAN_STATUS, A.PLAN_TYPE, A.APPROVE_TYPE, A.TRANSACTION_TYPE,
+		           A.REFERENCE_PLAN, A.ID_BILL_ACCOUNT, A.BILL_ACC_ALL, A.SVC_LEVEL1, A.SVC_LEVEL2, A.BILL_INSTRUCT,
+		           A.PAYMENT_METHOD, A.BILL_CURRENCY, A.EXPORT_CURRENCY, A.FIXED_FOREX, A.IS_DISPLAY_EXP_AMT, A.IS_DELETED,
+		           A.DATE_CREATED, A.DATE_UPDATED, A.ID_LOGIN, A.ID_AUDIT, B.ID_CUST_PLAN_GRP, B.SERVICES_STATUS, B.SVC_START,
+		           B.SVC_END, B.AUTO_RENEW, B.MIN_SVC_PERIOD, B.MIN_SVC_START, B.MIN_SVC_END, B.CONTRACT_TERM,
+		           B.CONTRACT_TERM_NO, B.PRO_RATE_BASE, B.PRO_RATE_BASE_NO, B.IS_LUMP_SUM,B.DISC_LUMP_SUM,
+		           B.BILL_DESC, C.ID_CUST_PLAN_LINK, C.ITEM_TYPE, C.ITEM_DESC, C.QUANTITY,
+		           C.UNIT_PRICE, C.TOTAL_AMOUNT, C.JOB_NO, C.ID_PLAN, C.PLAN_NAME, C.PLAN_DESC,
+		           C.ID_PLAN_GRP, C.ITEM_GRP_NAME, C.SVC_LEVEL1 as SUB_SVC_LEVEL1, C.SVC_LEVEL2 as SUB_SVC_LEVEL2,
+		           C.RATE_TYPE, C.RATE_MODE, C.RATE,C.APPLY_GST,C.IS_DISPLAY_JOBNO,C.DISC_AMOUNT,C.CUST_PO
+		    FROM T_CUST_PLAN_H A, T_CUST_PLAN_D B, T_CUST_PLAN_LINK C
+		    WHERE A.ID_CUST_PLAN = B.ID_CUST_PLAN
+		          AND B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP
+		          AND A.IS_DELETED = 0
+		          AND B.IS_DELETED = 0
+		          AND C.IS_DELETED = 0
+		 ) t
+		<dynamic prepend="WHERE">
+			t.ID_CUST_PLAN_LINK IN
+			<iterate property="idCustPlanLink" open="("
+				close=")" conjunction="," >
+				#idCustPlanLink[]#
+			</iterate>
+		</dynamic>
+		ORDER BY ID_CUST_PLAN,ID_CUST_PLAN_GRP,ID_CUST_PLAN_LINK
+	</select>
+	
+	<select id="selectID_SUB_MODULE_ISDisplay" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	    SELECT
+	          ID_SUB_MODULE
+	    FROM
+	          M_SUB_MODULES
+	    WHERE
+	          ID_MODULE = 'B'
+	          AND ID_SUB_MODULE = #idSubModule#
+	          AND IS_DISPLAY = '1'
+	</select>
+	
+	<select id="selectCB_AUTO_OFFSET" resultClass="java.util.HashMap">
+	    SELECT
+	          G.SET_VALUE
+	    FROM 
+	          M_GSET_D G
+	    WHERE 
+	          G.ID_SET = 'CB_AUTO_OFFSET'
+	          AND G.SET_SEQ = 1
+	          AND G.IS_DELETED = '0'
+	</select>
+	<select id="selectTEL_FAX_CONTACT" resultClass="java.lang.String">
+	    SELECT
+	          G.SET_VALUE
+	    FROM 
+	          M_GSET_D G
+	    WHERE 
+	          G.ID_SET = 'TEL_FAX_CONTACT'
+	          AND G.SET_SEQ = 1
+	          AND G.IS_DELETED = '0'
+	</select>
+	<select id="selectCURRENCY_STD" resultClass="java.lang.String">
+              SELECT
+                 G.SET_VALUE
+           FROM 
+                 M_GSET_D G
+           WHERE 
+                 G.ID_SET = 'CURRENCY_STD'
+                 AND G.SET_SEQ = 1
+                 AND G.IS_DELETED = '0'
+       </select>
+       <select id="selectDEF_CURRENCY" resultClass="java.lang.String">
+              SELECT
+                 G.SET_VALUE
+           FROM 
+                 M_GSET_D G
+           WHERE 
+                 G.ID_SET = 'DEF_CURRENCY'
+                 AND G.SET_SEQ = 1
+                 AND G.IS_DELETED = '0'
+       </select>
+	
+	<!-- G_BIL_P02 Start -->
+	<!-- Update service status to PS7 AND batch will run this process every day -->
+	<select id="selectActiveService" resultClass="java.util.HashMap">
+	    SELECT
+	          B.ID_CUST_PLAN,
+	          B.ID_CUST_PLAN_GRP,
+	          A.PLAN_STATUS
+	    FROM
+	          T_CUST_PLAN_H A INNER JOIN T_CUST_PLAN_D B
+	          ON A.ID_CUST_PLAN = B.ID_CUST_PLAN
+	          AND B.IS_DELETED = '0'
+	    WHERE
+	          B.SVC_END IS NOT NULL
+	          AND B.SVC_END &lt;= sysdate 
+	          AND B.SERVICES_STATUS = 'PS3'
+	          AND A.IS_DELETED = '0'
+	</select>
+	<update id="updateServiceStatus" parameterClass="java.util.HashMap">
+	    UPDATE
+	          T_CUST_PLAN_D A
+	    SET
+	          A.SERVICES_STATUS='PS7',
+	          A.DATE_UPDATED=sysdate,
+	          A.ID_LOGIN=#idLogin#,
+	          A.ID_AUDIT = #idAudit#
+	    WHERE 
+	          ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	</update>
+	
+	<select id="selectPermisTimes" resultClass="java.lang.String">
+		SELECT SET_VALUE FROM M_GSET_D WHERE ID_SET = 'NOPRINTDOC' AND SET_SEQ = 1 AND IS_DELETED = '0'
+	</select>
+	
+	<!-- Select service status count for each ID_CUST_PLAN which contains "PS7" -->
+	<select id="selectServiceStatus" resultClass="java.util.HashMap">
+        SELECT COUNT(DISTINCT SERVICES_STATUS) AS COUNT_STATUS, ID_CUST_PLAN
+        FROM T_CUST_PLAN_D
+        WHERE IS_DELETED = '0'AND ID_CUST_PLAN IN
+        (
+            SELECT DISTINCT ID_CUST_PLAN
+            FROM T_CUST_PLAN_D
+            WHERE SERVICES_STATUS = 'PS7' AND IS_DELETED = '0'
+        )
+        GROUP BY ID_CUST_PLAN
+	</select>
+	<select id="getT_BAC_H_InfoByID" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	    SELECT
+	          BILL_CURRENCY,
+	          EXPORT_CURRENCY,
+	          FIXED_FOREX
+	    FROM
+	          T_BAC_H
+	    WHERE
+	          ID_BILL_ACCOUNT = #billAcc#
+	          AND IS_DELETED = '0'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      B.SERVICES_STATUS
+        FROM 
+              T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+              INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              B.ID_CUST_PLAN = #idCustPlan#
+              AND B.IS_DELETED = '0'
+	</select>
+	<select id="GET_SUBSCIPTION_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_CUST_PLAN = #idCustPlan#
+			AND IS_DELETED = '0'
+	</select>
+	<!-- G_BIL_P02 End -->
+	<!-- B_BIL_S04 Start -->
+	<select id="SELECT.B_BIL.S04.RESULT.IDCUSTNAME" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+       <![CDATA[  
+        SELECT CUST_NAME
+        FROM M_CUST T
+        WHERE T.ID_CUST = #idCust#
+        AND T.IS_DELETED = '0'
+        ]]>
+	</select>
+	<select id="SELECT.B_BIL.S04.G_SET.getValue" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+        SELECT SET_VALUE
+        FROM M_GSET_D T
+        WHERE T.ID_SET=#idSet#
+        AND T.IS_DELETED = '0'
+        <dynamic prepend="AND">
+	        <isNotEmpty prepend="AND" property="setSeq">
+	          T.SET_SEQ = #setSeq#
+	        </isNotEmpty>
+	    </dynamic>
+	</select>
+	<select id="SELECT.B_BIL.S04.GETISDISPLAY" resultClass="java.lang.String" >
+        SELECT T.IS_DISPLAY FROM M_SUB_MODULES T WHERE T.ID_MODULE='B' AND T.ID_SUB_MODULE='B-BIF'
+    </select>
+	<select id="SELECT.B_BIL.S04.RESULT.TOTALCOUNT" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+         SELECT COUNT(DISTINCT(B.ID_CUST_PLAN))
+      	 FROM V_T_CUST_PLAN B, T_SUBSCRIPTION_INFO C 
+         WHERE 
+	      B.ID_CUST = #idCust#
+			<dynamic prepend="AND">
+				<isNotEmpty prepend="AND" property="jobNo">
+		          UPPER(B.JOB_NO) LIKE UPPER('%$jobNo$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="tbxSubscription">
+		          UPPER(C.ID_SUB_INFO) LIKE UPPER('%$tbxSubscription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcBillingDescription">
+		          UPPER(B.BILL_DESC) LIKE UPPER('%$gdcBillingDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcItemDescription">
+		          UPPER(B.ITEM_DESC) LIKE UPPER('%$gdcItemDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="tbxServiceStatus">
+                 B.SERVICES_STATUS IN 
+                 <iterate property="tbxServiceStatus"
+                      open="(" close=")"
+                      conjunction=",">
+                   #tbxServiceStatus[]# 
+                 </iterate>
+                 </isNotEmpty>
+                 <isNotEmpty prepend="AND" property="billAcc">
+		          TRIM(B.ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+		         </isNotEmpty>
+		    </dynamic>
+	      AND C.ID_CUST_PLAN  =  B.ID_CUST_PLAN
+	      AND B.IS_DELETED = '0'
+	      AND C.IS_DELETED = '0'
+	</select>
+	<select id="SELECT.B_BIL.S04.RESULT.CUSTPLANID" resultClass="java.lang.String" parameterClass="java.util.HashMap"> 
+         SELECT DISTINCT(B.ID_CUST_PLAN)
+      	 FROM V_T_CUST_PLAN B, T_SUBSCRIPTION_INFO C 
+         WHERE 
+	      B.ID_CUST = #idCust#
+			<dynamic prepend="AND">
+		        <isNotEmpty prepend="AND" property="tbxSubscription">
+		          UPPER(C.ID_SUB_INFO) LIKE UPPER('%$tbxSubscription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcBillingDescription">
+		          UPPER(B.BILL_DESC) LIKE UPPER('%$gdcBillingDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcItemDescription">
+		          UPPER(B.ITEM_DESC) LIKE UPPER('%$gdcItemDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="tbxServiceStatus">
+                 B.SERVICES_STATUS IN 
+                 <iterate property="tbxServiceStatus"
+                      open="(" close=")"
+                      conjunction=",">
+                   #tbxServiceStatus[]# 
+                 </iterate>
+                 </isNotEmpty>
+                 <isNotEmpty prepend="AND" property="billAcc">
+		          TRIM(B.ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+		         </isNotEmpty>
+		         <isNotEmpty prepend="AND" property="jobNo">
+		          UPPER(B.JOB_NO) LIKE UPPER('%$jobNo$%')
+		        </isNotEmpty>
+		    </dynamic>      
+	      AND C.ID_CUST_PLAN  =  B.ID_CUST_PLAN
+	      AND B.IS_DELETED = '0'
+	      AND C.IS_DELETED = '0'
+	      ORDER BY B.ID_CUST_PLAN ASC
+	</select>
+	<select id="SELECT.B_BIL.S04.RESULT.CUSTPLANList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT DISTINCT(B.ID_CUST_PLAN_LINK) AS ID_CUST_PLAN_LINK,B.ID_CUST_PLAN,B.ID_CUST_PLAN_GRP,B.ID_CUST,C.ID_SUB_INFO,B.TRANSACTION_TYPE,B.BILL_INSTRUCT,
+			   B.BILL_CURRENCY,TO_CHAR(B.BILL_DESC) AS BILL_DESC,TO_CHAR(B.SVC_START,'dd/mm/yyyy') SVC_START,TO_CHAR(B.SVC_END,'dd/mm/yyyy') AS SVC_END,
+			   B.SERVICES_STATUS,TO_CHAR(B.ITEM_DESC) AS ITEM_DESC,
+			   B.RATE_TYPE,B.RATE_MODE,B.QUANTITY,B.UNIT_PRICE,
+			   B.TOTAL_AMOUNT,B.APPLY_GST,B.ITEM_TYPE,B.SVC_LEVEL1,B.SVC_LEVEL2,B.JOB_NO,B.MIN_SVC_START,B.MIN_SVC_END
+	    FROM V_T_CUST_PLAN B, T_SUBSCRIPTION_INFO C 
+	    WHERE 
+			B.ID_CUST = #idCust#
+			<dynamic prepend="AND">
+		        <isNotEmpty prepend="AND" property="tbxSubscription">
+		          UPPER(C.ID_SUB_INFO) LIKE UPPER('%$tbxSubscription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcBillingDescription">
+		          UPPER(B.BILL_DESC) LIKE UPPER('%$gdcBillingDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="gdcItemDescription">
+		          UPPER(B.ITEM_DESC) LIKE UPPER('%$gdcItemDescription$%')
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="tbxServiceStatus">
+                 B.SERVICES_STATUS IN 
+                 <iterate property="tbxServiceStatus"
+                      open="(" close=")"
+                      conjunction=",">
+                   #tbxServiceStatus[]# 
+                 </iterate>
+                 </isNotEmpty>
+                 <isNotEmpty prepend="AND" property="billAcc">
+		          TRIM(B.ID_BILL_ACCOUNT) = TRIM(#billAcc#)
+		         </isNotEmpty>
+		         <isNotEmpty prepend="AND" property="jobNo">
+		          UPPER(B.JOB_NO) LIKE UPPER('%$jobNo$%')
+		        </isNotEmpty>
+		    </dynamic>    
+			AND C.ID_CUST_PLAN = B.ID_CUST_PLAN
+			AND B.ID_CUST_PLAN = #idCustPlan#
+			AND B.IS_DELETED = '0'
+			AND C.IS_DELETED = '0'
+			ORDER BY B.ID_CUST_PLAN ASC,B.ID_CUST_PLAN_GRP ASC,B.ID_CUST_PLAN_LINK ASC
+	</select>
+    <select id="getBillForCheckByIdref" parameterClass="string" resultClass="java.util.HashMap">
+        SELECT * FROM T_BIL_H
+        WHERE
+        ID_REF=RPAD(#idRef#,20,' ')
+    </select>
+    <select id="getManualBillButtonShowFlg" resultClass="java.lang.String">
+    SELECT 
+    		SET_VALUE
+    FROM 
+    		M_GSET_D
+    WHERE   
+            ID_SET='MANUAL_BILL_BUTTON'	
+    AND 
+    		IS_DELETED = '0'	        			
+    </select>
+	<!-- B_BIL_S04 End -->
+	<!-- add for #143 Start -->
+	<select id="getM_GSET_D_SetValue" resultClass="java.lang.String"> 
+	SELECT 
+		G.SET_VALUE 
+	FROM 
+		M_GSET_D G 
+	WHERE 
+		G.ID_SET = 'BIL_TAX_COL'
+    AND 
+  		IS_DELETED = '0'
+	</select>
+	<select id="getBAC_DInfo" resultClass="java.util.HashMap">
+	    SELECT S.ID_BILL_ACCOUNT, S.ID_CUST_PLAN_GRP,S.TERM, S.TERM_DAY
+		FROM T_BAC_D S
+		WHERE S.ID_CUST_PLAN_GRP = (
+			SELECT MAX(S.ID_CUST_PLAN_GRP)
+			FROM T_BAC_D S
+			WHERE S.ID_BILL_ACCOUNT = #billAcc#
+		)
+	</select>
+	<!-- add for #143 End -->
+	<!-- #154 Start -->
+	<select id="GET_IS_CUST_PO_DISPLAY" resultClass="java.lang.String">
+    	SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='CUSTPONOENTRY'
+    </select>
+    <select id="getM_TAXInfo" parameterClass="string" resultClass="java.util.HashMap">
+    	SELECT 
+    		W.ID_TAX, W.TAX_RATE, W.TAX_CODE
+    	FROM 
+    		M_TAX W
+    	WHERE 
+    		W.ID_TAX = #apply_gst#
+    	AND
+    		W.IS_DELETED = 0
+    </select>
+    <select id="getM_TAXInfo2" parameterClass="string" resultClass="java.util.HashMap">
+    	SELECT 
+    		W.ID_TAX, W.TAX_RATE, W.TAX_CODE, '[' || W.TAX_RATE || '%]' || W.DESCRIPTION1 AS TD
+    	FROM 
+    		M_TAX W
+    	WHERE
+    		W.IS_DELETED = 0
+    	ORDER BY W.ID_TAX
+    </select>
+    <!-- #154 End -->
+    
+    <!-- #174 Start -->
+    <select id="Get_IsDisplay_BillingPeriod" resultClass="java.lang.String">
+    	SELECT 
+    		G.SET_VALUE 
+    	FROM 
+    		M_GSET_D G 
+    	WHERE G.ID_SET='BIL_DISPLAY_OTC_PERIOD' AND G.IS_DELETED = 0
+    </select>
+    <!-- #174 End -->
+
+    <!-- #191 Start -->
+    <select id="getSinPostValue" resultClass="java.util.HashMap">
+    	SELECT RESOURCE_ID, VALUE 
+		FROM RESOURCESMAINT 
+		WHERE CATEGORY='LABEL' 
+			AND (RESOURCE_ID='BIL01' OR RESOURCE_ID='BIL02' OR RESOURCE_ID='BIL03')
+			AND IS_DELETED = 0
+    </select>
+    <!-- #191 End -->
+    <select id="SELECT.B_BIL.TAX_TYPE" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	    SELECT
+	    	  B.TAX_TYPE
+	    FROM
+	          T_BIl_D D INNER JOIN  T_CUST_PLAN_H A ON D.ID_CUST_PLAN = A.ID_CUST_PLAN AND A.IS_DELETED = '0'
+	          INNER JOIN T_BAC_H B ON A.ID_BILL_ACCOUNT = B.ID_BILL_ACCOUNT AND B.IS_DELETED = '0'
+		WHERE
+	          D.ID_REF = #idRef#
+	  </select>
+    <select id="SELECT.B_BIL.CPM_TAX_WORD" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_TAX_WORD'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+     </select>
+     
+     <select id="SELECT.B_BIL.TAX_RATE" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'GST'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+     </select>
+</sqlMap>

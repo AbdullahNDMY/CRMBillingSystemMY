@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_MIM">
+	<select id="getHistories" resultClass="java.util.HashMap">
+		 SELECT ID_CLC_IMP_BATCH, FILENAME, CLOSE_MONTHYEAR, TO_CHAR(DATE_UPLOADED, 'dd/MM/yyyy HH24:mi:ss') DATE_UPLOADED, STATUS, DATE_CREATED, DATE_UPDATED, ID_LOGIN 
+		 FROM T_CLC_IMP_HD
+		 ORDER BY ID_CLC_IMP_BATCH DESC
+	</select>
+	<select id="getTotalHistories" resultClass="java.lang.Integer">
+		 SELECT COUNT(*) 
+		 FROM T_CLC_IMP_HD
+		 ORDER BY DATE_UPLOADED DESC
+	</select>
+	<select id="getLogByHistory" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT ID_BATCH_LOG, ID_BATCH_REF_NO, ERROR_MSG, DATE_CREATED, TO_CHAR(DATE_UPDATED,'dd/MM/yyyy HH24:mi:ss') DATE_UPDATED, ID_LOGIN, ID_BATCH_TYPE
+		 FROM T_BATCH_LOG
+		 WHERE ID_BATCH_TYPE = #idBatchType#
+		 	AND ID_BATCH_REF_NO = #idBatchRefNo#
+		 ORDER BY ID_BATCH_LOG ASC
+	</select>
+	<select id="getCustPlanId" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT A.ID_SUB_INFO 
+			 FROM T_SUBSCRIPTION_INFO A, T_CUST_PLAN_H B
+		 WHERE 
+		 	TRIM(A.ID_SUB_INFO) = TRIM(#idSubInfo#)
+		 	AND B.ID_CUST_PLAN = A.ID_CUST_PLAN
+		 	AND B.IS_DELETED = '0'
+	</select>  
+	<select id="getClearCallSubId" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+         SELECT DISTINCT A.ID_SUB_INFO 
+         FROM V_T_CUST_SSM A, M_PLAN_BATCH_MAPPING B
+         WHERE 
+            TRIM(A.ID_SUB_INFO) = TRIM(#idSubInfo#)
+            AND B.ID_PLAN_GRP = A.ID_PLAN_GRP
+            AND B.BATCH_ID = 'CC'
+    </select>
+	<insert id="insertT_CLC_IMP_HD" parameterClass="java.util.HashMap">
+		INSERT INTO T_CLC_IMP_HD
+		       (ID_CLC_IMP_BATCH,FILENAME, CLOSE_MONTHYEAR, STATUS, DATE_UPLOADED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+		VALUES (#idClcImpBatch#, #filename#, #closeMonthYear#, #status#, sysdate, sysdate, sysdate, #idLogin#)
+	</insert>
+	<insert id="CreateBatchRecordError" parameterClass="java.util.HashMap">
+		INSERT INTO T_CLC_IMP_HD
+		       (ID_CLC_IMP_BATCH,FILENAME, CLOSE_MONTHYEAR, STATUS, DATE_UPLOADED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+		VALUES (#idClcImpBatch#, #filename#, #closeMonthYear#, #status#, sysdate, sysdate, sysdate, #idLogin#)
+	</insert>
+	<select id="getT_CLC_IMP_HDDESC" resultClass="java.util.HashMap">
+		 SELECT t.*, to_char(t.date_updated, 'dd/MM/yyyy HH24:MI:SS') as DATE_UPDATED_CHAR 
+		 FROM T_CLC_IMP_HD t
+		 WHERE t.STATUS = '2'
+	</select>
+	<select id="getT_CLC_IMP_HD_lastBatch" resultClass="java.util.HashMap">
+        SELECT * FROM (   
+             SELECT 
+                T.ID_CLC_IMP_BATCH
+             FROM 
+                T_CLC_IMP_HD T
+             ORDER BY 
+                T.DATE_CREATED DESC
+             )
+        WHERE  ROWNUM &lt; 2
+	</select>
+	<select id="getT_CLC_IMP_HDByTimeStatus" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT * 
+		FROM T_CLC_IMP_HD
+		WHERE CLOSE_MONTHYEAR = #closeMonthYear#
+		AND STATUS = #status#
+	</select>
+	<select id="getT_CLC_IMP_MONTHLY_SUM12" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT ID_CLC_CUST 
+		FROM T_CLC_IMP_MONTHLY_SUM
+		WHERE MONTH_YEAR = #monthYear#
+		AND ID_CLC_CUST = #idClcCust#
+	</select>
+	<select id="getAccAcount" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT *
+		FROM T_CLC_IMP_HD
+	</select>
+	<select id="getT_CLC_IMP_HDByTime" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT * 
+		FROM T_CLC_IMP_HD
+		WHERE CLOSE_MONTHYEAR = #closeMonthYear#
+	</select>
+	<select id="getT_CLC_IMP_MONTLY_SUMById" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT ID_CLC_CUST 
+		FROM T_CLC_IMP_MONTHLY_SUM
+		WHERE MONTH_YEAR = #monthYear#
+		AND IS_INVOICED = #isInvoiced#
+		AND ID_CLC_CUST = #idClcCust#
+	</select>
+	<update id="updateStatusT_CLC_IMP_HD" parameterClass="java.util.HashMap">
+		UPDATE T_CLC_IMP_HD SET STATUS = #status#, DATE_UPDATED=sysdate, ID_LOGIN=#idLogin#
+		WHERE ID_CLC_IMP_BATCH = #idClcImpBatch#
+	</update>
+	<select id="getSEQ_T_BATCH_LOG" resultClass="java.lang.Integer">
+		 SELECT T_SET_BATCH_LOG_SEQ.NEXTVAL 
+		 FROM DUAL 
+	</select>
+	<insert id="insertT_BATCH_LOG" parameterClass="java.util.HashMap">
+		INSERT INTO T_BATCH_LOG
+		       (ID_BATCH_LOG, ID_BATCH_TYPE, ID_BATCH_REF_NO, ERROR_MSG, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+		VALUES (#idBatchLog#, #idBatchType#, #idBatchRefNo#, #errorMsg#, sysdate, sysdate, #idLogin#)
+	</insert>
+	<delete id="deleteT_CLC_IMP_MONTHLY_SUM">
+		DELETE FROM T_CLC_IMP_MONTHLY_SUM 
+		WHERE MONTH_YEAR = #monthYear#
+	</delete>
+	<insert id="insertT_CLC_IMP_MONTHLY_SUM" parameterClass="java.util.HashMap">
+		INSERT INTO T_CLC_IMP_MONTHLY_SUM
+		       (ID_CLC_IMP_BATCH, ID_CLC_CUST, MONTH_YEAR, INVOICE_TOTAL, IS_INVOICED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+		VALUES (#idClcImpBatch#, #idClcCust#, #monthYear#, #invoiceTotal#, #isInvoiced#, #createdDate#, #updatedDate#, #idLogin#, #auditId#)
+	</insert>
+	<select id="getM_GSET_D" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM M_GSET_D
+		 WHERE ID_SET = #idSet# AND SET_SEQ = #setSeq#
+	</select>
+	<select id="getM_GSET_DByID_SET" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM M_GSET_D
+		 WHERE ID_SET = #idSet#
+	</select>
+	<select id="getSEQ_T_CLC_IMP_HD" resultClass="java.lang.Integer">
+		 SELECT SEQ_T_CLC_IMP_HD.NEXTVAL 
+		 FROM DUAL 
+	</select>
+	<!-- SQL for E_MIM_US3 -->
+	<!-- SQL : For Screen E-MIM-US3 - History -->
+	<select id="getT_RAD_IMP_HD" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_RAD_IMP_HD
+		 ORDER BY ID_RAD_IMP_BATCH DESC
+	</select>
+	<select id="getTotalT_RAD_IMP_HD" resultClass="java.lang.Integer">
+		 SELECT COUNT(*) 
+		 FROM T_RAD_IMP_HD
+		 ORDER BY DATE_UPLOADED DESC
+	</select>
+	<!-- SQL : For Screen E-MIM-US3_2 - Log review: use getLogByHistory-->
+	<!-- SQL : For Screen E-MIM-US3 - Load Scheduler Setting: #idBatchType# = G_RAD_P01 -->
+	<select id="getScheduleSetting" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_BATCH_SCH
+		 WHERE ID_BATCH_TYPE = #idBatchType#
+	</select>
+	<!-- SQL : For Screen E-MIM-US3 - Update Schedule: IS_ACTIVE = 1 ("0"=Inactive; "1"=IS Active), ID_BATCH_TYPE = G_RAD_P01 -->
+	<update id="updateSchedule" parameterClass="java.util.HashMap">
+		UPDATE T_BATCH_SCH SET IS_ACTIVE = #isActive#, 
+			EXEC_DAY = #execDay#, EXEC_HOUR = #execHour#, EXEC_MINUTE = #execMinute#, 
+			DATE_UPDATED = sysdate, ID_LOGIN = #idLogin#
+		WHERE ID_BATCH_TYPE = #idBatchType#
+	</update>
+	<insert id="addSchedule" parameterClass="java.util.HashMap">
+		INSERT INTO 
+		  T_BATCH_SCH (
+		    ID_BATCH_TYPE,
+		    IS_ACTIVE,
+		    EXEC_DAY,
+		    EXEC_HOUR,
+		    EXEC_MINUTE,
+		    DATE_UPDATED,
+		    ID_LOGIN
+		  )
+		VALUES (
+		  #idBatchType#,
+		   #isActive#, 
+		   #execDay#,
+		   #execHour#,
+		   #execMinute#,
+		   sysdate,
+		   #idLogin#
+		)
+	</insert>
+	<!-- SQL for G_RAD_P01 -->
+	<!-- get next id for T_RAD_IMP_HD -->
+	<select id="getSEQ_T_RAD_IMP_HD" resultClass="java.lang.Integer">
+		 SELECT SEQ_T_RAD_IMP_HD.NEXTVAL 
+		 FROM DUAL 
+	</select>
+	<!-- SQL : For Process #1.0 -->
+	<select id="getLatestT_RAD_IMP_HD" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT t.*, to_char(t.date_updated, 'dd/MM/yyyy HH24:mm:ss') as DATE_UPDATED_CHAR 
+		 FROM T_RAD_IMP_HD t
+		 WHERE rownum &lt; 2
+		 ORDER BY t.ID_RAD_IMP_BATCH DESC
+	</select>
+	<!-- SQL : For Process #3.0 -->	
+	<update id="updateStatusT_RAD_IMP_HD" parameterClass="java.util.HashMap">
+		UPDATE T_RAD_IMP_HD 
+		SET STATUS = #status#, 
+			ID_LOGIN = #idLogin#
+		WHERE ID_RAD_IMP_BATCH = #idRadImpBatch#
+	</update>
+	<!-- SQL : For Process #4.0: use insert T_BATCH_LOG  -->
+	<!-- SQL : For Process #5.0: status = 2 ("0"=Success; "1"=Failed; "2"=In Process) -->
+	<insert id="insertT_RAD_IMP_HD" parameterClass="java.util.HashMap">
+		INSERT INTO T_RAD_IMP_HD
+		       (ID_RAD_IMP_BATCH, CLOSE_MONTHYEAR, STATUS, DATE_UPLOADED, DATE_CREATED, DATE_UPDATED, ID_LOGIN)
+		VALUES (#idRadImpBatch#,#closeMonthYear#, #status#, #uploadedDate#, #createdDate#, #updatedDate#, #idLogin#)
+	</insert>
+	<!-- SQL : For Process #7.1: use updateStatusT_RAD_IMP_HD with status = 1 ("0"=Success; "1"=Failed) -->	
+	<!-- SQL : For Process #7.2: use insertT_BATCH_LOG -->
+	<!-- SQL : For Process #8.0: NASIndex IN (1, 2) ("1" = ADSL; "2"=Dial-up) -->
+	<select id="getAccountLog" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM ACCOUNTINGLOG
+		 WHERE to_char(AcctDate, 'MM/yyyy') = #closeMonthYear# AND NASIndex IN (1, 2)
+	</select>
+	<!-- SQL : For Process #9.0 -->
+	<select id="getT_RAD_IMP_HDByTime" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_RAD_IMP_HD
+		 WHERE CLOSE_MONTHYEAR = #closeMonthYear# AND STATUS = #status#
+	</select>
+	<!-- SQL : For Process #10.0: IS_INVOICED = 1 ("0"=NOT YET INVOICED; "1"=ALREADY INVOICED) -->
+	<select id="getT_RAD_IMP_MONTLY_SUMByTime" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT * 
+		 FROM T_RAD_IMP_MONTHLY_SUM
+		 WHERE MONTH_YEAR = #monthYear# 
+		 	AND IS_INVOICED = #isInvoiced#
+	</select>
+	<!-- SQL : For Process #11.0 -->
+	<delete id="deleteT_RAD_IMP_MONTHLY_SUM">
+		DELETE FROM T_RAD_IMP_MONTHLY_SUM 
+		WHERE MONTH_YEAR = #monthYear#
+	</delete>
+	<!-- SQL : For Process #12.0: NASIndex [1] = ADSL, NASIndex[2] = Dial-up -->
+	<select id="getAccountLogWithTotal" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT USERID, NASINDEX, SUM(ACCTSESSIONTIME) AS SESSION_TOTAL 
+		 FROM ACCOUNTINGLOG
+		 WHERE to_char(ACCTDATE, 'MM/yyyy') = #monthYear# 
+		 GROUP BY USERID, NASINDEX
+	</select>
+	<!-- SQL : For Process #14.0: #sessionTotal#($SESSION_MINUTES ) = $SESSION_TOTAL/60 ($SESSION_TOTAL from SQL 11 result.), "0"=NOT YET INVOICED; "1"=ALREADY INVOICED -->
+	<insert id="insertT_RAD_IMP_MONTHLY_SUM" parameterClass="java.util.HashMap">
+		INSERT INTO T_RAD_IMP_MONTHLY_SUM
+		       (ID_RAD_IMP_BATCH, ACCESS_ACC, SERVICE_ID, MONTH_YEAR, SESSION_TOTAL, IS_INVOICED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, IS_DELETED)
+		VALUES (#idRadImpBatch#, #accessAcct#, #serviceId#, #monthYear#, #sessionTotal#, #isInvoiced#, #createdDate#, #updatedDate#, #idLogin#, '0')
+	</insert>
+	<!-- SQL : For Process #15.1 with delete condition: IS_DELETED = 1 (0=Not Deleted; 1=Deleted) -->
+	<select id="getM_GSET_DByID_SETAndCond" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		 SELECT SET_SEQ, SET_VALUE
+		 FROM M_GSET_D
+		 WHERE ID_SET = 'RAD_SERVICE_GROUP'
+		 AND IS_DELETED = '0'
+	</select>
+	<!-- SQL : For Process #15.2: $SET_SEQ from the loop of Process #15.1,$SET_VALUE from the loop of Process #15.1 -->
+	<update id="updateT_RAD_IMP_MONTHLY_SUM" parameterClass="java.util.HashMap">
+		 UPDATE T_RAD_IMP_MONTHLY_SUM
+	 	 SET SERVICE_GROUP = #svcGrp#
+		 WHERE SERVICE_ID IN (#svcId#)
+	</update>
+	<!-- SQL : For Process #17.0: updateStatusT_RAD_IMP_HD with STATUS = 0 ("0"=Success; "1"=Failed)-->
+	<!-- End SQL for G_RAD_P01 -->
+</sqlMap>

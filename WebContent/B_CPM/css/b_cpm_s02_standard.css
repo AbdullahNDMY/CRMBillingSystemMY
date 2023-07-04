@@ -1,0 +1,111 @@
+
+.optionService {
+	width:100%;
+}
+.optionService td.billingDescription{
+	padding: 0 0 0 0;
+}
+.optionService .rateType{
+	width:7.75%;
+}
+.optionService .serviceGroup{
+	width:10.5%;
+}
+.optionService .serviceType{
+	width:10%;
+}
+.optionService .serviceItem{
+	width:17%;
+}
+.optionService .vendor{
+	width:11%;
+}
+.optionService .mode{
+	width:8%;
+}
+.optionService .rate{
+	width:6%;
+}
+.optionService .header{
+	background-color:#CEE7FF;
+}
+.optionService table{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+}
+
+.serviceDetail{
+	margin-top: 2px;
+	padding: 3px 3px 3px 3px;
+	border:1px solid #CEE7FF;
+	width:130px;
+	float:right;
+}
+.serviceDetail table{
+	border-collapse:collapse;
+	width:100%;
+}
+.serviceDetail .mode{
+}
+.serviceDetail .rate{
+}
+.serviceDetail tr.header{
+	background-color:#CEE7FF;
+}
+
+.subPlan.rateType{
+	width:12%;
+}
+.subPlan .serviceGroup{
+	width:18%;
+}
+.subPlan .serviceType{
+	width:18%;
+}
+.subPlan .serviceItem{
+	width:32%;
+}
+.subPlan .vendor{
+	width:20%;
+}
+.subPlan{
+	border-collapse:collapse;
+	border:1px solid #CEE7FF;
+	margin-top:3px;
+	float:left;
+}
+.subPlan td{
+	border-bottom:1px solid #CEE7FF;
+}
+.subPlan tr.header{
+	background-color:#CEE7FF;
+}
+
+fieldset{
+	width:100%;
+	border:2px solid #E4E4DC; 
+	padding: 15px 0 5px 0;
+	position:relative;
+}
+fieldset legend{
+	color:#0046D5;
+	font-size:medium;
+	font-weight:bold;
+}
+fieldset .removeX{
+	position:absolute;
+	top:15px;
+	right:10px;
+	background-color:#F8F8F8;
+
+}
+fieldset .removeX a{
+	text-decoration:none;
+	color:#C4C4BE;
+	font-weight:bold;
+}
+a img{
+	border:0;
+}
+

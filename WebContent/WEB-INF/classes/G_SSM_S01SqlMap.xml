@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="G_SSM_S01">
+
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+	
+	<select id="getGeneralInfo" resultClass="java.util.HashMap">
+		select cst.CUST_NAME, si.ID_SUB_INFO, to_char(ich.ID_CONTACT) ID_CONTACT
+		from M_CUST cst, T_CUST_PLAN_H cph, T_SUBSCRIPTION_INFO si, T_IT_CONTACT_H ich
+		where cst.ID_CUST = cph.ID_CUST
+			and si.ID_CUST_PLAN = cph.ID_CUST_PLAN
+			and ich.ID_SUB_INFO = si.ID_SUB_INFO
+			and si.IS_DELETED = 0
+			and ich.IS_DELETED = 0
+			<dynamic prepend=" and si.ID_SUB_INFO in">
+				<iterate property="arraySubID" open="(" close=")" conjunction=",">
+					#arraySubID[]#
+				</iterate>
+			</dynamic>
+		order by ID_SUB_INFO
+	</select>
+	
+	<select id="getITContactInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		select to_char(icd.ID_CONTACT) ID_CONTACT,
+				prt.CONTACT_TYPE,
+				icd."NAME", 
+				icd.DESIGNATION, 
+				icd.EMAIL,
+				icd.TEL_NO, 
+				icd.FAX_NO
+		from T_IT_CONTACT_D icd,
+		(
+			select 'C1' CONTACT_TYPE from dual
+			union select 'C2' CONTACT_TYPE from dual
+			union select 'C3' CONTACT_TYPE from dual
+		) prt
+		where icd.ID_CONTACT(+) = #idContact#
+			and prt.CONTACT_TYPE = icd.CONTACT_TYPE(+)
+		order by CONTACT_TYPE asc
+	</select>
+	
+</sqlMap>

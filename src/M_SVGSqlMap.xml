@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_SVG">
+
+  <select id="SELECT.M_SVG.SQL001"
+          resultClass="nttdm.bsys.m_svg.bean.ServiceGroupBean">
+	SELECT
+		a.svc_grp,
+		a.svc_grp_name,
+		a.origin_code,
+		a.product_code,
+		a.acc_code,
+		a.remark,
+		a.journal_no,
+		b.description,
+		(SELECT 
+      		CASE WHEN count(1) > 0 THEN 'Y' ELSE 'N' END
+    	FROM t_rev_dt E WHERE E.svc_level1 = a.svc_grp) is_used
+	FROM m_svg a
+	LEFT JOIN m_journal_no b on a.journal_no = b.journal_no
+	ORDER BY svc_grp ASC
+  </select>
+  <!-- Ver3.06 #278 [SIT] Issues found and fix: 1.M-CST, 2.M-SGV, 3.M-SVT CT 13072017-->
+  <select id="SELECT.M_SVG.SQL001_2"
+          resultClass="nttdm.bsys.m_svg.bean.ServiceGroupBean">
+	SELECT
+		a.svc_grp,
+		a.svc_grp_name,
+		a.origin_code,
+		a.product_code,
+		a.acc_code,
+		a.remark,
+		a.journal_no,
+		b.description
+	FROM m_svg a
+	LEFT JOIN m_journal_no b on a.journal_no = b.journal_no
+	ORDER BY svc_grp ASC
+  </select>
+  <select id="SELECT.M_SUB_MODULES"
+          resultClass="java.lang.String">
+	SELECT
+	IS_DISPLAY
+	FROM M_SUB_MODULES
+	WHERE ID_SUB_MODULE = 'R-REV-S01'
+  </select>
+  <!-- Ver3.06 #278 [SIT] Issues found and fix: 1.M-CST, 2.M-SGV, 3.M-SVT CT 13072017-->
+  <insert id="INSERT.M_SVG.SQL001"
+          parameterClass="nttdm.bsys.m_svg.bean.ServiceGroupBean">
+    <selectKey keyProperty="svc_grp" resultClass="java.lang.String" type="pre">
+	    SELECT SEQ_M_SVG.nextval FROM dual
+	</selectKey>
+    INSERT INTO m_svg (
+    	SVC_GRP,
+		SVC_GRP_NAME,
+		ACC_CODE,
+		ORIGIN_CODE,
+		JOURNAL_NO,
+		PRODUCT_CODE,
+		REMARK,
+		DATE_CREATED,
+		DATE_UPDATED,
+		ID_LOGIN,
+		ID_AUDIT
+    )
+    VALUES (
+        #svc_grp#,
+        #svc_grp_name#,
+        #acc_code#,
+        #origin_code#,
+        #journal_no#,
+        #product_code#,
+        #remark#,
+        sysdate,
+        sysdate,
+        #id_login#,
+        #id_audit#
+    )
+  </insert>
+  
+  <update id="UPDATE.M_SVG.SQL001"
+          parameterClass="nttdm.bsys.m_svg.bean.ServiceGroupBean">
+    UPDATE m_svg
+    SET
+		SVC_GRP_NAME=#svc_grp_name#,
+		ORIGIN_CODE=#origin_code#,
+		JOURNAL_NO=#journal_no#,
+		PRODUCT_CODE=#product_code#,
+		ACC_CODE=#acc_code#,
+		REMARK=#remark#,
+		DATE_UPDATED=sysdate,
+		ID_LOGIN=#id_login#,
+		ID_AUDIT=#id_audit#
+    WHERE
+        SVC_GRP = #svc_grp#
+  </update>
+  <select id="SELECT.M_SVG.SQL002" resultClass="java.lang.String">
+   	SELECT
+   	      G.SET_VALUE 
+	FROM
+	      M_GSET_D G
+	WHERE
+	      G.ID_SET = 'MULTI_BYTE_CHK'
+ 		      AND G.SET_SEQ = 1 
+ 		      AND G.IS_DELETED = 0
+   </select>
+   <select id="SELECT.M_SVG.SQL003" resultClass="java.util.HashMap">
+   	SELECT
+		M.JOURNAL_NO as ID,
+		M.JOURNAL_NO||'-'||M.DESCRIPTION as NAME
+	FROM
+		M_JOURNAL_NO M
+	WHERE
+		M.IS_DELETED = 0
+	ORDER BY
+		M.JOURNAL_NO
+   </select>
+    
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+</sqlMap>

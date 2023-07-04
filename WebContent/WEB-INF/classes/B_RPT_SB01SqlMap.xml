@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="B_RPT_SB01">
+	<select id="getCustInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT M.*, A.*
+		FROM M_CUST M, M_CUST_ADR A
+		WHERE M.ID_CUST = #idCust# 
+		AND M.ID_CUST = A.ID_CUST
+		AND A.ADR_TYPE = 'BA'
+	</select>
+	<select id="getPlanInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT h.PLAN_NAME, h.PLAN_DESC, h.PLAN_TYPE, to_char(b.BILL_DESC) as BILL_DESC, 
+			to_char(B.DATE_CREATED, 'dd/MM/yyyy') as DATE_CREATED_STR, 
+			to_char(j.ITM_DESC) as ITM_DESC, i.ITEM_TYPE,
+			b.*, j.*, i.*, h.*
+		FROM T_CUST_PLAN_D b, T_CUST_PLAN_LINK j, M_PLAN_H h, M_PLAN_D i
+		WHERE b.ID_CUST_PLAN = #idCustPlan#
+			AND b.ID_PLAN = h.ID_PLAN AND b.ID_CUST_PLAN = j.ID_CUST_PLAN AND j.ID_PLAN_GRP = i.ID_PLAN_GRP
+			AND j.IS_APPLY = '1'
+	</select>
+	<select id="getComInfo" resultClass="java.util.HashMap">
+		SELECT G.* FROM M_COM G WHERE G.ID_COM IN (SELECT MAX(ID_COM) FROM M_COM)
+	</select>
+	<select id="getComCtcInfo" resultClass="java.util.HashMap">
+		SELECT L.* FROM M_COM_CTC L WHERE L.ID_COM IN (SELECT MAX(ID_COM) FROM M_COM_CTC)
+	</select>
+	<select id="getCustomerPlan" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT B.*, C.*
+		FROM T_CUST_PLAN_LINK B, M_PLAN_D C
+		WHERE B.ID_CUST_PLAN = #idCustPlan#
+			AND B.IS_APPLY = '1'
+			AND B.ID_PLAN_GRP = C.ID_PLAN_GRP and C.IS_DELETED = '0'
+	</select>
+	<select id="getPlanSvc" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT D.*
+		FROM M_PLAN_SVC D
+		WHERE D.ID_PLAN_GRP = #idPlanGrp#
+			AND D.IS_DELETED = '0'
+		ORDER BY D.ID_PLAN_SVC
+	</select>
+	<select id="getSSM" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT E.*
+		FROM M_SSM E
+		WHERE E.REPORT = '1'
+			AND E.SVC_GRP = #svcGrp#
+			AND E.ID_SERVICE = #svcType#
+			AND E.IS_DELETED = '0'
+	</select>
+	<select id="getSubscriptionInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT C.id_cust_plan, C.access_account, 
+			   C.access_pw, C.access_tel, 
+			   C.ssid, C.wep_key, C.router_pw, 
+			   C.router_no, C.router_type, C.modem_no, 
+			   C.mac_id, C.adsl_del_no, C.circuit_id, 
+			   C.carrier, C.date_created, C.date_updated, 
+			   C.id_login, C.is_deleted, C.id_audit, 
+			   C.id_sub_info, to_char(C.memo) memo, 
+		(SELECT N.SUPPLIER_NAME FROM M_SUPPLIER_H N WHERE N.ID_SUPPLIER = C.CARRIER) AS CARRIER_NAME
+		FROM T_SUBSCRIPTION_INFO C
+		WHERE C.ID_CUST_PLAN = #idCustPlan#
+	</select>
+	<select id="getMailAddress" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT D.id_mail, D.id_sub_info, 
+			   D.domain_name, D.pop_server_name, 
+			   D.smtp_server_name, D.auto_mail_acc, 
+			   D.auto_mailbox_qty, D.auto_virus_scan, 
+			   D.auto_anti_spam, D.auto_junk_mgt, 
+			   D.opt_mail_acc, D.opt_base_qty, 
+			   D.opt_addt_option, D.opt_mailbox_qty, 
+			   D.opt_virus_scan, D.opt_anti_spam, 
+			   D.opt_junk_mgt, D.is_deleted, D.date_created, 
+			   D.date_update, D.id_login, D.id_audit, to_char(D.memo) memo
+		FROM T_MAIL_ADDRESS D
+		WHERE D.ID_CUST_PLAN = #idCustPlan#
+	</select>
+	<select id="getRackPower" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT F.* 
+		FROM T_RACK_POWER F
+		WHERE F.ID_CUST_PLAN = #idCustPlan#
+	</select>
+	<select id="getItContact" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT E.* 
+		FROM T_IT_CONTACT E
+		WHERE E.ID_CUST_PLAN = #idCustPlan#
+	</select>
+</sqlMap>

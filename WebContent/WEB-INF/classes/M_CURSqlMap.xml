@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_CUR">
+
+	<select id="SELECT.M_CUR.SQL001" 	
+  	parameterClass="nttdm.bsys.m_cur.dto.M_CURInput" 
+  	resultClass="nttdm.bsys.m_cur.bean.M_CURBean"
+  	resultSetType="SCROLL_INSENSITIVE">
+		SELECT ROWNUM AS "index",
+			TO_CHAR(rate_date,'dd/MM/yyyy') as rate_date,
+			rate_date as rate_date_s,
+			cur_code,
+			rate_to,
+			rate_from,
+			is_deleted,
+			TO_CHAR(date_created,'dd/MM/yyyy') as date_created,
+			TO_CHAR(date_updated,'dd/MM/yyyy') as date_updated,
+			id_login								
+		FROM	m_currency	
+		WHERE is_deleted=0  
+		<dynamic prepend="AND">
+			<isNotEmpty property="datefrom">
+				<isNotEmpty prepend="AND" property="dateto">
+					rate_date BETWEEN TO_DATE(#datefrom#,'dd/MM/yyyy') AND TO_DATE(#dateto#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="dateto">
+					rate_date &gt;= TO_DATE(#datefrom#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="datefrom">
+				<isNotEmpty prepend="AND" property="dateto">
+					rate_date &lt;= TO_DATE(#dateto# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty prepend="AND" property="cur_code_search">
+				cur_code = #cur_code_search#
+			</isNotEmpty> 
+		</dynamic>
+		ORDER BY rate_date_s DESC, cur_code ASC     
+	</select>
+	<select id="SELECT.M_CUR.SQL002" 	
+  	parameterClass="nttdm.bsys.m_cur.dto.M_CURInput" 
+  	resultClass="nttdm.bsys.m_cur.bean.M_CURBean"
+  	resultSetType="SCROLL_INSENSITIVE">
+		SELECT 
+			TO_CHAR(rate_date,'dd/MM/yyyy') as rate_date,
+			cur_code,
+			rate_to,
+			rate_from,
+			is_deleted,
+			TO_CHAR(date_created,'dd/MM/yyyy') as date_created,
+			TO_CHAR(date_updated,'dd/MM/yyyy') as date_updated,
+			id_login								
+		FROM	m_currency	
+		WHERE is_deleted=0  AND cur_code=#cur_code# AND 
+				rate_date = TO_DATE(#rate_date#,'dd/MM/yyyy')      
+	</select>
+	<select id="SELECT.M_CUR.SQL003" 
+  	parameterClass="nttdm.bsys.m_cur.dto.M_CURInput" 
+  	resultClass="java.lang.String"
+    resultSetType="SCROLL_INSENSITIVE">
+		SELECT count(*)							
+		FROM	m_currency	
+		WHERE is_deleted=0   
+		<dynamic prepend="AND">
+			<isNotEmpty property="datefrom">
+				<isNotEmpty prepend="AND" property="dateto">
+					rate_date BETWEEN TO_DATE(#datefrom#,'dd/MM/yyyy') AND TO_DATE(#dateto#	,'dd/MM/yyyy')		
+				</isNotEmpty>
+				<isEmpty prepend="AND" property="dateto">
+					rate_date &gt;= TO_DATE(#datefrom#,'dd/MM/yyyy') 
+				</isEmpty>
+			</isNotEmpty>
+			<isEmpty property="datefrom">
+				<isNotEmpty prepend="AND" property="dateto">
+					rate_date &lt;= TO_DATE(#dateto# ,'dd/MM/yyyy')		
+				</isNotEmpty>
+			</isEmpty>
+			<isNotEmpty prepend="AND" property="cur_code_search">
+				cur_code = #cur_code_search#
+			</isNotEmpty> 
+		</dynamic>    
+	</select>
+	<select id="SELECT.M_CUR.SQL004" 
+  	parameterClass="nttdm.bsys.m_cur.dto.M_CURInput" 
+  	resultClass="java.lang.String"
+    resultSetType="SCROLL_INSENSITIVE">
+		SELECT count(*)							
+		FROM	m_currency	
+		WHERE is_deleted=0   
+				AND rate_date = TO_DATE(#rate_date#,'dd/MM/yyyy')
+				AND cur_code = #cur_code# 
+	</select>
+	<!-- Edit data -->
+	<update id="UPDATE.M_CUR.SQL001"
+	          parameterClass="nttdm.bsys.m_cur.dto.M_CURInput">
+	    UPDATE m_currency
+	    SET
+	        rate_to=#rate_to#,
+	        rate_from=#rate_from#,
+	        date_updated=sysdate,
+	        id_login=#id_login#,
+	        id_audit = #idAudit#
+	    WHERE
+	        cur_code = #cur_code#
+	        AND
+	        rate_date=TO_DATE(#rate_date#,'dd/MM/yyyy') 
+	</update>
+	<!-- Delete data -->
+	<update id="UPDATE.M_CUR.SQL002"
+	          parameterClass="nttdm.bsys.m_cur.dto.M_CURInput">
+	    UPDATE m_currency
+	    SET
+	        is_deleted=1,
+	        date_updated=sysdate,
+	        id_login=#id_login#,
+	        id_audit = #idAudit#
+	    WHERE
+	        cur_code = #cur_code#
+	        AND
+	        rate_date=TO_DATE(#rate_date#,'dd/MM/yyyy') 
+	</update>
+	<insert id="INSERT.M_CUR.SQL001"
+          parameterClass="nttdm.bsys.m_cur.dto.M_CURInput">
+    INSERT INTO m_currency (
+        rate_date,
+		cur_code,
+		rate_to,
+		rate_from,
+		is_deleted,
+		date_created,
+		date_updated,
+		id_login,
+		id_audit
+    )
+    VALUES (
+        TO_DATE(#rate_date#,'dd/MM/yyyy'),
+		#cur_code#,
+		#rate_to#,
+		#rate_from#,
+		'0',
+		SYSDATE,
+		SYSDATE,
+		#id_login#,
+		#idAudit#
+    )
+  </insert>
+</sqlMap>

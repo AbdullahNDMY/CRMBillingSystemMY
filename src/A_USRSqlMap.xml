@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="A_USR">
+	<select id="SELECT.A_USR.GET_LIST_DEPARTMENT" resultClass="nttdm.bsys.a_usr.dto.Department">
+		select 	id_dept as "idDepartment",
+				dept_name as "departmentName"
+		from deptmaint
+		where is_deleted = 0
+        order by dept_name
+	</select>
+	<select id="SELECT.A_USR.GET_LIST_DIVISION" resultClass="nttdm.bsys.a_usr.dto.Division">
+		select 	id_div as "idDivision",
+				div_name as "divisionName"
+		from divmaint
+		where is_deleted = 0
+        order by div_name
+	</select>
+	<select id="SELECT.A_USR.S01.SEARCH" parameterClass="nttdm.bsys.a_usr.dto.InputSearch" resultClass="nttdm.bsys.a_usr.dto.User">
+		select rownum as "no",TEMP.*
+		from (	select id_user as "idUser",
+						user_name as "userName",
+						id_div as "idDivision",
+						id_dept as "idDepartment",
+                        id_role as "idRole",
+                        user_status as "userStatus",
+                        access_right as "accessRight"
+				from m_user
+				where is_deleted = 0 
+					<isNotEmpty property="idUser">
+					and UPPER(id_user) like UPPER('%$idUser$%')
+					</isNotEmpty>
+					<isNotEmpty property="userName">
+					and UPPER(user_name) like UPPER('%$userName$%')
+					</isNotEmpty>
+					<isNotEmpty property="idDivision">
+					and id_div = #idDivision#
+					</isNotEmpty>
+					<isNotEmpty property="idDepartment">
+					and id_dept = #idDepartment#
+					</isNotEmpty>
+					<isNotEmpty property="idRole">
+					 and ID_ROLE = #idRole#
+					</isNotEmpty>
+                    <isNotEmpty property="accessRight" prepend="AND">
+                      ACCESS_RIGHT IN
+                      <iterate  property="accessRight" conjunction="," close=")" open="(" >
+                         #accessRight[]#
+                      </iterate>
+                    </isNotEmpty>
+                    <isNotEmpty property="status" prepend="AND">
+                      USER_STATUS IN
+                      <iterate  property="status" conjunction="," close=")" open="(" >
+                         #status[]#
+                      </iterate>
+                    </isNotEmpty>
+				order by id_user) TEMP
+	</select>
+	<select id="SELECT.A_USR.S01.SEARCH_TOTALCOUNT" parameterClass="nttdm.bsys.a_usr.dto.InputSearch" resultClass="java.lang.String">
+		select count(*)
+		from m_user
+		where is_deleted = 0 
+			<isNotEmpty property="idUser">
+				and UPPER(id_user) like UPPER('%$idUser$%')
+			</isNotEmpty>
+			<isNotEmpty property="userName">
+				and UPPER(user_name) like UPPER('%$userName$%')
+			</isNotEmpty>
+			<isNotEmpty property="idDivision">
+				and id_div = #idDivision#
+			</isNotEmpty>
+			<isNotEmpty property="idDepartment">
+				and id_dept = #idDepartment#
+			</isNotEmpty>
+            <isNotEmpty property="idRole">
+             and ID_ROLE = #idRole#
+            </isNotEmpty>
+            <isNotEmpty property="accessRight" prepend="AND">
+              ACCESS_RIGHT IN
+              <iterate  property="accessRight" conjunction="," close=")" open="(" >
+                 #accessRight[]#
+              </iterate>
+            </isNotEmpty>
+            <isNotEmpty property="status" prepend="AND">
+              USER_STATUS IN
+              <iterate  property="status" conjunction="," close=")" open="(" >
+                 #status[]#
+              </iterate>
+            </isNotEmpty>
+		order by id_user
+	</select>
+	<select id="SELECT.A_USR.GET_LIST_ROLE" resultClass="nttdm.bsys.a_usr.dto.Role">
+		select 	id_role as "idRole",
+				role_name as "roleName"
+		from rolemaint
+		where is_deleted = 0
+        order by role_name asc
+	</select>
+	<select id="SELECT.A_USR.GET_LIST_SUBMODULE" resultClass="nttdm.bsys.a_usr.dto.SubModule">
+		select 	m_sub_modules.id_module as "idModule",
+				id_sub_module as "idSubModule",
+				sub_mod_name as "subModuleName",
+				sub_mod_desc as "subModuleDescription"
+		from m_sub_modules, m_modules
+		where 
+		((m_sub_modules.is_display = '1' and m_modules.IS_DISPLAY = '1')
+		or (m_sub_modules.is_field = '1' and m_modules.IS_DISPLAY = '1'))
+		and m_sub_modules.id_module = m_modules.id_module
+		order by m_sub_modules.id_module asc, id_sub_module asc
+	</select>
+	<select id="SELECT.A_USR.GET_LIST_MODULE" resultClass="nttdm.bsys.a_usr.dto.Module">
+		select 	id_module as "idModule",
+				mod_name as "moduleName",
+				mod_desc as "moduleDescription"
+		from m_modules
+		where is_display = '1'
+	</select>
+	<select id="SELECT.A_USER.GET_USER_INFO" parameterClass="java.lang.String" resultClass="nttdm.bsys.a_usr.dto.User">
+		select 	id_user 		as "idUser",
+				user_name 		as "userName",
+				id_div 			as "idDivision",
+				id_dept 		as "idDepartment",
+				id_role  		as "idRole",
+				tel_no 			as "telNo",
+				tel_extno 		as "telExtNo",
+				did_no 			as "didNo",
+				pplsoft_acc_id 	as "idPeopleSoftAcc",
+				pplsoft_dept_id as "idPplSoftDept",
+				ofs_mobile_no 	as "officeMobileNo",
+				email 			as "email",
+				photo 			as "photoByte",
+				user_status 	as "userStatus",
+				password 		as "password",
+                access_right    as "accessRight"
+		from m_user
+		where is_deleted = 0 and id_user = #idUser#
+	</select>
+	<select id="SELECT.A_USER.GET_LIST_USERACCESS" parameterClass="java.lang.String" resultClass="nttdm.bsys.a_usr.dto.UserAccess">
+        SELECT 	
+        MODULE.ID_MODULE AS "idModule",
+        MODULE.ID_SUB_MODULE AS "idSubModule",
+        M_USER_ACCESS.ACCESS_TYPE AS "accessType"
+        FROM M_USER_ACCESS
+		RIGHT JOIN( 
+            SELECT M_SUB_MODULES.ID_MODULE, M_SUB_MODULES.ID_SUB_MODULE
+            FROM M_MODULES INNER JOIN M_SUB_MODULES ON M_SUB_MODULES.ID_MODULE = M_MODULES.ID_MODULE 
+            WHERE (M_MODULES.IS_DISPLAY = '1' AND M_SUB_MODULES.IS_DISPLAY = '1')
+                   OR (M_SUB_MODULES.IS_FIELD = '1' AND M_MODULES.IS_DISPLAY = '1')
+        ) MODULE
+        ON MODULE.ID_MODULE = M_USER_ACCESS.ID_MODULE AND MODULE.ID_SUB_MODULE = M_USER_ACCESS.ID_SUB_MODULE AND ID_USER = #idUser#
+        ORDER BY MODULE.ID_MODULE ASC, MODULE.ID_SUB_MODULE ASC
+	</select>
+	<select id="SELECT.A_USER.GET_LIST_ROLEACCESS" parameterClass="java.lang.String" resultClass="nttdm.bsys.a_usr.dto.UserAccess">
+        SELECT  
+        MODULE.ID_MODULE AS "idModule",
+        MODULE.ID_SUB_MODULE AS "idSubModule",
+        nvl(R.ACCESS_TYPE,'1') AS "accessType"
+        FROM M_ROLE_ACCESS R
+        RIGHT JOIN( 
+            SELECT M_SUB_MODULES.ID_MODULE, M_SUB_MODULES.ID_SUB_MODULE
+            FROM M_MODULES INNER JOIN M_SUB_MODULES ON M_SUB_MODULES.ID_MODULE = M_MODULES.ID_MODULE 
+            WHERE (M_MODULES.IS_DISPLAY = '1' AND M_SUB_MODULES.IS_DISPLAY = '1')
+                   OR (M_SUB_MODULES.IS_FIELD = '1' AND M_MODULES.IS_DISPLAY = '1')
+        ) MODULE
+        ON MODULE.ID_MODULE = R.ID_MODULE AND MODULE.ID_SUB_MODULE = R.ID_SUB_MODULE AND R.Id_Role = #idRole#
+        ORDER BY MODULE.ID_MODULE ASC, MODULE.ID_SUB_MODULE ASC
+	</select>
+	<select id="SELECT.A_USER.GET_USER" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT *
+		FROM M_USER
+		WHERE ID_USER = #idUser#
+	</select>
+	<update id="UPDATE.DELETE.A_USR.USER" parameterClass="java.util.HashMap">
+		UPDATE M_USER
+		SET IS_DELETED = 1,
+			DATE_UPDATED = SYSDATE,
+			ID_LOGIN = #idLogin#,
+			ID_AUDIT = #idAudit#
+		WHERE ID_USER = #idUser#
+	</update>
+	<update id="UPDATE.A_USR.USER" parameterClass="nttdm.bsys.a_usr.dto.User">
+		update m_user
+		set	user_name = #userName#,
+			id_div = #idDivision#,
+			id_dept = #idDepartment#,
+			id_role = #idRole#,
+			<isEmpty property="telNo">
+			tel_no = null,
+			</isEmpty>
+			<isNotEmpty property="telNo">
+			tel_no = #telNo#,
+			</isNotEmpty>
+			<isEmpty property="telExtNo">
+			tel_extno = null,
+			</isEmpty>
+			<isNotEmpty property="telExtNo">
+			tel_extno = #telExtNo#,
+			</isNotEmpty>
+			<isEmpty property="didNo">
+			did_no = null,
+			</isEmpty>
+			<isNotEmpty property="didNo">
+			did_no = #didNo#,
+			</isNotEmpty>
+			<isEmpty property="officeMobileNo">
+			ofs_mobile_no = null,
+			</isEmpty>
+			<isNotEmpty property="officeMobileNo">
+			ofs_mobile_no = #officeMobileNo#,
+			</isNotEmpty>
+			<isEmpty property="email">
+			email = null,
+			</isEmpty>
+			<isNotEmpty property="email">
+			email = #email#,
+			</isNotEmpty>
+			<isNotEmpty property="photoByte">
+			photo = #photoByte#,
+			</isNotEmpty>
+			<isEmpty property="userStatus">
+			user_status = null,
+			</isEmpty>
+			<isNotEmpty property="userStatus">
+			user_status = #userStatus#,
+			</isNotEmpty>
+			<isNotEmpty property="password">
+			password = #password#,
+			</isNotEmpty>
+			is_deleted = 0,
+			date_updated = sysdate,
+			id_login = #idLogin#,
+			<isEmpty property="idPeopleSoftAcc">
+			pplsoft_acc_id = null
+			</isEmpty>
+			<isNotEmpty property="idPeopleSoftAcc">
+			pplsoft_acc_id = #idPeopleSoftAcc#
+			</isNotEmpty>
+			,id_audit = #idAudit#,
+            access_right=#accessRight#,
+            <isEmpty property="idPplSoftDept">
+				pplsoft_dept_id = null
+			</isEmpty>
+			<isNotEmpty property="idPplSoftDept">
+				pplsoft_dept_id = #idPplSoftDept#
+			</isNotEmpty>
+		where id_user = #idUser#
+	</update>
+	<update id="UPDATE.A_USR.USERACCESS" parameterClass="nttdm.bsys.a_usr.dto.UserAccess">
+		update m_user_access
+		set	access_type = #accessType#,
+			date_updated = sysdate,
+			id_login = #idLogin#,
+			id_audit = #idAudit#
+		where	id_user = #idUser#
+			and id_module = #idModule#
+			and id_sub_module = #idSubModule#
+	</update>
+	<select id="SELECT.A_USR.USERACCESS.checknull" parameterClass="nttdm.bsys.a_usr.dto.UserAccess" resultClass="java.lang.String">
+		select count(*)
+		from m_user_access
+		where id_user = #idUser#
+			and id_module = #idModule#
+			and id_sub_module = #idSubModule#
+	</select>
+	<insert id="INSERT.A_USR.USERACCESS.checknull" parameterClass="nttdm.bsys.a_usr.dto.UserAccess" >
+		insert into m_user_access (ID_USER,ID_MODULE,ID_SUB_MODULE,ACCESS_TYPE,DATE_CREATED,DATE_UPDATED,ID_LOGIN,IS_DELETED,ID_AUDIT)							
+		values (#idUser#,#idModule#,#idSubModule#,#accessType#,sysdate,sysdate,#idLogin#,'0',#idAudit#)		
+	</insert>
+	
+	<insert id="INSERT.A_USR.USER" parameterClass="nttdm.bsys.a_usr.dto.User">		
+		INSERT INTO M_USER (ID_USER,USER_NAME,ID_DIV,ID_DEPT,
+				ID_ROLE,TEL_NO,TEL_EXTNO,DID_NO,OFS_MOBILE_NO,
+				EMAIL,USER_STATUS,PASSWORD,LAST_PWD_CHANGE,
+				IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN,
+				PHOTO,PPLSOFT_ACC_ID,ID_AUDIT,ACCESS_RIGHT,PPLSOFT_DEPT_ID)
+		VALUES (
+			#idUser#,
+			#userName#,
+			#idDivision#,
+			#idDepartment#,
+			#idRole#,
+			<isEmpty property="telNo">
+			null,
+			</isEmpty>
+			<isNotEmpty property="telNo">
+			#telNo#,
+			</isNotEmpty>
+			<isEmpty property="telExtNo">
+			null,
+			</isEmpty>
+			<isNotEmpty property="telExtNo">
+			#telExtNo#,
+			</isNotEmpty>
+			<isEmpty property="didNo">
+			null,
+			</isEmpty>
+			<isNotEmpty property="didNo">
+			#didNo#,
+			</isNotEmpty>
+			<isEmpty property="officeMobileNo">
+			null,
+			</isEmpty>
+			<isNotEmpty property="officeMobileNo">
+			#officeMobileNo#,
+			</isNotEmpty>
+			<isEmpty property="email">
+			null,
+			</isEmpty>
+			<isNotEmpty property="email">
+			#email#,
+			</isNotEmpty>
+			<isEmpty property="userStatus">
+			null,
+			</isEmpty>
+			<isNotEmpty property="userStatus">
+			#userStatus#,
+			</isNotEmpty>
+			#password#,
+			sysdate,
+			0,
+			sysdate,
+			sysdate,
+			#idLogin#,
+			#photoByte#,
+			<isEmpty property="idPeopleSoftAcc">
+			null
+			</isEmpty>
+			<isNotEmpty property="idPeopleSoftAcc">
+			#idPeopleSoftAcc#
+			</isNotEmpty>
+			,#idAudit#,
+            #accessRight#,
+            <isEmpty property="idPplSoftDept">
+				null
+			</isEmpty>
+			<isNotEmpty property="idPplSoftDept">
+				#idPplSoftDept#
+			</isNotEmpty>
+				)	    
+  	</insert>
+  	<insert id="INSERT.A_USR.USERACCESS" parameterClass="nttdm.bsys.a_usr.dto.UserAccess">	
+		INSERT INTO M_USER_ACCESS (ID_USER,ID_MODULE,ID_SUB_MODULE,
+				ACCESS_TYPE,DATE_CREATED,DATE_UPDATED,ID_LOGIN,ID_AUDIT)
+		VALUES (
+			#idUser#,
+			#idModule#,
+			#idSubModule#,
+			#accessType#,
+			sysdate,
+			sysdate,
+			#idLogin#,
+			#idAudit#
+				)
+  	</insert>
+    
+    <!-- s03 -->
+    <select id="SELECT.A_USR.GET_LISTPLAN_DIVISION" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct a.id_div as "id",
+                a.div_name as "name",
+        case when b.user_name is null then 0 
+           else 1 
+           end as "isUsed"
+        from divmaint a, (select * from m_user m where m.is_deleted = '0') b
+        where a.is_deleted = 0 and  a.id_div = b.id_div(+)
+        ORDER BY a.id_div asc
+    </select>
+    <select id="SELECT.A_USR.GET_LISTPLAN_DEPARTMENT" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct a.id_dept as "id",
+                a.dept_name as "name",
+        case when b.user_name is null then 0 
+           else 1 
+           end as "isUsed"
+        from deptmaint a, (select * from m_user m where m.is_deleted = '0') b
+        where a.is_deleted = 0 and  a.id_dept = b.id_dept(+)
+        ORDER BY a.id_dept asc
+    </select>   
+    <select id="SELECT.A_USR.GET_LISTPLAN_ROLE" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct a.id_role as "id",
+        a.role_name as "name",
+        case when b.user_name is null then 0 
+        else 1 
+        end as "isUsed"            
+        from rolemaint a, (select * from m_user m where m.is_deleted = '0') b
+        where a.is_deleted = 0 and  a.id_role = b.id_role(+)
+        ORDER BY a.id_role asc
+    </select>
+    <select id="SELECT.A_USR.GET_LIST_DIVISION_ID" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct a.id_div  as "id"
+        from divmaint a
+        where a.is_deleted = '0'
+        order by a.id_div asc
+    </select>
+    <select id="SELECT.A_USR.GET_LIST_DEPARTMENT_ID" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct  a.id_dept as "id"
+        from deptmaint a
+        where a.is_deleted='0'
+        order by a.id_dept asc
+    </select>
+    <select id="SELECT.A_USR.GET_LIST_ROLE_ID" resultClass="nttdm.bsys.a_usr.dto.PlanService">
+        select distinct  a.id_role as "id"
+        from rolemaint a
+        where a.is_deleted='0'
+        order by a.id_role asc
+    </select>
+    <insert id="INSERT.A_USR.DIVISION" parameterClass="nttdm.bsys.a_usr.dto.PlanService">   
+        INSERT INTO divmaint (id_div, div_name, is_deleted,
+                date_created, date_updated, id_login )
+        VALUES (
+            #id#,
+            #name#,
+            '0',        
+            sysdate,
+            sysdate,
+            #idLogin#
+            )           
+    </insert>   
+    <insert id="INSERT.A_USR.DEPARTMENT" parameterClass="nttdm.bsys.a_usr.dto.PlanService"> 
+        INSERT INTO deptmaint(id_dept, dept_name, is_deleted,
+                date_created, date_updated ,id_login)
+        VALUES (
+            #id#,
+            #name#,
+            '0',        
+            sysdate,
+            sysdate,
+            #idLogin#
+            )           
+    </insert>
+    <insert id="INSERT.A_USR.ROLE" parameterClass="nttdm.bsys.a_usr.dto.PlanService">   
+        INSERT INTO rolemaint(id_role, role_name, is_deleted,
+                 date_created, date_updated, id_login)
+        VALUES (
+            #id#,
+            #name#,
+            '0',        
+            sysdate,
+            sysdate,
+            #idLogin#
+            )           
+    </insert>
+    <select id="SELECT.A_USR.ROLE_INITACCESS" resultClass="nttdm.bsys.a_usr.dto.RoleAccess">
+            SELECT 
+                M.ID_MODULE as "idModule",
+                M.ID_SUB_MODULE as "idSubModule" 
+            FROM M_MODULES  N INNER JOIN M_SUB_MODULES M ON M.ID_MODULE = N.ID_MODULE 
+            WHERE (N.IS_DISPLAY = '1' AND M.IS_DISPLAY = '1')
+            OR (M.IS_FIELD = '1' AND N.IS_DISPLAY = '1')
+            ORDER BY M.Id_Module ASC 
+    </select>    
+    <insert id="INSERT.A_USR.ROLEACCESS" parameterClass="nttdm.bsys.a_usr.dto.RoleAccess">  
+        INSERT INTO M_ROLE_ACCESS (ID_ROLE,ID_MODULE,ID_SUB_MODULE,
+                ACCESS_TYPE,IS_DELETED,DATE_CREATED,DATE_UPDATED,ID_LOGIN)
+        VALUES (
+            #idRole#,
+            #idModule#,
+            #idSubModule#,
+            '1',
+            '0',
+            sysdate,
+            sysdate,
+            #idLogin#
+            )
+    </insert>
+    <update id="UPDATE.A_USR.DIVISION" parameterClass="nttdm.bsys.a_usr.dto.PlanService">
+        update divmaint m
+        set m.div_name = #name#,
+            m.date_updated = sysdate,
+            m.id_login = #idLogin#      
+        where m.id_div = #id#
+    </update>
+    <update id="UPDATE.A_USR.DEPARTMENT" parameterClass="nttdm.bsys.a_usr.dto.PlanService">
+        update deptmaint m
+        set m.dept_name = #name#,
+            m.date_updated = sysdate,
+            m.id_login = #idLogin#
+        where m.id_dept = #id#
+    </update>
+    <update id="UPDATE.A_USR.ROLE" parameterClass="nttdm.bsys.a_usr.dto.PlanService">
+        update rolemaint m
+        set m.role_name = #name#,
+            m.date_updated = sysdate,
+            m.id_login = #idLogin#
+        where m.id_role = #id#
+    </update>
+    <delete id="DELETE.A_USR.DIVISION" parameterClass="java.lang.String">
+           delete divmaint  where id_div=#id#
+    </delete>
+    <delete id="DELETE.A_USR.DEPARTMENT" parameterClass="java.lang.String">
+           delete deptmaint where id_dept=#id#
+    </delete>
+    <delete id="DELETE.A_USR.ROLE" parameterClass="java.lang.String">
+           delete rolemaint where id_role=#id#
+    </delete>   
+    <delete id="DELETE.A_USR.ROLEACCESS" parameterClass="java.lang.String">
+           delete m_role_access   where id_role=#id#
+    </delete>   
+    <!-- s04 -->
+    <select id="SELECT.A_USR.GET_LIST_ROLEACCESS" parameterClass="java.lang.String" resultClass="nttdm.bsys.a_usr.dto.RoleAccess">
+        select  m.id_module as "idModule",
+                m.id_sub_module as "idSubModule",
+                m.access_type as "accessType"
+        from m_role_access m
+        where m.is_deleted = '0'  and m.id_role = #idRole#
+    </select>
+    <update id="UPDATE.A_USR.ROLEACCESS" parameterClass="nttdm.bsys.a_usr.dto.RoleAccess">
+        update m_role_access
+        set 
+            access_type = #accessType#,         
+            date_created = sysdate,
+            date_updated = sysdate,
+            id_login = #idLogin#
+        where id_role = #idRole# and id_sub_module = #idSubModule#
+    </update> 
+    <update id="UPDATE.A_USR.USERACCESS_BYROLE" parameterClass="nttdm.bsys.a_usr.dto.RoleAccess">
+        update M_USER_ACCESS u 
+        set 
+            u.access_type=#accessType#,
+            u.date_updated = sysdate,
+            u.id_login = #idLogin#
+        where 
+            u.id_sub_module = #idSubModule#
+            and u.id_user in (
+                select m.id_user from m_user m
+                where m.id_role = #idRole#
+                and m.access_right='R'
+                and m.is_deleted = '0'
+            )
+    </update>
+</sqlMap>

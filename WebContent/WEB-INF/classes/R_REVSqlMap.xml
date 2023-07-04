@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_REV">
+    <select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT 
+		  A.ACCESS_TYPE 
+		FROM M_USER_ACCESS A
+		WHERE A.ID_SUB_MODULE = 'R-REV-S01'
+		AND A.ID_USER=#idUser#
+    </select>
+    <select id="GET_REPORT_MONTH_CHECKING" resultClass="java.lang.String">
+		SELECT 
+			MIN(FISCAL_MONTH) openingMonth
+		FROM T_REV_FISCAL_YEAR
+		WHERE IS_DELETED = '0'
+		AND STATUS = 'O'   
+    </select>
+    <select id="GET_PERIOD_START_END" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+        SELECT S.FISCAL_START, S.FISCAL_END
+		  FROM
+		  (
+		    SELECT FISCAL_START, FISCAL_END, MAX(FISCAL_MONTH) AS FISCAL_MONTH
+		    FROM T_REV_FISCAL_YEAR
+		    WHERE STATUS = 'C'
+		    AND IS_DELETED = '0'
+		    GROUP BY FISCAL_START,FISCAL_END
+		  )S
+		  INNER JOIN T_REV_FISCAL_YEAR AC ON S.FISCAL_MONTH=AC.FISCAL_MONTH
+		WHERE AC.FISCAL_MONTH = #reportMonth#     
+    </select>
+    <select id="GET_SUMMARY_PRODUCT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT SVC_LEVEL1, SVC_GRP_NAME 
+        FROM T_REV_R_H
+        WHERE FISCAL_START = #fiscalStart#
+        AND FISCAL_END = #fiscalEnd#
+        AND IS_DELETED = '0'
+        GROUP BY SVC_LEVEL1, SVC_GRP_NAME 
+        ORDER BY SVC_LEVEL1, SVC_GRP_NAME 
+    </select>
+    <select id="GET_PROD_SVC_AMOUNT" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT REV.* FROM(
+        SELECT
+		    A.SVC_LEVEL1,
+		    A.PRODUCT_CODE,
+        	B.PRODUCT_DESC,
+		    SUM(A.AMOUNT0) AMOUNT0,
+		    SUM(A.AMOUNT1) AMOUNT1,
+		    SUM(A.AMOUNT2) AMOUNT2,
+		    SUM(A.AMOUNT3) AMOUNT3,
+		    SUM(A.AMOUNT4) AMOUNT4,
+		    SUM(A.AMOUNT5) AMOUNT5,
+		    SUM(A.AMOUNT6) AMOUNT6,
+		    SUM(A.AMOUNT7) AMOUNT7,
+		    SUM(A.AMOUNT8) AMOUNT8,
+		    SUM(A.AMOUNT9) AMOUNT9,
+		    SUM(A.AMOUNT10) AMOUNT10,
+		    SUM(A.AMOUNT11) AMOUNT11,
+		    SUM(A.AMOUNT12) AMOUNT12
+		  FROM T_REV_R_H A LEFT JOIN M_PRODUCT B ON A.PRODUCT_CODE = B.PRODUCT_CODE
+		  WHERE A.FISCAL_START = #fiscalStart#
+		  AND A.FISCAL_END = #fiscalEnd#
+		  AND A.SVC_LEVEL1 = #svcLevel1#
+		  AND A.IS_DELETED = '0'
+		  GROUP BY A.SVC_LEVEL1, A.PRODUCT_CODE, B.PRODUCT_DESC
+		  ORDER BY A.PRODUCT_CODE ASC
+		)REV WHERE(
+		    REV.AMOUNT0 != 0
+		    OR REV.AMOUNT1 != 0
+		    OR REV.AMOUNT2 != 0
+		    OR REV.AMOUNT3 != 0
+		    OR REV.AMOUNT4 != 0
+		    OR REV.AMOUNT5 != 0
+		    OR REV.AMOUNT6 != 0
+		    OR REV.AMOUNT7 != 0
+		    OR REV.AMOUNT8 != 0
+		    OR REV.AMOUNT9 != 0
+		    OR REV.AMOUNT10 != 0
+		    OR REV.AMOUNT11 != 0
+		    OR REV.AMOUNT12 != 0
+	    )
+    </select>
+    <select id="GET_SUMMARY_TYPE" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    	SELECT 
+	      DISTINCT SUMMARY_TYPE 
+	    FROM T_REV_R_S
+	    WHERE SUMMARY_TYPE != 'PRODUCT_CODE'
+	    AND FISCAL_START = #fiscalStart#
+	    AND FISCAL_END = #fiscalEnd#
+	    AND IS_DELETED = '0'
+	    ORDER BY SUMMARY_TYPE
+    </select>
+    <select id="GET_MAIN_SUMMARY_DETAIL_BY_TYPE" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT
+	        SUMMARY_TYPE,
+	        DECODE(SUMMARY_TYPE,
+	            'PRODUCT_CODE', 'Product Code',
+	            'LOCATION', 'Location',
+	            'CO_CATEGORY', 'Company Category',
+	            'CO_SUB_CATEGORY', 'Company Sub Category',
+	            'CO_TYPE' , 'Company Type'
+          	) SUMMARY_TYPE2,
+	        COL_DESC,
+	        SUM(AMOUNT0) AMOUNT0,
+	        SUM(AMOUNT1) AMOUNT1,
+	        SUM(AMOUNT2) AMOUNT2,
+	        SUM(AMOUNT3) AMOUNT3,
+	        SUM(AMOUNT4) AMOUNT4,
+	        SUM(AMOUNT5) AMOUNT5,
+	        SUM(AMOUNT6) AMOUNT6,
+	        SUM(AMOUNT7) AMOUNT7,
+	        SUM(AMOUNT8) AMOUNT8,
+	        SUM(AMOUNT9) AMOUNT9,
+	        SUM(AMOUNT10) AMOUNT10,
+	        SUM(AMOUNT11) AMOUNT11,
+	        SUM(AMOUNT12) AMOUNT12
+			FROM T_REV_R_S
+	    WHERE SUMMARY_TYPE = #summaryType#
+	    AND SUMMARY_TYPE != 'PRODUCT_CODE'
+		AND SVC_LEVEL1 IN
+		<iterate property="svcLevel" open="(" close=")" conjunction=",">
+		   #svcLevel[]#
+		</iterate>
+	    AND FISCAL_START = #fiscalStart#
+	    AND FISCAL_END = #fiscalEnd#
+	    AND IS_DELETED = '0'
+	    GROUP BY SUMMARY_TYPE, COL_DESC
+	    ORDER BY COL_DESC
+    </select>
+    <select id="GET_SUMMARY_DETAIL_BY_TYPE" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT
+	        SUMMARY_TYPE,
+	        DECODE(SUMMARY_TYPE,
+	            'PRODUCT_CODE', 'Product Code',
+	            'LOCATION', 'Location',
+	            'CO_CATEGORY', 'Company Category',
+	            'CO_SUB_CATEGORY', 'Company Sub Category',
+	            'CO_TYPE' , 'Company Type'
+          	) SUMMARY_TYPE2,
+	        COL_DESC,
+	        SUM(AMOUNT0) AMOUNT0,
+	        SUM(AMOUNT1) AMOUNT1,
+	        SUM(AMOUNT2) AMOUNT2,
+	        SUM(AMOUNT3) AMOUNT3,
+	        SUM(AMOUNT4) AMOUNT4,
+	        SUM(AMOUNT5) AMOUNT5,
+	        SUM(AMOUNT6) AMOUNT6,
+	        SUM(AMOUNT7) AMOUNT7,
+	        SUM(AMOUNT8) AMOUNT8,
+	        SUM(AMOUNT9) AMOUNT9,
+	        SUM(AMOUNT10) AMOUNT10,
+	        SUM(AMOUNT11) AMOUNT11,
+	        SUM(AMOUNT12) AMOUNT12
+			FROM T_REV_R_S
+	    WHERE SUMMARY_TYPE = #summaryType#
+	    AND SUMMARY_TYPE != 'PRODUCT_CODE'
+	    AND PRODUCT_CODE IN 
+	    <iterate property="prodCode" open="(" close=")" conjunction=",">
+		   #prodCode[]#
+		</iterate>
+		AND SVC_LEVEL1 IN
+		<iterate property="svcLevel" open="(" close=")" conjunction=",">
+		   #svcLevel[]#
+		</iterate>
+	    AND FISCAL_START = #fiscalStart#
+	    AND FISCAL_END = #fiscalEnd#
+	    AND IS_DELETED = '0'
+	    GROUP BY SUMMARY_TYPE, COL_DESC
+	    ORDER BY COL_DESC
+    </select>
+    <select id="GET_SUMMARY_SERVICE_DETAILS" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT REV.* FROM(
+			SELECT
+			  JOB_NO PROJECT_NAME,
+			  CUST_NAME CUST_NAME,
+			  LOCATION_S LOCATION,
+			  CO_CATEGORY_S CO_CATEGORY,
+			  CO_SUB_CATEGORY_S CO_SUB_CATEGORY,
+			  CO_TYPE_S CO_TYPE,
+			  SVC_START_END_S SERVICE_DURATION,
+			  BILL_INSTRUCT_S BILL_INSTRUCT,
+			  PLAN_S PLAN,
+			  AMOUNT0,
+			  AMOUNT1,
+			  AMOUNT2,
+			  AMOUNT3,
+			  AMOUNT4,
+			  AMOUNT5,
+			  AMOUNT6,
+			  AMOUNT7,
+			  AMOUNT8,
+			  AMOUNT9,
+			  AMOUNT10,
+			  AMOUNT11,
+			  AMOUNT12
+		  	FROM T_REV_R_H
+			  WHERE SVC_LEVEL1 = #svcLevel1#
+			AND PRODUCT_CODE = #prodCode#
+			AND FISCAL_START = #fiscalStart#
+			AND FISCAL_END = #fiscalEnd#
+			AND IS_DELETED = '0'
+			  ORDER BY JOB_NO ASC
+		)REV WHERE(
+		  REV.AMOUNT0 != 0
+		  OR REV.AMOUNT1 != 0
+		  OR REV.AMOUNT2 != 0
+		  OR REV.AMOUNT3 != 0
+		  OR REV.AMOUNT4 != 0
+		  OR REV.AMOUNT5 != 0
+		  OR REV.AMOUNT6 != 0
+		  OR REV.AMOUNT7 != 0
+		  OR REV.AMOUNT8 != 0
+		  OR REV.AMOUNT9 != 0
+		  OR REV.AMOUNT10 != 0
+		  OR REV.AMOUNT11 != 0
+		  OR REV.AMOUNT12 != 0
+	    )
+    </select>
+    <select id="GET_FILE_PATH" resultClass="java.lang.String">
+        SELECT 
+		  SET_VALUE 
+		FROM M_GSET_D WHERE ID_SET = 'BATCH_R_REV_P01' AND IS_DELETED = '0'
+    </select>
+    <select id="MERGE_FILE_DETAILS" parameterClass="java.util.HashMap">
+        MERGE INTO T_REV_R_DOC O
+		USING
+		(
+			SELECT 
+				REPORT_MONTH, TRIM(FILENAME) FILENAME
+			FROM T_REV_R_DOC WHERE TRIM(FILENAME)=TRIM(#fileName#) AND REPORT_MONTH=#reportMonth# AND IS_DELETED = '0'
+			UNION ALL
+		  	SELECT
+		   		'N/A' REPORT_MONTH, 'N/A' FILENAME
+		  	FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM T_REV_R_DOC WHERE TRIM(FILENAME)=TRIM(#fileName#) AND REPORT_MONTH=#reportMonth# AND IS_DELETED = '0')
+		) M
+		ON (O.REPORT_MONTH = M.REPORT_MONTH)
+		WHEN MATCHED THEN
+		  UPDATE SET O.FILENAME=#fileName#, O.REPORT_BY=#reportBy#, O.FILELOCATION=#fileLocation#, O.DATE_UPDATED=sysdate, O.ID_LOGIN=#idLogin# WHERE TRIM(O.FILENAME) = TRIM(M.FILENAME)
+		WHEN NOT MATCHED THEN
+		  INSERT (O.REPORT_MONTH, O.REPORT_BY, O.FILENAME, O.FILELOCATION, O.IS_DELETED, O.DATE_CREATED, O.DATE_UPDATED, O.ID_LOGIN, O.ID_AUDIT)
+		    VALUES (#reportMonth#, #reportBy#, #fileName#, #fileLocation#, '0', sysdate, sysdate, #idLogin#, null)
+    </select>
+    <select id="GET_EXCEL_FILE_LIST" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+        SELECT
+		  to_char(to_date(REPORT_MONTH, 'YYYYMM'), 'YYYY/MM') FILEDATE,
+		  FILENAME,
+		  FILELOCATION
+		FROM T_REV_R_DOC WHERE REPORT_MONTH = #reportMonth#
+		AND TRIM(REPORT_BY) IN
+		<iterate property="reportBy" open="(" close=")" conjunction=",">
+		   #reportBy[]#
+		</iterate>
+		<!-- #249 START-->
+		AND IS_DELETED = '0' ORDER BY UPPER(FILENAME)
+		<!-- #249 END-->
+    </select>
+    <select id="GET_INIT_DATE" resultClass="java.util.HashMap">
+        SELECT 
+		  to_char(to_date(A.maxOpeningStart, 'YYYYMM'), 'Mon YYYY') financialStart,
+		  to_char(to_date(A.maxOpeningEnd, 'YYYYMM'), 'Mon YYYY') financialEnd,
+		  to_char(to_date(NVL(A.maxClosingMonth,TO_CHAR(ADD_MONTHS(TO_DATE(A.minOpeningMonth,'YYYYMM'),-1),'YYYYMM')), 'YYYYMM'), 'Mon YYYY') closingMonth,
+		  to_char(to_date(A.minOpeningMonth, 'YYYYMM'), 'MM') reportMonth1,
+		  to_char(to_date(A.minOpeningMonth, 'YYYYMM'), 'YYYY') reportYear1,
+		  to_char(to_date(NVL(A.maxClosingMonth,TO_CHAR(ADD_MONTHS(TO_DATE(A.minOpeningMonth,'YYYYMM'),-1),'YYYYMM')), 'YYYYMM'), 'MM') reportMonth2,
+		  to_char(to_date(NVL(A.maxClosingMonth,TO_CHAR(ADD_MONTHS(TO_DATE(A.minOpeningMonth,'YYYYMM'),-1),'YYYYMM')), 'YYYYMM'), 'YYYY') reportYear2
+		FROM
+		(
+		  SELECT
+		    (SELECT MAX(FISCAL_START) FROM T_REV_FISCAL_YEAR WHERE STATUS='O' AND IS_DELETED = '0') maxOpeningStart,
+		    (SELECT MAX(FISCAL_END) FROM T_REV_FISCAL_YEAR WHERE STATUS='O' AND IS_DELETED = '0') maxOpeningEnd,
+		    (SELECT MAX(FISCAL_MONTH) FROM T_REV_FISCAL_YEAR WHERE STATUS='C' AND IS_DELETED = '0') maxClosingMonth,
+		    (SELECT MIN(FISCAL_MONTH) FROM T_REV_FISCAL_YEAR WHERE STATUS='O' AND IS_DELETED = '0') minOpeningMonth
+		  FROM DUAL
+		)A
+    </select>
+    <select id="CHECK_RPT_MTH_CLOSED" resultClass="java.lang.String" parameterClass="java.lang.String">
+ 		SELECT
+ 			COUNT(1) TOTAL 
+ 		FROM T_REV_FISCAL_YEAR
+		WHERE STATUS='C' AND TRIM(FISCAL_MONTH) = TRIM(#reportMonth#) AND IS_DELETED = '0'
+    </select>
+    <select id="GET_REGEN_FISCAL_YEAR" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ 		SELECT
+ 			FISCAL_START,
+ 			FISCAL_END 
+ 		FROM T_REV_FISCAL_YEAR
+		WHERE FISCAL_MONTH = #reportMonth# AND IS_DELETED = '0'
+    </select>
+    <!--Add by MiffyAn Start-->
+    <select id="GET_FILE_PATH_REV04BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='BATCH_R_REV_P01'
+    </select>
+    <select id="GET_REGEN_FISCAL_YEAR_REV04BL" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ 		SELECT
+ 			AC.FISCAL_START,
+ 			AC.FISCAL_END
+ 		FROM T_REV_FISCAL_YEAR AC
+		WHERE AC.FISCAL_MONTH =#reportMonth#
+    </select>
+    <select id="GET_AMOUNT_REV04BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AC.FISCAL_MONTH,
+ 			AC.COL_NAME
+ 		FROM T_REV_FISCAL_YEAR AC
+		WHERE AC.FISCAL_START =#fiscalStart# AND AC.FISCAL_END=#fiscalEnd# ORDER BY AC.FISCAL_MONTH 
+    </select>
+    <select id="GET_CONSOLIDATE_REV04BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AF.FISCAL_START,
+ 			AF.FISCAL_END,
+ 			AF.JOB_NO,
+ 		    AF.PRODUCT_CODE,
+ 			AM.PRODUCT_DESC,
+ 			AF.SVC_LEVEL1,
+ 			AF.ID_CUST,
+ 			AF.CUST_NAME,
+ 			AF.SVC_GRP_NAME,
+ 			AF.LOCATION_S,
+ 			AF.CO_CATEGORY_S,
+ 			AF.CO_SUB_CATEGORY_S,
+ 			AF.CO_TYPE_S,
+ 			AF.AMOUNT0,
+ 			AF.AMOUNT1,
+ 			AF.AMOUNT2,
+ 			AF.AMOUNT3,
+ 			AF.AMOUNT4,
+ 			AF.AMOUNT5,
+ 			AF.AMOUNT6,
+ 			AF.AMOUNT7,
+ 			AF.AMOUNT8,
+ 			AF.AMOUNT9,
+ 			AF.AMOUNT10,
+ 			AF.AMOUNT11,
+ 			AF.AMOUNT12,
+ 			AF.IS_DELETED,
+ 			AF.DATE_CREATED,
+ 			AF.DATE_UPDATED,
+ 			AF.ID_LOGIN,
+ 			AF.ID_AUDIT,
+ 			AF.BILL_INSTRUCT_S,
+ 			AF.SVC_START_END_S,
+ 			AF.PLAN_S
+ 		FROM T_REV_R_H AF
+        LEFT JOIN M_PRODUCT AM
+        ON AM.PRODUCT_CODE=	AF.PRODUCT_CODE
+		WHERE AF.FISCAL_START =#fiscalStart# AND AF.FISCAL_END=#fiscalEnd# AND
+        (AF.AMOUNT0!=0 OR AF.AMOUNT1!=0 OR AF.AMOUNT2!=0 OR  AF.AMOUNT3!=0 OR  
+         AF.AMOUNT4!=0 OR  AF.AMOUNT5!=0 OR AF.AMOUNT6!=0   OR  AF.AMOUNT7!=0 OR
+         AF.AMOUNT8!=0 OR AF.AMOUNT9!=0 OR AF.AMOUNT10!=0 OR  AF.AMOUNT11!=0 OR  AF.AMOUNT12!=0)
+		ORDER BY AF.SVC_LEVEL1 ,AF.PRODUCT_CODE,AF.JOB_NO,AF.CUST_NAME
+    </select>
+    <select id="GET_SUMMARY_REV04BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 		AH.SUMMARY_TYPE,
+ 		AH.COL_DESC,
+        AH.COL_ID,
+ 		SUM(AH.AMOUNT0) AMOUNT0,
+ 		SUM(AH.AMOUNT1) AMOUNT1,
+        SUM(AH.AMOUNT2) AMOUNT2,
+        SUM(AH.AMOUNT3) AMOUNT3,
+ 		SUM(AH.AMOUNT4) AMOUNT4,
+ 		SUM(AH.AMOUNT5) AMOUNT5,
+ 		SUM(AH.AMOUNT6) AMOUNT6,
+        SUM(AH.AMOUNT7) AMOUNT7,
+ 		SUM(AH.AMOUNT8) AMOUNT8,
+        SUM(AH.AMOUNT9) AMOUNT9,
+ 		SUM(AH.AMOUNT10) AMOUNT10,
+  	    SUM(AH.AMOUNT11) AMOUNT11,
+ 		SUM(AH.AMOUNT12) AMOUNT12
+ 		FROM T_REV_R_S AH 
+    WHERE AH.FISCAL_START=#fiscalStart# AND AH.FISCAL_END=#fiscalEnd# AND AH.SUMMARY_TYPE!='PRODUCT_CODE' 
+    GROUP BY AH.SUMMARY_TYPE, AH.COL_DESC,AH.COL_ID
+    order by  AH.SUMMARY_TYPE, AH.COL_ID
+    </select>
+    <select id="GET_TOTAL_REV04BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+        AF.FISCAL_START,
+ 		SUM(AF.AMOUNT0)   AMOUNT0,
+	    SUM(AF.AMOUNT1)   AMOUNT1,
+	    SUM(AF.AMOUNT2)   AMOUNT2,
+	    SUM(AF.AMOUNT3)   AMOUNT3,
+	    SUM(AF.AMOUNT4)   AMOUNT4,
+	    SUM(AF.AMOUNT5)   AMOUNT5,
+	    SUM(AF.AMOUNT6)   AMOUNT6,
+	    SUM(AF.AMOUNT7)   AMOUNT7,
+	    SUM(AF.AMOUNT8)   AMOUNT8,
+	    SUM(AF.AMOUNT9)   AMOUNT9,
+	    SUM(AF.AMOUNT10)  AMOUNT10,
+	    SUM(AF.AMOUNT11)  AMOUNT11,
+	    SUM(AF.AMOUNT12)  AMOUNT12 
+		FROM T_REV_R_H AF
+		WHERE AF.FISCAL_START =#fiscalStart# AND AF.FISCAL_END=#fiscalEnd# 
+	    GROUP BY AF.FISCAL_START
+	    ORDER BY AF.FISCAL_START
+    </select>
+    
+    <select id="GET_FILE_PATH_REV05BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='BATCH_R_REV_P01'
+    </select>
+    <select id="GET_REGEN_FISCAL_YEAR_REV05BL" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+ 		SELECT
+ 			AC.FISCAL_START,
+ 			AC.FISCAL_END
+ 		FROM T_REV_FISCAL_YEAR AC
+		WHERE AC.FISCAL_MONTH =#reportMonth#
+    </select>
+    <select id="GET_AMOUNT_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AC.FISCAL_MONTH,
+ 			AC.COL_NAME
+ 		FROM T_REV_FISCAL_YEAR AC
+		WHERE AC.FISCAL_START =#fiscalStart# AND AC.FISCAL_END=#fiscalEnd# ORDER BY AC.FISCAL_MONTH 
+    </select>
+    <select id="GET_DETAILS_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT * FROM
+ 		(
+	 		SELECT 
+	 			AG.FISCAL_START,
+	 			AG.FISCAL_END,
+	 			AG.JOB_NO,
+	 			AM.PRODUCT_DESC,
+	 			AG.SVC_LEVEL1,
+	 			AG.ID_CUST,
+	 			AG.CUST_NAME,
+	 			AG.SVC_GRP_NAME,
+	 			AG.LOCATION_S,
+	 			AG.CO_CATEGORY_S,
+	 			AG.CO_SUB_CATEGORY_S,
+	 			AG.CO_TYPE_S,
+			    AG.ID_REF,
+			    AG.BILL_MONTH,
+			    AG.ORIGINAL_REV_AMOUNT,
+	 			AG.AMOUNT0,
+	 			AG.AMOUNT1,
+	 			AG.AMOUNT2,
+	 			AG.AMOUNT3,
+	 			AG.AMOUNT4,
+	 			AG.AMOUNT5,
+	 			AG.AMOUNT6,
+	 			AG.AMOUNT7,
+	 			AG.AMOUNT8,
+	 			AG.AMOUNT9,
+	 			AG.AMOUNT10,
+	 			AG.AMOUNT11,
+	 			AG.AMOUNT12,
+	 			AG.IS_DELETED,
+	 			AG.DATE_CREATED,
+	 			AG.DATE_UPDATED,
+	 			AG.ID_LOGIN,
+	 			AG.ID_AUDIT,
+	 			AG.BILL_INSTRUCT_S,
+	 			AG.SVC_START_END_S,
+	 		    AG.PLAN_S
+	 		FROM T_REV_R_D AG
+	 		LEFT JOIN M_PRODUCT AM
+	        ON AM.PRODUCT_CODE=	AG.PRODUCT_CODE
+			WHERE AG.FISCAL_START =#fiscalStart# AND AG.FISCAL_END=#fiscalEnd# 
+			ORDER BY AG.SVC_LEVEL1 ,AG.PRODUCT_CODE,AG.JOB_NO,AG.CUST_NAME
+		)AG2 WHERE(
+			AG2.AMOUNT0!=0
+			OR AG2.AMOUNT1!=0
+			OR AG2.AMOUNT2!=0
+			OR AG2.AMOUNT3!=0
+			OR AG2.AMOUNT4!=0
+			OR AG2.AMOUNT5!=0
+			OR AG2.AMOUNT6!=0
+			OR AG2.AMOUNT7!=0
+			OR AG2.AMOUNT8!=0
+			OR AG2.AMOUNT9!=0
+			OR AG2.AMOUNT10!=0
+			OR AG2.AMOUNT11!=0
+			OR AG2.AMOUNT12!=0
+		)
+    </select>
+    <select id="GET_DETAILS_R1_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AG.SVC_LEVEL1,
+ 			AG.SVC_GRP_NAME
+ 		FROM T_REV_R_D AG
+		WHERE AG.FISCAL_START =#fiscalStart# AND AG.FISCAL_END=#fiscalEnd#
+		GROUP BY AG.SVC_LEVEL1 ,AG.SVC_GRP_NAME
+        ORDER BY  AG.SVC_LEVEL1 ,AG.SVC_GRP_NAME
+    </select>
+    <select id="GET_DETAILS_R2_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AG.FISCAL_START,
+ 			AG.FISCAL_END,
+ 			AG.JOB_NO,
+ 			AG.PRODUCT_CODE,
+ 			AG.SVC_LEVEL1,
+ 			AG.ID_CUST,
+ 			AG.CUST_NAME,
+ 			AG.SVC_GRP_NAME,
+ 			AG.LOCATION_S,
+ 			AG.CO_CATEGORY_S,
+ 			AG.CO_SUB_CATEGORY_S,
+ 			AG.CO_TYPE_S,
+		    AG.ID_REF,
+		    AG.BILL_MONTH,
+		    AG.ORIGINAL_REV_AMOUNT,
+ 			AG.AMOUNT0,
+ 			AG.AMOUNT1,
+ 			AG.AMOUNT2,
+ 			AG.AMOUNT3,
+ 			AG.AMOUNT4,
+ 			AG.AMOUNT5,
+ 			AG.AMOUNT6,
+ 			AG.AMOUNT7,
+ 			AG.AMOUNT8,
+ 			AG.AMOUNT9,
+ 			AG.AMOUNT10,
+ 			AG.AMOUNT11,
+ 			AG.AMOUNT12,
+ 			AG.IS_DELETED,
+ 			AG.DATE_CREATED,
+ 			AG.DATE_UPDATED,
+ 			AG.ID_LOGIN,
+ 			AG.ID_AUDIT,
+ 			AG.BILL_INSTRUCT_S,
+ 			AG.SVC_START_END_S,
+ 		    AG.PLAN_S,
+            MP.PRODUCT_DESC
+ 		FROM T_REV_R_D AG
+ 		INNER JOIN M_PRODUCT MP
+        ON MP.PRODUCT_CODE=	AG.PRODUCT_CODE
+		WHERE AG.FISCAL_START =#fiscalStart# AND AG.FISCAL_END=#fiscalEnd# AND AG.SVC_LEVEL1=#svcLevel# 
+                 AND(AG.AMOUNT0!=0 OR AG.AMOUNT1!=0 OR AG.AMOUNT2!=0 OR AG.AMOUNT3!=0 OR  AG.AMOUNT4!=0 OR  AG.AMOUNT5!=0 OR AG.AMOUNT6!=0
+                 OR AG.AMOUNT7!=0 OR AG.AMOUNT8!=0 OR AG.AMOUNT9!=0 OR AG.AMOUNT10!=0 OR AG.AMOUNT11!=0 OR AG.AMOUNT12!=0)
+		ORDER BY AG.SVC_LEVEL1 ,AG.PRODUCT_CODE,AG.JOB_NO,AG.CUST_NAME,AG.BILL_MONTH,AG.ID_REF
+    </select>
+    <select id="GET_SUMMARY_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 		AH.SUMMARY_TYPE,
+ 		AH.COL_DESC,
+        AH.COL_ID,
+ 		SUM(AH.AMOUNT0) AMOUNT0,
+ 		SUM(AH.AMOUNT1) AMOUNT1,
+        SUM(AH.AMOUNT2) AMOUNT2,
+        SUM(AH.AMOUNT3) AMOUNT3,
+ 		SUM(AH.AMOUNT4) AMOUNT4,
+ 		SUM(AH.AMOUNT5) AMOUNT5,
+ 		SUM(AH.AMOUNT6) AMOUNT6,
+        SUM(AH.AMOUNT7) AMOUNT7,
+ 		SUM(AH.AMOUNT8) AMOUNT8,
+        SUM(AH.AMOUNT9) AMOUNT9,
+ 		SUM(AH.AMOUNT10) AMOUNT10,
+  	    SUM(AH.AMOUNT11) AMOUNT11,
+ 		SUM(AH.AMOUNT12) AMOUNT12
+ 		FROM T_REV_R_S AH 
+    WHERE AH.FISCAL_START=#fiscalStart# AND AH.FISCAL_END=#fiscalEnd# AND AH.SUMMARY_TYPE!='PRODUCT_CODE' AND AH.SVC_LEVEL1=#svcLevel#
+    GROUP BY AH.SUMMARY_TYPE, AH.COL_DESC,AH.COL_ID
+    order by  AH.SUMMARY_TYPE, AH.COL_ID
+    </select>
+    <select id="GET_TOTAL_REV05BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+        AD.FISCAL_START,
+ 		SUM(AD.AMOUNT0)   AMOUNT0,
+	    SUM(AD.AMOUNT1)   AMOUNT1,
+	    SUM(AD.AMOUNT2)   AMOUNT2,
+	    SUM(AD.AMOUNT3)   AMOUNT3,
+	    SUM(AD.AMOUNT4)   AMOUNT4,
+	    SUM(AD.AMOUNT5)   AMOUNT5,
+	    SUM(AD.AMOUNT6)   AMOUNT6,
+	    SUM(AD.AMOUNT7)   AMOUNT7,
+	    SUM(AD.AMOUNT8)   AMOUNT8,
+	    SUM(AD.AMOUNT9)   AMOUNT9,
+	    SUM(AD.AMOUNT10)  AMOUNT10,
+	    SUM(AD.AMOUNT11)  AMOUNT11,
+	    SUM(AD.AMOUNT12)  AMOUNT12 
+		FROM T_REV_R_D AD
+        INNER JOIN M_PRODUCT MP ON  AD.PRODUCT_CODE=MP.PRODUCT_CODE
+		WHERE AD.FISCAL_START =#fiscalStart# AND AD.FISCAL_END=#fiscalEnd#  and AD.svc_level1=#svcLevel#
+	    GROUP BY AD.FISCAL_START
+	    ORDER BY AD.FISCAL_START
+    </select>   
+    <!-- <select id="GET_ADVANCE_REV06BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+		AG.FISCAL_MONTH,
+		AG.JOB_NO,
+		AG.PRODUCT_CODE,
+		AM.PRODUCT_DESC,
+		AG.SVC_LEVEL1,
+		AG.ID_CUST,
+		AG.CUST_NAME,
+		AG.SVC_GRP_NAME,
+		AG.LOCATION,
+        AG.CO_CATEGORY_S,
+		AG.CO_SUB_CATEGORY_S,
+		AG.CO_TYPE_S,
+		AG.SVC_START_END_S,
+		AG.BILL_INSTRUCT_S,
+		AG.PLAN_S,
+		AG.ID_REF,
+		AG.BILL_MONTH,
+		AG.ORIGINAL_REV_AMOUNT,
+		AG.AMOUNT0,
+		AG.AMOUNT1,
+		AG.AMOUNT2,
+		AG.AMOUNT3,
+		AG.AMOUNT4,
+		AG.AMOUNT5,
+		AG.AMOUNT6,
+		AG.AMOUNT7,
+		AG.AMOUNT8,
+		AG.AMOUNT9,
+		AG.AMOUNT10,
+		AG.AMOUNT11,
+		AG.AMOUNT12,
+		AG.DEPARTMENT,
+		AG.AFFILIATE_CODE,
+		AG.RATE_TYPE2,
+		AG.BILL_FROM,
+		AG.BILL_TO, 
+		AG.ADVANCE_AMOUNT, 
+		AG.CO_CATEGORY,
+		AG.CO_SUB_CATEGORY
+ 		FROM T_REV_R_A  AG
+    INNER JOIN M_PRODUCT AM
+    ON AG.PRODUCT_CODE=AM.PRODUCT_CODE
+    WHERE 	AG.FISCAL_MONTH=#reportMonth# AND AG.AMOUNT0!=0
+    ORDER BY AG.SVC_LEVEL1,AG.PRODUCT_CODE,	AG.JOB_NO,AG.CUST_NAME,	AG.ID_REF
+    </select> -->
+    <select id="GET_ADVANCE_REV06BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+		AG.FISCAL_MONTH,
+		AG.JOB_NO,
+		AG.PRODUCT_CODE,
+		AM.PRODUCT_DESC,
+		AG.SVC_LEVEL1,
+		AG.ID_CUST,
+		AG.CUST_NAME,
+		AG.SVC_GRP_NAME,
+		AG.LOCATION,
+        AG.CO_CATEGORY_S,
+		AG.CO_SUB_CATEGORY_S,
+		AG.CO_TYPE_S,
+		AG.SVC_START_END_S,
+		AG.BILL_INSTRUCT_S,
+		AG.PLAN_S,
+		AG.ID_REF,
+		AG.BILL_MONTH,
+		AG.ORIGINAL_REV_AMOUNT,
+		AG.AMOUNT0,
+		AG.AMOUNT1,
+		AG.AMOUNT2,
+		AG.AMOUNT3,
+		AG.AMOUNT4,
+		AG.AMOUNT5,
+		AG.AMOUNT6,
+		AG.AMOUNT7,
+		AG.AMOUNT8,
+		AG.AMOUNT9,
+		AG.AMOUNT10,
+		AG.AMOUNT11,
+		AG.AMOUNT12,
+		AG.DEPARTMENT,
+		AG.AFFILIATE_CODE,
+		AG.RATE_TYPE2,
+		AG.BILL_FROM,
+		AG.BILL_TO, 
+		AG.ADVANCE_AMOUNT, 
+		AG.CO_CATEGORY,
+		AG.CO_SUB_CATEGORY
+ 		FROM T_REV_R_A  AG
+    INNER JOIN M_PRODUCT AM
+    ON AG.PRODUCT_CODE=AM.PRODUCT_CODE
+    WHERE 	AG.FISCAL_MONTH=#reportMonth# 
+    ORDER BY AG.SVC_LEVEL1,AG.PRODUCT_CODE,	AG.JOB_NO,AG.CUST_NAME,	AG.ID_REF
+    </select>
+    <select id="GET_TOTAL_REV06BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 		SUM(AR.AMOUNT0)   AMOUNT0,
+	    SUM(AR.AMOUNT1)   AMOUNT1,
+	    SUM(AR.AMOUNT2)   AMOUNT2,
+	    SUM(AR.AMOUNT3)   AMOUNT3,
+	    SUM(AR.AMOUNT4)   AMOUNT4,
+	    SUM(AR.AMOUNT5)   AMOUNT5,
+	    SUM(AR.AMOUNT6)   AMOUNT6,
+	    SUM(AR.AMOUNT7)   AMOUNT7,
+	    SUM(AR.AMOUNT8)   AMOUNT8,
+	    SUM(AR.AMOUNT9)   AMOUNT9,
+	    SUM(AR.AMOUNT10)  AMOUNT10,
+	    SUM(AR.AMOUNT11)  AMOUNT11,
+	    SUM(AR.AMOUNT12)  AMOUNT12 
+		FROM T_REV_R_A  AR
+		INNER JOIN M_PRODUCT AM
+        ON AR.PRODUCT_CODE=AM.PRODUCT_CODE
+        WHERE 	AR.FISCAL_MONTH=#reportMonth#
+    </select>   
+    <select id="GET_JOURNALNO_REV07BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			D.SVC_GRP,
+ 			D.JOURNAL_NO
+ 		FROM M_SVG D
+		WHERE D.SVC_GRP IN 
+		(SELECT DISTINCT(AL.SVC_LEVEL1) FROM T_REV_R_A AL WHERE AL.FISCAL_MONTH=#reportMonth#)
+		ORDER BY D.JOURNAL_NO,D.SVC_GRP
+    </select>
+    <select id="GET_ADVANCEACC_REV07BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='BIL_ADVANCE_ACC'
+    </select>
+     <select id="GET_REVENUEACC_REV07BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='BIL_DEBTER_ACC'
+    </select>
+    <select id="GET_JOURNALDESC_REV07BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AJ.DESCRIPTION
+ 		FROM M_JOURNAL_NO AJ
+		WHERE AJ.JOURNAL_NO =#journalNo#
+    </select>
+    <select id="GET_BUSUNIT_REV07BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='EXP_F01_CONFIG' AND SET_SEQ='2'
+    </select>
+    <!--TODO-->
+     <select id="GET_DEFCUR_REV07BL" resultClass="java.lang.String">
+ 		SELECT
+ 			I.SET_VALUE
+ 		FROM M_GSET_D I
+		WHERE I.ID_SET ='DEF_CURRENCY'
+    </select>
+    <select id="GET_SUB1_S1_REV07BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 		   AL.AFFILIATE_CODE AS AFFILIATE_CODE,
+ 		   SUM(AMOUNT0) as SUMAMOUNT0
+ 		FROM T_REV_R_A  AL
+		WHERE AL.FISCAL_MONTH=#reportMonth# AND AL.AMOUNT0!=0 AND AL.SVC_LEVEL1 IN
+       (
+          SELECT
+ 			D.SVC_GRP
+ 		  FROM M_SVG D
+		  WHERE D.SVC_GRP IN 
+		  (SELECT DISTINCT(AL.SVC_LEVEL1) FROM T_REV_R_A AL WHERE AL.FISCAL_MONTH=#reportMonth#)
+		  AND D.JOURNAL_NO=#journalNo#
+       )
+       GROUP BY 	AL.AFFILIATE_CODE
+       ORDER BY AL.AFFILIATE_CODE
+    </select>
+    <select id="GET_SUB1_AK_REV07BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+ 			AK.DESC_ABBR
+ 		FROM M_AFFILIATE AK
+		WHERE AK.AFFILIATE_CODE =#affiliateCode#
+    </select>
+    <select id="GET_SUB2_S2_REV07BL" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		SELECT
+		AL.FISCAL_MONTH,
+		AL.JOB_NO,
+		AL.PRODUCT_CODE,
+		AL.SVC_LEVEL1,
+		AL.ID_CUST,
+		AL.CUST_NAME,
+		AL.SVC_GRP_NAME,
+		AL.LOCATION,
+	    AL.CO_CATEGORY_S,
+		AL.CO_SUB_CATEGORY_S,
+		AL.CO_TYPE_S,
+		AL.SVC_START_END_S,
+		AL.BILL_INSTRUCT_S,
+		AL.PLAN_S,
+		AL.ID_REF,
+		AL.BILL_MONTH,
+		AL.ORIGINAL_REV_AMOUNT,
+		AL.AMOUNT0,
+		AL.AMOUNT1,
+		AL.AMOUNT2,
+		AL.AMOUNT3,
+		AL.AMOUNT4,
+		AL.AMOUNT5,
+		AL.AMOUNT6,
+		AL.AMOUNT7,
+		AL.AMOUNT8,
+		AL.AMOUNT9,
+		AL.AMOUNT10,
+		AL.AMOUNT11,
+		AL.AMOUNT12,
+		AL.DEPARTMENT,
+		AL.AFFILIATE_CODE,
+		AL.RATE_TYPE2,
+		AL.BILL_FROM,
+		AL. BILL_TO, 
+		AL.ADVANCE_AMOUNT, 
+		AL.CO_CATEGORY,
+		AL.CO_SUB_CATEGORY
+ 		FROM T_REV_R_A  AL
+		WHERE AL.FISCAL_MONTH=#reportMonth# AND AL.AMOUNT0!=0 AND AL.SVC_LEVEL1 IN
+       (
+          SELECT D.SVC_GRP
+ 		  FROM M_SVG D
+		  WHERE D.SVC_GRP IN 
+		  (SELECT DISTINCT(AL.SVC_LEVEL1) FROM T_REV_R_A AL WHERE AL.FISCAL_MONTH=#reportMonth#)
+		   AND D.JOURNAL_NO=#journalNo#
+        )
+    </select>
+    <!--Add by MiffyAn End-->
+    
+	<parameterMap id="finalReportParam" class="map" >
+		<parameter property="REPORTMONTH" jdbcType="VARCHAR2" javaType="java.lang.String" mode="IN"/>
+		<parameter property="USERID" jdbcType="VARCHAR2" javaType="java.lang.String" mode="IN"/>
+		<parameter property="RSLT_FLG" jdbcType="INTEGER" javaType="java.lang.Integer" mode="OUT"/>
+	</parameterMap>  
+    <procedure id="finalReportProcedure1" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP1(?,?,?)}
+    </procedure>
+    <procedure id="finalReportProcedure2" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP2(?,?,?)}
+    </procedure>
+    <procedure id="finalReportProcedure3" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP3(?,?,?)}
+    </procedure>
+    <procedure id="finalReportProcedure4" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP4(?,?,?)}
+    </procedure>
+    <procedure id="finalReportProcedure5" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP5(?,?,?)}
+    </procedure>
+	<procedure id="finalReportProcedure6" parameterMap="finalReportParam" >
+    	{call REV_FINAL_STEP6(?,?,?)}
+    </procedure>
+    
+</sqlMap>

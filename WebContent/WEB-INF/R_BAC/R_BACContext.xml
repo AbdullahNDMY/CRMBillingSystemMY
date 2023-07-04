@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_BAC/R_BAC_R01BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_R01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_BAC/R_BAC_R02BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_R02BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/R_BAC/R_BAC_S01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/R_BAC/R_BAC_S02SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_BAC/R_BAC_S02_01BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_01BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_01BLogic"
+        id="R_BAC_S02_01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/R_BAC/R_BAC_S02_02BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_02BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_02BLogic"
+        id="R_BAC_S02_02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_R01BLogic"
+        id="R_BAC_R01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_R02BLogic"
+        id="R_BAC_R02BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/R_BAC/R_BAC_S02DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/R_BAC/R_BAC_R01DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_R03BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_R03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_R03BLogic"
+        id="R_BAC_R03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean> 
+
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_S02_03BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_03BLogic"
+        id="R_BAC_S02_03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_S02_exportBL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_exportBL"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_exportBLogic"
+        id="R_BAC_S02_exportBL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_S02_analysis1BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_analysis1BL"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_analysis1BLogic"
+        id="R_BAC_S02_analysis1BL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_S02_analysis2BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_analysis2BL"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_analysis2BLogic"
+        id="R_BAC_S02_analysis2BL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.DownloadBLogicAction"
+        name="/R_BAC/R_BAC_S02_analysis3BL" scope="singleton">
+        <property name="businessLogic" ref="R_BAC_S02_analysis3BL"/>
+    </bean>
+    <bean class="nttdm.bsys.r_bac.blogic.R_BAC_S02_analysis3BLogic"
+        id="R_BAC_S02_analysis3BL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

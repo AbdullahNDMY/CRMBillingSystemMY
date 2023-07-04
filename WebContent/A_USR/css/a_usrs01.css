@@ -1,0 +1,107 @@
+.searchCondition{
+	background-color:#F8F8F8;
+	border-top:1px solid #D0D0D0;
+	border-bottom:1px solid #D0D0D0;
+	margin-top:7px;	
+	padding-top:9px;
+	padding-bottom:20px;
+	width:100%;
+}
+.searchConditionTbl{
+	background-color:#F8F8F8;
+	margin-top:7px;	
+	padding-top:9px;
+	padding-bottom:20px;
+	width:100%;
+}
+.searchCondition input{
+	width:195px;
+	height:24px;
+	margin:2px 0px 2px 0px;
+}
+.checkboxTD input{
+    width:25px;
+    height:20px;
+    margin:0px 0px 0px 0px;
+}
+.searchCondition select{
+	width:195px;
+	margin:5px 0px 1px 0px;
+}
+.searchCondition option{
+	height:25px;
+}
+.searchCondition .left{
+	width:40%;
+}
+.searchCondition label{
+	width:35%;
+	text-align:right;
+}
+
+.groupButton{
+	margin-top:7px;
+}
+.groupButton button{
+	margin-right:4px;
+}
+
+.searchFound{
+	background-color:#C0C0C0;
+	font-weight:bold;
+	font-size:medium;
+	width:100%;
+	border:1px solid #D0D0D0;
+	margin-top:4px;
+	padding:5px;
+}
+
+.pageLink{
+	width:100%;
+	background-color:#F8F8F8;
+	border:1px solid #D0D0D0;
+	margin-top:2px;
+}
+.result{
+	border-collapse:collapse;
+	background-color:#F8F8F8;
+	border:1px solid #D0D0D0;
+	width:100%;
+}
+.result .header{
+	border:1px solid #D0D0D0;
+	font-weight:bold;
+}
+.result td{
+	border-bottom:1px solid #D0D0D0;
+}
+
+.result .record{
+	border:1px solid #D0D0D0;
+}
+
+.result .colNo{
+	width:4.9%;
+}
+.result .colIdUser{
+	width:16.78%;
+}
+.result .colUserName{
+	width:30.33%
+}
+.result .colDivision{
+	width:22.96%
+}
+.result .colDepartment{
+	width:25.03%;
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+
+.clear{
+	clear:both;
+}

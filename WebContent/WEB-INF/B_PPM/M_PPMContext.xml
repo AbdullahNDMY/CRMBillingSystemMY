@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<!-- モジュール固有のBean定義 -->
+
+  <!-- 共通定義のインポート -->
+  <import resource="../commonContext.xml" />
+
+<!-- ======================================== アクション・業務ロジック定義 -->
+  <!-- アクション定義 --> 	
+	        
+    <!-- S01 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS01_01BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS01_01BLogic"/>
+    </bean>
+     <bean id="M_PPMS01_01BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS01_01BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    <!-- S01 action -->
+    
+    <!-- S02 action -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_01BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_01BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_01BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_01BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+     
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_02BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_02BLogic"/>
+    </bean>
+    
+     <bean id="M_PPMS02_02BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_02BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+            <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_03BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_03BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_03BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_03BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_04BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_04BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_04BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_04BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_07BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_07BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_07BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_07BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_08BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_08BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_08BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_08BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_09BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_09BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_09BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_09BLogic">
+            <property name="queryDAO" ref="queryDAO"></property>
+            <property name="updateDAO" ref="updateDAO"></property>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_PPM/M_PPMS02_10BL" scope="singleton">
+        <property name="businessLogic" ref="M_PPMS02_10BLogic"/>
+    </bean>
+     <bean id="M_PPMS02_10BLogic" scope="singleton"
+		class="nttdm.bsys.m_ppm.blogic.M_PPMS02_10BLogic">
+            <property name="updateDAO" ref="updateDAO"></property>
+    </bean>
+    <!-- S02 action -->        
+    
+    
+</beans>

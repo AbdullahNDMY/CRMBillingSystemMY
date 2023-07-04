@@ -1,0 +1,15 @@
+.group-content fieldset {
+	width: 60%;
+}
+
+.space {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 10px;
+	padding-right: 40px;
+}
+
+.legend-small {
+	font-size: small;
+	color: blue;
+}

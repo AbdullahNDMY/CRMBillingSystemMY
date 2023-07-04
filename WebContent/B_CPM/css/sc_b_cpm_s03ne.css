@@ -1,0 +1,259 @@
+.tabContent{
+	background-color:#F4F3EF;
+	border:1px solid #919B9C;
+	padding:0px 18px 18px 18px;
+	width:100%;
+}
+fieldset{
+	width:100%;
+	border:2px solid #D6D6C7;
+}
+legend{
+	font-weight:bold;
+	color:#0046D5;
+	padding-right:8px;
+	padding-left:2px;
+	vertical-align:center;
+	margin-top:12px;
+}
+#divCustomer{
+	margin-top:17px;
+}
+
+#subscriptionTab{
+	margin-top:11px;
+}
+/* Start General tab */
+#general table{
+	width:100%;
+	border-collapse:collapse;
+}
+
+#general .col1{
+	width:22.48%;
+}
+
+#general .col2{
+	width:28.99%;
+}
+#general .col2 input{
+	width:80%;
+}
+#general .col3{
+	width:23.07%;
+}
+#general .col4{
+	width:25.46%;
+}
+#general .col4 input{
+	width:80%;
+}
+#general .col4 select{
+	width:80%;
+}
+
+#routerSetting {
+	padding:15px 0 21px 10px;
+}
+#browserInfor {
+	padding:17px 0px 12px 10px;
+}
+#operationAddress{
+	padding:3px 0 5px 8px;
+}
+#operationAddress  ul{
+	margin:0 0 0 0;
+	width:47.5%;
+	list-style-type: none;
+}
+#operationAddress .full input{
+	width:100%;
+}
+#operationAddress .half input{
+	width:49%;
+}
+#operationAddress .half select{
+	width:49.5%;
+}
+#ftpInterfaceInfor{
+	padding:17px 0 10px 10px;
+}
+#tableMemo{
+	margin-top:25px;
+	width:100%;
+	border-collapse:collapse;
+}
+#tableMemo .col1{
+	width:15%;
+	vertical-align:top;
+}
+#tableMemo .col2{
+	width:50%;
+	vertical-align:top;
+	position:relative;
+	padding-left:22px;
+}
+#tableMemo span{
+	position:absolute;
+	top:0px;
+	left:5px;
+}
+#tableMemo .col2 textarea{
+	width:70%;
+}
+/* End General tab */
+
+/* Start Mail Address tab */
+#mailAccountInfor{
+	padding:19px 0px 16px 11px;
+}
+#mailAccountInfor table{
+	width:100%;
+	border-collapse:collapse;
+}
+#mailAccountInfor .col1{
+	width:22.61%;
+}
+#mailAccountInfor .col2{
+	width:27.38%;
+}
+#mailAccountInfor .col3{
+	width:25%;
+}
+#mailAccountInfor .col4{
+	width:25%;
+}
+#tableMailAccount {
+	border:1px solid #CEE7FF;
+	border-collapse:collapse;
+	width:100%;
+	margin-top:16px;
+}
+#tableMailAccount input{
+	width:100%;
+}
+#tableMailAccount .header{
+	background-color:#CEE7FF;
+}
+#tableMailAccount .footer{
+	background-color:#CEE7FF;
+	font-weight:bold;
+}
+#tableMailAccount .colAdd{
+	width:5.55%;
+}
+#tableMailAccount .colNo{
+	width:5.45%;
+}
+#tableMailAccount .colMailAccount{
+	width:26.33%;
+}
+#tableMailAccount .colMailPassword{
+	width:16.33%;
+}
+#tableMailAccount .colPOPAccount{
+	width:16.33%;
+}
+#tableMailAccount .colMailBoxQuantity{
+	width:5.55%;
+	text-align:right;
+}
+.colMailBoxQuantity input{
+	text-align:right;
+}
+#tableMailAccount .colMailBoxSize{
+	width:5.55%;
+	text-align:right;
+}
+.colMailBoxSize input{
+	text-align:right;
+}
+#tableMailAccount .colVirusScan{
+	width:6.3%;
+	text-align:center;
+}
+#tableMailAccount .colAntiSpam{
+	width:6.3%;
+	text-align:center;
+}
+#tableMailAccount .colJunkManagment{
+	width:6.3%;
+	text-align:center;
+}
+#tableMailAccount td{
+	border-bottom:1px solid #CEE7FF;
+}
+
+/* End Mail Address tab */
+
+/* Start Rack Power tab */
+#rack table{
+	width:70%;
+	border:1px solid #CEE7FF;
+	border-collapse:collapse;
+	margin-top:22px;
+}
+#rack .header{
+	background-color:#CEE7FF;
+}
+#rack td{
+	border-bottom:1px solid #CEE7FF;
+}
+#rack .colAdd{
+	width:9.36%;
+}
+#rack .colRackNo{
+	width:59.51%;
+}
+#rack .colMaxPower{
+	width:31.13%;
+}
+#rack input{
+	width:100%;
+}
+/* End Rack Power tab */
+/* Start IT Contact tab */
+#itContact .itContact{
+	padding:22px 0px 9px 16px
+}
+#itContact .col1{
+	width:17.57%;
+}
+#itContact .col2{
+	width:29.09%;
+}
+#itContact .col3{
+	width:23.03%;
+}
+#itContact .col4{
+	width:30.31%;
+}
+#itContact input{
+	width:80%;
+}
+#itContact table{
+	width:100%;
+	border-collapse:collapse;
+}
+/* End IT Contact tab */
+.right{
+	float:right;
+}
+.left{
+	float:left;
+}
+.both{
+	clear:both;
+}
+
+a img{
+	border:0px;
+}
+
+.groupButton{
+	margin-top:20px;
+}
+.groupButton button{
+	margin-left:5px;
+	width:auto;
+}

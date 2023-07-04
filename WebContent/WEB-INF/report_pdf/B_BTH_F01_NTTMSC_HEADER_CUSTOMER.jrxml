@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_BTH_F01_NTTMSC_HEADER_IN" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_BTH_F01_NTTMSC_STYLE.jrtx"]]></template>
+	<parameter name="contactName" class="java.lang.String"/>
+	<parameter name="contactAdd1" class="java.lang.String"/>
+	<parameter name="contactAdd2" class="java.lang.String"/>
+	<parameter name="contactAdd3" class="java.lang.String"/>
+	<parameter name="contactAdd4" class="java.lang.String"/>
+	<parameter name="contactTelNo" class="java.lang.String"/>
+	<parameter name="contactFaxNo" class="java.lang.String"/>
+	<detail>
+		<band height="14">
+			<textField>
+				<reportElement style="font_10b_TimesNewRoman" x="0" y="0" width="100" height="14"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactName}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{contactAdd1} != null]]></printWhenExpression>
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactAdd1}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{contactAdd2} != null]]></printWhenExpression>
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactAdd2}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{contactAdd3} != null]]></printWhenExpression>
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactAdd3}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{contactAdd4} != null]]></printWhenExpression>
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactAdd4}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="24" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactTelNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="font_10_TimesNewRoman" x="151" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{contactFaxNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="font_10_TimesNewRoman" x="0" y="0" width="24" height="14"/>
+				<textElement/>
+				<text><![CDATA[Tel :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="font_10_TimesNewRoman" x="124" y="0" width="27" height="14"/>
+				<textElement/>
+				<text><![CDATA[Fax :]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,79 @@
+@CHARSET "Shift_JIS";
+
+* {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+body {
+    background: #FFFFFF;
+}
+
+.labelHeader {
+	background-image: url(../../image/header.png);
+	background-repeat: repeat-x;
+	height: 28px;
+	width: 800px;
+	font-family : "Calibri";
+	color: #FFFFFF;
+	text-align: left;
+	vertical-align: middle;
+	border: solid 1px #000000;
+	padding-left: 5px;
+}
+
+.contentPanel {
+	width: 400px;
+	margin: 80px auto 0px auto;
+}
+
+.welcomeHeader {
+	height : 40px;
+	background-color: #F8F8F8;
+	color : #242491;
+	font-family : "Calibri";
+	font-size : 24px;
+	font-weight : bold;
+	text-align : center;
+	vertical-align : middle;
+	border-top: 2px solid #C0C0C0;
+	border-bottom: 2px solid #C0C0C0;
+}
+
+.login {
+	margin-top: 10px;
+	padding-top: 10px;
+	height : 100px;
+	background-color: #F8F8F8;
+	color : #FFFFF;
+	font-family : "Calibri";
+	font-size : 14px;
+	text-align : center;
+	vertical-align : middle;
+	border-top: 2px solid #C0C0C0;
+	border-bottom: 2px solid #C0C0C0;
+}
+
+.tblLogin {
+	margin: auto;
+}
+
+.error {
+	margin: 10px 0px 0px 0px !important;
+	color : #FF0000;
+}
+
+.labelDashboard {
+	width: 100px;
+}
+
+.labelLogout {
+	width: 80px;
+}
+.popClass{
+	font-family: verdana,arial,serif,sans-serif;
+	font-size: 12px;
+	background-image: url('../../image/dummy.jpg');
+	background-repeat: repeat;
+}

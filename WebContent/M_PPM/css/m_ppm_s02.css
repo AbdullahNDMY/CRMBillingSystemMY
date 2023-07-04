@@ -1,0 +1,54 @@
+@CHARSET "ISO-8859-1";
+#planInfo, #planInfo fieldset {
+	width: 100%; 
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+#planInfo legend {
+	color: #0046D5;
+	font-weight: bold;
+	size: 12px;
+}
+#planInfo #subPlanClone legend {
+	size: 11px;
+}
+.serviceDetail {
+	width: 100%; 
+}
+.serviceDetail .header {
+	background-color: #CEE7FF;
+}
+.serviceDetail .header .add {
+	width: 30px;
+	text-align: center;
+}
+.serviceDetail .remove {
+	text-align: center;
+}
+.serviceDetail {
+	border: 1px solid #CEE7FF;
+}
+.serviceDetail td {
+	border-top: 1px solid #CEE7FF;
+}
+.serviceInfo {
+	border: 1px solid #CEE7FF;
+}
+.serviceInfo .headerLeft div, .serviceInfo .headerCenter div, .serviceInfo .headerRight div {
+	background-color: #CEE7FF;
+}
+.serviceInfo .headerLeft {
+	padding: 2px 0px 2px 4px;
+}
+.serviceInfo .headerCenter {
+	padding: 2px 0px 2px 0px;
+}
+.serviceInfo .headerRight {
+	padding: 2px 4px 2px 0px;
+}
+.gst_serviceList, .gst_cboPlanList, .gst_cboPlanDetailList {
+	display: none;
+}
+.inUsed {
+	display:none;
+}

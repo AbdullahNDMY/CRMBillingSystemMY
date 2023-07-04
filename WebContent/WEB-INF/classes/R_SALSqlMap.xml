@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_SAL">
+	<select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'R-SAL'
+	</select>
+	<select id="SELECT.R_SAL.GET_LIST_SERVICEGROUP" resultClass="org.apache.struts.util.LabelValueBean">
+	   SELECT K.SVC_GRP as value, K.SVC_GRP_NAME as label
+	   FROM M_SVG K 
+	   ORDER BY K.SVC_GRP_NAME ASC
+	</select>
+	<select id="countSalesReport" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		select COUNT(*)
+		  from (SELECT TO_CHAR(c.date_req, 'MM/yyyy') date_req,
+		               b.cust_name,
+		               b.customer_type,
+		               b.affiliate_code,
+		               c.id_ref,
+		               d.ID_CUST_PLAN,
+		               d.SVC_LEVEL2,
+		               TRIM(d.SVC_LEVEL1) AS SVC_LEVEL1,
+                       d.id_cust_plan_link,
+                       d.id_cust_plan_grp,
+		               c.IS_SINGPOST,
+		               c.IS_MANUAL,
+		               c.PAY_METHOD,
+		               c.BILL_CURRENCY,
+		               (case when c.bill_type='CN' then -(d.ITEM_SUBTOTAL) else d.ITEM_SUBTOTAL end) INVOICE_AMT,
+	                   (case when c.bill_type='CN' then -(d.ITEM_GST) else d.ITEM_GST end) GST_AMOUNT,
+	                   (case when c.bill_type='CN' then -(d.ITEM_SUBTOTAL + d.ITEM_GST) else d.ITEM_SUBTOTAL + d.ITEM_GST end) BILL_AMOUNT
+		          FROM m_cust b, t_bil_h c, t_bil_d d
+		         WHERE c.is_deleted = '0'
+		           AND d.is_deleted = '0'
+		           AND b.id_cust = c.id_cust
+		           AND c.id_ref = d.id_ref
+		           AND d.item_level = '1'
+		           AND d.ITEM_AMT <![CDATA[>]]> 0
+		     <dynamic prepend="AND">
+                <isNotEmpty prepend="AND" property="tbxBillFromYearMonth">
+                    c.date_req <![CDATA[>=]]> to_date(#tbxBillFromYearMonth#,'dd/mm/yyyy')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxBillFromYearMonthTo">
+                    c.date_req <![CDATA[<=]]> to_date(#tbxBillFromYearMonthTo#,'dd/mm/yyyy')
+                </isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerType">
+					b.customer_type = #tbxCustomerType#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxInvoiceNo">
+					UPPER(c.ID_REF) LIKE UPPER('%$tbxInvoiceNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					c.bill_currency = #cboCurrency#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboPaymentMetho">
+					trim(c.pay_method) = #cboPaymentMetho#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCategory">
+					d.SVC_LEVEL1 = #cboCategory#
+				</isNotEmpty>
+				<isEmpty property="issueTypeAllNotChecked" prepend="AND"> 
+			    (
+			        1!=1
+			        <isNotEmpty property="issueTypeSingpost">
+						OR (c.IS_SINGPOST = '1' AND c. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeAuto">
+						OR (c.IS_SINGPOST = '0' AND c. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeManual">
+						OR (c.IS_SINGPOST = '0' AND c. IS_MANUAL = '1')
+					</isNotEmpty>
+			    )
+			    </isEmpty>
+			</dynamic>
+		           ) a
+		  left join M_SVC e on e.id_service = a.svc_level2
+		  left join M_SVG k on k.SVC_GRP = a.SVC_LEVEL1
+          left join T_SUBSCRIPTION_INFO F on a.ID_CUST_PLAN = F.ID_CUST_PLAN
+          left join t_cust_plan_link h on a.id_cust_plan_link = h.id_cust_plan_link
+          left join t_cust_plan_d i on a.id_cust_plan_grp = i.id_cust_plan_grp
+		  where 1=1
+		  <dynamic prepend="AND">
+		  	<isNotEmpty prepend="AND" property="tbxServiceName">
+					UPPER(e.SVC_DESC) LIKE UPPER('%$tbxServiceName$%')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="tbxRevenueCode">
+					UPPER(e.ACC_CODE) LIKE UPPER('%$tbxRevenueCode$%')
+			</isNotEmpty>
+            <isNotEmpty prepend="AND" property="tbxSubscription">
+                UPPER(F.ID_SUB_INFO) LIKE UPPER('%$tbxSubscription$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cboRateMode">
+                h.RATE_MODE = #cboRateMode#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateStartFrom">
+                i.SVC_START <![CDATA[>=]]> to_date(#serviceDateStartFrom#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateStartTo">
+                i.SVC_START <![CDATA[<=]]> to_date(#serviceDateStartTo#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateEndFrom">
+                i.SVC_END <![CDATA[>=]]> to_date(#serviceDateEndFrom#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateEndTo">
+                i.SVC_END <![CDATA[<=]]> to_date(#serviceDateEndTo#,'dd/mm/yyyy')
+            </isNotEmpty>
+          </dynamic>
+	</select>
+	<!-- #267 [T15][R-SAL-S01] Sales Reports: Export result - Add new column: Plan CT 13062017 -->
+	<select id="getListSalesReport" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select a.*, TRIM(e.SVC_DESC) AS SVC_DESC, F.ID_SUB_INFO AS ID_SUB_INFO,k.SVC_GRP_NAME AS SVC_GRP_NAME,e.ACC_CODE AS ACC_CODE
+               ,TO_CHAR(i.SVC_START, 'dd/MM/yyyy') AS SERVICE_START
+               ,TO_CHAR(i.SVC_END, 'dd/MM/yyyy') AS SERVICE_END
+               ,h.RATE_MODE, e.ID_SERVICE
+		  from (SELECT TO_CHAR(c.date_req, 'dd/MM/yyyy') date_req,
+		  			   c.date_req date_req_order,
+		               TRIM(b.cust_name) AS cust_name,
+		               TRIM(b.customer_type) AS customer_type,
+		               TRIM(b.affiliate_code) AS affiliate_code,
+		               TRIM(c.id_ref) AS id_ref,
+		               TRIM(d.ID_CUST_PLAN) AS ID_CUST_PLAN,
+		               TRIM(d.SVC_LEVEL2) AS SVC_LEVEL2,
+		               TRIM(d.SVC_LEVEL1) AS SVC_LEVEL1,
+                       d.id_cust_plan_link,
+                       d.id_cust_plan_grp,
+		               c.IS_SINGPOST,
+		               c.IS_MANUAL,
+		               c.BILL_CURRENCY,
+		               (case when c.bill_type='CN' then -(d.ITEM_SUBTOTAL) else d.ITEM_SUBTOTAL end) INVOICE_AMT,
+	                   (case when c.bill_type='CN' then -(d.ITEM_GST) else d.ITEM_GST end) GST_AMOUNT,
+	                   (case when c.bill_type='CN' then -(d.ITEM_SUBTOTAL + d.ITEM_GST) else d.ITEM_SUBTOTAL + d.ITEM_GST end) BILL_AMOUNT
+		          FROM m_cust b, t_bil_h c, t_bil_d d
+		         WHERE c.is_deleted = '0'
+		           AND d.is_deleted = '0'
+		           AND b.id_cust = c.id_cust
+		           AND c.id_ref = d.id_ref
+		           AND d.item_level = '1'
+		           AND d.ITEM_AMT <![CDATA[>]]> 0
+		     <dynamic prepend="AND">
+                <isNotEmpty prepend="AND" property="tbxBillFromYearMonth">
+                    c.date_req <![CDATA[>=]]> to_date(#tbxBillFromYearMonth#,'dd/mm/yyyy')
+                </isNotEmpty>
+                <isNotEmpty prepend="AND" property="tbxBillFromYearMonthTo">
+                    c.date_req <![CDATA[<=]]> to_date(#tbxBillFromYearMonthTo#,'dd/mm/yyyy')
+                </isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerType">
+					b.customer_type = #tbxCustomerType#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxInvoiceNo">
+					UPPER(c.ID_REF) LIKE UPPER('%$tbxInvoiceNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					c.bill_currency = #cboCurrency#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCategory">
+					d.SVC_LEVEL1 = #cboCategory#
+				</isNotEmpty>
+				<isEmpty property="issueTypeAllNotChecked" prepend="AND"> 
+			    (
+			        1!=1
+			        <isNotEmpty property="issueTypeSingpost">
+						OR (c.IS_SINGPOST = '1' AND c. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeAuto">
+						OR (c.IS_SINGPOST = '0' AND c. IS_MANUAL = '0')
+					</isNotEmpty>
+					<isNotEmpty property="issueTypeManual">
+						OR (c.IS_SINGPOST = '0' AND c. IS_MANUAL = '1')
+					</isNotEmpty>
+			    )
+			    </isEmpty>
+			</dynamic>
+		           ) a
+		  left join M_SVC e on e.id_service = a.svc_level2
+		  left join M_SVG k on k.SVC_GRP = a.SVC_LEVEL1
+		  left join T_SUBSCRIPTION_INFO F on a.ID_CUST_PLAN = F.ID_CUST_PLAN
+          left join t_cust_plan_link h on a.id_cust_plan_link = h.id_cust_plan_link
+          left join t_cust_plan_d i on a.id_cust_plan_grp = i.id_cust_plan_grp
+		  where 1=1
+		  <dynamic prepend="AND">
+		  	<isNotEmpty prepend="AND" property="tbxServiceName">
+					UPPER(e.SVC_DESC) LIKE UPPER('%$tbxServiceName$%')
+			</isNotEmpty>
+		  	<isNotEmpty prepend="AND" property="tbxRevenueCode">
+					UPPER(e.ACC_CODE) LIKE UPPER('%$tbxRevenueCode$%')
+			</isNotEmpty>
+            <isNotEmpty prepend="AND" property="tbxSubscription">
+                UPPER(F.ID_SUB_INFO) LIKE UPPER('%$tbxSubscription$%')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cboRateMode">
+                h.RATE_MODE = #cboRateMode#
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateStartFrom">
+                i.SVC_START <![CDATA[>=]]> to_date(#serviceDateStartFrom#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateStartTo">
+                i.SVC_START <![CDATA[<=]]> to_date(#serviceDateStartTo#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateEndFrom">
+                i.SVC_END <![CDATA[>=]]> to_date(#serviceDateEndFrom#,'dd/mm/yyyy')
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="serviceDateEndTo">
+                i.SVC_END <![CDATA[<=]]> to_date(#serviceDateEndTo#,'dd/mm/yyyy')
+            </isNotEmpty>
+		  </dynamic>
+		  ORDER BY UPPER(a.cust_name) ASC, to_char(a.date_req_order,'yyyymmdd') DESC,UPPER(a.id_ref) asc, UPPER(k.SVC_GRP_NAME) ASC, UPPER(SVC_DESC) ASC
+	</select>
+	
+	<select id="GET_SVC_NAME" resultClass="java.util.HashMap">
+		select E.SVC_DESC,J.SVC_LEVEL3,H.ID_CUST_PLAN_LINK from T_CUST_PLAN_SVC J, M_SVC E, T_CUST_PLAN_LINK H WHERE E.ID_SERVICE = J.SVC_LEVEL3 and 
+		J.ID_CUST_PLAN_LINK = H.ID_CUST_PLAN_LINK 
+		<dynamic  prepend="AND">
+        <isNotEmpty prepend="AND" property="idCustPlanLink">
+               J.ID_CUST_PLAN_LINK = #idCustPlanLink#
+        </isNotEmpty>
+        </dynamic>
+    </select>
+	<!-- #267 [T15][R-SAL-S01] Sales Reports: Export result - Add new column: Plan CT 13062017 -->
+</sqlMap>

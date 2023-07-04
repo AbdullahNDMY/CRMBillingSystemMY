@@ -1,0 +1,16 @@
+.DateTextBox{
+	width: 100px;
+	font-family: Tahoma;
+}
+.MonthTextBox{
+	width: 40px;
+}
+.YearTextBox{
+	width: 60px;
+}
+.CashBookTextBox{
+	width: 200px;
+}
+.tdBlankWidth{
+	width: 50px;
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="E_DIM_GR1">
+	
+	<select id="SQL.SELECT.HISTORY.01" resultClass="nttdm.bsys.e_dim_gr1.dto.TGirImpHdDto" >
+	  SELECT 
+	  		ROWNUM AS "index",
+	  		T.FILENAME AS "fileName",
+	  		T.ID_GIR_IMP_BATCH AS "idGirImpBatch",	  		
+	  		T.CLOSE_MONTHYEAR AS "closeMonthYear",
+	  		to_char(DATE_UPLOADED,'DD/MM/yyyy')  AS "dateUploaded",
+	  		T.STATUS AS "status",
+	  		to_char(DATE_CREATED,'DD/MM/yyyy')  AS "dateCreated",
+	  		to_char(DATE_UPDATED,'DD/MM/yyyy HH:mi:ss')  AS "dateUpdated",
+	  		T.ID_LOGIN AS "idLogin" 		
+	    FROM (
+			  SELECT   
+			  		FILENAME ,
+			  		ID_GIR_IMP_BATCH ,	  		
+			  		CLOSE_MONTHYEAR , 
+                                        DATE_UPLOADED,
+                                        DATE_CREATED,
+                                        DATE_UPDATED, 
+                                        STATUS,
+			  		ID_LOGIN  		
+			    FROM T_GIR_IMP_HD
+			   ORDER BY ID_GIR_IMP_BATCH DESC
+	   )T	    
+	</select>
+	<select id="SQL.SELECT.HISTORY.02" resultClass="java.lang.Integer">
+	  SELECT count(*)
+	   	    FROM T_GIR_IMP_HD
+	 </select>
+	 
+	<select id="SQL.SELECT.LOG.01" parameterClass="java.lang.String" resultClass="nttdm.bsys.e_dim_gr1.dto.TBatchLogDto" >
+	  SELECT 
+	  		ROWNUM AS "index",
+	  		ID_BATCH_LOG AS "idBatchLog",
+	  		ID_BATCH_REF_NO AS "idBatchRefNo",	  		
+	  		ERROR_MSG AS "errorMsg",
+	  		to_char(DATE_CREATED,'DD/MM/yyyy')  AS "dateCreated",
+	  		to_char(DATE_UPDATED,'DD/MM/yyyy HH:mi:ss')  AS "dateUpdated",
+	  		ID_LOGIN AS "idLogin" 
+	  	FROM T_BATCH_LOG
+	  	WHERE ID_BATCH_REF_NO = #id#
+	  		AND ID_BATCH_TYPE = 'G_GIR_P02'
+	  	ORDER BY ID_BATCH_LOG DESC
+	</select>	
+	<select id="SQL.SELECT.LOG.02" resultClass="java.lang.Integer">
+	  SELECT count(*)
+	   	    FROM T_BATCH_LOG
+	 </select>
+	<select id="SQL.SELECT.DOWNLOAD.01" parameterClass="java.lang.String" resultClass="java.lang.String">
+	  SELECT SET_VALUE
+	   	    FROM M_GSET_D
+	   	    WHERE ID_SET = #idSet#
+	 </select>
+	
+</sqlMap>

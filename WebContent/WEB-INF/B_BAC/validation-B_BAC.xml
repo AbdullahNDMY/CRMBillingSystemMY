@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+                                 "http://jakarta.apache.org/commons/dtds/validator_1_3_0.dtd">
+<!-- 入力値検証定義 -->
+<form-validation>
+    <formset>
+        <form name="/RP_B_BAC_S04_02BL">
+            <field depends="requiredCombobox" property="cboCustomerName">
+                <arg key="Customer Name" position="0" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_01_01BL">
+            <field depends="requiredCheckbox" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeBC" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Billing Currency" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeEC" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Export Currency" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeFFR" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Fixed Forex Rate" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeIDE" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Is Display Export" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeES" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Export SingPost" position="1" resource="false"/>
+            </field>
+            <!--#31  -->
+            <field depends="validateBBacNewModeMBP" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Multi Bill Period" position="1" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_01_03BL">
+            <field depends="validatePaymentMethod" property="inputHeaderInfo.paymentMethod">
+                <arg key="Payment Method" position="0" resource="false"/>
+                <arg key="bank information" position="1" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_01_02BL">
+            <field depends="requiredCombobox" property="inputHeaderInfo.custAdrType">
+                <arg key="Billing Address" position="0" resource="false"/>
+            </field>
+            <field depends="requiredCombobox" property="inputHeaderInfo.paymentMethod">
+                <arg key="Payment Method" position="0" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_03_02BL">
+            <field depends="requiredCombobox" property="inputHeaderInfo.paymentMethod">
+                <arg key="Payment Method" position="0" resource="false"/>
+            </field>
+            <field depends="requiredCombobox" property="inputHeaderInfo.custAdrType">
+                <arg key="Billing Address" position="0" resource="false"/>
+            </field>
+            <field depends="validwhen,requiredCombobox" property="inputHeaderInfo.billCurrency">
+                <msg name="validwhen" key="errors.ERR1SC038"/>
+                <arg name ="validwhen" position="0" key="screen.b_bac.billingCurrency"/>
+                <var>
+	    			<var-name>test</var-name>
+	    			<var-value>((inputHeaderInfo.bacDCount != 0) or (*this* != null))</var-value>
+	    		</var>
+            </field>
+            <field depends="mask" property="inputHeaderInfo.fixedForex">
+                <msg name="mask" key="errors.ERR1SC012"/>
+				<arg position="0" key="Fixed Forex" resource="false"/>
+				<var>
+					<var-name>mask</var-name>
+					<var-value>^\d{0,4}([.]\d{0,8})?$</var-value><!-- number(15,2) -->
+				</var>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_04_01BL">
+            <field depends="requiredCheckbox" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeBC" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Billing Currency" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeEC" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Export Currency" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeFFR" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Fixed Forex Rate" position="1" resource="false"/>
+            </field>
+            <field depends="validateBBacNewModeIDE" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Is Display Export" position="1" resource="false"/>
+            </field>
+            <!--#31  -->
+            <field depends="validateBBacNewModeMBP" property="idKeys">
+                <arg key="Plan" position="0" resource="false"/>
+                <arg key="plan with same Multi Bill Period" position="1" resource="false"/>
+            </field>
+        </form>
+        <form name="/RP_B_BAC_S02_04_02BL">
+            <field depends="requiredCombobox" property="inputHeaderInfo.idBillAccount">
+                <arg key="Bill Account No" position="0" resource="false"/>
+            </field>
+        </form>
+    </formset>
+</form-validation>

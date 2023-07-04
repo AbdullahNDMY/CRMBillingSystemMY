@@ -1,0 +1,106 @@
+.hidden{
+	position:absolute;
+	left:-10000px;
+	top:auto;
+	overflow:hidden;
+	visibility:hidden;
+}
+
+/*.hidden{
+	display: none;
+}*/
+.unhide{
+	display: inline;
+}
+.lineBottom{
+	color: #EFEFEF;
+}
+.underlineTitle{
+	text-decoration: underline;
+	font-weight: bold;
+}
+.checkboxes{
+	width:80px;
+	height: 28px;
+}
+.lastCheckboxes{
+	height: 28px;
+}
+
+.hyperLink {
+	text-decoration: underline;
+	font-weight: lighter;
+	font-size : 13px;
+	display: block;
+	color: blue;
+	cursor: pointer;
+}
+
+.addressinfo{
+	margin-top:0.05in;
+	background-color:#F8F8F8;
+	border-collapse: collapse;
+	width:100%;	
+
+	
+}
+.addressinfo table{
+	
+	font-family: Calibri;
+	
+}
+.addressinfo td.header{
+	text-align: left;
+	background-color: #EAEAEA;
+	font: bold;	
+}
+
+.addressinfo td.adrr{
+	font-weight: bold;
+	text-decoration: underline;
+	
+	
+
+}
+div#address_layout
+{
+	width: 100%;
+	height: 180px;
+	
+
+}
+div#address_layout_regis{
+	width:45%;
+	float: left;
+
+}
+div #address_layout_corr{
+	width:45%;
+	float: right;
+	margin-right: 10px;
+}
+
+div#billing_address12_layout{
+	width:45%;
+	float: left;
+
+}
+div #billing_address34_layout{
+	width:45%;
+	float: right;
+	margin-right: 10px;
+}
+
+.generalInfo td.colLeft{
+	text-align: left;
+	width: 120px;
+}
+.generalInfo td.colRight{
+	text-align: left;
+	
+}
+
+.generalInfo td.colmid{
+	text-align: left;
+	width:30px;
+}

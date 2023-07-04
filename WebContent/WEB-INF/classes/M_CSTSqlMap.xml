@@ -1,0 +1,1953 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_CST">
+
+<!-- 設定例
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+  <select id="SELECT.M_CST.SQL001" 
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR01Input" 
+  	resultClass="nttdm.bsys.m_cst.bean.CustomerBean"
+  	resultSetType="SCROLL_INSENSITIVE">
+  		SELECT ROWNUM AS "index", t.id_cust, t.cust_acc_no, t.cust_name, t.co_regno, t.country, t.customer_type as "customerType"
+  		 ,t.acc_mgr_prim ,t.acc_mgr_sec
+  		FROM
+		(SELECT DISTINCT c.id_cust, c.cust_acc_no , c.cust_name, c.co_regno, e.country, c.customer_type, c.acc_mgr_prim, c.acc_mgr_sec
+		FROM m_cust c, m_cust_adr e
+		WHERE c.is_deleted=0 
+		AND c.id_cust (+) = e.id_cust
+		AND e.ADR_TYPE = 'BA'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cust_acc_no">
+				lower(c.cust_acc_no) LIKE lower(#cust_acc_no#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cust_name">
+				lower(c.cust_name) LIKE lower(#cust_name#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="co_regno">
+				lower(c.co_regno) LIKE lower(#co_regno#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="country">
+				lower(e.country) LIKE lower(#country#)
+			</isNotEmpty>
+            <isNotEmpty prepend="AND" property="cust_id">
+                lower(c.id_cust) LIKE lower(#cust_id#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cust_type">
+                lower(c.customer_type) = lower(#cust_type#)
+            </isNotEmpty>
+		</dynamic>     
+		ORDER BY CAST(c.id_cust as NUMBER)  ASC) t
+  </select>
+  
+  <select id="SELECT.M_CST.SQL061" 
+    parameterClass="nttdm.bsys.m_cst.bean.CustomerBean" 
+    resultClass="nttdm.bsys.m_cst.bean.CustomerBean"
+    resultSetType="SCROLL_INSENSITIVE">
+        SELECT ROWNUM AS "index", t.id_cust, t.cust_acc_no, t.cust_name, t.co_regno, t.country, t.customer_type as "customerType"
+         ,t.acc_mgr_prim,t.acc_mgr_sec
+        FROM
+        (SELECT DISTINCT c.id_cust, c.cust_acc_no , c.cust_name, c.co_regno, e.country, c.customer_type, c.acc_mgr_prim, c.acc_mgr_sec
+        FROM m_cust c, m_cust_adr e
+        WHERE c.is_deleted=0 
+        AND c.id_cust (+) = e.id_cust
+        AND e.ADR_TYPE = 'BA'
+        <dynamic prepend="AND">
+            <isNotEmpty prepend="AND" property="cust_acc_no">
+                lower(c.cust_acc_no) LIKE lower(#cust_acc_no#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cust_name">
+                lower(c.cust_name) LIKE lower(#cust_name#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="co_regno">
+                lower(c.co_regno) LIKE lower(#co_regno#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="country">
+                lower(e.country) LIKE lower(#country#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="id_cust">
+                lower(c.id_cust) LIKE lower(#id_cust#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="customerType">
+                lower(c.customer_type) = lower(#customerType#)
+            </isNotEmpty>
+        </dynamic>     
+        ORDER BY CAST(c.id_cust as NUMBER)  ASC) t
+  </select>
+  <select id=" "
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR01Input" 
+  	resultClass="java.lang.String"
+    resultSetType="SCROLL_INSENSITIVE">
+  		SELECT count(*)
+		FROM m_cust c, m_cust_adr e, resourcesmaint r
+		WHERE c.is_deleted=0
+		AND c.id_cust = e.id_cust(+)
+		AND e.country = r.resource_id
+		AND e.adr_type='BA'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cust_acc_no">
+				lower(c.cust_acc_no) LIKE lower(#cust_acc_no#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cust_name">
+				lower(c.cust_name) LIKE lower(#cust_name#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="co_regno">
+				lower(c.co_regno) LIKE lower(#co_regno#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="country">
+				lower(e.country) LIKE lower(#country#)
+			</isNotEmpty>
+		</dynamic>  
+  </select>  
+  <select id="SELECT.M_CST.USERLIST"  resultClass="nttdm.bsys.a_usr.bean.UserBean">
+	 SELECT id_user,user_name FROM m_user WHERE is_deleted=0
+  </select>
+  <select id="SELECT.M_CST.SQL003" 
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR02Input" 
+  	resultClass="nttdm.bsys.m_cst.dto.M_CSTR02Output">
+	  	SELECT 
+  		  t1.id_cust,
+		  t1.cust_name,
+		  t1.co_regno,
+		  t1.co_website,
+		  t1.co_email,
+		  t1.co_tel_no,
+		  t1.co_fax_no,
+		  t1.gboc_acc_no,
+		  t1.others_ref_no,
+		  t1.ACC_MGR_PRIM as managerPrimary,
+		  t1.ACC_MGR_SEC as managerSecondary,
+		  decode(NVL(t1.inter_comp,'0'),'1','on','') as inter_comp,
+		  decode(NVL(t1.print_statement,'0'),'1','on','') as print_statement,
+		  t1.cust_acc_no,
+		  t1.SALES_FORCE_ACC_ID as "sales_force_acc_id",
+		  t1.AFFILIATE_CODE as "affiliate_ntt",
+		  t1.CO_CATEGORY as "company_category",
+		  t1.CO_SUB_CATEGORY as "company_sub_category",
+		  t1.CO_BANKINFO as company_bank_info,
+		  t1.END_USER as "end_user",
+		  t1.CO_TYPE as "company_type",
+	   	  t2.ra_adr_line1,
+		  t2.ra_adr_line2,
+		  t2.ra_adr_line3,
+		  t2.ra_zip_code,
+		  t2.ra_country,
+		  t2.ra_country as ra_country_id,
+		  t3.ba_adr_line1,
+		  t3.ba_adr_line2,
+		  t3.ba_adr_line3,
+		  t3.ba_zip_code,
+		  t3.ba_country,
+		  t3.ba_country as ba_country_id,
+		  t4.ca_adr_line1,
+		  t4.ca_adr_line2,
+		  t4.ca_adr_line3,
+		  t4.ca_zip_code,
+		  t4.ca_country,
+		  t4.ca_country as ca_country_id,
+		  t5.pc_contact_name,
+		  t5.pc_designation,
+		  t5.pc_email,
+		  t5.pc_email_cc,
+		  t5.pc_tel_no,
+		  t5.pc_did_no,
+		  t5.pc_fax_no,
+		  t5.pc_mobile_no,
+		  t6.bc_contact_name,
+		  t6.bc_designation,
+		  t6.bc_email,
+		  t6.bc_email_cc,
+		  t6.bc_tel_no,
+		  t6.bc_did_no,
+		  t6.bc_fax_no,
+		  t6.bc_mobile_no,
+		  t7.tc_contact_name,
+		  t7.tc_designation,
+		  t7.tc_email,
+		  t7.tc_email_cc,
+		  t7.tc_tel_no,
+		  t7.tc_did_no,
+		  t7.tc_fax_no,
+		  t7.tc_mobile_no,
+		  t8.oc_contact_name,
+		  t8.oc_designation,
+		  t8.oc_email,
+		  t8.oc_email_cc,
+		  t8.oc_tel_no,
+		  t8.oc_did_no,
+		  t8.oc_fax_no,
+		  t8.oc_mobile_no,
+		  t9.ta_adr_line1,
+		  t9.ta_adr_line2,
+		  t9.ta_adr_line3,
+		  t9.ta_zip_code,
+		  t9.ta_country,
+		  t9.ta_country as ta_country_id,
+		  t10.ba_adr2_line1,
+		  t10.ba_adr2_line2,
+		  t10.ba_adr2_line3,
+		  t10.ba_zip_code2,
+		  t10.ba_country2,
+		  t10.ba_country2 as ba_country2_id,
+		  t11.ba_adr3_line1,
+		  t11.ba_adr3_line2,
+		  t11.ba_adr3_line3,
+		  t11.ba_zip_code3,
+		  t11.ba_country3,
+		  t11.ba_country3 as ba_country3_id,
+		  t12.ba_adr4_line1,
+		  t12.ba_adr4_line2,
+		  t12.ba_adr4_line3,
+		  t12.ba_zip_code4,
+		  t12.ba_country4,
+		  t12.ba_country4 as ba_country4_id	,
+		  t13.bc2_contact_name,
+		  t13.bc2_designation,
+		  t13.bc2_email_to,
+		  t13.bc2_email_cc,
+		  t13.bc2_tel_no,
+		  t13.bc2_did_no,
+		  t13.bc2_fax_no,
+		  t13.bc2_mobile_no,
+		  t14.bc3_contact_name,
+		  t14.bc3_designation,
+		  t14.bc3_email_to,
+		  t14.bc3_email_cc,
+		  t14.bc3_tel_no,
+		  t14.bc3_did_no,
+		  t14.bc3_fax_no,
+		  t14.bc3_mobile_no,
+		  t15.bc4_contact_name,
+		  t15.bc4_designation,
+		  t15.bc4_email_to,
+		  t15.bc4_email_cc,
+		  t15.bc4_tel_no,
+		  t15.bc4_did_no,
+		  t15.bc4_fax_no,
+		  t15.bc4_mobile_no	  		  		  		  		  		  
+	  	FROM
+		  	(SELECT  
+		  	  c.id_cust,
+			  c.cust_name,
+			  c.co_regno,
+			  c.co_website,
+			  c.co_email,
+			  c.co_tel_no,
+			  c.co_fax_no,
+			  c.inter_comp,
+			  c.print_statement,
+			  c.cust_acc_no,
+			  c.gboc_acc_no,
+			  c.others_ref_no,
+			  c.SALES_FORCE_ACC_ID,
+			  c.AFFILIATE_CODE,
+			  c.ACC_MGR_PRIM,
+			  c.ACC_MGR_SEC,
+        	  c.CO_CATEGORY,
+		      c.CO_SUB_CATEGORY,
+		      c.CO_BANKINFO,
+		      c.END_USER,
+		      c.CO_TYPE
+			FROM m_cust c
+			WHERE c.is_deleted=0
+			AND c.id_cust=#id_cust#) t1,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ra_adr_line1,
+			  e.adr_line2 as ra_adr_line2,
+			  e.adr_line3 as ra_adr_line3,
+			  e.ZIP_CODE as ra_zip_code,
+			  e.country as ra_country
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='RA') t2,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr_line1,
+			  e.adr_line2 as ba_adr_line2,
+			  e.adr_line3 as ba_adr_line3,
+			  e.ZIP_CODE as ba_zip_code,
+			  e.country as ba_country
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA') t3,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ca_adr_line1,
+			  e.adr_line2 as ca_adr_line2,
+			  e.adr_line3 as ca_adr_line3,
+			  e.ZIP_CODE as ca_zip_code,
+			  e.country as ca_country
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='CA') t4,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ta_adr_line1,
+			  e.adr_line2 as ta_adr_line2,
+			  e.adr_line3 as ta_adr_line3,
+			  e.ZIP_CODE as ta_zip_code,
+			  e.country as ta_country
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='TA') t9,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr2_line1,
+			  e.adr_line2 as ba_adr2_line2,
+			  e.adr_line3 as ba_adr2_line3,
+			  e.ZIP_CODE as ba_zip_code2,
+			  e.country as ba_country2
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA2') t10,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr3_line1,
+			  e.adr_line2 as ba_adr3_line2,
+			  e.adr_line3 as ba_adr3_line3,
+			  e.ZIP_CODE as ba_zip_code3,
+			  e.country as ba_country3
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA3') t11,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr4_line1,
+			  e.adr_line2 as ba_adr4_line2,
+			  e.adr_line3 as ba_adr4_line3,
+			  e.ZIP_CODE as ba_zip_code4,
+			  e.country as ba_country4
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA4') t12,						
+			(SELECT
+			  d.id_cust,
+			  d.contact_name as pc_contact_name,
+			  d.designation as pc_designation,
+			  d.email as pc_email,
+			  d.email_cc as pc_email_cc,
+			  d.tel_no as pc_tel_no,
+			  d.did_no as pc_did_no,
+			  d.fax_no as pc_fax_no,
+			  d.mobile_no as pc_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='PC') t5,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as bc_contact_name,
+			  d.designation as bc_designation,
+			  d.email as bc_email,
+			  d.email_cc as bc_email_cc,
+			  d.tel_no as bc_tel_no,
+			  d.did_no as bc_did_no,
+			  d.fax_no as bc_fax_no,
+			  d.mobile_no as bc_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='BC') t6,			
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as tc_contact_name,
+			  d.designation as tc_designation,
+			  d.email as tc_email,
+			  d.email_cc as tc_email_cc,
+			  d.tel_no as tc_tel_no,
+			  d.did_no as tc_did_no,
+			  d.fax_no as tc_fax_no,
+			  d.mobile_no as tc_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='TC') t7,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as oc_contact_name,
+			  d.designation as oc_designation,
+			  d.email as oc_email,
+			  d.email_cc as oc_email_cc,
+			  d.tel_no as oc_tel_no,
+			  d.did_no as oc_did_no,
+			  d.fax_no as oc_fax_no,
+			  d.mobile_no as oc_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='OC') t8,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as bc2_contact_name,
+			  d.designation as bc2_designation,
+			  d.email as bc2_email_to,
+			  d.email_cc as bc2_email_cc,
+			  d.tel_no as bc2_tel_no,
+			  d.did_no as bc2_did_no,
+			  d.fax_no as bc2_fax_no,
+			  d.mobile_no as bc2_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='BC2') t13,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as bc3_contact_name,
+			  d.designation as bc3_designation,
+			  d.email as bc3_email_to,
+			  d.email_cc as bc3_email_cc,
+			  d.tel_no as bc3_tel_no,
+			  d.did_no as bc3_did_no,
+			  d.fax_no as bc3_fax_no,
+			  d.mobile_no as bc3_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='BC3') t14,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as bc4_contact_name,
+			  d.designation as bc4_designation,
+			  d.email as bc4_email_to,
+			  d.email_cc as bc4_email_cc,
+			  d.tel_no as bc4_tel_no,
+			  d.did_no as bc4_did_no,
+			  d.fax_no as bc4_fax_no,
+			  d.mobile_no as bc4_mobile_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='BC4') t15				
+		WHERE t1.id_cust=t2.id_cust(+)
+		AND t1.id_cust=t3.id_cust(+)
+		AND t1.id_cust=t4.id_cust(+)
+		AND t1.id_cust=t5.id_cust(+)
+		AND t1.id_cust=t6.id_cust(+)
+		AND t1.id_cust=t7.id_cust(+)	
+		AND t1.id_cust=t8.id_cust(+)				
+		AND t1.id_cust=t9.id_cust(+)
+		AND t1.id_cust=t10.id_cust(+)
+		AND t1.id_cust=t11.id_cust(+)
+		AND t1.id_cust=t12.id_cust(+)
+		AND t1.id_cust=t13.id_cust(+)
+		AND t1.id_cust=t14.id_cust(+)
+		AND t1.id_cust=t15.id_cust(+)
+		
+  </select>
+  <select id="SELECT.M_CST.COMPANYBANKINFO" resultClass="org.apache.struts.util.LabelValueBean">
+  	SELECT DISTINCT F.ID_BANK as value,I.BANK_NAME as label
+    	FROM  M_COM_BANKINFO F, M_BANK I 
+    	WHERE F.ID_BANK=I.ID_BANK
+  </select>
+    <insert id="SELECT.M_CST.SQL004"
+     parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		INSERT INTO m_cust
+		(
+			id_cust,
+			cust_name,
+			co_regno,
+			co_website,
+			co_email,
+			co_tel_no,
+			co_fax_no,
+			inter_comp,
+			cust_acc_no,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login,
+			print_statement,
+			gboc_acc_no,
+			others_ref_no,
+			sales_force_acc_id,
+			salutation,
+			customer_type,
+			cust_id_no,
+			cust_birth_date,
+			home_tel_no,
+			home_fax_no,
+			AFFILIATE_CODE,
+			id_audit,
+			mobile_no,
+			ACC_MGR_PRIM,
+			ACC_MGR_SEC,
+			CO_CATEGORY,
+		    CO_SUB_CATEGORY,
+		    CO_BANKINFO,
+		    END_USER,
+		    CO_TYPE
+		)
+		VALUES
+		(
+			#id_cust#,
+			#cust_name#,
+			#co_regno#,
+			#co_website#,
+			#co_email#,
+			#co_tel_no#,
+			#co_fax_no#,
+			decode(#inter_comp#,'on','1','0'),
+			#cust_acc_no#,
+			0,
+			sysdate,
+			sysdate,
+			#uvo#,
+			decode(#print_statement#,'on','1','0'),			
+			#gboc_acc_no#,
+			#others_ref_no#,
+			#sales_force_acc_id#,
+			#salutation#,
+			#customer_type#,
+			#cust_id_no#,
+			to_date(#cust_birth_date#,'DD/MM/YYYY'),
+			#home_tel_no#,
+			#home_fax_no#,
+			#affiliate_ntt#,
+			#idAudit#,
+			#mobile_no#,
+			#managerPrimary#,
+			#managerSecondary#,
+			#company_category#,
+			#company_sub_category#,
+			#company_bank_info#,
+			#end_user#,
+			#company_type#
+		)
+  </insert>  
+   <insert id="INSERT.M_CST.SQL004.BL09"
+     parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		INSERT INTO m_cust
+		(
+			id_cust,
+			cust_name,
+			co_regno,
+			co_website,
+			co_email,
+			co_tel_no,
+			co_fax_no,
+			inter_comp,
+			cust_acc_no,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login,
+			print_statement,
+			gboc_acc_no,
+			others_ref_no,
+			sales_force_acc_id,
+			salutation,
+			customer_type,
+			cust_id_no,
+			cust_birth_date,
+			home_tel_no,
+			home_fax_no,
+			AFFILIATE_CODE,
+			id_audit,
+			mobile_no,
+			ACC_MGR_PRIM,
+			ACC_MGR_SEC,
+			CO_CATEGORY,
+		    CO_SUB_CATEGORY,
+		    CO_BANKINFO,
+		    END_USER,
+		    CO_TYPE
+		)
+		VALUES
+		(
+			#id_cust#,
+			#cust_name#,
+			#co_regno#,
+			#co_website#,
+			#co_email#,
+			#co_tel_no#,
+			#co_fax_no#,
+			decode(#inter_comp#,'on','1','0'),
+			#cust_acc_no#,
+			0,
+			sysdate,
+			sysdate,
+			#uvo#,
+			decode(#print_statement#,'on','1','0'),			
+			#gboc_acc_no#,
+			#others_ref_no#,
+			#sales_force_acc_id#,
+			#salutation#,
+			#customer_type#,
+			#cust_id_no#,
+			to_date(#cust_birth_date#,'DD/MM/YYYY'),
+			#home_tel_no#,
+			#home_fax_no#,
+			#affiliate_ntt#,
+			#idAudit#,
+			#mobile_no#,
+			#managerPrimary#,
+			#managerSecondary#,
+			#company_category#,
+			#company_sub_category#,
+			#company_bank_info#,
+			#end_user#,
+			#company_type#
+		)
+  </insert>  
+  <update id="UPDATE.M_CST.SQL005.BL09"
+          parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		UPDATE m_cust
+		SET
+		        cust_name=#cust_name#,
+		        co_regno=#co_regno#,
+		        co_website=#co_website#,
+		        co_email=#co_email#,
+		        co_tel_no=#co_tel_no#,
+		        co_fax_no=#co_fax_no#,
+		        mobile_no=#mobile_no#,
+		        home_fax_no=#home_fax_no#,
+		        home_tel_no=#home_tel_no#,
+		        cust_id_no=#cust_id_no#,
+		        salutation = #salutation#,
+		        inter_comp=decode(#inter_comp#,'on','1','0'),
+		        cust_acc_no=#cust_acc_no#,
+		        date_updated=sysdate,
+		        id_login=#uvo#,
+		        print_statement=decode(#print_statement#,'on','1','0'),
+		        gboc_acc_no=#gboc_acc_no#,
+		        others_ref_no=#others_ref_no#,
+		        AFFILIATE_CODE=#affiliate_ntt#,
+		        SALES_FORCE_ACC_ID=#sales_force_acc_id#,
+		        CUST_BIRTH_DATE= TO_DATE(#cust_birth_date#,'DD/MM/YYYY'),
+		        ID_AUDIT = #idAudit#,
+		        ACC_MGR_PRIM = #managerPrimary#,
+		        ACC_MGR_SEC = #managerSecondary#,
+		        CO_CATEGORY = #company_category#,
+		        CO_SUB_CATEGORY = #company_sub_category#,
+		        CO_BANKINFO=#company_bank_info#,
+		        END_USER=#end_user#,
+		        CO_TYPE=#company_type#
+		WHERE   id_cust=#id_cust#  
+		        AND is_deleted=0
+  </update>
+   <update id="SELECT.M_CST.SQL005"
+          parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		UPDATE m_cust
+		SET
+		        cust_name=#cust_name#,
+		        co_regno=#co_regno#,
+		        co_website=#co_website#,
+		        co_email=#co_email#,
+		        co_tel_no=#co_tel_no#,
+		        co_fax_no=#co_fax_no#,
+		        mobile_no=#mobile_no#,
+		        home_fax_no=#home_fax_no#,
+		        home_tel_no=#home_tel_no#,
+		        cust_id_no=#cust_id_no#,
+		        salutation = #salutation#,
+		        inter_comp=decode(#inter_comp#,'on','1','0'),
+		        cust_acc_no=#cust_acc_no#,
+		        date_updated=sysdate,
+		        id_login=#uvo#,
+		        print_statement=decode(#print_statement#,'on','1','0'),
+		        gboc_acc_no=#gboc_acc_no#,
+		        others_ref_no=#others_ref_no#,
+		        AFFILIATE_CODE=#affiliate_ntt#,
+		        SALES_FORCE_ACC_ID=#sales_force_acc_id#,
+		        CUST_BIRTH_DATE= TO_DATE(#cust_birth_date#,'DD/MM/YYYY'),
+		        ID_AUDIT = #idAudit#,
+		        ACC_MGR_PRIM = #managerPrimary#,
+		        ACC_MGR_SEC = #managerSecondary#,
+		        CO_CATEGORY = #company_category#,
+		        CO_SUB_CATEGORY = #company_sub_category#,
+		        CO_BANKINFO=#company_bank_info#,
+		        END_USER=#end_user#,
+		        CO_TYPE=#company_type#
+		WHERE   id_cust=#id_cust#  
+		        AND is_deleted=0
+  </update>
+  <update id="SELECT.M_CST.SQL006" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ra_adr_line1#,
+		    adr_line2=#ra_adr_line2#,
+		    adr_line3=#ra_adr_line3#,
+		    country=#ra_country_id#,	
+		    zip_code=#ra_zip_code#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ra_adr_line1#,
+			#ra_adr_line2#,
+			#ra_adr_line3#,
+			#ra_country_id#,				
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ra_zip_code#,
+		  	#idAudit#
+		  )  
+  </update>    
+  <update id="SELECT.M_CST.SQL007" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ba_adr_line1#,
+		    adr_line2=#ba_adr_line2#,
+		    adr_line3=#ba_adr_line3#,
+		    country=#ba_country_id#,	
+		    zip_code=#ba_zip_code#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ba_adr_line1#,
+			#ba_adr_line2#,
+			#ba_adr_line3#,
+			#ba_country_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ba_zip_code#,
+		  	#idAudit#
+		  )  
+  </update>
+  <!-- billing address 2 --> 
+  <update id="SELECT.M_CST.SQL007_2" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+  	MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ba_adr2_line1#,
+		    adr_line2=#ba_adr2_line2#,
+		    adr_line3=#ba_adr2_line3#,
+		    country=#ba_country2_id#,	
+		    zip_code=#ba_zip_code2#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ba_adr2_line1#,
+			#ba_adr2_line2#,
+			#ba_adr2_line3#,
+			#ba_country2_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ba_zip_code2#,
+		  	#idAudit#
+		  )  
+  </update>
+  <!-- billing address 3 --> 
+  <update id="SELECT.M_CST.SQL007_3" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+  	MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ba_adr3_line1#,
+		    adr_line2=#ba_adr3_line2#,
+		    adr_line3=#ba_adr3_line3#,
+		    country=#ba_country3_id#,	
+		    zip_code=#ba_zip_code3#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ba_adr3_line1#,
+			#ba_adr3_line2#,
+			#ba_adr3_line3#,
+			#ba_country3_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ba_zip_code3#,
+		  	#idAudit#
+		  )  
+  </update>
+  <!-- billing address 4 --> 
+  <update id="SELECT.M_CST.SQL007_4" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+  	MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ba_adr4_line1#,
+		    adr_line2=#ba_adr4_line2#,
+		    adr_line3=#ba_adr4_line3#,
+		    country=#ba_country4_id#,	
+		    zip_code=#ba_zip_code4#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ba_adr4_line1#,
+			#ba_adr4_line2#,
+			#ba_adr4_line3#,
+			#ba_country4_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ba_zip_code4#,
+		  	#idAudit#
+		  )  
+  </update>
+ <update id="SELECT.M_CST.SQL008" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ca_adr_line1#,
+		    adr_line2=#ca_adr_line2#,
+		    adr_line3=#ca_adr_line3#,
+		    country=#ca_country_id#,	
+		    zip_code=#ca_zip_code#,		    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ca_adr_line1#,
+			#ca_adr_line2#,
+			#ca_adr_line3#,
+			#ca_country_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ca_zip_code#,
+		  	#idAudit#
+		  )  
+  </update>      
+  <update id="SELECT.M_CST.SQL009" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#pc_contact_name#,
+		    designation=#pc_designation#,
+		    email=#pc_email#,
+		    email_cc=#pc_email_cc#,
+		    tel_no=#pc_tel_no#,
+		    did_no=#pc_did_no#,
+		    fax_no=#pc_fax_no#,
+		    mobile_no=#pc_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#pc_contact_name#,#pc_designation#,#pc_email#,#pc_email_cc#,#pc_tel_no#,#pc_did_no#,#pc_fax_no#,#pc_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update>
+  <update id="SELECT.M_CST.SQL010" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#bc_contact_name#,
+		    designation=#bc_designation#,
+		    email=#bc_email#,
+		    email_cc=#bc_email_cc#,
+		    tel_no=#bc_tel_no#,
+		    did_no=#bc_did_no#,
+		    fax_no=#bc_fax_no#,
+		    mobile_no=#bc_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#bc_contact_name#,#bc_designation#,#bc_email#,#bc_email_cc#,#bc_tel_no#,#bc_did_no#,#bc_fax_no#,#bc_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update>  
+  <update id="SELECT.M_CST.SQL010_2" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#bc2_contact_name#,
+		    designation=#bc2_designation#,
+		    email=#bc2_email_to#,
+		    email_cc=#bc2_email_cc#,
+		    tel_no=#bc2_tel_no#,
+		    did_no=#bc2_did_no#,
+		    fax_no=#bc2_fax_no#,
+		    mobile_no=#bc2_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#bc2_contact_name#,#bc2_designation#,#bc2_email_to#,#bc2_email_cc#,#bc2_tel_no#,#bc2_did_no#,#bc2_fax_no#,#bc2_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update> 
+  <update id="SELECT.M_CST.SQL010_3" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#bc3_contact_name#,
+		    designation=#bc3_designation#,
+		    email=#bc3_email_to#,
+		    email_cc=#bc3_email_cc#,
+		    tel_no=#bc3_tel_no#,
+		    did_no=#bc3_did_no#,
+		    fax_no=#bc3_fax_no#,
+		    mobile_no=#bc3_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#bc3_contact_name#,#bc3_designation#,#bc3_email_to#,#bc3_email_cc#,#bc3_tel_no#,#bc3_did_no#,#bc3_fax_no#,#bc3_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update> 
+  <update id="SELECT.M_CST.SQL010_4" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#bc4_contact_name#,
+		    designation=#bc4_designation#,
+		    email=#bc4_email_to#,
+		    email_cc=#bc4_email_cc#,
+		    tel_no=#bc4_tel_no#,
+		    did_no=#bc4_did_no#,
+		    fax_no=#bc4_fax_no#,
+		    mobile_no=#bc4_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#bc4_contact_name#,#bc4_designation#,#bc4_email_to#,#bc4_email_cc#,#bc4_tel_no#,#bc4_did_no#,#bc4_fax_no#,#bc4_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update> 
+  <update id="SELECT.M_CST.SQL011" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#tc_contact_name#,
+		    designation=#tc_designation#,
+		    email=#tc_email#,
+		    email_cc=#tc_email_cc#,
+		    tel_no=#tc_tel_no#,
+		    did_no=#tc_did_no#,
+		    fax_no=#tc_fax_no#,
+		    mobile_no=#tc_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#tc_contact_name#,#tc_designation#,#tc_email#,#tc_email_cc#,#tc_tel_no#,#tc_did_no#,#tc_fax_no#,#tc_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update>  
+  <update id="SELECT.M_CST.SQL012" 
+  	parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_ctc t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(contact_type) contact_type
+		  FROM m_cust_ctc
+		  WHERE id_cust=#id_cust#
+		        AND contact_type=#contact_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.contact_type=t1.contact_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    contact_name=#oc_contact_name#,
+		    designation=#oc_designation#,
+		    email=#oc_email#,
+		    email_cc=#oc_email_cc#,
+		    tel_no=#oc_tel_no#,
+		    did_no=#oc_did_no#,
+		    fax_no=#oc_fax_no#,
+		    mobile_no=#oc_mobile_no#,
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  (id_cust,contact_type,contact_name,designation,email,email_cc,tel_no,did_no,fax_no,mobile_no,date_created,date_updated,id_login,id_audit)
+		VALUES
+		  (#id_cust#,#contact_type#,#oc_contact_name#,#oc_designation#,#oc_email#,#oc_email_cc#,#oc_tel_no#,#oc_did_no#,#oc_fax_no#,#oc_mobile_no#,sysdate,sysdate,#uvo#,#idAudit#) 
+  </update>  
+  <update id="SELECT.M_CST.SQL013" 
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR03Input">
+        UPDATE m_cust
+        SET is_deleted=1,
+        	date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit = #idAudit#
+        WHERE   id_cust=#id_cust#  
+  </update> 
+	<select id="SELECT.M_CST.SQL014"   resultClass="java.lang.String">
+		SELECT   
+			SEQ_M_CUST.NEXTVAL AS "idCust"
+		FROM  dual
+	</select>	
+
+<!-- Handn For M_CST_r11 -->
+  <select id="SELECT.M_CST.SQL015" 
+  	parameterClass="nttdm.bsys.m_cst.bean.CustomerBean" 
+  	resultClass="nttdm.bsys.m_cst.bean.CustomerBean"
+  	resultSetType="SCROLL_INSENSITIVE">
+  		SELECT ROWNUM AS "index", t.id_cust, t.cust_acc_no, t.cust_name, t.co_regno,a.country,  t.customer_type as "customerType"
+  		    ,acc_mgr_prim , t.acc_mgr_sec
+  		FROM
+			(SELECT DISTINCT c.id_cust, c.cust_acc_no , c.cust_name, c.co_regno,c.customer_type, c.acc_mgr_prim, c.acc_mgr_sec
+			FROM m_cust c, m_cust_adr e, m_cust_ctc d   
+	        WHERE c.is_deleted=0   
+	        AND  c.id_cust (+) = e.ID_CUST  
+	        AND  c.ID_CUST = d.ID_CUST(+)	
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="customerAccountNo">
+				lower(c.cust_acc_no) LIKE lower(#customerAccountNo#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				lower(c.cust_name) LIKE lower(#customerName#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="coRegNo">
+				lower(c.co_regno) LIKE lower(#coRegNo#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billingCountry">
+				lower(e.country) LIKE lower(#billingCountry#) and (e.ADR_TYPE = 'BA')				
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="id_cust">
+				lower(c.id_cust) LIKE lower(#id_cust#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="address">
+				( lower(e.adr_line1) LIKE lower(#address#) or lower(e.adr_line2) LIKE lower(#address#) or lower(e.adr_line3) LIKE lower(#address#))
+				and (e.ADR_TYPE = 'BA' or e.ADR_TYPE = 'RA' or e.ADR_TYPE = 'CA' or e.ADR_TYPE = 'TA')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="emailAddress">
+				lower(c.co_email) LIKE lower(#emailAddress#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="zipCode">
+				lower(e.zip_code) LIKE lower (#zipCode#) and (e.ADR_TYPE = 'BA' or e.ADR_TYPE = 'RA' or e.ADR_TYPE = 'CA' or e.ADR_TYPE = 'TA')				
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="contactNo">
+				lower(d.tel_no) LIKE lower(#contactNo#) and (d.contact_type = 'PC' or d.contact_type = 'BC' or d.contact_type = 'TC' or d.contact_type = 'OC')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="contactPerson">
+				lower(d.contact_name) LIKE lower(#contactPerson#)  and (d.contact_type = 'PC' or d.contact_type = 'BC' or d.contact_type = 'TC' or d.contact_type = 'OC')
+			</isNotEmpty>
+            <isNotEmpty prepend="AND" property="accountManager">
+                (lower(c.acc_mgr_prim) LIKE lower(#accountManager#) OR lower(c.acc_mgr_sec) LIKE lower(#accountManager#))
+            </isNotEmpty>
+		</dynamic>     
+		ORDER BY CAST(c.id_cust as NUMBER)  ASC) t  , m_cust_adr a
+		where t.id_cust = a.ID_CUST(+) and a.ADR_TYPE = 'BA'
+  </select>
+	<select id="SELECT.M_CST.SQL016"
+	  	parameterClass="nttdm.bsys.m_cst.bean.CustomerBean" 
+	  	resultClass="java.lang.String"
+	    resultSetType="SCROLL_INSENSITIVE">
+	  		SELECT count(*)
+  		FROM
+		(SELECT DISTINCT c.id_cust, c.cust_acc_no , c.cust_name, c.co_regno , c.customer_type
+			FROM m_cust c, m_cust_adr e, m_cust_ctc d   
+	        WHERE c.is_deleted=0   
+	        AND  c.id_cust (+) = e.ID_CUST   
+	        AND  c.ID_CUST = d.ID_CUST  (+)
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="customerAccountNo">
+				lower(c.cust_acc_no) LIKE lower(#customerAccountNo#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="customerName">
+				lower(c.cust_name) LIKE lower(#customerName#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="coRegNo">
+				lower(c.co_regno) LIKE lower(#coRegNo#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="billingCountry">
+				lower(e.country ) LIKE lower(#billingCountry#) and (e.ADR_TYPE = 'BA')				
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="id_cust">
+				lower(c.id_cust) LIKE lower(#id_cust#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="address">
+				( lower(e.adr_line1) LIKE lower(#address#) or lower(e.adr_line2) LIKE lower(#address#) or lower(e.adr_line3) LIKE lower(#address#))
+				and (e.ADR_TYPE = 'BA' or e.ADR_TYPE = 'RA' or e.ADR_TYPE = 'CA' or e.ADR_TYPE = 'TA')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="emailAddress">
+				lower(c.co_email) LIKE lower(#emailAddress#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="zipCode">
+				lower(e.zip_code) LIKE lower (#zipCode#) and (e.ADR_TYPE = 'BA' or e.ADR_TYPE = 'RA' or e.ADR_TYPE = 'CA' or e.ADR_TYPE = 'TA')				
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="contactNo">
+				lower(d.tel_no) LIKE lower(#contactNo#) and (d.contact_type = 'PC' or d.contact_type = 'BC' or d.contact_type = 'TC' or d.contact_type = 'OC')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="contactPerson">
+				lower(d.contact_name) LIKE lower(#contactPerson#)  and (d.contact_type = 'PC' or d.contact_type = 'BC' or d.contact_type = 'TC' or d.contact_type = 'OC')
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accountManager">
+                (lower(c.acc_mgr_prim) LIKE lower(#accountManager#) OR lower(c.acc_mgr_sec) LIKE lower(#accountManager#))
+            </isNotEmpty>
+		</dynamic>
+		ORDER BY CAST(c.id_cust as NUMBER)  ASC) t
+	  </select> 
+	<select id="SELECT.M_CST.SQL017"
+			parameterClass="java.lang.String"
+			resultClass="java.lang.String">
+			
+		SELECT B.ACCESS_TYPE  
+		FROM M_USER_ACCESS B
+		WHERE B.ID_USER = #id_user#
+			AND B.ID_MODULE = 'M'
+			AND	B.ID_SUB_MODULE = 'M-CST'
+			AND ROWNUM = 1
+	</select>
+	<select id="SELECT.M_CST.SQL018"
+			parameterClass="java.lang.String"
+			resultClass="nttdm.bsys.m_cst.bean.CustomBean"
+			resultSetType="SCROLL_INSENSITIVE">
+		SELECT  F.SET_VALUE, F.SET_SEQ, F.ID_SET 
+		FROM M_GSET_D F
+		WHERE F.ID_SET = 'SYSTEMBASE' AND F.SET_SEQ = 1 
+	</select>
+
+ <update id="SELECT.M_CST.SQL019" parameterClass="nttdm.bsys.m_cst.dto.CustomerDto">
+		MERGE INTO m_cust_adr t
+		USING
+		(
+		  SELECT max(id_cust) id_cust,max(adr_type) adr_type
+		  FROM m_cust_adr
+		  WHERE id_cust=#id_cust#
+		        AND adr_type=#adr_type#
+		) t1
+		ON (t.id_cust=t1.id_cust AND t.adr_type=t1.adr_type)
+		WHEN MATCHED THEN
+		  UPDATE SET
+		    adr_line1=#ta_adr_line1#,
+		    adr_line2=#ta_adr_line2#,
+		    adr_line3=#ta_adr_line3#,
+		    country=#ta_country_id#,	
+		    zip_code=#ta_zip_code#,	    
+		    date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit=#idAudit#
+		WHEN NOT MATCHED THEN
+		  INSERT 
+		  ( id_cust,adr_type,adr_line1,adr_line2,adr_line3,country,date_created,date_updated,id_login, zip_code,id_audit)
+		  VALUES
+		  (
+		  	#id_cust#,
+		  	#adr_type#,
+			#ta_adr_line1#,
+			#ta_adr_line2#,
+			#ta_adr_line3#,
+			#ta_country_id#,
+		  	sysdate,
+		  	sysdate,
+		  	#uvo#,
+		  	#ta_zip_code#,
+		  	#idAudit#
+		  )  
+  </update>  
+  	<select id="SELECT.M_CST.SQL020"
+			parameterClass="nttdm.bsys.a_usr.bean.UserAccessBean"
+			resultClass="java.lang.String">
+			
+		SELECT B.ID_SUB_MODULE  
+		FROM M_USER_ACCESS B
+		WHERE B.ID_USER = #id_user#
+			AND B.ID_SUB_MODULE = #id_sub_module#
+			AND ROWNUM = 1
+	</select>
+  	<select id="SELECT.M_CST.SQL021"
+			parameterClass="java.util.Map"
+			resultClass="nttdm.bsys.m_cst.bean.CustomerBean">
+		SELECT *  
+		FROM M_CUST
+        WHERE IS_DELETED = '0' 
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="custAccNo">
+				TRIM(CUST_ACC_NO) = TRIM(#custAccNo#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="idCust">
+				ID_CUST &lt;&gt; #idCust#
+			</isNotEmpty>
+			AND ROWNUM &lt; 6
+		</dynamic>
+	</select>
+	
+	<select id="SELECT.M_CST.SQL022"
+            parameterClass="java.lang.String"
+            resultClass="java.util.HashMap">
+        SELECT DISTINCT ACC_MGR AS ACC_MGR_ID , ACC_MGR AS ACC_MGR_NAME FROM
+        (
+            SELECT TRIM(ACC_MGR_PRIM) AS ACC_MGR FROM M_CUST
+            UNION
+            SELECT TRIM(ACC_MGR_SEC) AS ACC_MGR FROM M_CUST 
+        ) DATA
+        WHERE TRIM(ACC_MGR) IS NOT NULL AND TRIM(ACC_MGR) &lt;&gt; '-'
+        ORDER BY UPPER(ACC_MGR) ASC
+    </select>
+
+  	<insert id="INSERT.M_CST.SQL022"
+          parameterClass="nttdm.bsys.m_cst.dto.BankInfoDto">
+    INSERT INTO M_CUST_BANKINFO (
+        ID_CUST,
+        ID_GIRO_BANK,
+        GIRO_ACCT_NO,
+        GIRO_ACCT_NAME,
+        CCARD_TYPE,
+        CCARD_ACCT_NO,
+        CCARD_NO,
+        CCARD_SECURITY_NO,
+        CCARD_HOLDER_NAME,
+        SWIFT_CODE,
+        NO_REFERENCE,
+        CCARD_EXPIRED_DATE,
+        DATE_CREATED,
+        DATE_UPDATED,
+        ID_LOGIN,
+        ID_AUDIT
+    )
+    VALUES (
+        #idCust#,
+        #bank#,
+        #acctNumber#,
+        #acctName#,
+        #cardType#,
+        #acctNumberCredit#,
+        #creditCardNumber#,
+        #securityNo#,
+        #holderName#,
+        #swiftCode#,
+        #refNum#,
+        TO_DATE(#expiredDate#,'DD/MM/YYYY'),        
+        sysdate,
+        sysdate,
+        #uvo#,
+        #idAudit#
+    )
+  </insert>
+  <!-- 
+  <select id="SELECT.M_CST.SQL023"
+  	resultClass="java.lang.String">
+  	SELECT max(id_cust) + 1 as id_cust
+	FROM M_CUST_BANKINFO
+  </select>
+  -->
+	<select id="SELECT.M_CST.SQL023"   resultClass="java.lang.String">
+		SELECT   
+			SEQ_M_CUST_BANKINFO.NEXTVAL AS "idCust"
+		FROM  dual
+	</select>	
+  
+   <update id="UPDATE.M_CST.SQL024"
+           parameterClass="nttdm.bsys.m_cst.dto.BankInfoDto">
+		UPDATE M_CUST_BANKINFO SET
+	 		ID_GIRO_BANK = #bank#,
+	        GIRO_ACCT_NO =   #acctNumber#,
+	        GIRO_ACCT_NAME =   #acctName#,
+	        CCARD_TYPE =   #cardType#,
+	        CCARD_ACCT_NO =    #acctNumberCredit#,
+	        CCARD_NO =     #creditCardNumber#,
+	        CCARD_HOLDER_NAME =   #holderName#,
+	        CCARD_SECURITY_NO =   #securityNo#,
+	        SWIFT_CODE =   #swiftCode#,
+	        NO_REFERENCE=#refNum#,	        
+	        CCARD_EXPIRED_DATE = TO_DATE(#expiredDate#,'DD/MM/YYYY'),	        
+	        DATE_UPDATED =sysdate,
+	        ID_LOGIN =#uvo#,
+	        ID_AUDIT = #idAudit#
+		WHERE   id_cust = #idCust#
+  </update>
+  <select id="SELECT.M_CST.SQL025"
+  	resultClass="java.lang.String">
+  	SELECT count(id_cust) 
+	FROM M_CUST_BANKINFO
+	WHERE  id_cust = #idCust#
+  </select> 
+  <select id="SELECT.M_CST.SQL025_1" resultClass="java.lang.String">
+  	SELECT CUST_NAME
+	FROM M_CUST
+	WHERE  ID_CUST = #idCust#
+  </select> 
+ <!--  for r11
+ <select id="SELECT.M_CST.SQL026"
+  	resultClass="nttdm.bsys.m_cst.dto.BankInfoDto">
+  	SELECT 
+  	    ID_CUST as "idCust",
+        GIRO_BANK_CODE as "bank",
+        GIRO_BANK_NAME as "bankName",
+        GIRO_BRANCH_NAME as "branchName",
+        GIRO_ACCT_NO as "acctNumber",
+        GIRO_ACCT_NAME as "acctName",
+        CCARD_TYPE as "cardType",
+        CCARD_ACCT_NO as "acctNumberCredit",
+        CCARD_NO as "creditCardNumber",
+        CCARD_HOLDER_NAME as "holderName",
+        to_char(CCARD_EXPIRED_DATE,'MM/yyyy') as "expiredDate",
+        ID_LOGIN as "uvo"
+	FROM M_CUST_BANKINFO
+	WHERE  id_cust = #idCust#
+  </select>
+   -->
+   
+   <select id="SELECT.M_CST.SQL026"
+  	resultClass="nttdm.bsys.m_cst.dto.BankInfoDto">
+  	SELECT 
+  	    ID_CUST as "idCust",
+        ID_GIRO_BANK as "bank",
+        GIRO_ACCT_NO as "acctNumber",
+        GIRO_ACCT_NAME as "acctName",
+        CCARD_TYPE as "cardType",
+        CCARD_ACCT_NO as "acctNumberCredit",
+        CCARD_NO as "creditCardNumber",
+        CCARD_HOLDER_NAME as "holderName",
+        to_char(CCARD_EXPIRED_DATE,'MM/yyyy') as "expiredDate",
+        CCARD_SECURITY_NO as "securityNo" ,
+        SWIFT_CODE as "swiftCode",
+        NO_REFERENCE as "refNum",
+        ID_LOGIN as "uvo"
+	FROM M_CUST_BANKINFO
+	WHERE  id_cust = #idCust#
+  </select>
+    
+  <update id="UPDATE.M_CST.SQL027" 
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR11BLogicInput">
+        UPDATE m_cust
+        SET is_deleted=1,
+        	date_updated=sysdate,
+		    id_login=#uvo#,
+		    id_audit = #idAudit#
+        WHERE   id_cust=#id_cust#  
+  </update> 
+  <select id="SELECT.M_CST.SQL028" 
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR07BLogicInput" 
+  	resultClass="nttdm.bsys.m_cst.dto.M_CSTR07BLogicOutput">
+	  	SELECT 
+  		  t1.id_cust,
+  		  t1.salutation,
+		  t1.cust_name,
+		  t1.cust_id_no,
+		  to_char(t1.cust_birth_date, 'DD/MM/YYYY') cust_birth_date,		  
+		  t1.co_email,
+		  t1.home_tel_no,
+		  t1.home_fax_no,
+		  t1.mobile_no,
+		  t1.co_tel_no,
+		  t1.co_fax_no,		  
+		  decode(NVL(t1.print_statement,'0'),'1','on','') as print_statement,
+		  t1.cust_acc_no,
+		  t1.gboc_acc_no,
+		  t1.others_ref_no,
+		  t1.sales_force_acc_id,
+		  t1.CO_CATEGORY as "company_category",
+		  t1.CO_SUB_CATEGORY as "company_sub_category",
+		  t1.CO_BANKINFO as company_bank_info,
+		  t1.END_USER as "end_user",
+		  t1.CO_TYPE as "company_type",	  		  
+	   	  t2.ra_adr_line1,
+		  t2.ra_adr_line2,
+		  t2.ra_adr_line3,
+		  t2.ra_country,
+		  t2.ra_country as ra_country_id,
+		  t2.ra_zip_code as ra_zip_code,		  
+		  t3.ba_adr_line1,
+		  t3.ba_adr_line2,
+		  t3.ba_adr_line3,
+		  t3.ba_country,
+		  t3.ba_country as ba_country_id,
+		  t3.ba_zip_code as ba_zip_code
+		  
+	  	FROM
+		  	(SELECT  
+		  	  c.id_cust,
+		  	  c.salutation,
+		  	  c.cust_id_no,
+			  c.cust_name,
+			  c.cust_birth_date,
+			  c.co_email,
+			  c.home_tel_no,
+			  c.home_fax_no,
+			  c.mobile_no,
+			  c.co_tel_no,
+			  c.co_fax_no,
+			  c.print_statement,
+			  c.cust_acc_no,
+			  c.gboc_acc_no,
+			  c.others_ref_no,
+			  c.sales_force_acc_id,
+			  c.CO_CATEGORY,
+		      c.CO_SUB_CATEGORY,
+		      c.CO_BANKINFO,
+		      c.END_USER,
+		      c.CO_TYPE
+			FROM m_cust c
+			WHERE c.is_deleted=0
+			AND c.id_cust=#id_cust#) t1,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ra_adr_line1,
+			  e.adr_line2 as ra_adr_line2,
+			  e.adr_line3 as ra_adr_line3,
+			  e.country as ra_country,
+			  e.zip_code as ra_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='RA') t2,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr_line1,
+			  e.adr_line2 as ba_adr_line2,
+			  e.adr_line3 as ba_adr_line3,
+			  e.country as ba_country,
+			  e.zip_code as ba_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA') t3
+		WHERE t1.id_cust=t2.id_cust(+)
+		AND t1.id_cust=t3.id_cust(+)
+  </select>  
+   <select id="SELECT.M_CST.SQL029"   	parameterClass="java.lang.String" 
+  	resultClass="nttdm.bsys.m_cst.dto.CustomerDto">
+  	select
+  		C.CUST_NAME as cust_name,
+		C.CO_TEL_NO as co_tel_no,
+		C.CO_FAX_NO as co_fax_no,
+		C.HOME_TEL_NO as home_tel_no,
+		C.HOME_FAX_NO as home_fax_no,
+		C.MOBILE_NO as mobile_no,
+		D.CONTACT_NAME as pc_contact_name,
+		D.TEL_NO as as pc_tel_no,
+		D.CONTACT_NAME as bc_contact_name,
+		D.TEL_NO as bc_tel_no,
+		D.CONTACT_NAME as tc_contact_name,
+		D.TEL_NO as tc_tel_no,
+		D.CONTACT_NAME as oc_contact_name,
+		D.TEL_NO as oc_tel_no,
+		E.ADR_LINE1 as ra_adr_line1,
+		E.ADR_LINE2 as ra_adr_line2,
+		E.ADR_LINE3 as ra_adr_line3,
+		E.ZIP_CODE as ra_zip_code,
+		E.COUNTRY as ra_country_id,
+		E.ADR_LINE1 as ba_adr_line1,
+		E.ADR_LINE2 as ba_adr_line2,
+		E.ADR_LINE3 as ba_adr_line3,
+		E.ZIP_CODE as ba_zip_code,
+		E.COUNTRY as ba_country_id,
+		E.ADR_LINE1 as ta_adr_line1,
+		E.ADR_LINE2 as ta_adr_line2,
+		E.ADR_LINE3 as ta_adr_line3,
+		E.ZIP_CODE as ta_zip_code,
+		E.COUNTRY as ta_country_id,
+		E.ADR_LINE1 as ca_adr_line1,
+		E.ADR_LINE2 as ca_adr_line2,
+		E.ADR_LINE3 as ca_adr_line3,
+		E.ZIP_CODE as ca_zip_code,
+		E.COUNTRY as ca_country_id
+  	from 
+   </select>
+          <select id="SELECT.M_CST.SQL030" 
+  	parameterClass="java.lang.String" 
+  	resultClass="nttdm.bsys.m_cst.dto.CustomerDto">
+	  	SELECT 
+  		  t1.id_cust,
+  		  t1.customer_type,
+          t1.acc_mgr_prim,
+          t1.acc_mgr_sec,
+		  t1.cust_name,
+		  t1.co_tel_no,
+		  t1.co_fax_no,
+		  t1.cust_acc_no,
+		  t1.home_tel_no,
+		  t1.home_fax_no,
+		  t1.mobile_no,
+	   	  t2.ra_adr_line1,
+		  t2.ra_adr_line2,
+		  t2.ra_adr_line3,
+		  t2.ra_country,
+		  t2.ra_country as ra_country_id,
+		  t2.ra_zip_code,
+		  t3.ba_adr_line1,
+		  t3.ba_adr_line2,
+		  t3.ba_adr_line3,
+		  t3.ba_country,
+		  t3.ba_country as ba_country_id,
+		  t3.ba_zip_code,
+		  t4.ca_adr_line1,
+		  t4.ca_adr_line2,
+		  t4.ca_adr_line3,
+		  t4.ca_country,
+		  t4.ca_country as ca_country_id,
+		  t4.ca_zip_code,
+		  t9.ta_adr_line1,
+		  t9.ta_adr_line2,
+		  t9.ta_adr_line3,
+		  t9.ta_country,
+		  t9.ta_country as ta_country_id,
+		  t9.ta_zip_code,
+		  t5.pc_contact_name,
+		  t5.pc_tel_no,
+		  t6.bc_contact_name,
+		  t6.bc_tel_no,
+		  t7.tc_contact_name,
+		  t7.tc_tel_no,
+		  t8.oc_contact_name,
+		  t8.oc_tel_no
+	  	FROM
+		  	(SELECT  
+		  	  c.id_cust,
+		  	  c.customer_type,
+		  	  c.acc_mgr_prim,
+		  	  c.acc_mgr_sec,
+			  c.cust_name,
+			  c.home_tel_no,
+			  c.home_fax_no,
+			  c.mobile_no,
+			  c.co_tel_no,
+			  c.co_fax_no,
+			  c.cust_acc_no
+			FROM m_cust c
+			WHERE c.is_deleted=0
+			AND c.id_cust=#id_cust#) t1,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ra_adr_line1,
+			  e.adr_line2 as ra_adr_line2,
+			  e.adr_line3 as ra_adr_line3,
+			  e.country as ra_country,
+			  e.zip_code as ra_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='RA') t2,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ba_adr_line1,
+			  e.adr_line2 as ba_adr_line2,
+			  e.adr_line3 as ba_adr_line3,
+			  e.country as ba_country,
+			  e.zip_code as ba_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='BA') t3,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ca_adr_line1,
+			  e.adr_line2 as ca_adr_line2,
+			  e.adr_line3 as ca_adr_line3,
+			  e.country as ca_country,
+			  e.zip_code as ca_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='CA') t4,
+			(SELECT 
+			  e.id_cust,
+			  e.adr_line1 as ta_adr_line1,
+			  e.adr_line2 as ta_adr_line2,
+			  e.adr_line3 as ta_adr_line3,
+			  e.country as ta_country,
+			  e.zip_code as ta_zip_code
+			FROM m_cust c, m_cust_adr e
+			WHERE c.id_cust=e.id_cust
+			AND c.is_deleted=0 
+			AND e.id_cust=#id_cust#
+			AND e.adr_type='TA') t9,				
+			(SELECT
+			  d.id_cust,
+			  d.contact_name as pc_contact_name,
+			  d.tel_no as pc_tel_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='PC') t5,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as bc_contact_name,
+			  d.tel_no as bc_tel_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='BC') t6,			
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as tc_contact_name,
+			  d.tel_no as tc_tel_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='TC') t7,
+			(SELECT
+			  d.id_cust, 
+			  d.contact_name as oc_contact_name,
+			  d.tel_no as oc_tel_no
+			FROM m_cust c, m_cust_ctc d
+			WHERE c.id_cust=d.id_cust
+			AND c.is_deleted=0
+			AND d.id_cust=#id_cust#
+			AND d.contact_type='OC') t8			
+		WHERE t1.id_cust=t2.id_cust(+)
+		AND t1.id_cust=t3.id_cust(+)
+		AND t1.id_cust=t4.id_cust(+)
+		AND t1.id_cust=t5.id_cust(+)
+		AND t1.id_cust=t6.id_cust(+)
+		AND t1.id_cust=t7.id_cust(+)	
+		AND t1.id_cust=t8.id_cust(+)
+		AND t1.id_cust=t9.id_cust(+)				
+  </select>
+ <select id="SELECT.M_CST.SQL002"
+  	parameterClass="nttdm.bsys.m_cst.dto.M_CSTR01Input" 
+  	resultClass="java.lang.String"
+    resultSetType="SCROLL_INSENSITIVE">
+  		SELECT count(*)
+  		FROM
+		(SELECT DISTINCT c.id_cust, c.cust_acc_no , c.cust_name, c.co_regno, e.country, c.customer_type
+		FROM m_cust c, m_cust_adr e
+		WHERE c.is_deleted=0 
+		AND c.id_cust(+) = e.id_cust
+		AND e.ADR_TYPE = 'BA'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cust_acc_no">
+				lower(c.cust_acc_no) LIKE lower(#cust_acc_no#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cust_name">
+				lower(c.cust_name) LIKE lower(#cust_name#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="co_regno">
+				lower(c.co_regno) LIKE lower(#co_regno#)
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="country">
+				lower(e.country) LIKE lower(#country#)
+			</isNotEmpty>
+            <isNotEmpty prepend="AND" property="cust_id">
+                lower(c.id_cust) LIKE lower(#cust_id#)
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="cust_type">
+                lower(c.customer_type) = lower(#cust_type#)
+            </isNotEmpty>
+		</dynamic>     
+		ORDER BY CAST(c.id_cust as NUMBER)  ASC) t
+  </select>  
+   <select id="SELECT.M_CST.SQL031"
+  	resultClass="nttdm.bsys.m_cst.dto.Bank" >
+  	SELECT ID_BANK as "idBank",
+  		BANK_FULL_NAME as "bankFullName",
+  		BANK_CODE as "bankCode",
+  		BRANCH_CODE as "branchCode",
+  		BIC_CODE as "bankBicCode"
+  	FROM
+  		M_BANK
+  	WHERE
+  		IS_DELETED = 0
+  	ORDER BY BANK_FULL_NAME
+  </select>
+  
+    <select id="SELECT.M_CST.SQL032" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+        SELECT VALUE 
+        FROM RESOURCESMAINT 
+        WHERE RESOURCE_ID = #RESOURCE_ID#|| 
+                (
+                    SELECT b.SET_VALUE FROM M_GSET_D b 
+                    WHERE b.ID_SET = 'SYSTEMBASE' AND 
+                          b.SET_SEQ = 1 
+                )
+        AND CATEGORY=#CATEGORY#
+        AND IS_DELETED = 0
+        ORDER BY SEQ ASC
+    </select>
+    
+  <!-- end Handn For M_CST_r11 -->
+  <!-- for 358  m_CST04 -->
+  <select id="SELECT.M_CST04.SQL001" parameterClass="java.util.HashMap" resultClass="java.lang.Integer" >
+  	SELECT count(*)
+  	FROM
+  		M_CUST C
+  	WHERE
+  	C.IS_DELETED = 0
+  	<dynamic prepend="AND">
+		<isNotEmpty prepend="AND" property="tbxCustomerName">
+			UPPER(C.CUST_NAME) LIKE UPPER('%$tbxCustomerName$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxCustomerId">
+			UPPER(C.ID_CUST) LIKE UPPER('%$tbxCustomerId$%')
+		</isNotEmpty>
+	</dynamic>
+  </select>
+  <select id="SELECT.M_CST04.SQL002" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+  	SELECT C.ID_CUST AS CUSTOMERID, C.CUST_ACC_NO AS PEOPLESOFT, C.CUST_NAME AS CUSTOMERNAME, C.CO_REGNO AS COMPANYREG, C.CUSTOMER_TYPE AS CUSTOMERTYPE
+  	FROM
+  		M_CUST C
+  	WHERE
+  	C.IS_DELETED = 0
+  	<dynamic prepend="AND">
+		<isNotEmpty prepend="AND" property="tbxCustomerName">
+			UPPER(C.CUST_NAME) LIKE UPPER('%$tbxCustomerName$%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tbxCustomerId">
+			UPPER(C.ID_CUST) LIKE UPPER('%$tbxCustomerId$%')
+		</isNotEmpty>
+	</dynamic>
+	ORDER BY CAST(C.ID_CUST AS NUMBER) ASC,C.CUST_NAME ASC
+  </select>
+  <select id="SELECT.M_CST.GET_M_CUST_BANKINFO_BY_CCARD_ACCT_NO" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+      SELECT
+            ID_CUST
+      FROM
+            M_CUST_BANKINFO
+      WHERE
+            ID_CUST != #idCust#
+            AND GIRO_ACCT_NO = #acctNumber#
+      ORDER BY ID_CUST
+  </select>
+  <select id="SELECT.M_CST.GET_M_CUST_BANKINFO_BY_CCARD_NO" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+      SELECT
+            ID_CUST
+      FROM
+            M_CUST_BANKINFO
+      WHERE
+            ID_CUST != #idCust#
+            AND CCARD_NO = #creditCardNumber#
+      ORDER BY ID_CUST
+  </select>
+  <select id="SELECT.M_CST.SQL040" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'MULTI_BYTE_CHK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+    <!-- Add by Jing Start -->
+  <select id="SELECT.M_CST.SET_VALUE" resultClass="java.util.HashMap">
+      	SELECT 
+      		c.SET_VALUE as c_value,
+      		s.SET_VALUE as s_value,
+      		b.SET_VALUE as b_value,
+      		d.SET_VALUE as d_value
+		FROM 
+			(select SET_VALUE FROM M_GSET_D WHERE ID_SET = 'CST_CO_CATEGORY' AND SET_SEQ = '1' AND IS_DELETED = 0) c, 
+        	(select SET_VALUE  FROM M_GSET_D WHERE ID_SET = 'CST_CO_CATEGORY' AND SET_SEQ = '2' AND IS_DELETED = 0) s, 
+        	(select SET_VALUE  FROM M_GSET_D WHERE ID_SET = 'CST_CO_CATEGORY' AND SET_SEQ = '3' AND IS_DELETED = 0) b,
+        	(select SET_VALUE  FROM M_GSET_D WHERE ID_SET = 'CST_CO_CATEGORY' AND SET_SEQ = '4' AND IS_DELETED = 0) d
+    </select>    
+    <!-- Add by Jing End -->
+</sqlMap>

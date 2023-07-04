@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="M_JNM">
+	<select id="SELECT.M_JNM.SQL001" parameterClass="nttdm.bsys.m_jnm.dto.M_JNMR01Input" 
+			resultClass="nttdm.bsys.m_jnm.dto.T_JOB_LIST" >								
+			SELECT t.*,
+				  (SELECT COUNT(JOB_NO) FROM T_CUST_PLAN_LINK WHERE JOB_NO = t.job_no ) as hid_flag,
+				  m.cust_name as name_cust
+			FROM M_JOB_LIST t left join M_CUST m on m.id_cust = t.id_cust and m.IS_DELETED = 0
+			WHERE 1 = 1			
+            <isNotEmpty property="id_cust" prepend="AND">
+            <!-- #159 Start -->
+	            <isNotEmpty property="refreshFlg">
+		            <isEqual property="refreshFlg" compareValue="1">
+		            	UPPER(t.id_cust) = UPPER('$id_cust$')
+		            </isEqual>
+	            </isNotEmpty>
+	            <isNotEqual property="refreshFlg" compareValue="1">
+	            	UPPER(t.id_cust) like UPPER('%$id_cust$%')
+	            </isNotEqual>
+	        <!-- #159 End -->
+            </isNotEmpty>
+            <isNotEmpty property="job_no" prepend="AND">
+            <!-- #159 Start -->
+            	<isNotEmpty property="refreshFlg">
+		            <isEqual property="refreshFlg" compareValue="1">
+		            	UPPER(t.job_no) = UPPER('$job_no$')
+		            </isEqual>
+	            </isNotEmpty>
+	            <isNotEqual property="refreshFlg" compareValue="1">
+	            	UPPER(t.job_no) like UPPER('%$job_no$%')
+	            </isNotEqual>
+	        <!-- #159 End -->
+            </isNotEmpty>					
+            <isNotEmpty property="name_cust" prepend="AND">
+            	UPPER(m.cust_name) like UPPER('%$name_cust$%')
+            </isNotEmpty>	
+            AND t.IS_DELETED = 0    
+            <!-- AND m.IS_DELETED = 0   -->         
+			ORDER BY t.JOB_NO	DESC				
+	</select>
+	<select id="SELECT.M_JNM.SEARCH_COUNT" parameterClass="nttdm.bsys.m_jnm.dto.M_JNMR01Input" 
+			resultClass="java.lang.Integer" >								
+			SELECT COUNT(1)
+			FROM M_JOB_LIST t left join M_CUST m on m.id_cust = t.id_cust and m.IS_DELETED = 0
+			WHERE 1 = 1			
+            <isNotEmpty property="id_cust" prepend="AND">
+            	<isNotEmpty property="refreshFlg">
+            	<!-- #159 Start -->
+		            <isEqual property="refreshFlg" compareValue="1">
+		            	UPPER(t.id_cust) = UPPER('$id_cust$')
+		            </isEqual>
+	            </isNotEmpty>
+	            <isNotEqual property="refreshFlg" compareValue="1">
+	            	UPPER(t.id_cust) like UPPER('%$id_cust$%')
+	            </isNotEqual>
+	            <!-- #159 End -->
+            </isNotEmpty>
+            <isNotEmpty property="job_no" prepend="AND">
+            <!-- #159 Start -->
+            	<isNotEmpty property="refreshFlg">
+		            <isEqual property="refreshFlg" compareValue="1">
+		            	UPPER(t.job_no) = UPPER('$job_no$')
+		            </isEqual>
+	            </isNotEmpty>
+	            <isNotEqual property="refreshFlg" compareValue="1">
+	            	UPPER(t.job_no) like UPPER('%$job_no$%')
+	            </isNotEqual>
+	        <!-- #159 End -->
+            </isNotEmpty>					
+            <isNotEmpty property="name_cust" prepend="AND">
+            	UPPER(m.cust_name) like UPPER('%$name_cust$%')
+            </isNotEmpty>	
+            AND t.IS_DELETED = 0    
+	</select>	
+	<select id="SELECT.M_JNM.Exists" parameterClass="nttdm.bsys.m_jnm.dto.T_JOB_LIST" resultClass="java.util.HashMap">
+	        SELECT T.ID_CUST,M.CUST_NAME
+	        FROM M_JOB_LIST T LEFT JOIN M_CUST M ON T.ID_CUST = M.ID_CUST
+	        WHERE T.ID_JOBNO = #id_jobno#
+	</select>
+	<insert id="INSERT.M_JNM.SQL002" parameterClass="nttdm.bsys.m_jnm.dto.T_JOB_LIST">
+			INSERT INTO M_JOB_LIST(id_jobno, id_cust, is_deleted, date_created, date_updated, id_login, id_audit)
+			VALUES(#id_jobno#, #id_cust#, #is_deleted#, sysdate, sysdate, #id_login#, #id_audit#)
+	</insert>
+	<update id="DELETE.M_JNM.SQL004" parameterClass="nttdm.bsys.m_jnm.dto.T_JOB_LIST">
+			UPDATE M_JOB_LIST 
+			SET IS_DELETED = 1, DATE_UPDATED = sysdate
+			WHERE 
+				id_jobno = #id_jobno#
+	</update>
+	<select id="SELECT.M_JNM.SQL005" parameterClass="nttdm.bsys.m_jnm.dto.T_JOB_LIST" 
+			resultClass="java.lang.Integer" >
+			SELECT COUNT(id_jobno)  FROM M_JOB_LIST WHERE id_jobno = #id_jobno# AND IS_DELETED = 0		
+	</select>	
+	<select id="SELECT.M_JNM.SQL007" parameterClass="java.lang.String" 
+			resultClass="java.lang.String" >
+			SELECT cust_name FROM M_CUST WHERE is_deleted = 0 AND id_cust = #value# AND rownum = 1
+	</select>
+	<select id="getAllCustomer" resultClass="org.apache.struts.util.LabelValueBean">
+			SELECT id_cust as value, concat(cust_name, concat(' - ', id_cust)) as label 
+			FROM m_cust WHERE is_deleted='0'
+			ORDER BY cust_name asc, id_cust asc
+	</select>
+	<select id="SELECT.M_JNM.DATACHECK_COUNT" parameterClass="nttdm.bsys.m_jnm.dto.M_JNMR02Input" 
+			resultClass="java.lang.Integer" >								
+			SELECT count(1)
+			FROM M_JOB_LIST t
+			WHERE 1 = 1
+            <isNotEmpty property="id_cust" prepend="AND">
+             	t.id_cust = #id_cust#	
+            </isNotEmpty>
+            <isNotEmpty property="job_no" prepend="AND">
+             	t.job_no = #job_no# 
+            </isNotEmpty>	
+            AND IS_DELETED = 0
+	</select>
+	
+	<select id="SELECT.M_JNM.GETCUSTIDANDNAME" parameterClass="java.lang.String" 
+			resultClass="java.util.HashMap" >								
+			select t.id_cust,m.cust_name 
+			from m_job_list t left join m_cust m
+			on t.id_cust = m.id_cust and m.IS_DELETED = 0
+			where t.job_no=#Job_no# and t.IS_DELETED = 0
+			ORDER BY t.ID_JOBNO	DESC
+	</select>
+	
+	<insert id="SELECT.M_JNM.SAVE" parameterClass="nttdm.bsys.m_jnm.dto.M_JNMR02Input">
+        INSERT INTO M_JOB_LIST 
+        (
+            ID_JOBNO,
+            ID_CUST,
+            JOB_NO,
+            IS_DELETED,
+            DATE_CREATED,
+            DATE_UPDATED,
+            ID_LOGIN
+        )
+        VALUES
+        (
+            SEQ_M_JOB_LIST.NEXTVAL,
+            #id_cust#,
+            #job_no#,
+            0,
+            SYSDATE,
+            SYSDATE,
+            #idLogin#
+        )
+    </insert>    
+</sqlMap>

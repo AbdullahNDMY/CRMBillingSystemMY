@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="R_AGR">
+	<select id="getAccessType" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	    SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'R-AGR'
+	</select>
+	<select id="countAgingReport" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+		SELECT COUNT(*)
+			FROM m_cust b, t_bil_h c
+			WHERE c.is_deleted = '0'
+				AND  b.id_cust = c.id_cust
+				AND c.bill_amount - c.paid_amount <![CDATA[<>]]> 0
+			<dynamic prepend="AND">
+				<isNotEmpty prepend="AND" property="tbxBillFromYearMonth">
+					TO_CHAR(c.date_req,'yyyymm') <![CDATA[>=]]> #tbxBillFromYearMonth#
+				</isNotEmpty>
+				<isEmpty property="tbxBillFromYearMonth">
+					<isNotEmpty prepend="AND" property="cboBillMonth">
+						TO_CHAR(c.date_req, 'mm') <![CDATA[>=]]> #cboBillMonth#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxBillYear">
+						TO_CHAR(c.date_req, 'yyyy') <![CDATA[>=]]> #tbxBillYear#
+					</isNotEmpty>
+				</isEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillFromYearMonthTo">
+					TO_CHAR(c.date_req,'yyyymm') <![CDATA[<=]]> #tbxBillFromYearMonthTo#
+				</isNotEmpty>
+				<isEmpty property="tbxBillFromYearMonthTo">
+					<isNotEmpty prepend="AND" property="cboBillMonthTo">
+						TO_CHAR(c.date_req, 'mm') <![CDATA[<=]]> #cboBillMonthTo#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxBillYearTo">
+						TO_CHAR(c.date_req, 'yyyy') <![CDATA[<=]]> #tbxBillYearTo#
+					</isNotEmpty>
+				</isEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillingAccout">
+					UPPER(c.BILL_ACC) LIKE UPPER('%$tbxBillingAccout$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillDocumentNo">
+					UPPER(c.ID_REF) LIKE UPPER('%$tbxBillDocumentNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboPaymentMetho">
+					trim(c.pay_method) = #cboPaymentMetho#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					c.bill_currency = #cboCurrency#
+				</isNotEmpty>
+			</dynamic>
+	</select>
+	<select id="getListAgingReport" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		SELECT TO_CHAR(c.date_req,'MM/yyyy') date_req, TRIM(b.cust_name) AS cust_name, TRIM(c.BILL_ACC) AS BILL_ACC,
+		TRIM(b.affiliate_code) AS affiliate_code, TRIM(c.id_ref) AS id_ref, c.bill_currency, 
+		(case when c.bill_type='CN' then -c.bill_amount else c.bill_amount end) bill_amount,
+        (case when c.bill_type='CN' then -(c.bill_amount - c.paid_amount) else c.bill_amount - c.paid_amount end) outstanding_amount,
+					 TRIM(c.pay_method) AS pay_method
+			FROM m_cust b, t_bil_h c
+			WHERE c.is_deleted = '0'
+				AND  b.id_cust = c.id_cust
+				AND c.bill_amount - c.paid_amount <![CDATA[<>]]> 0
+			<dynamic prepend="AND">
+				<isNotEmpty prepend="AND" property="tbxBillFromYearMonth">
+					TO_NUMBER(TO_CHAR(c.date_req,'yyyymm')) <![CDATA[>=]]> #tbxBillFromYearMonth#
+				</isNotEmpty>
+				<isEmpty property="tbxBillFromYearMonth">
+					<isNotEmpty prepend="AND" property="cboBillMonth">
+						TO_NUMBER(TO_CHAR(c.date_req, 'mm')) <![CDATA[>=]]> #cboBillMonth#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxBillYear">
+						TO_NUMBER(TO_CHAR(c.date_req, 'yyyy')) <![CDATA[>=]]> #tbxBillYear#
+					</isNotEmpty>
+				</isEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillFromYearMonthTo">
+					TO_NUMBER(TO_CHAR(c.date_req,'yyyymm')) <![CDATA[<=]]> #tbxBillFromYearMonthTo#
+				</isNotEmpty>
+				<isEmpty property="tbxBillFromYearMonthTo">
+					<isNotEmpty prepend="AND" property="cboBillMonthTo">
+						TO_NUMBER(TO_CHAR(c.date_req, 'mm')) <![CDATA[<=]]> #cboBillMonthTo#
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="tbxBillYearTo">
+						TO_NUMBER(TO_CHAR(c.date_req, 'yyyy')) <![CDATA[<=]]> #tbxBillYearTo#
+					</isNotEmpty>
+				</isEmpty>
+				<isNotEmpty prepend="AND" property="tbxCustomerName">
+					UPPER(b.cust_name) LIKE UPPER('%$tbxCustomerName$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxAffiliateCod">
+					UPPER(b.affiliate_code) = UPPER(#tbxAffiliateCod#)
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillingAccout">
+					UPPER(c.BILL_ACC) LIKE UPPER('%$tbxBillingAccout$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="tbxBillDocumentNo">
+					UPPER(c.ID_REF) LIKE UPPER('%$tbxBillDocumentNo$%')
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboPaymentMetho">
+					trim(c.pay_method) = #cboPaymentMetho#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="cboCurrency">
+					c.bill_currency = #cboCurrency#
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY to_char(c.date_req,'yyyymm') DESC,c.ID_REF ASC
+	</select>
+</sqlMap>

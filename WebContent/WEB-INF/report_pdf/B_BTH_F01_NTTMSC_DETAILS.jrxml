@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="B_BTH_F01_NTTMSC_DETAILS" pageWidth="553" pageHeight="842" columnWidth="553" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["B_BTH_F01_NTTMSC_STYLE.jrtx"]]></template>
+	<style name="default_font" isBlankWhenNull="true" fontName="Times New Roman" fontSize="10"/>
+	<style name="border_full" style="default_font" hAlign="Center" vAlign="Middle" isBlankWhenNull="true" isBold="false">
+		<box leftPadding="2" rightPadding="2">
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_left_right" style="default_font" isBlankWhenNull="true">
+		<box leftPadding="2" rightPadding="2">
+			<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="border_left_right_b" isBlankWhenNull="true"/>
+	<style name="footer_bg" style="border_full" mode="Opaque" backcolor="#CCCCCC" fill="Solid" isBlankWhenNull="true"/>
+	<parameter name="currency" class="java.lang.String"/>
+	<field name="item" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="period" class="java.lang.String"/>
+	<field name="quantity" class="java.math.BigDecimal"/>
+	<field name="price" class="java.math.BigDecimal"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<variable name="amount_first" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="amount_last" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<pageHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement style="border_full" x="35" y="0" width="320" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full" x="355" y="0" width="63" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full" x="418" y="0" width="63" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unit Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full" x="0" y="0" width="35" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="border_full" x="481" y="0" width="72" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Amount\r\n("+$P{currency}+")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<printWhenExpression><![CDATA[!$V{amount_first}.equals( new java.math.BigDecimal(0) )]]></printWhenExpression>
+			<textField pattern="#,##0.00">
+				<reportElement style="border_left_right" x="481" y="0" width="72" height="28"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{amount_first}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_left_right" x="35" y="0" width="320" height="28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance b/f]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="0" y="0" width="35" height="28"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="355" y="0" width="63" height="28"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="418" y="0" width="63" height="28"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="0" y="0" width="35" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{item}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0">
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="355" y="0" width="63" height="14">
+					<printWhenExpression><![CDATA[! $F{quantity}.equals( new java.math.BigDecimal(0) )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" mode="Transparent" x="418" y="0" width="63" height="14">
+					<printWhenExpression><![CDATA[! $F{price}.equals( new java.math.BigDecimal(0) )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="481" y="0" width="72" height="14">
+					<printWhenExpression><![CDATA[! $F{amount}.equals( new java.math.BigDecimal(0) )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="border_left_right" stretchType="RelativeToTallestObject" x="35" y="0" width="320" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="0" y="0" width="35" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="35" y="0" width="320" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="355" y="0" width="63" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="418" y="0" width="63" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToBandHeight" x="481" y="0" width="72" height="14" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+		<band height="14">
+			<printWhenExpression><![CDATA[$F{period} != null]]></printWhenExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="border_left_right" x="35" y="0" width="320" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Billing Period: " + $F{period}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToTallestObject" x="355" y="0" width="63" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToTallestObject" x="418" y="0" width="63" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToTallestObject" x="481" y="0" width="72" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" stretchType="RelativeToTallestObject" x="0" y="0" width="35" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+		<band height="14">
+			<staticText>
+				<reportElement style="border_left_right" x="0" y="0" width="35" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="355" y="0" width="63" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="418" y="0" width="63" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="481" y="0" width="72" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_left_right" x="35" y="0" width="320" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="14">
+			<textField pattern="#,##0.00">
+				<reportElement style="border_full" x="481" y="0" width="72" height="14"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{amount_first}.doubleValue()+$V{amount_last}.doubleValue()-
+$V{amount_last}.doubleValue()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_full" x="0" y="0" width="481" height="14"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance c/f]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="28">
+			<textField pattern="#,##0.00">
+				<reportElement style="border_full" x="481" y="0" width="72" height="14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{amount_first}.doubleValue()+$V{amount_last}.doubleValue()-
+$V{amount_last}.doubleValue()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="border_full" x="0" y="14" width="481" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="border_full" x="481" y="14" width="72" height="14"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="border_full" x="0" y="0" width="481" height="14"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["SubTotal ("+$P{currency}+")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SVG/M_SVGS01_01BL" scope="singleton">
+        <property name="businessLogic" ref="M_SVGS01_01BLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_SVG/M_SVGS01_01SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_SVG/M_SVGS01_02SCR" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SVG/M_SVGS01_03BL" scope="singleton">
+        <property name="businessLogic" ref="M_SVGS01_03BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_svg.blogic.M_SVGS01_01BLogic"
+        id="M_SVGS01_01BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.m_svg.blogic.M_SVGS01_03BLogic"
+        id="M_SVGS01_03BLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="updateDAONuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/M_SVG/M_SVGS01_04BL" scope="singleton">
+        <property name="businessLogic" ref="M_SVGS01_04BLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.m_svg.blogic.M_SVGS01_04BLogic"
+        id="M_SVGS01_04BLogic" scope="singleton"/>
+</beans>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <!-- <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_EML/M_EMLS01BL" scope="singleton"/> -->
+    
+    <!-- New    
+    <bean class="jp.terasoluna.fw.web.struts.actions.ForwardAction"
+        name="/M_EML/M_EMLS01New" scope="singleton"/> -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/E_EML/E_EMLS01Action" scope="prototype"/>         
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EML/E_EMLS01BL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS01InitBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLS01InitBLogic"
+        id="E_EMLS01InitBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EML/E_EMLS02BL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS02Search"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLS02SearchBLogic"
+        id="E_EMLS02Search" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EML/E_EMLS03BL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS03"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLS03BLogic"
+        id="E_EMLS03" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLDownloadBL"
+        name="/E_EML/E_EMLDownloadBL" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EML/E_EMLS04EmailBL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS04EmailBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLS04EmailBLogic"
+        id="E_EMLS04EmailBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    <bean
+        class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/E_EML/E_EMLS04EmailAllBL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS04EmailAllBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.e_eml.blogic.E_EMLS04EmailAllBLogic"
+        id="E_EMLS04EmailAllBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="authenticationController" ref="authenticationController"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction" name="/E_EML/E_EMLS04PdfBL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS04PdfBLogic"/>
+    </bean>
+	<bean class="nttdm.bsys.e_eml.blogic.E_EMLS04PdfBLogic" id="E_EMLS04PdfBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction" name="/E_EML/E_EMLS04PdfAllBL" scope="singleton">
+        <property name="businessLogic" ref="E_EMLS04PdfAllBLogic"/>
+    </bean>
+	<bean class="nttdm.bsys.e_eml.blogic.E_EMLS04PdfAllBLogic" id="E_EMLS04PdfAllBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+</beans>

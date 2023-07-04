@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="A_PWD">
+
+  <update id="UPDATE.A_PWD.SQL001"
+          parameterClass="nttdm.bsys.a_pwd.dto.A_PWDS01R01Input">
+    UPDATE m_user
+    SET
+        password = #newPassword#,
+        LAST_PWD_CHANGE= sysdate,
+        ID_AUDIT = #idAudit#
+    WHERE
+        id_user = #userID#
+  </update>
+  <select id="SELECT.A_PWD.SQL001" parameterClass="nttdm.bsys.a_pwd.dto.A_PWDS01R01Input" resultClass="java.util.HashMap">
+  	SELECT *
+  	FROM M_USER
+  	WHERE ID_USER = #userID#
+  </select>
+</sqlMap>

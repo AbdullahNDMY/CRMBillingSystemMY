@@ -1,0 +1,2246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="B_CPM">
+
+<!-- 設定侁E
+  <select id="selectUsers" 
+          resultClass="jp.terasoluna.sample.user.dao.SelectUsersOutput">
+    SELECT
+        ID AS "userId",
+        NAME AS "userName"
+    FROM
+        USERLIST
+  </select>
+  
+  <select id="getUserCount"
+          parameterClass="jp.terasoluna.sample.user.dao.GetUserCountInput"
+          resultClass="jp.terasoluna.sample.user.dao.GetUserCountOutput">
+    SELECT
+        COUNT (*) AS userCount
+    FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </select>
+
+  <insert id="insertUser"
+          parameterClass="jp.terasoluna.sample.user.dao.InsertUserInput">
+    INSERT INTO USERLIST (
+        ID,
+        NAME
+    )
+    VALUES (
+        #userId#,
+        #userName#
+    )
+  </insert>
+  
+  <update id="updateUser"
+          parameterClass="jp.terasoluna.sample.user.dao.UpdateUserInput">
+    UPDATE USERLIST
+    SET
+        NAME = #userName#
+    WHERE
+        ID = #userId#
+  </update>
+  
+  <delete id="deleteUser"
+          parameterClass="jp.terasoluna.sample.user.dao.DeleteUserInput">
+    DELETE FROM
+        USERLIST
+    WHERE
+        ID = #userId#
+  </delete>
+-->
+	<select id="GET_CATEGORY" 
+          resultClass="java.util.HashMap">
+	SELECT DISTINCT
+        SUB_SVC_LEVEL1 LEVEL_ID, 
+        SVC_GRP_NAME LEVEL_NAME
+    FROM
+        V_T_CUST_PLAN, M_SVG
+    WHERE SUB_SVC_LEVEL1 = SVC_GRP(+)
+    AND SUB_SVC_LEVEL1 IS NOT NULL
+ 	</select>
+ 	<select id="GET_SERVICE" 
+          resultClass="java.util.HashMap">
+	SELECT DISTINCT
+        SUB_SVC_LEVEL2 LEVEL_ID, 
+        (SVC_DESC || ' - ' || ACC_CODE) LEVEL_NAME
+    FROM
+        V_T_CUST_PLAN, M_SVC
+    WHERE SUB_SVC_LEVEL2 = ID_SERVICE(+)
+    AND SUB_SVC_LEVEL2 IS NOT NULL
+	</select>
+		<select id="GET_PLAN" 
+          resultClass="java.util.HashMap">
+	SELECT DISTINCT
+        SVC_LEVEL3 LEVEL_ID, 
+        (SVC_DESC || ' - ' || ACC_CODE) LEVEL_NAME
+    FROM
+        V_T_CUST_PLAN, M_SVC
+    WHERE SVC_LEVEL3 = ID_SERVICE(+)
+    AND SVC_LEVEL3 IS NOT NULL
+ 	</select>
+ 	<select id="GET_PLAN_DETAIL" 
+          resultClass="java.util.HashMap">
+	SELECT DISTINCT
+        SVC_LEVEL4 LEVEL_ID, 
+        (SVC_DESC || ' - ' || ACC_CODE) LEVEL_NAME
+    FROM
+        V_T_CUST_PLAN, M_SVC
+    WHERE SVC_LEVEL4 = ID_SERVICE(+)
+    AND SVC_LEVEL4 IS NOT NULL
+	</select>
+	
+	<select id="GET_CUST_LIST" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+		SELECT E.ID_CUST, E.CUST_NAME, (E.CUST_NAME || ' - ' || E.ID_CUST) CUST_FULL_NAME
+		FROM M_CUST E
+		WHERE E.IS_DELETED = 0
+		ORDER BY E.CUST_NAME
+	</select>
+	
+	<select id="GET_EXPORT_CUSTOMER_PLAN" 
+          resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+
+    SELECT 
+      T1.ID_CUST,
+      T2.CUST_NAME,
+      T3.ID_SUB_INFO,
+      TO_CHAR(T1.BILL_DESC) as BILL_DESC,
+      T1.TRANSACTION_TYPE,
+      T1.ID_BILL_ACCOUNT,
+      T1.BILL_INSTRUCT,
+      T1.BILL_CURRENCY, 
+      T4.SUB_AMOUNT,
+      T6.GRAND_AMOUNT,
+      <!--Ver3.07 #290 [NTTS-LiveIssues] [B_CPM_E01] CPM Export Date Format Incorrect CT 20171003-->
+      TO_CHAR(T1.SVC_START,'dd/mm/yyyy') SVC_START,
+      TO_CHAR(T1.SVC_END,'dd/mm/yyyy') SVC_END,
+      <!--Ver3.07 #290 [NTTS-LiveIssues] [B_CPM_E01] CPM Export Date Format Incorrect CT 20171003-->
+      T1.SERVICES_STATUS,
+      <!-- #202 Start -->
+      T1.BILLING_STATUS,
+      T1.BILL_OPTION,
+      <!-- #202 End -->
+      T1.PLAN_DESC, 
+      T1.ITEM_GRP_NAME,
+      T1.SUB_SVC_LEVEL1 AS SVC_LEVEL1,
+      T1.SUB_SVC_LEVEL2 AS SVC_LEVEL2,
+      T1.ID_CUST_PLAN_LINK,
+      T1.RATE_TYPE,
+      T1.RATE_MODE,
+      T1.QUANTITY,
+      T1.UNIT_PRICE,
+      T1.TOTAL_AMOUNT,
+      T1.SVC_LEVEL3,
+      TO_CHAR(T1.ITEM_DESC) as ITEM_DESC,
+      T1.MIN_SVC_PERIOD,
+      TO_CHAR(T1.MIN_SVC_START,'dd/mm/yyyy') MIN_SVC_START,
+      TO_CHAR(T1.MIN_SVC_END,'dd/mm/yyyy') MIN_SVC_END,
+      T1.CONTRACT_TERM,
+      T1.JOB_NO,
+      T1.CONTRACT_TERM_NO,
+      <!-- #165 Start -->
+      T1.CUST_PO,
+      <!-- #165 End -->
+      <!-- #216 Start -->
+      T1.LOCATION,
+      <!-- #216 End -->
+      <!-- #263 [T11] Add customer type at inquiry screen and export result CT 13062017 -->
+      T1.BILLING_STATUS
+      <!-- #263 [T11] Add customer type at inquiry screen and export result CT 13062017 -->
+    FROM 
+    	V_T_CUST_PLAN T1 INNER JOIN  T_SUBSCRIPTION_INFO T3
+      	ON T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      	LEFT JOIN M_CUST T2
+      	ON T1.ID_CUST = T2.ID_CUST AND T1.IS_DELETED = 0
+      	LEFT JOIN T_BAC_D T7
+        ON T1.ID_CUST_PLAN = T7.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      	LEFT JOIN 
+      	( SELECT PD.ID_CUST_PLAN,PD.ID_CUST_PLAN_GRP,SUM(PL.TOTAL_AMOUNT) AS SUB_AMOUNT
+          FROM T_CUST_PLAN_H PH, T_CUST_PLAN_D PD, T_CUST_PLAN_LINK PL
+          WHERE PD.ID_CUST_PLAN = PH.ID_CUST_PLAN AND
+                PL.ID_CUST_PLAN_GRP = PD.ID_CUST_PLAN_GRP AND
+                PH.IS_DELETED = 0 AND PD.IS_DELETED = 0 AND PL.IS_DELETED = 0
+          GROUP BY PD.ID_CUST_PLAN, PD.ID_CUST_PLAN_GRP ) T4  
+        ON T1.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.ID_CUST_PLAN_GRP = T4.ID_CUST_PLAN_GRP AND T1.IS_DELETED = 0
+        INNER JOIN 
+        ( SELECT T5.ID_CUST_PLAN, SUM(T5.SUB_AMOUNT) AS GRAND_AMOUNT
+          FROM (
+                 SELECT PD.ID_CUST_PLAN,PD.ID_CUST_PLAN_GRP,SUM(PL.TOTAL_AMOUNT) AS SUB_AMOUNT
+                 FROM T_CUST_PLAN_H PH, T_CUST_PLAN_D PD, T_CUST_PLAN_LINK PL
+                 WHERE PD.ID_CUST_PLAN = PH.ID_CUST_PLAN AND
+                        PL.ID_CUST_PLAN_GRP = PD.ID_CUST_PLAN_GRP AND
+                        PH.IS_DELETED = 0 AND PD.IS_DELETED = 0 AND PL.IS_DELETED = 0
+                 GROUP BY PD.ID_CUST_PLAN, PD.ID_CUST_PLAN_GRP) T5
+          GROUP BY T5.ID_CUST_PLAN ) T6
+    	ON T6.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.ID_CUST_PLAN = T6.ID_CUST_PLAN AND T1.IS_DELETED = 0
+     WHERE 1=1
+		    <isNotEmpty property="searchCustomerId">
+		    AND UPPER(T1.ID_CUST) like UPPER('%$searchCustomerId$%')
+		    <isNotEmpty property="idScreen">
+		    AND T1.PLAN_STATUS = 'PS1'
+		    </isNotEmpty>	
+		    </isNotEmpty>
+		    <isNotEmpty property="searchCustomerName">
+		    AND UPPER(T2.CUST_NAME) like UPPER('%$searchCustomerName$%')
+		    </isNotEmpty>
+		    <isNotEmpty property="customerType">
+		    AND T2.CUSTOMER_TYPE = #customerType#
+		    </isNotEmpty>
+		    <isNotEmpty property="category">
+		    AND T1.SUB_SVC_LEVEL1 = #category#	
+		    </isNotEmpty>
+			<!-- #180 Start -->
+		    <isNotEmpty property="service">
+		    <!-- AND T1.SUB_SVC_LEVEL2 = #service# -->
+				AND	T1.SUB_SVC_LEVEL2 IN(
+						SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'TYP'
+							AND SVC_GRP=#category# 
+							AND UPPER(SVC_DESC || ' - ' || ACC_CODE) LIKE UPPER('%'||#service#||'%')
+		            )
+		    </isNotEmpty>
+		    <isNotEmpty property="plan">
+		    <!-- AND T1.SVC_LEVEL3 = #plan# -->	
+				AND	T1.SVC_LEVEL3 IN(
+						SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'ITM'
+							AND SVC_GRP=#category# 
+							AND UPPER(SVC_DESC) LIKE UPPER('%'||#plan#||'%')
+		            )    
+		    </isNotEmpty>
+		    <isNotEmpty property="planDetail">
+		    <!-- AND T1.SVC_LEVEL4 = #planDetail# -->
+				AND	T1.SVC_LEVEL4 IN(
+						SELECT ID_SERVICE
+						FROM M_SVC
+						WHERE IS_DELETED = 0 
+							AND SVC_CATEGORY = 'DTL'
+							AND SVC_GRP=#category# 
+							AND UPPER(SVC_DESC) LIKE UPPER('%'||#planDetail#||'%')
+		            )    	
+		    </isNotEmpty>
+		    <!-- #180 End -->		    
+		    <isNotEmpty property="subscriptionId">
+		    AND UPPER(T3.ID_SUB_INFO) like UPPER('%$subscriptionId$%')	
+		    </isNotEmpty>
+		    <isNotEmpty property="billingAccount">
+		    AND (UPPER(T1.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%') OR UPPER(T7.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%'))
+		    </isNotEmpty>
+		    <isNotEmpty property="jobNo">
+    		AND UPPER(T1.JOB_NO) like UPPER('%$jobNo$%')
+    		</isNotEmpty>
+		    <isNotEmpty property="billingInstructions">
+				AND T1.BILL_INSTRUCT IN 
+					<iterate property="billingInstructions"
+			             open="(" close=")"
+		           		 conjunction=",">
+				      #billingInstructions[]# 
+				    </iterate>
+			</isNotEmpty>
+		    <isNotEmpty property="serviceDateStartFrom">
+		    AND T1.SVC_START &gt;= TO_DATE(#serviceDateStartFrom#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="serviceDateStartTo">
+		    AND T1.SVC_START &lt; (TO_DATE(#serviceDateStartTo#, 'DD/MM/YYYY') + 1)
+		    </isNotEmpty>
+		    <isNotEmpty property="serviceDateEndFrom">
+		    AND T1.SVC_END &gt;= TO_DATE(#serviceDateEndFrom#, 'DD/MM/YYYY')
+		    </isNotEmpty>
+		    <isNotEmpty property="serviceDateEndTo">
+		    AND T1.SVC_END &lt; (TO_DATE(#serviceDateEndTo#, 'DD/MM/YYYY') + 1)
+		    </isNotEmpty>
+		    <isNotEmpty property="serviceStatus">
+				AND T1.SERVICES_STATUS IN 
+					<iterate property="serviceStatus"
+			             open="(" close=")"
+		           		 conjunction=",">
+				      #serviceStatus[]# 
+				    </iterate>
+			</isNotEmpty>
+			<isNotEmpty property="transType">
+				AND T1.TRANSACTION_TYPE IN 
+					<iterate property="transType"
+			             open="(" close=")"
+		           		 conjunction=",">
+				      #transType[]# 
+				    </iterate>
+			</isNotEmpty>
+			<!-- #202 Start -->
+			<isNotEmpty property="billingStatus">
+				AND T1.BILLING_STATUS IN 
+					<iterate property="billingStatus"
+	             		open="(" close=")"
+           		 		conjunction=",">
+		      		   #billingStatus[]# 
+		    		</iterate>
+			</isNotEmpty>	
+			<isNotEmpty property="billingOption">
+				AND T1.BILL_OPTION IN 
+					<iterate property="billingOption"
+			             open="(" close=")"
+		           		 conjunction=",">
+				      #billingOption[]# 
+				    </iterate>
+			</isNotEmpty>
+			<!-- #189 End -->
+			<!-- Condition for B-CPM-S04 Start -->
+			<isNotEmpty property="tranType">
+				AND T1.TRANSACTION_TYPE = #tranType#
+				AND T1.PLAN_STATUS = 'PS1'	
+			</isNotEmpty>
+			<isNotEmpty property="billCurrency">
+				AND T1.BILL_CURRENCY = #billCurrency#
+				AND T1.PLAN_STATUS = 'PS1'
+			</isNotEmpty>
+			<!-- #202 End -->
+			<isNotEmpty property="contractStartFrom">
+		        AND T1.MIN_SVC_START &gt;= TO_DATE(#contractStartFrom#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="contractStartTo">
+		        AND T1.MIN_SVC_START &lt;= TO_DATE(#contractStartTo#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="contractEndFrom">
+		        AND T1.MIN_SVC_END &gt;= TO_DATE(#contractEndFrom#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="contractEndTo">
+		        AND T1.MIN_SVC_END &lt;= TO_DATE(#contractEndTo#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="applicationDateFrom">
+		        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE(#applicationDateFrom#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+		    <isNotEmpty property="applicationDateTo">
+		        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE(#applicationDateTo#, 'DD/MM/YYYY')	
+		    </isNotEmpty>
+	    	<!-- #185 Start -->
+			<isNotEmpty property="billingDesc">
+			AND ( UPPER(T1.BILL_DESC) like UPPER('%$billingDesc$%')
+				  OR UPPER(T1.ITEM_DESC) like UPPER('%$billingDesc$%')
+				  OR UPPER(T1.PLAN_NAME) like UPPER('%$billingDesc$%')
+				  OR UPPER(T1.PLAN_DESC) like UPPER('%$billingDesc$%')
+				  OR UPPER(T3.MEMO) like UPPER('%$billingDesc$%')
+			)
+			</isNotEmpty>
+			<!-- #185 End -->
+	     GROUP BY          
+          T1.ID_CUST,
+          T2.CUST_NAME,
+          T3.ID_SUB_INFO,
+          TO_CHAR(T1.BILL_DESC),
+          T1.TRANSACTION_TYPE,
+          T1.ID_BILL_ACCOUNT,
+          T1.BILL_INSTRUCT,
+          T1.BILL_CURRENCY, 
+          T4.SUB_AMOUNT,
+          T6.GRAND_AMOUNT,
+          T1.SVC_START,
+          T1.SVC_END,
+          T1.SERVICES_STATUS,
+          <!-- #202 Start -->
+      	  T1.BILLING_STATUS,
+      	  T1.BILL_OPTION,
+          <!-- #202 End -->
+          T1.PLAN_DESC, 
+          T1.ITEM_GRP_NAME,
+          T1.SUB_SVC_LEVEL1,
+          T1.SUB_SVC_LEVEL2,
+          T1.ID_CUST_PLAN_LINK,
+          T1.RATE_TYPE,
+          T1.RATE_MODE,
+          T1.QUANTITY,
+          T1.UNIT_PRICE,
+          T1.TOTAL_AMOUNT,
+          T1.SVC_LEVEL3,
+          TO_CHAR(T1.ITEM_DESC),
+          T1.MIN_SVC_PERIOD,
+          TO_CHAR(T1.MIN_SVC_START,'dd/mm/yyyy'),
+          TO_CHAR(T1.MIN_SVC_END,'dd/mm/yyyy'),
+          T1.CONTRACT_TERM,
+          T1.JOB_NO,
+          T1.CONTRACT_TERM_NO,
+	      <!-- #165 Start -->
+	      T1.CUST_PO,
+	      <!-- #165 End -->
+	      <!-- #216 Start -->
+	      T1.LOCATION
+	      <!-- #216 End -->
+    ORDER BY T1.ID_CUST ASC, T3.ID_SUB_INFO DESC
+	</select>
+	
+	<select id="GET_EXPORT_FILENAME" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT A.VALUE
+		FROM RESOURCESMAINT A, M_GSET_D B
+		WHERE A.RESOURCE_ID = #type# || B.SET_VALUE
+		AND B.ID_SET = 'SYSTEMBASE' AND B.SET_SEQ = 1
+		AND A.CATEGORY = 'EXP'
+	</select>
+	
+	<select id="GET_EXPORT_HEADER" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT A.VALUE
+		FROM RESOURCESMAINT A, M_GSET_D B
+		WHERE A.RESOURCE_ID = #type# || B.SET_VALUE
+		AND B.ID_SET = 'SYSTEMBASE' AND B.SET_SEQ = 1
+		AND A.CATEGORY = 'HDR'
+		ORDER BY A.SEQ ASC
+	</select>
+	
+	<select id="SEARCH_CUST_PLAN_H" 
+          resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+    SELECT DISTINCT T2.CUSTOMER_TYPE, T1.ID_CUST_PLAN, T1.ID_CUST, PLAN_STATUS, 
+    	T1.PLAN_TYPE, T1.TRANSACTION_TYPE, 
+    	(CASE WHEN PLAN_STATUS = 'PS0' THEN T1.ID_BILL_ACCOUNT
+    		  WHEN PLAN_STATUS = 'PS1' THEN T1.ID_BILL_ACCOUNT
+    		  WHEN PLAN_STATUS = 'PS2' THEN T1.ID_BILL_ACCOUNT
+    		  WHEN PLAN_STATUS = 'PS8' THEN T1.ID_BILL_ACCOUNT
+    		  ELSE T4.ID_BILL_ACCOUNT END) as ID_BILL_ACCOUNT, 
+    	T1.BILL_INSTRUCT, T1.BILL_CURRENCY, T1.EXPORT_CURRENCY, 
+    	T2.CUST_NAME, T3.ID_SUB_INFO, T4.ID_BILL_ACCOUNT as CURRENT_BILL_ACCOUNT  
+    FROM 
+      V_T_CUST_PLAN T1 INNER JOIN  T_SUBSCRIPTION_INFO T3
+      ON T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      LEFT JOIN M_CUST T2
+      ON T1.ID_CUST = T2.ID_CUST AND T1.IS_DELETED = 0
+      LEFT JOIN T_BAC_D T4
+      ON T1.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.IS_DELETED = 0
+    WHERE 1=1
+    <isNotEmpty property="searchCustomerId">
+    AND UPPER(T1.ID_CUST) like UPPER('%$searchCustomerId$%')
+    <isNotEmpty property="idScreen">
+    AND T1.PLAN_STATUS = 'PS1'
+    </isNotEmpty>
+    </isNotEmpty>
+    <isNotEmpty property="searchCustomerName">
+    AND UPPER(T2.CUST_NAME) like UPPER('%$searchCustomerName$%')
+    </isNotEmpty>
+    <isNotEmpty property="customerType">
+    AND T2.CUSTOMER_TYPE = #customerType#
+    </isNotEmpty>
+    <isNotEmpty property="category">
+    AND T1.SUB_SVC_LEVEL1 = #category#	
+    </isNotEmpty>
+    <!-- #180 Start -->
+    <isNotEmpty property="service">
+    <!-- AND T1.SUB_SVC_LEVEL2 = #service# -->
+		AND	T1.SUB_SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC || ' - ' || ACC_CODE) LIKE UPPER('%'||#service#||'%')
+            )
+    </isNotEmpty>
+    <isNotEmpty property="plan">
+    <!-- AND T1.SVC_LEVEL3 = #plan# -->	
+		AND	T1.SVC_LEVEL3 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#plan#||'%')
+            )    
+    </isNotEmpty>
+    <isNotEmpty property="planDetail">
+    <!-- AND T1.SVC_LEVEL4 = #planDetail# -->
+		AND	T1.SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#planDetail#||'%')
+            )    	
+    </isNotEmpty>
+    <!-- #180 End -->
+    <isNotEmpty property="subscriptionId">
+    AND UPPER(T3.ID_SUB_INFO) like UPPER('%$subscriptionId$%')
+    </isNotEmpty>
+    <isNotEmpty property="billingAccount">
+    AND  (UPPER(T1.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%') OR UPPER(T4.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%'))
+    </isNotEmpty>
+    <isNotEmpty property="jobNo">
+    AND UPPER(T1.JOB_NO) like UPPER('%$jobNo$%')
+    </isNotEmpty>
+   <!--  <isNotEmpty property="billingInstruction">
+    AND T1.BILL_INSTRUCT = #billingInstruction#	
+    </isNotEmpty> -->
+    <isNotEmpty property="billingInstructions">
+		AND T1.BILL_INSTRUCT IN 
+			<iterate property="billingInstructions"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingInstructions[]# 
+		    </iterate>
+	</isNotEmpty>
+    <isNotEmpty property="serviceDateStartFrom">
+    AND T1.SVC_START &gt;= TO_DATE(#serviceDateStartFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateStartTo">
+    AND T1.SVC_START &lt; (TO_DATE(#serviceDateStartTo#, 'DD/MM/YYYY') + 1)
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateEndFrom">
+    AND T1.SVC_END &gt;= TO_DATE(#serviceDateEndFrom#, 'DD/MM/YYYY')
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateEndTo">
+    AND T1.SVC_END &lt; (TO_DATE(#serviceDateEndTo#, 'DD/MM/YYYY') + 1)
+    </isNotEmpty>
+    <isNotEmpty property="contractStartFrom">
+        AND T1.MIN_SVC_START &gt;= TO_DATE(#contractStartFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractStartTo">
+        AND T1.MIN_SVC_START &lt;= TO_DATE(#contractStartTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractEndFrom">
+        AND T1.MIN_SVC_END &gt;= TO_DATE(#contractEndFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractEndTo">
+        AND T1.MIN_SVC_END &lt;= TO_DATE(#contractEndTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="applicationDateFrom">
+        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE(#applicationDateFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="applicationDateTo">
+        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE(#applicationDateTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="serviceStatus">
+		AND T1.SERVICES_STATUS IN 
+			<iterate property="serviceStatus"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #serviceStatus[]# 
+		    </iterate>
+	</isNotEmpty>
+	<isNotEmpty property="transType">
+		AND T1.TRANSACTION_TYPE IN 
+			<iterate property="transType"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #transType[]# 
+		    </iterate>
+	</isNotEmpty>
+	<isNotEmpty property="billingStatus">
+		AND T1.BILLING_STATUS IN 
+			<iterate property="billingStatus"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingStatus[]# 
+		    </iterate>
+	</isNotEmpty>
+	<!-- #189 Start -->
+	<isNotEmpty property="billingOption">
+		AND T1.BILL_OPTION IN 
+			<iterate property="billingOption"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingOption[]# 
+		    </iterate>
+	</isNotEmpty>	
+	<!-- #189 End -->
+	<!-- Condition for B-CPM-S04 Start -->
+	<isNotEmpty property="tranType">
+	AND T1.TRANSACTION_TYPE = #tranType#
+	AND T1.PLAN_STATUS = 'PS1'
+	</isNotEmpty>
+	<isNotEmpty property="billCurrency">
+	AND T1.BILL_CURRENCY = #billCurrency#
+	AND T1.PLAN_STATUS = 'PS1'
+	</isNotEmpty>
+	<!-- #185 Start -->
+	<isNotEmpty property="billingDesc">
+	AND ( UPPER(T1.BILL_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.ITEM_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.PLAN_NAME) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.PLAN_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T3.MEMO) like UPPER('%$billingDesc$%')
+	)
+	</isNotEmpty>
+	<!-- #185 End -->
+	<!-- Condition for B-CPM-S04 End -->
+    ORDER BY T1.ID_CUST ASC, T3.ID_SUB_INFO DESC
+	</select>
+	
+	<select id="SEARCH_CUST_PLAN_H_COUNT" 
+          resultClass="java.lang.String" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+    SELECT count(distinct T1.ID_CUST_PLAN)
+	FROM 
+		V_T_CUST_PLAN T1 INNER JOIN  T_SUBSCRIPTION_INFO T3
+      ON T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      LEFT JOIN M_CUST T2
+      ON T1.ID_CUST = T2.ID_CUST AND T1.IS_DELETED = 0
+      LEFT JOIN T_BAC_D T4
+      ON T1.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.IS_DELETED = 0
+    WHERE 1=1
+    <isNotEmpty property="searchCustomerId">
+    AND UPPER(T1.ID_CUST) like UPPER('%$searchCustomerId$%')
+    <isNotEmpty property="idScreen">
+    AND T1.PLAN_STATUS = 'PS1'
+    </isNotEmpty>
+    </isNotEmpty>
+    <isNotEmpty property="searchCustomerName">
+    AND UPPER(T2.CUST_NAME) like UPPER('%$searchCustomerName$%')
+    </isNotEmpty>
+    <isNotEmpty property="customerType">
+    AND T2.CUSTOMER_TYPE = #customerType#
+    </isNotEmpty>
+    <isNotEmpty property="category">
+    AND T1.SUB_SVC_LEVEL1 = #category#	
+    </isNotEmpty>
+    <!-- #180 Start -->
+    <isNotEmpty property="service">
+    <!-- AND T1.SUB_SVC_LEVEL2 = #service# -->
+		AND	T1.SUB_SVC_LEVEL2 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'TYP'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC || ' - ' || ACC_CODE) LIKE UPPER('%'||#service#||'%')
+            )
+    </isNotEmpty>
+    <isNotEmpty property="plan">
+    <!-- AND T1.SVC_LEVEL3 = #plan# -->	
+		AND	T1.SVC_LEVEL3 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'ITM'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#plan#||'%')
+            )    
+    </isNotEmpty>
+    <isNotEmpty property="planDetail">
+    <!-- AND T1.SVC_LEVEL4 = #planDetail# -->
+		AND	T1.SVC_LEVEL4 IN(
+				SELECT ID_SERVICE
+				FROM M_SVC
+				WHERE IS_DELETED = 0 
+					AND SVC_CATEGORY = 'DTL'
+					AND SVC_GRP=#category# 
+					AND UPPER(SVC_DESC) LIKE UPPER('%'||#planDetail#||'%')
+            )    	
+    </isNotEmpty>
+    <!-- #180 End -->
+    <isNotEmpty property="subscriptionId">
+    AND UPPER(T3.ID_SUB_INFO) like UPPER('%$subscriptionId$%')
+    </isNotEmpty>
+    <isNotEmpty property="billingAccount">
+    AND  (UPPER(T1.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%') OR UPPER(T4.ID_BILL_ACCOUNT) like UPPER('%$billingAccount$%'))
+    </isNotEmpty>
+    <isNotEmpty property="jobNo">
+    AND UPPER(T1.JOB_NO) like UPPER('%$jobNo$%')
+    </isNotEmpty>
+   <!--  <isNotEmpty property="billingInstruction">
+    AND T1.BILL_INSTRUCT = #billingInstruction#	
+    </isNotEmpty> -->
+    <isNotEmpty property="billingInstructions">
+		AND T1.BILL_INSTRUCT IN 
+			<iterate property="billingInstructions"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingInstructions[]# 
+		    </iterate>
+	</isNotEmpty>
+    <isNotEmpty property="serviceDateStartFrom">
+    AND T1.SVC_START &gt;= TO_DATE(#serviceDateStartFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateStartTo">
+    AND T1.SVC_START &lt; (TO_DATE(#serviceDateStartTo#, 'DD/MM/YYYY') + 1)
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateEndFrom">
+    AND T1.SVC_END &gt;= TO_DATE(#serviceDateEndFrom#, 'DD/MM/YYYY')
+    </isNotEmpty>
+    <isNotEmpty property="serviceDateEndTo">
+    AND T1.SVC_END &lt; (TO_DATE(#serviceDateEndTo#, 'DD/MM/YYYY') + 1)
+    </isNotEmpty>
+    <isNotEmpty property="contractStartFrom">
+        AND T1.MIN_SVC_START &gt;= TO_DATE(#contractStartFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractStartTo">
+        AND T1.MIN_SVC_START &lt;= TO_DATE(#contractStartTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractEndFrom">
+        AND T1.MIN_SVC_END &gt;= TO_DATE(#contractEndFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="contractEndTo">
+        AND T1.MIN_SVC_END &lt;= TO_DATE(#contractEndTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="applicationDateFrom">
+        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &gt;= TO_DATE(#applicationDateFrom#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="applicationDateTo">
+        AND TO_DATE(TO_CHAR(T1.DATE_CREATED,'dd/mm/yyyy'),'dd/mm/yyyy') &lt;= TO_DATE(#applicationDateTo#, 'DD/MM/YYYY')	
+    </isNotEmpty>
+    <isNotEmpty property="serviceStatus">
+		AND T1.SERVICES_STATUS IN 
+			<iterate property="serviceStatus"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #serviceStatus[]# 
+		    </iterate>
+	</isNotEmpty>
+	<isNotEmpty property="transType">
+		AND T1.TRANSACTION_TYPE IN 
+			<iterate property="transType"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #transType[]# 
+		    </iterate>
+	</isNotEmpty>
+	<isNotEmpty property="billingStatus">
+		AND T1.BILLING_STATUS IN 
+			<iterate property="billingStatus"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingStatus[]# 
+		    </iterate>
+	</isNotEmpty>
+	<!-- #189 Start -->
+	<isNotEmpty property="billingOption">
+		AND T1.BILL_OPTION IN 
+			<iterate property="billingOption"
+	             open="(" close=")"
+           		 conjunction=",">
+		      #billingOption[]# 
+		    </iterate>
+	</isNotEmpty>	
+	<!-- #189 End -->	
+	<!-- Condition for B-CPM-S04 Start -->
+	<isNotEmpty property="tranType">
+	AND T1.TRANSACTION_TYPE = #tranType#
+	AND T1.PLAN_STATUS = 'PS1'
+	</isNotEmpty>
+	<isNotEmpty property="billCurrency">
+	AND T1.BILL_CURRENCY = #billCurrency#
+	AND T1.PLAN_STATUS = 'PS1'
+	</isNotEmpty>
+	<!-- #185 Start -->
+	<isNotEmpty property="billingDesc">
+	AND ( UPPER(T1.BILL_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.ITEM_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.PLAN_NAME) like UPPER('%$billingDesc$%')
+		  OR UPPER(T1.PLAN_DESC) like UPPER('%$billingDesc$%')
+		  OR UPPER(T3.MEMO) like UPPER('%$billingDesc$%')
+	)
+	</isNotEmpty>
+	<!-- #185 End -->
+	<!-- Condition for B-CPM-S04 End -->
+	</select>
+	
+	<select id="SEARCH_CUST_PLAN_D" 
+          resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+          SELECT T1.ID_CUST_PLAN_GRP, TO_CHAR(T1.BILL_DESC) as BILL_DESC, 
+          		TO_CHAR(T1.SVC_START, 'DD/MM/YYYY') as SVC_START, TO_CHAR(T1.SVC_END, 'DD/MM/YYYY') as SVC_END, SERVICES_STATUS, 
+          		TO_CHAR(SUM(T1.TOTAL_AMOUNT),'9,999,999,999,999,999.00') as TOTAL_AMOUNT 
+          FROM V_T_CUST_PLAN T1
+          WHERE ID_CUST_PLAN = #ID_CUST_PLAN# 
+          AND IS_DELETED = 0
+          GROUP BY T1.ID_CUST_PLAN_GRP, TO_CHAR(T1.BILL_DESC), T1.SVC_START, T1.SVC_END, SERVICES_STATUS
+          ORDER BY T1.ID_CUST_PLAN_GRP
+	</select>
+	<select id="SEARCH_CUST_PLAN_LINK" 
+          resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		  SELECT DISTINCT T1.ID_CUST_PLAN_LINK, T1.RATE_TYPE, T1.RATE_MODE, 
+		  T2.SVC_GRP_NAME, SVC_DESC || ' - ' || T3.ACC_CODE AS SVC_NAME,
+          T1.QUANTITY, T1.UNIT_PRICE,  
+          to_char(substr(ITEM_DESC,1,4000)) as ITEM_DESC, T1.TOTAL_AMOUNT
+          FROM V_T_CUST_PLAN T1, M_SVG T2, M_SVC T3
+          WHERE ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP# 
+          AND T1.SUB_SVC_LEVEL1 = T2.SVC_GRP(+)
+          AND T1.SUB_SVC_LEVEL2 = T3.ID_SERVICE(+)
+          AND T1.IS_DELETED = 0
+          GROUP BY T1.ID_CUST_PLAN_LINK, T1.RATE_TYPE, T1.RATE_MODE, 
+          T2.SVC_GRP_NAME, SVC_DESC || ' - ' || T3.ACC_CODE,
+          T1.QUANTITY, T1.UNIT_PRICE,  
+          to_char(substr(ITEM_DESC,1,4000)), T1.TOTAL_AMOUNT
+          order by T1.ID_CUST_PLAN_LINK
+    </select>
+    
+    <select id="GET_CUSTOMER_LIST" 
+          resultClass="java.util.HashMap">
+          SELECT F.ID_CUST AS "idCust",
+			F.CUST_NAME || ' - ' || F.ID_CUST AS "custName"
+			FROM M_CUST F
+			WHERE IS_DELETED = '0'
+			ORDER BY  NLSSORT(F.CUST_NAME, 'NLS_SORT=BINARY_AI')
+    </select>
+    <!-- B-CPM-S02 START -->
+    <select id="GET_CUSTOMER_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap" >
+		SELECT F.ID_CUST AS "idCust",
+			F.CUST_NAME AS "custName",
+			F.CUSTOMER_TYPE AS "custType",
+			G.SET_VALUE as "filePath", 
+			G1.SET_VALUE as "systemBase",
+			G2.SET_VALUE as "defCurrency"
+		FROM M_CUST F, M_GSET_D G, M_GSET_D G1, M_GSET_D G2 
+		WHERE F.ID_CUST = #idCust#
+			AND G.ID_SET = 'SHAREDFOLDER'
+			AND G1.ID_SET = 'SYSTEMBASE'
+			AND G2.ID_SET = 'DEF_CURRENCY'
+	</select>
+    <select id="GET_REFERENCE_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+    	SELECT ID_CUST_PLAN
+    	FROM T_CUST_PLAN_H
+    	WHERE PLAN_STATUS &lt;&gt; 'PS1' AND IS_DELETED = 0 AND ID_CUST = #idCust# 
+    	ORDER BY ID_CUST_PLAN ASC 
+    </select>
+    <select id="GET_SVC_LEVEL1" resultClass="java.util.HashMap">
+    	SELECT SVC_GRP, SVC_GRP_NAME
+    	FROM M_SVG
+    	ORDER BY UPPER(SVC_GRP_NAME)
+    </select>
+    <select id="GET_SVC_LEVEL2" resultClass="java.util.HashMap">
+    	SELECT ID_SERVICE, SVC_DESC || ' - ' || ACC_CODE AS SVC_NAME, GST, SVC_GRP,DESC_ABBR
+    	FROM M_SVC
+    	WHERE IS_DELETED = 0 AND SVC_CATEGORY = 'TYP'
+    	ORDER BY UPPER(SVC_NAME)
+    </select>
+    <select id="GET_SVC_LEVEL3" resultClass="java.util.HashMap">
+    	SELECT ID_SERVICE, SVC_DESC AS SVC_NAME, GST, SVC_GRP,DESC_ABBR
+    	FROM M_SVC
+    	WHERE IS_DELETED = 0 AND SVC_CATEGORY = 'ITM'
+    	ORDER BY UPPER(SVC_NAME)
+    </select>
+    <select id="GET_SVC_LEVEL4" resultClass="java.util.HashMap">
+    	SELECT ID_SERVICE, SVC_DESC AS SVC_NAME, GST, SVC_GRP
+    	FROM M_SVC
+    	WHERE IS_DELETED = 0 AND SVC_CATEGORY = 'DTL'
+    	ORDER BY UPPER(SVC_NAME)
+    </select>
+    <select id="GET_BIF_STATUS" resultClass="java.lang.String">
+    	SELECT IS_DISPLAY
+		FROM M_SUB_MODULES
+		WHERE  ID_MODULE='B' and ID_SUB_MODULE ='B-BIF'
+    </select>
+    <select id="GET_M_JNM_STATUS" resultClass="java.lang.String">
+    	SELECT IS_DISPLAY
+		FROM M_SUB_MODULES
+		WHERE  ID_MODULE='M' and ID_SUB_MODULE ='M-JNM'
+    </select>
+    <select id="GET_M_LOCATION_STATUS" resultClass="java.lang.String">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_LOCATION'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+    </select>
+    <select id="GET_JOB_NO_STATUS" resultClass="java.lang.String">
+    	SELECT COUNT(*)
+		FROM M_SUB_MODULES N
+		WHERE N.ID_SUB_MODULE='M-JNM' and N.IS_DISPLAY=0
+    </select>
+    <select id="GET_PAYMENT_METHOD" resultClass="java.util.HashMap">
+    	SELECT RESOURCE_ID, VALUE
+    	FROM RESOURCESMAINT
+    	WHERE CATEGORY = 'PAYMENT METHOD'
+    	AND IS_DELETED='0'
+    	ORDER BY SEQ ASC
+    </select>
+    
+    <select id="CHECK_BILLING_ACCOUNT" resultClass="java.lang.String" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	SELECT COUNT(ID_BILL_ACCOUNT)
+    	FROM T_BAC_D
+    	WHERE ID_CUST_PLAN = #idCustPlan#
+    </select>    
+    
+    <select id="GET_BILLING_ACCOUNT" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	SELECT H.ID_BILL_ACCOUNT, PAYMENT_METHOD, EXPORT_CURRENCY, BILL_CURRENCY, FIXED_FOREX, TAX_TYPE, 
+    	(SELECT COUNT(D.ID_BILL_ACCOUNT) FROM T_BAC_D D WHERE D.ID_BILL_ACCOUNT = H.ID_BILL_ACCOUNT) COUNT_BAC_D
+    	FROM T_BAC_H H
+    	WHERE ID_CUST = #idCust#
+    	AND H.IS_DELETED='0'
+    	ORDER BY H.ID_BILL_ACCOUNT
+    </select>
+    
+    <select id="GET_SELECTED_BILLING_ACCOUNT" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	SELECT H.ID_BILL_ACCOUNT, PAYMENT_METHOD, EXPORT_CURRENCY, BILL_CURRENCY, FIXED_FOREX
+    	FROM T_BAC_H
+    	WHERE ID_BILL_ACCOUNT = #billAccNo#
+    </select>
+    
+    <select id="GET_VENDOR" resultClass="java.util.HashMap">
+    	SELECT ID_SUPPLIER, SUPPLIER_NAME
+    	FROM M_SUPPLIER_H
+    </select>
+    <select id="GET_JOB_NO" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+    	SELECT * 
+    	FROM M_JOB_LIST
+    	WHERE (ID_CUST = #idCust# OR ID_CUST = '000000')
+    	  AND IS_DELETED = '0'
+    	ORDER BY JOB_NO DESC
+    </select>
+    
+    <select id="GET_GRAND_TOTAL" resultClass="java.util.HashMap">
+    	SELECT DISTINCT CUR_CODE 
+    	FROM M_CURRENCY
+    	WHERE IS_DELETED = 0
+    	ORDER BY CUR_CODE
+    </select>
+    
+    <select id="PLAN_AND_BATCH_MAPPING" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    	SELECT T1.ID_PLAN_GRP, T1.ID_PLAN, T1.BATCH_ID, T1.CODE_VALUE, T2.ITEM_TYPE 
+    	FROM M_PLAN_BATCH_MAPPING T1, M_PLAN_D T2
+    	WHERE T1.ID_PLAN_GRP = T2.ID_PLAN_GRP
+    	AND T1.ID_PLAN IN
+   		<iterate open="(" close=")" conjunction="," property="idPlanList">
+   			#idPlanList[]#
+   		</iterate>
+    	AND T1.ID_PLAN_GRP IN
+   		<iterate open="(" close=")" conjunction="," property="idPlanGrpList">
+   			#idPlanGrpList[]#
+   		</iterate>
+	</select>
+    
+    <select id="GET_NEW_ID_T_CUST_PLAN_H" resultClass="java.lang.String">
+    	SELECT SEQ_T_CUST_PLAN_H.NEXTVAL as NEW_ID FROM DUAL 
+    </select>
+    <select id="SELECT_BAC_D_COUNT" parameterClass="java.lang.String" resultClass="java.lang.String">
+    	SELECT COUNT(D.ID_BILL_ACCOUNT) FROM T_BAC_D D WHERE D.ID_BILL_ACCOUNT = #id_bill_account#
+    </select>
+    <select id="SELECT_CUST_ATC_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 	
+			contact_type
+        FROM m_cust_ctc
+      	WHERE id_cust=#idCust# 
+      		and CONTACT_TYPE = 'BC' 
+      		and CONTACT_NAME IS NOT NULL
+	</select>
+	<select id="SELECT_CUST_TYPE" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT 	
+			  CUSTOMER_TYPE
+        FROM
+              M_CUST
+      	WHERE
+      	      ID_CUST=#idCust#
+      	      AND IS_DELETED = '0'
+	</select>
+    <insert id="INSERT_T_BAC_H" parameterClass="java.util.HashMap">
+	    INSERT INTO t_bac_h (id_bill_account,
+			id_cust,
+			payment_method,
+			bill_currency,
+			is_display_exp_amt,
+			export_currency,
+			cust_adr_type,
+			contact_type,
+			is_deleted,
+			date_created,
+			date_updated,
+			id_login,
+			fixed_forex,
+			ID_AUDIT,
+			TAX_TYPE
+	    )
+	    VALUES (#id_bill_account#,
+			#id_cust#,
+			<isEmpty property="payment_method">
+			null,
+			</isEmpty>
+			<isNotEmpty property="payment_method">
+			#payment_method#,
+			</isNotEmpty>
+			#bill_currency#,
+			<isEmpty property="is_display_exp_amt">
+			null,
+			</isEmpty>
+			<isNotEmpty property="is_display_exp_amt">
+			#is_display_exp_amt#,
+			</isNotEmpty>
+			<isEmpty property="export_currency">
+			null,
+			</isEmpty>
+			<isNotEmpty property="export_currency">
+			#export_currency#,
+			</isNotEmpty>	
+			#cust_adr_type#,
+			#contact_type#,
+			0,
+			sysdate,
+			sysdate,
+			#id_login#,
+			<isEmpty property="fixed_forex">
+			null,
+			</isEmpty>
+			<isNotEmpty property="fixed_forex">
+			#fixed_forex#,
+			</isNotEmpty>
+			<isEmpty property="idAudit">
+			null,
+			</isEmpty>
+			<isNotEmpty property="idAudit">
+			#idAudit#,
+			</isNotEmpty>
+			<isEmpty property="tax_type">
+			null
+			</isEmpty>	
+			<isNotEmpty property="tax_type">
+			#tax_type#
+			</isNotEmpty>  )
+  	</insert>
+  	<update id="UPDATE_T_BAC_H" parameterClass="java.util.HashMap">
+  		UPDATE T_BAC_H SET  payment_method = #payment_method#,
+  		bill_currency = #bill_currency#,
+  		export_currency = #export_currency#,
+  		cust_adr_type = #cust_adr_type#,
+  		contact_type = #contact_type#,
+  		fixed_forex = #fixed_forex#,
+  		id_login = #id_login#,
+  		date_updated = sysdate,
+  		ID_AUDIT = #idAudit#
+  		WHERE id_bill_account = #id_bill_account#
+  	</update>
+    <insert id="INSERT_T_CUST_PLAN_H" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	INSERT INTO T_CUST_PLAN_H 
+    		(ID_CUST_PLAN, ID_CUST, PLAN_STATUS, TRANSACTION_TYPE, PLAN_TYPE,
+    		REFERENCE_PLAN, ID_BILL_ACCOUNT, BILL_ACC_ALL, 
+    		BILL_INSTRUCT, PAYMENT_METHOD, BILL_CURRENCY, EXPORT_CURRENCY, FIXED_FOREX, 
+    		IS_DISPLAY_EXP_AMT, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT, TAX_TYPE) 
+    	VALUES(#idCustPlan#, #idCust#, 'PS1', #transactionType#, #planType#,
+    		#referencePlan#, #billAccNo#, '0', 
+    		#billingInstruction#, #paymentMethod#, #billCurrency#, #expGrandTotal#, #fixedForex#, 
+    		0, 0, sysdate, sysdate, #idLogin#, #idAudit#, #taxType#) 
+    </insert>
+    <update id="UPDATE_T_CUST_PLAN_H" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_CUST_PLAN_H 
+    		SET TRANSACTION_TYPE = #transactionType#, 
+    		REFERENCE_PLAN = #referencePlan#, 
+    		ID_BILL_ACCOUNT = #billAccNo#, 
+    		BILL_ACC_ALL = '0', 
+    		BILL_INSTRUCT = #billingInstruction#, 
+    		PAYMENT_METHOD = #paymentMethod#, 
+    		BILL_CURRENCY = #billCurrency#, 
+    		EXPORT_CURRENCY = #expGrandTotal#, 
+    		FIXED_FOREX = #fixedForex#, 
+    		DATE_UPDATED = sysdate, 
+    		ID_LOGIN = #idLogin#, 
+    		ID_AUDIT = #idAudit#,
+    		TAX_TYPE = #taxType#
+    		WHERE ID_CUST_PLAN = #idCustPlan#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_H" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_CUST_PLAN_H
+    	SET IS_DELETED = 1, 
+    	DATE_UPDATED = sysdate, 
+    	ID_AUDIT = #idAudit#
+    	WHERE ID_CUST_PLAN = #idCustPlan#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_H_D" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_CUST_PLAN_D
+    	SET IS_DELETED = 1,
+    	DATE_UPDATED = sysdate, 
+    	ID_AUDIT = #idAudit#
+    	WHERE ID_CUST_PLAN = #idCustPlan#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_H_LINK" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_CUST_PLAN_LINK
+    	SET IS_DELETED = 1,
+    	DATE_UPDATED = sysdate, 
+    	ID_AUDIT = #idAudit#
+    	WHERE ID_CUST_PLAN_GRP IN 
+    		(SELECT ID_CUST_PLAN_GRP FROM T_CUST_PLAN_D WHERE ID_CUST_PLAN = #idCustPlan#) 
+    </update>
+    <update id="DELETE_T_CUST_PLAN_H_SVC" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_CUST_PLAN_SVC
+    	SET IS_DELETED = 1,
+    	DATE_UPDATED = sysdate, 
+    	ID_AUDIT = #idAudit#
+    	WHERE ID_CUST_PLAN_LINK IN 
+    		(SELECT ID_CUST_PLAN_LINK FROM T_CUST_PLAN_D D, T_CUST_PLAN_LINK L 
+    		WHERE D.ID_CUST_PLAN_GRP = L.ID_CUST_PLAN_GRP 
+    		AND D.ID_CUST_PLAN = #idCustPlan#) 
+    </update>
+    <update id="DELETE_T_SUBSCRIPTION_INFO" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	UPDATE T_SUBSCRIPTION_INFO
+    	SET IS_DELETED = 1,
+    	DATE_UPDATED = sysdate, 
+    	ID_LOGIN = #idLogin#
+    	WHERE ID_CUST_PLAN=#idCustPlan#
+    </update>
+    <select id="GET_NEW_ID_T_CUST_PLAN_D" resultClass="java.lang.String">
+    	SELECT SEQ_T_CUST_PLAN_D.NEXTVAL as NEW_ID FROM DUAL 
+    </select>
+    <insert id="INSERT_T_CUST_PLAN_D" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlanService">
+    INSERT INTO T_CUST_PLAN_D(ID_CUST_PLAN, ID_CUST_PLAN_GRP, SVC_START, SERVICES_STATUS, 
+	    SVC_END, AUTO_RENEW, MIN_SVC_PERIOD, MIN_SVC_START, MIN_SVC_END, 
+	    CONTRACT_TERM_NO, CONTRACT_TERM, PRO_RATE_BASE, PRO_RATE_BASE_NO, 
+	    IS_LUMP_SUM, BILL_DESC, IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT,MULTI_STD,BILLING_STATUS,DISC_LUMP_SUM,BILL_OPTION)
+	 VALUES(#idCustPlan#, #idCustPlanGrp#, TO_DATE(#serviceDateStart#, 'DD/MM/YYYY'), #serviceStatus#,
+	    TO_DATE(#serviceDateEnd#, 'DD/MM/YYYY'), #autoRenewal#, #minimumService#, TO_DATE(#minimumServiceFrom#, 'DD/MM/YYYY'), TO_DATE(#minimumServiceTo#, 'DD/MM/YYYY'), 
+	    #contactTermNo#, #contactTerm#, #proRateBase#, #proRateBaseNo#, 
+	    #isLumpSum#, #billDesc#, 0, sysdate, sysdate, #idLogin#, #idAudit#,#serviceMultiPln#,'BS0',#isDiscountLumpSum#,#billingOption#)
+    </insert>
+    <update id="UPDATE_T_CUST_PLAN_D" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlanService">
+    UPDATE T_CUST_PLAN_D
+    	SET SVC_START = TO_DATE(#serviceDateStart#, 'DD/MM/YYYY'), 
+	    SVC_END = TO_DATE(#serviceDateEnd#, 'DD/MM/YYYY'), 
+	    AUTO_RENEW = #autoRenewal#, 
+	    MIN_SVC_PERIOD = #minimumService#, 
+	    MIN_SVC_START = TO_DATE(#minimumServiceFrom#, 'DD/MM/YYYY'), 
+	    MIN_SVC_END = TO_DATE(#minimumServiceTo#, 'DD/MM/YYYY'), 
+	    CONTRACT_TERM_NO = #contactTermNo#, 
+	    CONTRACT_TERM = #contactTerm#, 
+	    PRO_RATE_BASE = #proRateBase#, 
+	    PRO_RATE_BASE_NO = #proRateBaseNo#, 
+	    IS_LUMP_SUM = #isLumpSum#, 
+	    BILL_DESC = #billDesc#, 
+	    DATE_UPDATED = sysdate, 
+	    ID_LOGIN = #idLogin#, 
+	    ID_AUDIT = #idAudit#,
+	    MULTI_STD = #serviceMultiPln#,
+	    DISC_LUMP_SUM=#isDiscountLumpSum#,
+	    BILL_OPTION=#billingOption#
+    WHERE ID_CUST_PLAN_GRP = #idCustPlanGrp#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_D" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_D
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE ID_CUST_PLAN = #idTable# 
+   	<isNotEmpty property="existIdList">
+   	AND ID_CUST_PLAN_GRP NOT IN 
+   	<iterate conjunction="," property="existIdList" open="(" close=")">
+   		#existIdList[]#
+   	</iterate>
+   	</isNotEmpty>
+   	AND IS_DELETED = 0
+    </update>
+    <update id="DELETE_T_CUST_PLAN_D_LINK" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_LINK
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE ID_CUST_PLAN_GRP IN (SELECT ID_CUST_PLAN_GRP FROM T_CUST_PLAN_D WHERE ID_CUST_PLAN = #idTable#)
+   	AND ID_CUST_PLAN_GRP NOT IN 
+   	<iterate conjunction="," property="existIdList" open="(" close=")">
+   		#existIdList[]#
+   	</iterate>
+   	AND IS_DELETED = 0
+    </update>
+    <update id="DELETE_T_CUST_PLAN_D_SVC" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_SVC
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE ID_CUST_PLAN_LINK IN 
+   		(SELECT L.ID_CUST_PLAN_LINK
+   		FROM T_CUST_PLAN_D D, T_CUST_PLAN_LINK L
+   		WHERE D.ID_CUST_PLAN_GRP = L.ID_CUST_PLAN_GRP 
+   		AND D.ID_CUST_PLAN = #idTable#
+   		AND D.ID_CUST_PLAN_GRP NOT IN 
+	   	<iterate conjunction="," property="existIdList" open="(" close=")">
+	   		#existIdList[]#
+	   	</iterate>
+	   	)
+    </update>
+    <delete id="DELETE_T_BAC_D" parameterClass="java.util.HashMap">
+        DELETE
+	          T_BAC_D
+	   	WHERE
+	   	      ID_CUST_PLAN = #idTable# 
+		   	  <isNotEmpty property="existIdList">
+		   	      AND ID_CUST_PLAN_GRP NOT IN 
+		   	      <iterate conjunction="," property="existIdList" open="(" close=")">
+		   	          #existIdList[]#
+		   	      </iterate>
+		      </isNotEmpty>
+    </delete>
+    <select id="GET_NEW_ID_T_CUST_PLAN_LINK" resultClass="java.lang.String">
+    	SELECT SEQ_T_CUST_PLAN_LINK.NEXTVAL as NEW_ID FROM DUAL 
+    </select>
+    <insert id="INSERT_T_CUST_PLAN_LINK" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan">
+    INSERT INTO T_CUST_PLAN_LINK(ID_CUST_PLAN_LINK, ID_CUST_PLAN_GRP, ITEM_DESC, 
+    	QUANTITY, UNIT_PRICE, TOTAL_AMOUNT, JOB_NO, ID_PLAN, PLAN_NAME, ITEM_TYPE,
+    	PLAN_DESC, ID_PLAN_GRP, ITEM_GRP_NAME, SVC_LEVEL1, SVC_LEVEL2, 
+    	RATE_TYPE, RATE_MODE, RATE, APPLY_GST, 
+    	IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT, IS_DISPLAY_JOBNO,DISC_TYPE,DISC_AMOUNT,RATE_TYPE2,CUST_PO,LOCATION)
+    VALUES(#idCustPlanLink#, #idCustPlanGrp#, #itemDesc#, 
+    	#quantity#, #unitPrice#, #amount#, #jobNo#, #idPlan#, #planName#, #itemType#,
+    	#planDesc#, #idPlanGrp#, #itemGrpName#, #svcLevel1#, #svcLevel2#, 
+    	#rateType#, #rateMode#, #rate#, #applyGst#, 
+    	0, sysdate, sysdate, #idLogin#, #idAudit#, #isDisplayJobNo#,#isDiscountOneTime#,#discamount#,#rateType2#,#custPo#,#subLocation#)
+    </insert>
+    <update id="UPDATE_T_CUST_PLAN_LINK" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan">
+    UPDATE T_CUST_PLAN_LINK
+    SET ITEM_DESC = #itemDesc#, 
+    	QUANTITY = #quantity#, 
+    	UNIT_PRICE = #unitPrice#, 
+    	TOTAL_AMOUNT = #amount#, 
+    	JOB_NO = #jobNo#, 
+    	ID_PLAN = #idPlan#, 
+    	PLAN_NAME = #planName#,
+    	ITEM_TYPE = #itemType#,
+    	PLAN_DESC = #planDesc#, 
+    	ID_PLAN_GRP = #idPlanGrp#, 
+    	ITEM_GRP_NAME = #itemGrpName#, 
+    	SVC_LEVEL1 = #svcLevel1#, 
+    	SVC_LEVEL2 = #svcLevel2#, 
+    	RATE_TYPE = #rateType#, 
+    	RATE_MODE = #rateMode#, 
+    	RATE = #rate#, 
+    	APPLY_GST = #applyGst#, 
+    	DATE_UPDATED = sysdate, 
+    	ID_LOGIN = #idLogin#, 
+    	ID_AUDIT = #idAudit#,
+    	IS_DISPLAY_JOBNO = #isDisplayJobNo#,
+    	DISC_TYPE=#isDiscountOneTime#,
+    	DISC_AMOUNT=#discamount#,
+    	RATE_TYPE2=#rateType2#,
+    	CUST_PO=#custPo#,
+    	LOCATION=#subLocation#
+    WHERE ID_CUST_PLAN_LINK = #idCustPlanLink#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_LINK" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_LINK
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE ID_CUST_PLAN_GRP = #idTable#
+   	AND ID_CUST_PLAN_LINK NOT IN 
+		<iterate property="existIdList" conjunction="," open="(" close=")">
+			#existIdList[]#
+		</iterate>
+   	AND IS_DELETED = 0
+    </update>
+    <update id="DELETE_T_CUST_PLAN_LINK_SVC" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_SVC
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE ID_CUST_PLAN_LINK IN (SELECT ID_CUST_PLAN_LINK FROM T_CUST_PLAN_LINK WHERE ID_CUST_PLAN_GRP = #idTable#)  
+   	AND ID_CUST_PLAN_LINK NOT IN 
+   		<iterate property="existIdList" conjunction="," open="(" close=")">
+   			#existIdList[]#
+   		</iterate>
+   	AND IS_DELETED = 0
+    </update>
+    <insert id="INSERT_T_CUST_PLAN_SVC" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlanDetail">
+    INSERT INTO T_CUST_PLAN_SVC(ID_CUST_PLAN_SVC, ID_CUST_PLAN_LINK, 
+    	SVC_LEVEL3, SVC_LEVEL4, ID_SUPPLIER, 
+    	IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+    VALUES(SEQ_T_CUST_PLAN_SVC.NEXTVAL, #idCustPlanLink#, 
+    	#svcLevel3#, #svcLevel4#, #vendor#, 
+    	0, sysdate, sysdate, #idLogin#, #idAudit#)
+    </insert>
+    <insert id="INSERT_T_CUST_PLAN_SVC2" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlanDetail">
+    INSERT INTO T_CUST_PLAN_SVC(ID_CUST_PLAN_SVC, ID_CUST_PLAN_LINK, 
+    	SVC_LEVEL3, SVC_LEVEL4, ID_SUPPLIER, 
+    	IS_DELETED, DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+    VALUES(#idCustPlanSvc#, #idCustPlanLink#, 
+    	#svcLevel3#, #svcLevel4#, #vendor#, 
+    	0, sysdate, sysdate, #idLogin#, #idAudit#)
+    </insert>
+    <update id="UPDATE_T_CUST_PLAN_SVC" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlanDetail">
+    UPDATE T_CUST_PLAN_SVC
+    SET SVC_LEVEL3 = #svcLevel3#, 
+    	SVC_LEVEL4 = #svcLevel4#, 
+    	ID_SUPPLIER = #vendor#, 
+    	DATE_UPDATED = sysdate, 
+    	ID_LOGIN = #idLogin#,
+    	ID_AUDIT = #idAudit#
+    WHERE ID_CUST_PLAN_SVC = #idCustPlanSvc#
+    </update>
+    <update id="DELETE_T_CUST_PLAN_SVC" parameterClass="java.util.HashMap">
+    UPDATE T_CUST_PLAN_SVC
+   	SET IS_DELETED = 1, 
+   	DATE_UPDATED = sysdate, 
+   	ID_AUDIT = #idAudit#
+   	WHERE IS_DELETED = 0
+   	AND ID_CUST_PLAN_LINK = #idTable#
+   	<isNotEmpty property="existIdList">
+   	AND ID_CUST_PLAN_SVC NOT IN 
+   		<iterate property="existIdList" conjunction="," open="(" close=")">
+   			#existIdList[]#
+   		</iterate>
+   	</isNotEmpty>
+    </update>
+    
+    <insert id="INSERT_T_SUBSCRIPTION_INFO" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    INSERT INTO T_SUBSCRIPTION_INFO(ID_CUST_PLAN, ID_SUB_INFO, IS_DELETED, 
+    	DATE_CREATED, DATE_UPDATED, ID_LOGIN, ID_AUDIT)
+    VALUES(#idCustPlan#, #idSubInfo#, 0, sysdate, sysdate, #idLogin#, #idAudit#)
+    </insert>
+    
+    <update id="UPDATE_SERVICE_STATUS" parameterClass="java.util.HashMap">
+    	UPDATE T_CUST_PLAN_D 
+    	SET SERVICES_STATUS = #SERVICE_STATUS#,
+    	DATE_UPDATED = sysdate,
+    	ID_LOGIN = #ID_LOGIN#
+    	<isNotEmpty property="ID_AUDIT">
+    		,ID_AUDIT = #ID_AUDIT#
+    	</isNotEmpty>
+    	WHERE ID_CUST_PLAN  = #ID_CUST_PLAN#
+    	      AND SERVICES_STATUS = 'PS3'
+    </update>
+    
+    <update id="UPDATE_SERVICE_STATUS_UNSUSPEND" parameterClass="java.util.HashMap">
+    	UPDATE T_CUST_PLAN_D 
+    	SET SERVICES_STATUS = #SERVICE_STATUS#,
+    	DATE_UPDATED = sysdate,
+    	ID_LOGIN = #ID_LOGIN#
+    	<isNotEmpty property="ID_AUDIT">
+    		,ID_AUDIT = #ID_AUDIT#
+    	</isNotEmpty>
+    	WHERE ID_CUST_PLAN_GRP  = #ID_CUST_PLAN_GRP#
+    </update>
+    
+    <update id="UPDATE_T_CUST_PLAN_D_SERVICESTATUS" parameterClass="java.util.HashMap">
+    	UPDATE
+    	      T_CUST_PLAN_D 
+    	SET
+    	      SERVICES_STATUS = #serviceStatus#,
+    	      DATE_UPDATED = sysdate,
+    	      ID_LOGIN = #idLogin#,
+    	      ID_AUDIT = #idAudit#
+    	WHERE
+    	      ID_CUST_PLAN  = #idCustPlan#
+    </update>
+    
+    <update id="UPDATE_T_CUST_PLAN_H_PLANSTATUS" parameterClass="java.util.HashMap">
+    	UPDATE
+    	      T_CUST_PLAN_H
+    	SET
+    	      PLAN_STATUS = #planStatus#,
+    	      DATE_UPDATED = sysdate,
+    	      ID_LOGIN = #idLogin#,
+    	      ID_AUDIT = #idAudit#
+    	WHERE
+    	      ID_CUST_PLAN  = #idCustPlan#
+    </update>
+    <update id="UPDATE_M_AUDIT_TRAIL_H" parameterClass="java.util.HashMap">
+	    UPDATE
+	          M_AUDIT_TRAIL_H
+	    SET
+	          STATUS = #status#
+	    WHERE
+	          ID_AUDIT = #idAudit#
+	</update>
+    <update id="UPDATE_M_AUDIT_TRAIL_D" parameterClass="java.util.HashMap">
+	    UPDATE
+	          M_AUDIT_TRAIL_D
+	    SET
+	          NEW_DATA = #newData#
+	    WHERE
+	          ID_AUDIT = #idAudit#
+	          AND TABLE_NAME = #tableName#
+	          AND AT_FIELD = #atField#
+	          AND OLD_DATA IS NULL
+	</update>
+	<insert id="INSERT_M_AUDIT_TRAIL_D" parameterClass="java.util.HashMap">
+	    INSERT INTO M_AUDIT_TRAIL_D 
+	    	(
+		    	ID_AUDIT, 
+		    	AUDIT_SEQ, 
+		    	TABLE_NAME, 
+		    	AT_FIELD, 
+		    	OLD_DATA, 
+		    	NEW_DATA
+	    	)
+		values
+  			(
+  				#idAudit#, 
+  				(SELECT MAX(AUDIT_SEQ)+1 FROM M_AUDIT_TRAIL_D WHERE ID_AUDIT = #idAudit#), 
+  				#tableName#, 
+  				#atField#, 
+  				#oldData#, 
+  				#newData#
+  			)
+	</insert>
+    
+    <select id="GET_CUSTOMER_PLAN_H" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    SELECT H.ID_CUST_PLAN as idCustPlan,
+    	S.ID_SUB_INFO as idSubInfo, 
+    	ID_CUST as idCust, 
+    	PLAN_STATUS as planStatus, 
+    	PLAN_TYPE as planType, 
+    	TO_CHAR(H.DATE_CREATED, 'DD/MM/YYYY') as applicationDate,
+    	APPROVE_TYPE as approveType,
+    	TRANSACTION_TYPE as transactionType,
+    	REFERENCE_PLAN as referencePlan, 
+    	ID_BILL_ACCOUNT as billAccNo, 
+    	BILL_ACC_ALL as billAccAll, 
+    	SVC_LEVEL1 as svcLevel1,
+    	SVC_LEVEL1 as svcLevel1Name, 
+    	SVC_LEVEL2 as svcLevel2,
+    	SVC_LEVEL2 as svcLevel2Name,
+    	BILL_INSTRUCT as billingInstruction, 
+    	BILL_INSTRUCT as billingInstructionName, 
+    	PAYMENT_METHOD as paymentMethod, 
+    	PAYMENT_METHOD as paymentMethodName, 
+    	BILL_CURRENCY as billCurrency,
+    	BILL_CURRENCY as billCurrencyName, 
+    	EXPORT_CURRENCY as expGrandTotal, 
+    	to_char(FIXED_FOREX,'fm9990.99999999') as fixedForex,
+    	TAX_TYPE as taxType
+    	FROM T_CUST_PLAN_H H, T_SUBSCRIPTION_INFO S
+    WHERE H.ID_CUST_PLAN = #idCustPlan#
+    	AND H.ID_CUST_PLAN = S.ID_CUST_PLAN(+)
+    	AND H.IS_DELETED = 0
+    </select>
+    
+    <select id="GET_CUSTOMER_PLAN_D" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerPlanService">
+    SELECT DISTINCT 
+		d.ID_CUST_PLAN_GRP as idCustPlanGrp,	
+		d.ID_CUST_PLAN as idCustPlan,
+		d.SERVICES_STATUS as serviceStatus,
+		TO_CHAR(d.SVC_START, 'DD/MM/YYYY') as serviceDateStart,
+		TO_CHAR(d.SVC_END, 'DD/MM/YYYY') as serviceDateEnd,
+		d.AUTO_RENEW as autoRenewal,
+		d.MIN_SVC_PERIOD as minimumService,
+		TO_CHAR(d.MIN_SVC_START, 'DD/MM/YYYY') as minimumServiceFrom,
+		TO_CHAR(d.MIN_SVC_END, 'DD/MM/YYYY') as minimumServiceTo,
+		d.CONTRACT_TERM as contactTerm,
+		d.CONTRACT_TERM_NO as contactTermNo,
+		d.PRO_RATE_BASE as proRateBase,
+		d.PRO_RATE_BASE_NO as proRateBaseNo,
+		d.IS_LUMP_SUM as isLumpSum,
+		TO_CHAR(d.BILL_DESC) as billDesc,
+		d.MULTI_STD as serviceMultiPln,
+		d.BILLING_STATUS as billingStatus,
+		TO_CHAR(d.COMPLETION_DATE, 'DD/MM/YYYY') as completionDate,
+		d.DISC_LUMP_SUM as isDiscountLumpSum,
+		d.BILL_OPTION as billingOption,
+		e.CUST_PO AS custPo
+    FROM T_CUST_PLAN_D d LEFT JOIN T_CUST_PLAN_LINK e  on d.ID_CUST_PLAN_GRP = e.ID_CUST_PLAN_GRP
+    WHERE d.ID_CUST_PLAN = #idCustPlan#
+    AND d.IS_DELETED = 0
+    AND e.IS_DELETED = 0
+    ORDER BY d.ID_CUST_PLAN_GRP
+    </select>
+    
+    <select id="GET_CUSTOMER_PLAN_LINK" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerPlanService" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan">
+    SELECT T.ID_CUST_PLAN_LINK as idCustPlanLink,
+		T.ID_CUST_PLAN_GRP as idCustPlanGrp,
+		T.ITEM_TYPE as itemType,
+		T.ITEM_DESC as itemDesc,
+		T.QUANTITY as quantity,
+		T.UNIT_PRICE as unitPrice,
+		T.TOTAL_AMOUNT as amount,
+		T.JOB_NO as jobNo,
+		T.ID_PLAN as idPlan,
+		T.PLAN_NAME as planName,
+		T.PLAN_DESC as planDesc,
+		T.ID_PLAN_GRP as idPlanGrp,
+		T.ITEM_GRP_NAME as itemGrpName,
+		T.SVC_LEVEL1 as svcLevel1,
+		T.SVC_LEVEL1 as svcLevel1Name,
+		T.SVC_LEVEL2 as svcLevel2,
+		T.SVC_LEVEL2 as svcLevel2Name,
+		T.RATE_TYPE as rateType,
+		T.RATE_TYPE as rateTypeName,
+		T.RATE_MODE as rateMode,
+		T.RATE_MODE as rateModeName,
+		T.RATE as rate,
+		T.APPLY_GST as applyGst,
+		T.IS_DISPLAY_JOBNO as isDisplayJobNo,
+		T.DISC_TYPE as isDiscountOneTime,
+		T.DISC_AMOUNT as discamount,
+		T.RATE_TYPE2 as rateType2,
+		M.BILL_CURRENCY as currency,
+    	T.CUST_PO AS custPo,
+    	T.LOCATION as subLocation
+    FROM T_CUST_PLAN_LINK T LEFT JOIN M_PLAN_H M ON T.ID_PLAN = M.ID_PLAN
+    WHERE T.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+    AND T.IS_DELETED = 0
+    ORDER BY T.ID_CUST_PLAN_LINK
+    </select>
+    
+    <select id="GET_SUB_PLAN_BY_ID_LIST" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan">
+    SELECT 
+		H.ID_PLAN as idPlan,
+		H.PLAN_NAME as planName,
+		H.PLAN_DESC as planDesc,
+		H.BILL_CURRENCY as currency,
+		D.ITEM_TYPE as itemType,
+		D.ID_PLAN_GRP as idPlanGrp,
+		D.ITEM_GRP_NAME as itemGrpName,
+		H.PLAN_DESC || ' - ' || D.ITEM_GRP_NAME as itemDesc,
+		SVC_LEVEL1 as svcLevel1,
+		SVC_LEVEL2 as svcLevel2,
+		RATE_TYPE as rateType,
+		RATE_TYPE2 as rateType2,
+		RATE_MODE as rateMode,
+		RATE as rate,
+		APPLY_GST as applyGst 
+    FROM M_PLAN_H H, M_PLAN_D D
+    WHERE H.ID_PLAN = D.ID_PLAN
+    	AND D.ID_PLAN_GRP IN 
+    	<iterate property="idPlanGrpList" conjunction="," open="(" close=")">
+    		#idPlanGrpList[]#
+    	</iterate>
+    AND H.IS_DELETED = 0 AND D.IS_DELETED = 0
+    </select>
+    
+    <select id="GET_EXIST_SUB_PLAN_BY_ID_LIST" parameterClass="java.util.HashMap" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan">
+    SELECT t.*  
+      FROM
+          (
+           SELECT C.ID_PLAN as idPlan,
+                  B.ID_CUST_PLAN_GRP as idCustPlanGrp,
+                  C.ID_CUST_PLAN_LINK as idCustPlanLink,
+                  C.PLAN_NAME as planName,
+                  C.PLAN_DESC as planDesc,
+                  C.UNIT_PRICE as unitPrice,
+                  CASE WHEN C.ID_PLAN IS NULL THEN A.BILL_CURRENCY
+                  ELSE MPH.BILL_CURRENCY END AS currency,
+                  C.ITEM_TYPE as itemType,
+                  C.ID_PLAN_GRP as idPlanGrp,
+                  C.ITEM_GRP_NAME as itemGrpName,
+                  C.ITEM_DESC as itemDesc,
+                  C.SVC_LEVEL1 as svcLevel1,
+                  C.SVC_LEVEL2 as svcLevel2,
+                  C.RATE_TYPE as rateType,
+                  C.RATE_TYPE2 as rateType2,
+                  C.RATE_MODE as rateMode,
+                  C.RATE as rate,
+                  C.APPLY_GST as applyGst, 
+                  C.DISC_TYPE as isDiscountOneTime,
+                  C.DISC_AMOUNT as discamount,
+                  C.QUANTITY as quantity,
+                  C.CUST_PO,
+                  C.LOCATION as location
+             FROM T_CUST_PLAN_H A, T_CUST_PLAN_D B, T_CUST_PLAN_LINK C
+             LEFT JOIN M_PLAN_H MPH
+               ON C.ID_PLAN = MPH.ID_PLAN
+            WHERE C.ID_CUST_PLAN_GRP=B.ID_CUST_PLAN_GRP
+              AND A.ID_CUST_PLAN = B.ID_CUST_PLAN
+              AND A.IS_DELETED = 0 
+              AND B.IS_DELETED = 0
+              AND C.IS_DELETED = 0
+          )t
+        <dynamic prepend="WHERE">
+			idCustPlanLink IN
+			<iterate property="idCustPlanLink" open="("
+				close=")" conjunction="," >
+				#idCustPlanLink[]#
+			</iterate>
+		</dynamic>
+        ORDER BY idPlan,idCustPlanGrp,idCustPlanLink  
+        
+    </select>
+    
+    <select  id="GET_EXIST_SUB_PLAN_CURRENCY" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+    	SELECT H.BILL_CURRENCY FROM T_CUST_PLAN_LINK T
+    	 LEFT JOIN T_CUST_PLAN_D D ON T.ID_CUST_PLAN_GRP = D.ID_CUST_PLAN_GRP
+     	 LEFT JOIN T_CUST_PLAN_H H ON H.ID_CUST_PLAN= D.ID_CUST_PLAN
+     	 WHERE T.ID_CUST_PLAN_LINK = #idCustPlanLink#
+    </select>
+    
+    <select id="GET_SUB_PLAN_DETAIL_BY_PLAN" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlanDetail">
+    SELECT  SVC_LEVEL3 as svcLevel3, 
+		    SVC_LEVEL4 as svcLevel4, 
+		    ID_SUPPLIER as vendor
+	FROM M_PLAN_SVC
+	WHERE ID_PLAN_GRP = #idPlanGrp#
+	    AND IS_DELETED = 0
+    </select>
+    
+    <select id="GET_CUSTOMER_PLAN_SVC" parameterClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlan" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerSubPlanDetail">
+    SELECT ID_CUST_PLAN_SVC as idCustPlanSvc, 
+    ID_CUST_PLAN_LINK as idCustPlanLink,
+	    SVC_LEVEL3 as svcLevel3, 
+	    SVC_LEVEL4 as svcLevel4, 
+	    ID_SUPPLIER as vendor
+    FROM T_CUST_PLAN_SVC
+    WHERE ID_CUST_PLAN_LINK = #idCustPlanLink#
+    AND IS_DELETED = 0
+    </select>
+    
+    <select id="GET_CUST_PLAN_LIST_BY_STATUS" parameterClass="nttdm.bsys.b_cpm_en.dto.B_CPM_Tab" resultClass="nttdm.bsys.b_cpm_en.dto.CustomerPlan">
+    	SELECT
+    	      DISTINCT T1.ID_CUST_PLAN as "idCustPlan"
+    	FROM
+    	      V_T_CUST_PLAN T1 INNER JOIN T_SUBSCRIPTION_INFO T3 
+    	      ON T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+    	WHERE
+    	      T1.PLAN_STATUS IN 
+	   		  <iterate property="status" conjunction="," open="(" close=")">
+	   			#status[]#
+	   		  </iterate>
+   		      AND T1.ID_CUST = #idCust#
+   		ORDER BY
+   		       T1.ID_CUST_PLAN
+    </select>
+    <select id="SELECT_ACCESS_ACCOUNT" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+     select ACCESS_ACCOUNT,ACCESS_PW
+     from T_SUBSCRIPTION_INFO 
+     where ID_CUST_PLAN = #ID_CUST_PLAN#
+    </select>
+	<select id="SELECT_IDCUSTPLAN_COUNT" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		SELECT COUNT(*)
+		FROM m_plan_batch_mapping
+		WHERE
+		batch_id = 'RD' AND
+		id_plan_grp IN
+		(
+		SELECT id_plan_grp
+		FROM t_cust_plan_link, t_cust_plan_d
+		WHERE t_cust_plan_d.id_cust_plan = #customerPlanID# AND
+		t_cust_plan_d.id_cust_plan_grp = t_cust_plan_link.id_cust_plan_grp
+		AND t_cust_plan_d.IS_DELETED = '0' AND t_cust_plan_link.IS_DELETED = '0'
+		)
+    </select>
+    <select id="GET_GIRO_CREDIT" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+    	SELECT GIRO_ACCT_NO, CCARD_NO
+		FROM M_CUST_BANKINFO
+		WHERE ID_CUST = #idCust#
+    </select>
+    <select id="GET_SVC_NAME" resultClass="java.util.HashMap">
+		select ID_SERVICE, SVC_DESC
+		from M_SVC
+		where IS_DELETED = 0
+		order by ID_SERVICE
+    </select>
+    <select id="GET_SVC_GROUP" resultClass="java.util.HashMap">
+		select SVC_GRP, SVC_GRP_NAME
+		from M_SVG
+		order by SVC_GRP_NAME
+    </select>
+	<select id="GET_CPM_TRANS_TYPE" resultClass="java.util.HashMap">
+    	SELECT G.SET_VALUE 
+		FROM M_GSET_D G
+		WHERE G.ID_SET = 'CPM_TRANS_TYPE'
+  		  AND G.SET_SEQ = 1 AND G.IS_DELETED = 0
+    </select>
+    <select id="GET_B_SSM_STATUS" resultClass="java.lang.String">
+    	SELECT IS_DISPLAY
+		FROM M_SUB_MODULES
+		WHERE  ID_MODULE='B' and ID_SUB_MODULE ='B-SSM'
+    </select>
+    <select id="GET_IS_CHECK_MUL_CHAR" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'MULTI_BYTE_CHK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+    <select id="GET_FIXED_FOREX_FLAG" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'FIXED_FOREX'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+    <select id="GET_NEW_ACC_CHECK_FLAG" resultClass="java.lang.String">
+    	SELECT
+    	      G.SET_VALUE 
+		FROM
+		      M_GSET_D G
+		WHERE
+		      G.ID_SET = 'NEW_ACC_CHECK'
+  		      AND G.SET_SEQ = 1 
+  		      AND G.IS_DELETED = 0
+    </select>
+    <!-- B-CPM-S02 END -->
+    
+    <!-- B_CPM_S02n start -->
+    <select id="SELECT_BUTTON_ISENABLED" resultClass="java.util.HashMap">
+		select ID_SET,SET_VALUE
+		from M_GSET_D
+		where
+		ID_SET IN ('ADD_STDPLN','ADD_STDPLN_MULTI','ADD_NON_STDPLN')
+		AND IS_DELETED = '0'
+    </select>
+    <!-- B_CPM_S02n end -->
+    <!-- B_CPM_S02ne_std start -->
+    <select id="SELECT_CPM_TRANS_TYPE" resultClass="java.util.HashMap">
+		select ID_SET,SET_VALUE
+		from M_GSET_D
+		where
+		ID_SET='CPM_TRANS_TYPE'
+		AND SET_VALUE='0'
+		AND IS_DELETED = '0'
+    </select>
+    <select id="GET_STD_PLAN_CURRENCY" resultClass="java.lang.String" parameterClass="java.lang.String">
+    	SELECT BILL_CURRENCY
+		FROM M_PLAN_H
+		WHERE  ID_PLAN=#idPlan#
+    </select>
+    <select id="GET_SERVICE_BAC_COUNT" resultClass="java.lang.String" parameterClass="java.lang.String">
+    	SELECT COUNT(*)
+		FROM T_BAC_D
+		WHERE 
+		ID_CUST_PLAN_GRP = #idCustPlanGrp#
+		AND BILL_FROM IS NOT NULL
+    </select>
+    <select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE 
+			ID_PLAN_GRP IN 
+			(
+				SELECT 
+					ID_PLAN_GRP
+				FROM 
+					T_CUST_PLAN_D A INNER JOIN T_CUST_PLAN_LINK B
+					ON A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP AND B.IS_DELETED = '0'
+				WHERE 
+					A.ID_CUST_PLAN = #idCustPlan#
+					AND A.IS_DELETED = '0'
+			)
+			AND BATCH_ID = 'RD'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_CUST_PLAN_AND_SERVICE_STATUS" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE 
+			ID_PLAN_GRP IN 
+			(
+				SELECT 
+					ID_PLAN_GRP
+				FROM 
+					T_CUST_PLAN_D A INNER JOIN T_CUST_PLAN_LINK B
+					ON A.ID_CUST_PLAN_GRP = B.ID_CUST_PLAN_GRP AND B.IS_DELETED = '0'
+				WHERE 
+					A.ID_CUST_PLAN = #idCustPlan#
+					AND A.SERVICES_STATUS IN ('PS1','PS3')
+					AND A.IS_DELETED = '0'
+			)
+			AND BATCH_ID = 'RD'
+	</select>
+	<select id="GET_ACTIVE_SERVICE_BATCH_MAPPING_BY_ID_CUST_PLAN" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		      C.ID_PLAN_GRP
+        FROM 
+              T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+              ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+              INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              B.ID_CUST_PLAN = #idCustPlan#
+              AND B.IS_DELETED = '0'
+              AND B.SERVICES_STATUS = #serviceStatus#
+	</select>
+	<select id="GET_SUBSCIPTION_BY_ID_CUST_PLAN" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW,
+			ACCESS_ACCOUNT_TEST
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_CUST_PLAN = #idCustPlan#
+			AND IS_DELETED = '0'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_ID_PLAN_GRP" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			ID_PLAN,
+			BATCH_ID
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE
+			ID_PLAN_GRP IN
+	   		<iterate open="(" close=")" conjunction="," property="idPlanGrpList">
+	   			#idPlanGrpList[]#
+	   		</iterate>
+			AND BATCH_ID = 'RD'
+	</select>
+	<select id="GET_BATCH_MAPPING_BY_EXIST_ID_PLAN_GRP" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 
+			M.ID_PLAN_GRP,
+			M.ID_PLAN,
+			M.BATCH_ID
+		FROM 
+			T_CUST_PLAN_D B INNER JOIN T_CUST_PLAN_LINK C
+			ON B.ID_CUST_PLAN_GRP = C.ID_CUST_PLAN_GRP AND C.IS_DELETED = '0'
+			INNER JOIN M_PLAN_BATCH_MAPPING M
+			ON C.ID_PLAN_GRP = M.ID_PLAN_GRP AND M.BATCH_ID = 'RD'
+		WHERE
+		    B.ID_CUST_PLAN = #idCustPlan#
+		    AND B.SERVICES_STATUS = 'PS3'
+		    AND B.IS_DELETED = '0'
+			AND C.ID_PLAN_GRP IN
+	   		<iterate open="(" close=")" conjunction="," property="idPlanGrpList">
+	   			#idPlanGrpList[]#
+	   		</iterate>
+	   		<isNotEmpty property="idCustPlanLinkList">
+	   		    AND C.ID_CUST_PLAN_LINK IN
+	   		    <iterate open="(" close=")" conjunction="," property="idCustPlanLinkList">
+		   			#idCustPlanLinkList[]#
+		   		</iterate>
+	   		</isNotEmpty>
+	</select>
+	<select id="GET_SUB_PLAN_MAIL_HOSTING_BY_ID_PLAN_GRP" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE
+			ID_PLAN_GRP IN
+	   		<iterate open="(" close=")" conjunction="," property="idPlanGrpList">
+	   			#idPlanGrpList[]#
+	   		</iterate>
+			AND BATCH_ID = 'MH'
+			AND UOM = 'SPM'
+	</select>
+	<select id="GET_OPTION_SERVICE_MAIL_HOSTING_BY_ID_PLAN_GRP" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ID_PLAN_GRP,
+			UOM
+		FROM 
+			M_PLAN_BATCH_MAPPING
+		WHERE
+			ID_PLAN = #idPlan#
+			AND BATCH_ID = 'MH'
+			AND UOM IN ('AMA', 'AMQ', 'VRS', 'ASP', 'JMG')
+			AND CODE_VALUE = 1
+	</select>
+	<select id="GET_SUBSCIPTION_BY_ID_SUB_INFO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT 
+			ACCESS_ACCOUNT,
+			ACCESS_PW,
+			ACCESS_ACCOUNT_TEST
+		FROM 
+			T_SUBSCRIPTION_INFO
+		WHERE 
+			ID_SUB_INFO = #idSubInfo#
+			AND IS_DELETED = '0'
+	</select>
+	<select id="GET_SERVICE_BATCH_MAPPING_BY_ID_CUST_PLAN_GRP" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      C.ID_PLAN_GRP
+        FROM 
+              T_CUST_PLAN_LINK C INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              C.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+              AND C.IS_DELETED = '0'
+	</select>
+	<select id="GET_SERVICE_BATCH_MAPPING_BY_ID_CUST_PLAN_LINK" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT
+		      C.ID_PLAN_GRP
+        FROM 
+              T_CUST_PLAN_LINK C INNER JOIN M_PLAN_BATCH_MAPPING F
+              ON C.ID_PLAN_GRP = F.ID_PLAN_GRP AND F.BATCH_ID = 'RD'
+        WHERE 
+              C.ID_CUST_PLAN_LINK = #idCustPlanLink#
+              AND C.IS_DELETED = '0'
+	</select>
+    <!-- B_CPM_S02ne_std end -->
+    <!-- B_CPM_S07 start-->
+    <select id="SELECT.B_CPM_S07.GETQTY.SQL001" resultClass="java.util.HashMap" parameterClass="java.lang.String">			
+		SELECT TO_CHAR(B.ID_MAIL) as ID_MAIL,COUNT(A.ID_MAILACC) MAILACC, NVL(SUM(A.MAILBOX_QTY),0) AS MAILBOX_QTY, NVL(SUM(A.VIRUS_SCAN),0) AS VIRUS_SCAN, NVL(SUM(A.ANTI_SPAM),0) AS ANTI_SPAM, NVL(SUM(A.JUNK_MGT),0) AS JUNK_MGT,
+	        B.AUTO_MAIL_ACC,B.AUTO_MAILBOX_QTY,B.AUTO_VIRUS_SCAN,B.AUTO_ANTI_SPAM,B.AUTO_JUNK_MGT,B.OPT_BASE_QTY,
+	        B.OPT_MAIL_ACC,B.OPT_ADDT_OPTION ,B.OPT_MAILBOX_QTY ,B.OPT_VIRUS_SCAN , B.OPT_ANTI_SPAM, B.OPT_JUNK_MGT
+	    FROM T_MAIL_ADDRESS B LEFT OUTER JOIN T_MAIL_ACCOUNT A
+        	ON A.ID_MAIL = B.ID_MAIL AND B.IS_DELETED='0' AND A.IS_DELETED='0'
+		WHERE 
+			B.ID_SUB_INFO=#idSubInfo#
+		GROUP BY 
+			B.ID_MAIL,B.AUTO_MAIL_ACC,B.AUTO_MAILBOX_QTY,B.AUTO_VIRUS_SCAN,B.AUTO_ANTI_SPAM,B.AUTO_JUNK_MGT,B.OPT_BASE_QTY,
+			B.OPT_MAIL_ACC,B.OPT_ADDT_OPTION ,B.OPT_MAILBOX_QTY ,B.OPT_VIRUS_SCAN , B.OPT_ANTI_SPAM, B.OPT_JUNK_MGT
+	</select>
+    <select id="SELECT.B_CPM_S07.GETSERVICE.SQL001" resultClass="java.util.HashMap" parameterClass="java.lang.String">			
+		SELECT
+			  TO_CHAR(D.BILL_DESC) AS PLAN_NAME,
+			  D.SERVICES_STATUS,
+			  D.BILLING_STATUS,
+			  D.ID_CUST_PLAN_GRP
+		FROM 
+		     T_CUST_PLAN_D D
+		WHERE 
+			D.ID_CUST_PLAN = #idCustPlan#
+			AND D.IS_DELETED = '0'
+		ORDER BY
+			D.ID_CUST_PLAN_GRP
+	</select>
+    <select id="SELECT.B_CPM_S07.GETSERVICE.SQL002" resultClass="java.util.HashMap" parameterClass="java.lang.String">			
+		SELECT
+			  C.ID_CUST_PLAN_LINK, 
+			  TO_CHAR(C.ITEM_DESC) AS ITEM_GRP_NAME
+		FROM 
+		     T_CUST_PLAN_LINK C
+		WHERE 
+			C.ID_CUST_PLAN_GRP = #idCustPlanGrp#
+			AND C.ITEM_TYPE='O'
+			AND C.IS_DELETED='0'
+		ORDER BY
+			C.ID_CUST_PLAN_LINK
+	</select>
+    <select id="SELECT.B_CPM_S07.GETACCESS.SQL001" resultClass="java.lang.String" parameterClass="java.util.HashMap">			
+		SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+		AND ID_SUB_MODULE = 'B-SSM'
+	</select>
+	<update id="UPDATE.B_CPM_S07.UPDATE.T_MAIL_ADDRESS" parameterClass="java.util.Map">			
+		UPDATE T_MAIL_ADDRESS A
+		SET 
+			A.OPT_ADDT_OPTION  =  #OPT_ADDT_OPTION#,
+			A.OPT_MAILBOX_QTY  =  #OPT_MAILBOX_QTY#,
+			A.OPT_VIRUS_SCAN  =  #OPT_VIRUS_SCAN#,
+			A.OPT_ANTI_SPAM  =  #OPT_ANTI_SPAM#,
+			A.OPT_JUNK_MGT  =  #OPT_JUNK_MGT#,
+			A.OPT_BASE_QTY  =  #OPT_BASE_QTY#,
+			A.AUTO_MAIL_ACC  =  #AUTO_MAIL_ACC#,
+			A.AUTO_MAILBOX_QTY  =  #AUTO_MAILBOX_QTY#,
+			A.AUTO_VIRUS_SCAN  =  #AUTO_VIRUS_SCAN#,
+			A.AUTO_ANTI_SPAM  =  #AUTO_ANTI_SPAM#,
+			A.AUTO_JUNK_MGT	=	#AUTO_JUNK_MGT#,
+			A.DATE_UPDATE = SYSDATE,
+			A.ID_AUDIT = #idAudit#,
+			A.ID_LOGIN = #logonUserID#
+		WHERE 
+			A.ID_MAIL=#id_mail#
+	</update>
+    <insert id="INSERT.B_CPM_S07.INSERT.T_MAIL_ADDRESS" parameterClass="java.util.Map">			
+		INSERT INTO T_MAIL_ADDRESS (
+                    ID_MAIL,
+                    ID_SUB_INFO,
+                    AUTO_MAIL_ACC,
+                    AUTO_MAILBOX_QTY,
+                    AUTO_VIRUS_SCAN,
+                    AUTO_ANTI_SPAM,
+                    AUTO_JUNK_MGT,
+                    OPT_BASE_QTY,
+                    OPT_ADDT_OPTION,
+                    OPT_MAILBOX_QTY,
+                    OPT_VIRUS_SCAN,
+                    OPT_ANTI_SPAM,
+                    OPT_JUNK_MGT,
+                    DATE_UPDATE,
+                    DATE_CREATED,
+                    ID_LOGIN,
+                    IS_DELETED,
+                    ID_AUDIT
+                 )
+              values (
+                    SEQ_T_MAIL_ADDRESS.NEXTVAL,
+                    #idSubInfo#,
+                    #AUTO_MAIL_ACC#,
+                    #AUTO_MAILBOX_QTY#,
+                    #AUTO_VIRUS_SCAN#,
+                    #AUTO_ANTI_SPAM#,
+                    #AUTO_JUNK_MGT#,
+                    #OPT_BASE_QTY#,
+                    #OPT_ADDT_OPTION#,
+                    #OPT_MAILBOX_QTY#,
+                    #OPT_VIRUS_SCAN#,
+                    #OPT_ANTI_SPAM#,
+                    #OPT_JUNK_MGT#,
+                    SYSDATE,
+                    SYSDATE,
+                    #logonUserID#,
+                    '0',
+                    #idAudit#
+                   )
+	</insert>
+	<update id="UPDATE.B_CPM_S07.UPDATET_CUST_PLAN_LINK" parameterClass="java.util.HashMap" >
+		UPDATE T_CUST_PLAN_LINK T
+			SET T.TOTAL_AMOUNT = T.UNIT_PRICE*#quantity#,
+			    T.QUANTITY=#quantity#,
+			    T.DATE_UPDATED=SYSDATE,
+			    T.ID_LOGIN = #logonUserID#,						
+          		T.ID_AUDIT = #idAudit#
+		WHERE T.ID_CUST_PLAN_LINK=#id_cust_plan_link#
+	</update>
+	<select id="SELECT.B_CPM_S07.GET_CUSTOMER_PLAN_H" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+    SELECT
+          ID_CUST_PLAN,
+          PLAN_STATUS
+    FROM
+          T_CUST_PLAN_H H
+    WHERE
+          ID_CUST_PLAN = #idCustPlan#
+    	  AND IS_DELETED = 0
+    </select>
+    <!-- B_CPM_S07 end-->
+    
+    <!-- B_CPM_S04 start -->
+    <sql id="B_CPM_S04_SEARCH_CONDITION">
+        <isNotEmpty property="customerId" prepend="AND">
+	        UPPER(T1.ID_CUST) = #customerId#
+	    </isNotEmpty>
+		<isNotEmpty property="tranType" prepend="AND">
+		    T1.TRANSACTION_TYPE = #tranType#
+		</isNotEmpty>
+		<isNotEmpty property="billCurrency" prepend="AND">
+		    T1.BILL_CURRENCY = #billCurrency#
+		</isNotEmpty>
+    </sql>
+    <select id="B_CPM_S04_SEARCH_CUST_PLAN_H" resultClass="java.util.HashMap" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+       SELECT 
+             DISTINCT T2.CUSTOMER_TYPE,
+             T1.ID_CUST_PLAN,
+             T1.ID_CUST,
+             PLAN_STATUS,
+    	     T1.PLAN_TYPE,
+    	     T1.TRANSACTION_TYPE, 
+    	     (
+    	         CASE WHEN PLAN_STATUS = 'PS1' THEN T1.ID_BILL_ACCOUNT
+    		          WHEN PLAN_STATUS = 'PS2' THEN T1.ID_BILL_ACCOUNT
+    		          WHEN PLAN_STATUS = 'PS8' THEN T1.ID_BILL_ACCOUNT
+    		          ELSE T4.ID_BILL_ACCOUNT END
+    		 ) as ID_BILL_ACCOUNT, 
+    	     T1.BILL_INSTRUCT,
+    	     T1.BILL_CURRENCY,
+    	     T1.EXPORT_CURRENCY, 
+    	     T2.CUST_NAME,
+    	     T3.ID_SUB_INFO,
+    	     T4.ID_BILL_ACCOUNT as CURRENT_BILL_ACCOUNT
+       FROM 
+             V_T_CUST_PLAN T1 INNER JOIN  T_SUBSCRIPTION_INFO T3 ON 
+             T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+             LEFT JOIN M_CUST T2
+             ON T1.ID_CUST = T2.ID_CUST AND T1.IS_DELETED = 0
+             LEFT JOIN T_BAC_D T4
+             ON T1.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      WHERE
+            T1.PLAN_STATUS = 'PS1'
+      <dynamic>
+	      <include refid="B_CPM_S04_SEARCH_CONDITION"/>
+	  </dynamic>
+      ORDER BY T1.ID_CUST ASC, T3.ID_SUB_INFO DESC
+	</select>
+	<select id="B_CPM_S04_SEARCH_CUST_PLAN_H_COUNT" resultClass="java.lang.String" parameterClass="nttdm.bsys.b_cpm_en.dto.InputSearchPlan">
+      SELECT 
+            COUNT(distinct T1.ID_CUST_PLAN)
+	  FROM 
+		    V_T_CUST_PLAN T1 INNER JOIN  T_SUBSCRIPTION_INFO T3
+            ON T1.ID_CUST_PLAN = T3.ID_CUST_PLAN AND T1.IS_DELETED = 0
+            LEFT JOIN M_CUST T2
+            ON T1.ID_CUST = T2.ID_CUST AND T1.IS_DELETED = 0
+            LEFT JOIN T_BAC_D T4
+            ON T1.ID_CUST_PLAN = T4.ID_CUST_PLAN AND T1.IS_DELETED = 0
+      WHERE
+            T1.PLAN_STATUS = 'PS1'
+      <dynamic>
+	      <include refid="B_CPM_S04_SEARCH_CONDITION"/>
+	  </dynamic>
+	</select>
+	<select id="B_CPM_S04_SEARCH_CUST_PLAN_D" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+      SELECT
+            T1.ID_CUST_PLAN_GRP,
+            TO_CHAR(T1.BILL_DESC) as BILL_DESC, 
+            TO_CHAR(T1.SVC_START, 'DD/MM/YYYY') as SVC_START,
+            TO_CHAR(T1.SVC_END, 'DD/MM/YYYY') as SVC_END,
+            SERVICES_STATUS, 
+          	TO_CHAR(SUM(T1.TOTAL_AMOUNT),'9,999,999,999,999,999.00') as TOTAL_AMOUNT 
+      FROM 
+            V_T_CUST_PLAN T1
+      WHERE
+           ID_CUST_PLAN = #ID_CUST_PLAN# 
+           AND IS_DELETED = 0
+      GROUP BY
+           T1.ID_CUST_PLAN_GRP,
+           TO_CHAR(T1.BILL_DESC),
+           T1.SVC_START,
+           T1.SVC_END,
+           SERVICES_STATUS
+      ORDER BY 
+           T1.ID_CUST_PLAN_GRP
+	</select>
+	<select id="B_CPM_S04_SEARCH_CUST_PLAN_LINK" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+      SELECT
+            DISTINCT T1.ID_CUST_PLAN_LINK,
+            T1.RATE_TYPE,
+            T1.RATE_MODE, 
+		    T2.SVC_GRP_NAME,
+		    SVC_DESC || ' - ' || T3.ACC_CODE AS SVC_NAME,
+            T1.QUANTITY, T1.UNIT_PRICE,  
+            to_char(T1.ITEM_DESC) as ITEM_DESC,
+            T1.TOTAL_AMOUNT
+      FROM
+            V_T_CUST_PLAN T1,
+            M_SVG T2,
+            M_SVC T3
+      WHERE
+            ID_CUST_PLAN_GRP = #ID_CUST_PLAN_GRP# 
+            AND T1.SUB_SVC_LEVEL1 = T2.SVC_GRP(+)
+            AND T1.SUB_SVC_LEVEL2 = T3.ID_SERVICE(+)
+            AND T1.IS_DELETED = 0
+      GROUP BY
+            T1.ID_CUST_PLAN_LINK,
+            T1.RATE_TYPE,
+            T1.RATE_MODE, 
+            T2.SVC_GRP_NAME,
+            SVC_DESC || ' - ' || T3.ACC_CODE,
+            T1.QUANTITY, T1.UNIT_PRICE,  
+            to_char(T1.ITEM_DESC),
+            T1.TOTAL_AMOUNT
+      ORDER BY T1.ID_CUST_PLAN_LINK
+    </select>
+    <select id="B_CPM_S04_SELECT_CUST_BY_ID" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+      SELECT
+            CUST_NAME
+      FROM
+            M_CUST
+      WHERE
+            ID_CUST = #idCust#
+    </select>
+    <select id="B_CPM_S04_SELECT_T_CUST_H_INFO" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+      SELECT
+            A.ID_CUST_PLAN,
+            A.TRANSACTION_TYPE,
+            A.BILL_CURRENCY,
+            A.EXPORT_CURRENCY,
+            A.FIXED_FOREX,
+            A.ID_BILL_ACCOUNT
+      FROM
+            T_CUST_PLAN_H A
+      WHERE
+            A.ID_CUST_PLAN IN 
+			<iterate property="idCustPlans" open="(" close=")" conjunction=",">
+		        #idCustPlans[]# 
+		    </iterate>
+    </select>
+    <!-- B_CPM_S04 end -->
+    <!-- 'Transaction Type' Display and non display Start-->
+    <select id="getNonTaxInvoiceShowFlg" resultClass="java.lang.String">
+    SELECT 
+    		SET_VALUE
+    FROM 
+    		M_GSET_D
+    WHERE   
+            ID_SET='TRANTYPE_NONTAXINV'	
+    AND 
+    		IS_DELETED = '0'	        			
+    </select>
+    <select id="getEditActivePlanAMTFlg" resultClass="java.lang.String">
+    SELECT 
+    		SET_VALUE
+    FROM 
+    		M_GSET_D
+    WHERE   
+            ID_SET='EDITACTIVEPLANAMT'	
+    AND 
+    		IS_DELETED = '0'	        			
+    </select>
+    
+    <insert id="INSERT_M_SVC" parameterClass="java.util.HashMap">
+    	INSERT INTO M_SVC (
+                   ID_SERVICE,
+                   SVC_GRP,
+                   SVC_CATEGORY,
+                   SVC_DESC,
+                   DESC_ABBR,
+                   IS_DELETED,
+                   DATE_CREATED,
+                   DATE_UPDATED,
+                   ID_LOGIN
+                 )
+              values (
+                    SEQ_M_SVC.NEXTVAL,
+                    #plan#,
+                    'ITM'
+                    #category#,
+                    #abbrevation#,
+                    0,
+                    SYSDATE,
+                    SYSDATE,
+                    #idLogin#
+                   )
+    </insert>
+    
+    <select id="GET_NEW_ID_T_CUST_PLAN_SVC" resultClass="java.lang.String">
+    	SELECT SEQ_T_CUST_PLAN_SVC.NEXTVAL as NEW_ID FROM DUAL 
+    </select>
+    
+    <select id="GET_ID_CUST_PLAN_LINK" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		  FROM T_CUST_PLAN_LINK
+		 WHERE ID_CUST_PLAN_LINK = #idCustPlanLink#
+		   AND ID_CUST_PLAN_GRP = #idCustPlanGrp#
+	</select>
+	
+	<select id="GET_ID_CUST_PLAN_SVC" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		  FROM T_CUST_PLAN_SVC
+		 WHERE ID_CUST_PLAN_LINK = #idCustPlanLink#
+	</select>
+	
+	<select id="GET_IS_CUST_PO_DISPLAY" resultClass="java.lang.String">
+    	SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='CUSTPONOENTRY'
+    </select>
+    
+    <select id="GET_IS_RATE_TYPE2" resultClass="java.lang.String">
+    	SELECT C.SET_VALUE FROM M_GSET_D C WHERE C.ID_SET='CPM_RATETYPE2_ENABLE'
+    </select>
+    
+    <select id="GET_IS_RATE_TYPE2_CHANGE" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+    	SELECT AB.RATETYPE_CODE 
+		FROM M_RATE_TYPE2 AB, (SELECT G.END_USER FROM M_CUST G WHERE G.ID_CUST=#idCust#) C
+		WHERE AB.END_USER=C.END_USER AND AB.MODE_TYPE=#modeType# AND AB.IS_DELETED=0
+    </select>
+    
+    <select id="getAddExistingPlanFlg" resultClass="java.lang.String">
+	    SELECT C.SET_VALUE FROM M_GSET_D C
+        WHERE C.ID_SET = 'ADD_EXISTING_PLAN'       			
+    </select>
+    <!-- #187 Start -->
+    <select id="GET_ACCESS_TYPE" resultClass="java.lang.String" parameterClass="java.util.HashMap">			
+		SELECT ACCESS_TYPE		
+		FROM M_USER_ACCESS
+		WHERE ID_USER = #idUser# 
+			AND ID_SUB_MODULE = 'B-CPM-AP'
+			AND IS_DELETED = 0
+	</select>
+    <select id="GET_APPROVE_BUTTON" resultClass="java.lang.String">			
+		SELECT C.SET_VALUE 
+		FROM M_GSET_D C 
+		WHERE C.ID_SET='CPM_APPROVE_BUTTON'
+			AND C.IS_DELETED = 0
+	</select>
+    <!-- #187 End -->
+    <!-- #189 Start -->
+        <select id="GET_disBillingOption" resultClass="java.lang.String">			
+		SELECT C.SET_VALUE 
+		FROM M_GSET_D C 
+		WHERE C.ID_SET='CPM_BILL_OPTION'
+			AND C.IS_DELETED = 0
+	</select>
+    <!-- #189 End -->
+    
+    <select id="GET_CPM_TAX_TYPE_DISPLAY" resultClass="java.lang.String">			
+		SELECT SET_VALUE
+		  FROM M_GSET_D
+		 WHERE ID_SET = 'CPM_TAX_TYPE_DISPLAY'
+		   AND IS_DELETED = '0'
+	</select>
+	
+	<select id="GET_CPM_TAX_TYPE_DEFAULT" resultClass="java.lang.String">			
+		SELECT SET_VALUE
+		  FROM M_GSET_D
+		 WHERE ID_SET = 'CPM_TAX_TYPE_DEFAULT'
+		   AND IS_DELETED = '0'
+	</select>
+	
+	<select id="GET_CPM_TAX_ID_DEFAULT" resultClass="java.lang.String">			
+		SELECT SET_VALUE
+		  FROM M_GSET_D
+		 WHERE ID_SET = 'CPM_TAX_ID_DEFAULT'
+		   AND IS_DELETED = '0'
+	</select>
+	
+	<select id="GET_CPM_TAX_WORD" resultClass="java.lang.String">			
+		SELECT SET_VALUE
+		  FROM M_GSET_D
+		 WHERE ID_SET = 'CPM_TAX_WORD'
+		   AND IS_DELETED = '0'
+	</select>
+    
+</sqlMap>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap 
+            PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+            "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- SqlMap定義 -->
+<sqlMap namespace="B_CLS">
+	<select id="SELECT.B_CLS.SQL001" parameterClass="nttdm.bsys.b_cls.dto.T_CLOSING" 
+			resultClass="nttdm.bsys.b_cls.dto.T_CLOSING" >								
+			SELECT to_char(id_year_month, 'MM/yyyy') idYearMonth, is_closed isClosed, module_id moduleId,
+		           decode(module_id, 'QCS', (select count(*) FROM T_QCS_H d WHERE to_char(D.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND d.is_deleted = 0),
+		                             'BIF', (select count(*) FROM T_BIF_H e WHERE to_char(e.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND e.is_deleted = 0),
+		                             'BIL', (select count(*) FROM T_BIL_H f WHERE to_char(f.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND f.is_deleted = 0),
+		                             'CSB', (select count(*) FROM T_CSB_H g WHERE to_char(g.DATE_TRANS, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND g.is_deleted = 0),
+		                                    0) totalDoc,
+		           decode(module_id, 'QCS', (select count(*) FROM T_QCS_H d WHERE to_char(D.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND d.is_deleted = 0 AND d.is_closed = 0),
+		                             'BIF', (select count(*) FROM T_BIF_H e WHERE to_char(e.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND e.is_deleted = 0 AND e.is_closed = 0),
+		                             'BIL', (select count(*) FROM T_BIL_H f WHERE to_char(f.DATE_REQ, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND f.is_deleted = 0 AND f.is_closed = 0),
+		                             'CSB', (select count(*) FROM T_CSB_H g WHERE to_char(g.DATE_TRANS, 'MM/yyyy') = to_char(c.id_year_month, 'MM/yyyy') AND g.is_deleted = 0 AND g.is_closed = 0),
+		                                    0) totalOutDoc
+		    FROM T_CLOSING c
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="year">
+					<isNotEmpty property="month">
+						<isNotEqual property="year" compareValue="">
+							<isNotEqual property="month" compareValue="" prepend="AND">
+								to_char(c.id_year_month, 'mmyyyy') = #idYearMonth# 
+							</isNotEqual>
+						</isNotEqual>
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="year">
+					<isNotEqual property="year" compareValue="">
+						<isEqual property="month" compareValue="" prepend="AND">
+							to_char(c.id_year_month, 'yyyy') = #year# 
+						</isEqual>
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="month">
+					<isNotEqual property="month" compareValue="">
+						<isEqual property="year" compareValue="" prepend="AND">
+							to_char(c.id_year_month, 'mm') = #month# 
+						</isEqual>
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="moduleId">
+					<isNotEqual property="moduleId" compareValue="" prepend="AND">
+						module_id = #moduleId#
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="isClosed">
+					<isNotEqual property="isClosed" compareValue="" prepend="AND">
+						is_closed = #isClosed#
+					</isNotEqual>
+				</isNotEmpty>
+			</dynamic>
+			ORDER BY c.id_year_month
+	</select>
+	<select id="SELECT.B_CLS.SQL002" parameterClass="nttdm.bsys.b_cls.dto.T_CLOSING" 
+			resultClass="java.lang.Integer" >								
+			SELECT COUNT(ID_YEAR_MONTH)
+			FROM T_CLOSING c
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="year">
+					<isNotEmpty property="month">
+						<isNotEqual property="year" compareValue="">
+							<isNotEqual property="month" compareValue="" prepend="AND">
+								to_char(c.id_year_month, 'mmyyyy') = #idYearMonth# 
+							</isNotEqual>
+						</isNotEqual>
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="year">
+					<isNotEqual property="year" compareValue="">
+						<isEqual property="month" compareValue="" prepend="AND">
+							to_char(c.id_year_month, 'yyyy') = #year# 
+						</isEqual>
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="month">
+					<isNotEqual property="month" compareValue="">
+						<isEqual property="year" compareValue="" prepend="AND">
+							to_char(c.id_year_month, 'mm') = #month# 
+						</isEqual>
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="moduleId">
+					<isNotEqual property="moduleId" compareValue="" prepend="AND">
+						module_id = #moduleId#
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty property="isClosed">
+					<isNotEqual property="isClosed" compareValue="" prepend="AND">
+						is_closed = #isClosed#
+					</isNotEqual>
+				</isNotEmpty>
+			</dynamic>							
+	</select>
+	<select id="getExistResult" parameterClass="java.lang.String" resultClass="java.util.HashMap" >								
+			SELECT *
+			FROM T_CLOSING
+			WHERE to_char(id_year_month, 'mmyyyy') = #idYearMonth#
+	</select>
+	<insert id="insertTClosing" parameterClass="java.util.HashMap">
+	  INSERT INTO T_CLOSING
+	         (id_year_month, module_id, is_closed, date_created, date_updated, id_login, id_audit)
+	  VALUES (#idYearMonth#, #moduleId#, #isClosed#, #createdDate#, #updatedDate#, #idLogin#, #idAudit#)
+	</insert>
+	<update id="updateTClosing" parameterClass="java.util.HashMap">
+		UPDATE T_CLOSING SET IS_CLOSED = #isClosedUpt#, ID_LOGIN = #idLogin#, DATE_UPDATED = #updatedDate#,
+			id_audit = #idAudit#
+		WHERE to_char(id_year_month, 'mmyyyy') = #idYearMonth# AND module_id = #moduleId#
+	</update>
+	<update id="updateT_QCS_H" parameterClass="java.util.HashMap">
+		UPDATE T_QCS_H SET IS_CLOSED = #isClosedUpt#, ID_LOGIN = #idLogin#, DATE_UPDATED = #updatedDate#,
+			id_audit = #idAudit#
+		WHERE to_char(DATE_REQ, 'mmyyyy') = #idYearMonth# AND is_deleted = #isDeleted# AND is_closed = #isClosed#
+		<isNotEmpty property="idStatus">
+			AND ID_STATUS IN('DS3', 'DS4', 'DS5')
+		</isNotEmpty>
+	</update>
+	<update id="updateT_BIF_H" parameterClass="java.util.HashMap">
+		UPDATE T_BIF_H SET IS_CLOSED = #isClosedUpt#, ID_LOGIN = #idLogin#, DATE_UPDATED = #updatedDate#,
+			id_audit = #idAudit#
+		WHERE to_char(DATE_REQ, 'mmyyyy') = #idYearMonth# AND is_deleted = #isDeleted# AND is_closed = #isClosed#
+		<isNotEmpty property="idStatus">
+			AND ID_STATUS IN('DS3', 'DS4', 'DS5')
+		</isNotEmpty>
+	</update>
+	<update id="updateT_BIL_H" parameterClass="java.util.HashMap">
+		UPDATE T_BIL_H SET IS_CLOSED = #isClosedUpt#, ID_LOGIN = #idLogin#, DATE_UPDATED = #updatedDate#,
+			id_audit = #idAudit#
+		WHERE to_char(DATE_REQ, 'mmyyyy') = #idYearMonth# AND is_deleted = #isDeleted# AND is_closed = #isClosed#
+	</update>
+	<update id="updateT_CSB_H" parameterClass="java.util.HashMap">
+		UPDATE T_CSB_H SET IS_CLOSED = #isClosedUpt#, ID_LOGIN = #idLogin#, DATE_UPDATED = #updatedDate#,
+			id_audit = #idAudit#
+		WHERE to_char(DATE_TRANS, 'mmyyyy') = #idYearMonth# AND is_deleted = #isDeleted# AND is_closed = #isClosed#
+	</update>
+</sqlMap>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    <!-- モジュール固有のBean定義 -->
+    <!-- 共通定義のインポート -->
+    <import resource="../commonContext.xml"/>
+    <!-- ======================================== アクション・業務ロジック定義 -->
+    <!-- アクション定義 -->
+    <bean class="jp.terasoluna.fw.web.struts.actions.DispatchAction"
+        name="/COMMON/POPUP_COMMON_DSP" scope="singleton"/>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONTerminateBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONTerminateBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONServiceEndDateBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONServiceEndDateBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONServiceEndDateSaveBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONServiceEndDateSaveBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONACCBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONACCBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONACCSaveCheckErrorBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONACCSaveCheckErrorBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONACCSaveBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONACCSaveBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONAPWBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONAPWBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONAPWSaveCheckErrorBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONAPWSaveCheckErrorBLogic"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONAPWSaveBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONAPWSaveBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONTerminateBLogic"
+        id="COMMONTerminateBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+        <property name="updateDAOiBatisNuked" ref="updateDAONuked"/>
+    </bean>
+    <bean class="jp.terasoluna.fw.web.struts.actions.BLogicAction"
+        name="/COMMON/COMMONCurrencyBL" scope="singleton">
+        <property name="businessLogic" ref="COMMONCurrencyBLogic"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONCurrencyBLogic"
+        id="COMMONCurrencyBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONServiceEndDateBLogic"
+        id="COMMONServiceEndDateBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONServiceEndDateSaveBLogic"
+        id="COMMONServiceEndDateSaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONACCBLogic"
+        id="COMMONACCBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONACCSaveCheckErrorBLogic"
+        id="COMMONACCSaveCheckErrorBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONACCSaveBLogic"
+        id="COMMONACCSaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONAPWBLogic"
+        id="COMMONAPWBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONAPWSaveCheckErrorBLogic"
+        id="COMMONAPWSaveCheckErrorBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+    </bean>
+    <bean class="nttdm.bsys.common.blogic.COMMONAPWSaveBLogic"
+        id="COMMONAPWSaveBLogic" scope="singleton">
+        <property name="queryDAO" ref="queryDAO"/>
+        <property name="updateDAO" ref="updateDAO"/>
+        <property name="radiusQueryDAO" ref="radiusQueryDAO"/>
+        <property name="radiusUpdateDAO" ref="radiusUpdateDAO"/>
+    </bean>
+</beans>
